@@ -4,20 +4,54 @@
     "plans": 5,
     "dayLengthSec": 180,
     "targets": [
-      { "m": 200, "e": 60, "f": 30 },
-      { "m": 270, "e": 80, "f": 42 },
-      { "m": 360, "e": 105, "f": 56 },
-      { "m": 470, "e": 135, "f": 72 },
-      { "m": 600, "e": 170, "f": 92 }
+      {
+        "m": 200,
+        "e": 60,
+        "f": 30
+      },
+      {
+        "m": 270,
+        "e": 80,
+        "f": 42
+      },
+      {
+        "m": 360,
+        "e": 105,
+        "f": 56
+      },
+      {
+        "m": 470,
+        "e": 135,
+        "f": 72
+      },
+      {
+        "m": 600,
+        "e": 170,
+        "f": 92
+      }
     ],
-    "prizes": [300, 350, 400, 450, 0],
-    "payPerTon": { "m": 1.0, "e": 1.6, "f": 2.2 },
+    "prizes": [
+      300,
+      350,
+      400,
+      450,
+      0
+    ],
+    "payPerTon": {
+      "m": 1.0,
+      "e": 1.6,
+      "f": 2.2
+    },
     "overfulfilPayBonus": 0.5,
     "lateWarningSec": 12
   },
   "start": {
     "money": 700,
-    "inventory": { "A": 3, "B": 3, "C": 2 },
+    "inventory": {
+      "A": 3,
+      "B": 3,
+      "C": 2
+    },
     "antidote": 1,
     "vodka": 0,
     "caviar": 0
@@ -31,9 +65,24 @@
     "caviar": 150
   },
   "substances": [
-    { "id": "A", "code": "A-17", "name": "Wachstum", "color": "#46d14f" },
-    { "id": "B", "code": "B-08", "name": "Laktation", "color": "#3aa0ff" },
-    { "id": "C", "code": "C-04", "name": "Stabilität", "color": "#ffcc2a" }
+    {
+      "id": "A",
+      "code": "A-17",
+      "name": "Wachstum",
+      "color": "#46d14f"
+    },
+    {
+      "id": "B",
+      "code": "B-08",
+      "name": "Laktation",
+      "color": "#3aa0ff"
+    },
+    {
+      "id": "C",
+      "code": "C-04",
+      "name": "Stabilität",
+      "color": "#ffcc2a"
+    }
   ],
   "mixing": {
     "sliderMax": 8,
@@ -41,8 +90,16 @@
     "rackSize": 6
   },
   "animals": {
-    "cow": { "baseRate": 2.0, "baseMeat": 6, "produces": "m" },
-    "hen": { "baseRate": 0.8, "baseMeat": 2, "produces": "e" }
+    "cow": {
+      "baseRate": 2.0,
+      "baseMeat": 6,
+      "produces": "m"
+    },
+    "hen": {
+      "baseRate": 0.8,
+      "baseMeat": 2,
+      "produces": "e"
+    }
   },
   "formulas": {
     "_doc": {
@@ -54,15 +111,38 @@
       "concentrated": "base+(formula-base)*conc"
     },
     "dampPerC": 0.15,
-    "stability": { "base": 100, "perA": 14, "perB": 18, "perAB": 6, "perC": 20, "overloadFrom": 5, "overloadPer": 10 },
-    "quality": { "base": 80, "perA": 8, "perB": 12, "perC": 8 },
-    "rate": { "perA": 0.15, "perB": 0.8 },
-    "meat": { "perA": 0.7, "perB": 0.1 },
+    "stability": {
+      "base": 100,
+      "perA": 14,
+      "perB": 18,
+      "perAB": 6,
+      "perC": 20,
+      "overloadFrom": 5,
+      "overloadPer": 10
+    },
+    "quality": {
+      "base": 80,
+      "perA": 8,
+      "perB": 12,
+      "perC": 8
+    },
+    "rate": {
+      "perA": 0.15,
+      "perB": 0.8
+    },
+    "meat": {
+      "perA": 0.7,
+      "perB": 0.1
+    },
     "statMax": 100,
     "frozenStabBonus": 20,
     "musicStabBonus": 15,
     "stampQualityBonus": 15,
-    "acid": { "quality": 0.4, "rate": 0.4, "meat": 0.5 }
+    "acid": {
+      "quality": 0.4,
+      "rate": 0.4,
+      "meat": 0.5
+    }
   },
   "combo": {
     "_doc": "Logbuch-Namen und Vor-/Nachteile (GDD 4.4)",
@@ -106,9 +186,15 @@
     "infectionDays": 2
   },
   "warnings": {
-    "heat": [30, 55],
+    "heat": [
+      30,
+      55
+    ],
     "acidT": 4,
-    "float": [1, 2.4],
+    "float": [
+      1,
+      2.4
+    ],
     "stab": 20
   },
   "processing": {
@@ -129,8 +215,14 @@
     "caviar": -25,
     "wishDone": -15,
     "wishFailed": 10,
-    "tiers": [34, 67],
-    "shoutIntervalSec": [9, 22]
+    "tiers": [
+      34,
+      67
+    ],
+    "shoutIntervalSec": [
+      9,
+      22
+    ]
   },
   "authority": {
     "max": 100,
@@ -192,9 +284,18 @@
       "rpmAccelPerRpm": 0.12,
       "zones": {
         "tooEarly": 0.6,
-        "yellow": [0.6, 0.75],
-        "green": [0.75, 0.9],
-        "red": [0.9, 1.0]
+        "yellow": [
+          0.6,
+          0.75
+        ],
+        "green": [
+          0.75,
+          0.9
+        ],
+        "red": [
+          0.9,
+          1.0
+        ]
       },
       "concYellow": 1.25,
       "concGreen": 1.5,
@@ -226,9 +327,20 @@
     "microscope": {
       "cost": 20,
       "analyseSec": 2,
-      "factorLevels": [1.04, 1.35, 1.8],
-      "qualityLevels": [55, 75, 85],
-      "stabLevels": [31, 61]
+      "factorLevels": [
+        1.04,
+        1.35,
+        1.8
+      ],
+      "qualityLevels": [
+        55,
+        75,
+        85
+      ],
+      "stabLevels": [
+        31,
+        61
+      ]
     }
   },
   "buildMachines": {
@@ -245,83 +357,206 @@
       "blockedTo": 7
     },
     "types": [
-      { "id": "pump", "name": "Melkpumpe", "price": 400, "unlockPlanIdx": 0, "effect": "+1.4 t Milch/s bei Kuh, Qualität 85", "milkPerSec": 1.4, "quality": 85 },
-      { "id": "spray", "name": "Auto-Sprüher", "price": 450, "unlockPlanIdx": 1, "effect": "alle 15 s zuletzt benutztes Serum sprühen", "intervalSec": 15 },
-      { "id": "cool", "name": "Kühlaggregat", "price": 350, "unlockPlanIdx": 2, "effect": "Hitze -8/s", "heatPerSec": 8 },
-      { "id": "doc", "name": "Notfall-Automat", "price": 650, "unlockPlanIdx": 3, "effect": "bei Krise Gegenmittel ins Tier, alle 3 s", "intervalSec": 3 }
+      {
+        "id": "pump",
+        "name": "Melkpumpe",
+        "price": 400,
+        "unlockPlanIdx": 0,
+        "effect": "+1.4 t Milch/s bei Kuh, Qualität 85",
+        "milkPerSec": 1.4,
+        "quality": 85
+      },
+      {
+        "id": "spray",
+        "name": "Auto-Sprüher",
+        "price": 450,
+        "unlockPlanIdx": 1,
+        "effect": "alle 15 s zuletzt benutztes Serum sprühen",
+        "intervalSec": 15
+      },
+      {
+        "id": "cool",
+        "name": "Kühlaggregat",
+        "price": 350,
+        "unlockPlanIdx": 2,
+        "effect": "Hitze -8/s",
+        "heatPerSec": 8
+      },
+      {
+        "id": "doc",
+        "name": "Notfall-Automat",
+        "price": 650,
+        "unlockPlanIdx": 3,
+        "effect": "bei Krise Gegenmittel ins Tier, alle 3 s",
+        "intervalSec": 3
+      }
     ]
   },
   "wishes": {
     "fromDay": 2,
     "firstAfterSec": 35,
-    "intervalSec": [70, 110],
-    "reward": { "base": 150, "perPlan": 50 },
+    "intervalSec": [
+      70,
+      110
+    ],
+    "reward": {
+      "base": 150,
+      "perPlan": 50
+    },
     "types": [
-      { "id": "meat", "amount": { "base": 10, "perPlan": 5 }, "durationSec": 75 },
-      { "id": "eggs", "amount": { "base": 15, "perPlan": 6 }, "durationSec": 70 },
-      { "id": "quality", "minQuality": 85, "durationSec": 90 },
-      { "id": "calm", "durationSec": 60 }
+      {
+        "id": "meat",
+        "amount": {
+          "base": 10,
+          "perPlan": 5
+        },
+        "durationSec": 75
+      },
+      {
+        "id": "eggs",
+        "amount": {
+          "base": 15,
+          "perPlan": 6
+        },
+        "durationSec": 70
+      },
+      {
+        "id": "quality",
+        "minQuality": 85,
+        "durationSec": 90
+      },
+      {
+        "id": "calm",
+        "durationSec": 60
+      }
     ]
   },
   "contracts": {
     "fromDay": 2,
     "payMult": 2,
     "list": [
-      { "k": "m", "minQ": 80, "who": "Krankenhaus", "what": "Milch" },
-      { "k": "e", "minQ": 75, "who": "Kindergarten", "what": "Eier" },
-      { "k": "f", "minQ": 70, "who": "Parteibankett", "what": "Fleisch" },
-      { "k": "m", "minQ": 70, "who": "Schulspeisung", "what": "Milch" }
+      {
+        "k": "m",
+        "minQ": 80,
+        "who": "Krankenhaus",
+        "what": "Milch"
+      },
+      {
+        "k": "e",
+        "minQ": 75,
+        "who": "Kindergarten",
+        "what": "Eier"
+      },
+      {
+        "k": "f",
+        "minQ": 70,
+        "who": "Parteibankett",
+        "what": "Fleisch"
+      },
+      {
+        "k": "m",
+        "minQ": 70,
+        "who": "Schulspeisung",
+        "what": "Milch"
+      }
     ]
   },
   "ultimates": {
     "omega": {
       "name": "Planerfüller Ω",
-      "recipe": [2, 3, 5],
+      "recipe": [
+        2,
+        3,
+        5
+      ],
       "color": "#ffd24a",
       "rateMult": 3.5,
       "meatMult": 1.3,
       "quality": 92,
       "stability": 100,
-      "pros": ["Milch bzw. Eier ×3,5", "Qualität 92 %", "Stabilität 100 %, keine Nebenwirkungen"],
-      "cons": ["Tier leuchtet golden – Parteikontrolle steigt stark"]
+      "pros": [
+        "Milch bzw. Eier ×3,5",
+        "Qualität 92 %",
+        "Stabilität 100 %, keine Nebenwirkungen"
+      ],
+      "cons": [
+        "Tier leuchtet golden – Parteikontrolle steigt stark"
+      ]
     },
     "koloss": {
       "name": "Fleischkoloss",
-      "recipe": [4, 1, 4],
+      "recipe": [
+        4,
+        1,
+        4
+      ],
       "color": "#ff8a3a",
       "rateMult": 1.2,
       "meatMult": 4.5,
       "quality": 78,
       "stability": 95,
-      "pros": ["Fleisch ×4,5 bei der Verarbeitung", "Stabilität 95 %"],
-      "cons": ["Riesiges Tier – Förderband reißt oft bei der Verarbeitung", "Kommissar bemerkt es sofort"]
+      "pros": [
+        "Fleisch ×4,5 bei der Verarbeitung",
+        "Stabilität 95 %"
+      ],
+      "cons": [
+        "Riesiges Tier – Förderband reißt oft bei der Verarbeitung",
+        "Kommissar bemerkt es sofort"
+      ]
     }
   },
   "funRecipes": {
     "milkhen": {
       "animal": "hen",
-      "total": [1, 3, 1],
+      "total": [
+        1,
+        3,
+        1
+      ],
       "name": "Milchhuhn",
       "rateMult": 1.6,
-      "pros": ["Das Huhn gibt Milch statt Eiern (+60 %)"],
-      "cons": ["Keine Eier mehr", "Die Hühner im Stall sind verwirrt"]
+      "pros": [
+        "Das Huhn gibt Milch statt Eiern (+60 %)"
+      ],
+      "cons": [
+        "Keine Eier mehr",
+        "Die Hühner im Stall sind verwirrt"
+      ]
     },
     "sing": {
       "animal": "cow",
-      "total": [3, 0, 3],
+      "total": [
+        3,
+        0,
+        3
+      ],
       "name": "Singende Kuh",
       "meatMult": 0.8,
-      "pros": ["Singt Arbeiterlieder – Parteikontrolle sinkt", "Volk ist gerührt"],
-      "cons": ["Fleisch wird zäh vor Rührung", "Kein Ertragsgewinn bei Milch"]
+      "pros": [
+        "Singt Arbeiterlieder – Parteikontrolle sinkt",
+        "Volk ist gerührt"
+      ],
+      "cons": [
+        "Fleisch wird zäh vor Rührung",
+        "Kein Ertragsgewinn bei Milch"
+      ]
     },
     "coinhen": {
       "animal": "hen",
-      "total": [0, 4, 2],
+      "total": [
+        0,
+        4,
+        2
+      ],
       "name": "Münzhuhn",
       "coinsPerEgg": 3,
       "qualityMalus": 15,
-      "pros": ["Legt Eier mit Stalinmünzen-Prägung (+SM pro Ei)"],
-      "cons": ["Eier schmecken nach Metall (Qualität −)"]
+      "pros": [
+        "Legt Eier mit Stalinmünzen-Prägung (+SM pro Ei)"
+      ],
+      "cons": [
+        "Eier schmecken nach Metall (Qualität −)"
+      ]
     }
   },
   "comboNames": {
@@ -348,11 +583,24 @@
     "4-1-4": "Roher Koloss"
   },
   "infection": {
-    "symptomIntervalSec": [10, 22],
-    "symptomDurationSec": [7, 12],
+    "symptomIntervalSec": [
+      10,
+      22
+    ],
+    "symptomDurationSec": [
+      7,
+      12
+    ],
     "fast": 2.4,
     "slow": 0.45,
-    "symptoms": ["green", "fast", "slow", "blur", "wobble", "invert"]
+    "symptoms": [
+      "green",
+      "fast",
+      "slow",
+      "blur",
+      "wobble",
+      "invert"
+    ]
   },
   "world": {
     "_doc": {
@@ -366,7 +614,11 @@
     "famineQ": 62,
     "famineRange": 40,
     "popMax": 100,
-    "supplyWeights": { "m": 1, "e": 2, "f": 3 },
+    "supplyWeights": {
+      "m": 1,
+      "e": 2,
+      "f": 3
+    },
     "supplyPerDay": 5,
     "foodBase": 55,
     "foodPerSupply": 0.35,
@@ -375,8 +627,14 @@
     "envMax": 100,
     "envPerDose": 1,
     "envPerExplosion": 8,
-    "windowHunger": { "popBelow": 65, "foodBelow": 50 },
-    "windowParade": { "popMin": 85, "foodMin": 80 }
+    "windowHunger": {
+      "popBelow": 65,
+      "foodBelow": 50
+    },
+    "windowParade": {
+      "popMin": 85,
+      "foodMin": 80
+    }
   },
   "news": {
     "durationSec": 9,
@@ -388,5 +646,285 @@
     "heroMinPop": 70,
     "heroMaxFailedDays": 1,
     "deadBelowPop": 40
+  },
+  "layout": {
+    "_doc": "Prototyp-Koordinaten (GDD 3): x bleibt, z_unity = -z. facing = Drehung um Y in Unity-Grad, Vorderseite der Station zeigt bei 0 Grad zum Spieler (-Z). size = Kollider [Breite, Hoehe, Tiefe].",
+    "room": {
+      "sideWallX": 17,
+      "frontWallZ": -3,
+      "backWallZ": 11.9,
+      "wallThickness": 0.5,
+      "height": 8.7
+    },
+    "playerArea": {
+      "xMin": -16,
+      "xMax": 16,
+      "zMin": 2.3,
+      "zMax": 10.8
+    },
+    "playerStart": {
+      "x": 0,
+      "z": 7.2,
+      "eyeHeight": 1.7
+    },
+    "chamber": {
+      "x": 0,
+      "z": 0,
+      "radius": 2.5,
+      "height": 8.3,
+      "baseY": 0.35,
+      "playerCollisionRadius": 3.1
+    },
+    "belt": {
+      "xMin": -10.4,
+      "xMax": 10.4,
+      "halfWidth": 1.15,
+      "height": 0.35
+    },
+    "pultZone": {
+      "absXMin": 0,
+      "absXMax": 1.95,
+      "zMin": 0,
+      "zMax": 5.85
+    },
+    "clothZone": {
+      "absXMin": 1.9,
+      "absXMax": 4.3,
+      "zMin": 0,
+      "zMax": 4.7
+    },
+    "window": {
+      "x": 16.7,
+      "y": 4.1,
+      "z": 5.2,
+      "width": 9,
+      "height": 4.5
+    },
+    "stations": [
+      {
+        "id": "clone",
+        "x": -8.5,
+        "y": 0,
+        "z": 0,
+        "facing": 0,
+        "size": [
+          2.3,
+          8.7,
+          2.3
+        ],
+        "signKey": "ui.signs.clone",
+        "signHeight": 7.4
+      },
+      {
+        "id": "processing",
+        "x": 9.2,
+        "y": 0,
+        "z": 0,
+        "facing": 0,
+        "size": [
+          2.3,
+          2.6,
+          2.6
+        ],
+        "signKey": "ui.signs.processing",
+        "signHeight": 3.5
+      },
+      {
+        "id": "pult",
+        "x": 0,
+        "y": 0,
+        "z": 3.75,
+        "facing": 0,
+        "size": [
+          3.6,
+          1.1,
+          1.0
+        ],
+        "signKey": "",
+        "signHeight": 0
+      },
+      {
+        "id": "beltMotor",
+        "x": -6.6,
+        "y": 0,
+        "z": 1.7,
+        "facing": 0,
+        "size": [
+          0.9,
+          0.8,
+          0.7
+        ],
+        "signKey": "ui.signs.beltMotor",
+        "signHeight": 1.7
+      },
+      {
+        "id": "mixing",
+        "x": -5.2,
+        "y": 0,
+        "z": 4.0,
+        "facing": 0,
+        "size": [
+          3.0,
+          1.0,
+          1.3
+        ],
+        "signKey": "ui.signs.mixing",
+        "signHeight": 3.0
+      },
+      {
+        "id": "microscope",
+        "x": -6.5,
+        "y": 0.98,
+        "z": 4.35,
+        "facing": 0,
+        "size": [
+          0.3,
+          0.5,
+          0.3
+        ],
+        "signKey": "",
+        "signHeight": 0
+      },
+      {
+        "id": "centrifuge",
+        "x": 5.6,
+        "y": 0,
+        "z": 2.0,
+        "facing": 0,
+        "size": [
+          1.7,
+          1.8,
+          1.7
+        ],
+        "signKey": "ui.signs.centrifuge",
+        "signHeight": 2.5
+      },
+      {
+        "id": "cryo",
+        "x": 7.6,
+        "y": 0,
+        "z": 2.1,
+        "facing": 0,
+        "size": [
+          1.3,
+          1.9,
+          1.1
+        ],
+        "signKey": "ui.signs.cryo",
+        "signHeight": 2.6
+      },
+      {
+        "id": "tasting",
+        "x": 10.2,
+        "y": 0,
+        "z": 3.3,
+        "facing": 28.6,
+        "size": [
+          0.9,
+          1.7,
+          0.7
+        ],
+        "signKey": "ui.signs.tasting",
+        "signHeight": 2.5
+      },
+      {
+        "id": "gramophone",
+        "x": 3.5,
+        "y": 0,
+        "z": 11.0,
+        "facing": 180,
+        "size": [
+          1.0,
+          1.5,
+          0.8
+        ],
+        "signKey": "ui.signs.gramophone",
+        "signHeight": 2.7
+      },
+      {
+        "id": "rohrpost",
+        "x": -3.5,
+        "y": 0,
+        "z": 11.25,
+        "facing": 180,
+        "size": [
+          0.6,
+          1.6,
+          0.5
+        ],
+        "signKey": "ui.signs.rohrpost",
+        "signHeight": 2.3
+      },
+      {
+        "id": "terminal",
+        "x": -12,
+        "y": 0,
+        "z": 0.8,
+        "facing": 0,
+        "size": [
+          1.5,
+          2.2,
+          1.0
+        ],
+        "signKey": "ui.signs.terminal",
+        "signHeight": 3.0
+      },
+      {
+        "id": "storage",
+        "x": 12,
+        "y": 0,
+        "z": 0.9,
+        "facing": 0,
+        "size": [
+          2.6,
+          1.2,
+          1.8
+        ],
+        "signKey": "ui.signs.storage",
+        "signHeight": 2.5
+      },
+      {
+        "id": "tv",
+        "x": -11.8,
+        "y": 5.0,
+        "z": -2.7,
+        "facing": 0,
+        "size": [
+          5.7,
+          3.6,
+          0.5
+        ],
+        "signKey": "ui.signs.directorCaption",
+        "signHeight": 7.1
+      },
+      {
+        "id": "angerScale",
+        "x": -15.15,
+        "y": 5.0,
+        "z": -2.62,
+        "facing": 0,
+        "size": [
+          0.62,
+          2.5,
+          0.1
+        ],
+        "signKey": "ui.signs.angerScale",
+        "signHeight": 6.6
+      },
+      {
+        "id": "planBoard",
+        "x": 11.8,
+        "y": 5.0,
+        "z": -2.7,
+        "facing": 0,
+        "size": [
+          5.7,
+          3.6,
+          0.3
+        ],
+        "signKey": "ui.signs.planBoard",
+        "signHeight": 7.1
+      }
+    ]
   }
 }

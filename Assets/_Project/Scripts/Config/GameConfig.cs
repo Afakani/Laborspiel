@@ -33,6 +33,7 @@ namespace PlanErfuellt
         public WorldConfig world = new WorldConfig();
         public NewsConfig news = new NewsConfig();
         public EndingsConfig endings = new EndingsConfig();
+        public LayoutConfig layout = new LayoutConfig();
 
         // Diese Teile sind in der JSON als Objekte mit Schlüsseln abgelegt und werden vom Importer gesondert übertragen.
         [JsonIgnore] public List<UltimateSerum> ultimates = new List<UltimateSerum>();
