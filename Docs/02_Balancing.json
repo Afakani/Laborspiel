@@ -1,0 +1,531 @@
+{
+  "_info": "Alle Spielwerte aus dem Prototyp (Version 6). In Unity als ScriptableObjects abbilden.",
+  "day": {
+    "plans": 5,
+    "dayLengthSec": 180,
+    "targets": [
+      {
+        "m": 200,
+        "e": 60,
+        "f": 30
+      },
+      {
+        "m": 270,
+        "e": 80,
+        "f": 42
+      },
+      {
+        "m": 360,
+        "e": 105,
+        "f": 56
+      },
+      {
+        "m": 470,
+        "e": 135,
+        "f": 72
+      },
+      {
+        "m": 600,
+        "e": 170,
+        "f": 92
+      }
+    ],
+    "prizes": [
+      300,
+      350,
+      400,
+      450,
+      0
+    ],
+    "payPerTon": {
+      "m": 1.0,
+      "e": 1.6,
+      "f": 2.2
+    },
+    "overfulfilPayBonus": 0.5
+  },
+  "start": {
+    "money": 700,
+    "inventory": {
+      "A": 3,
+      "B": 3,
+      "C": 2
+    },
+    "antidote": 1,
+    "vodka": 0,
+    "caviar": 0
+  },
+  "prices": {
+    "A": 40,
+    "B": 60,
+    "C": 50,
+    "antidote": 150,
+    "vodka": 60,
+    "caviar": 150
+  },
+  "substances": [
+    {
+      "id": "A",
+      "code": "A-17",
+      "name": "Wachstum",
+      "color": "#46d14f"
+    },
+    {
+      "id": "B",
+      "code": "B-08",
+      "name": "Laktation",
+      "color": "#3aa0ff"
+    },
+    {
+      "id": "C",
+      "code": "C-04",
+      "name": "Stabilität",
+      "color": "#ffcc2a"
+    }
+  ],
+  "mixing": {
+    "sliderMax": 8,
+    "mixTimeSec": 2.5,
+    "rackSize": 6
+  },
+  "animals": {
+    "cow": {
+      "baseRate": 2.0,
+      "baseMeat": 6,
+      "produces": "m"
+    },
+    "hen": {
+      "baseRate": 0.8,
+      "baseMeat": 2,
+      "produces": "e"
+    }
+  },
+  "formulas": {
+    "dampening": "e = 1/(1+0.15*C)",
+    "stability": "clamp(100-14A-18B-6AB+20C-10*max(0,A+B+C-5),0,100)",
+    "quality": "clamp(80-8A-12B+8C,0,100)",
+    "rate": "base*(1+0.8*B*e+0.15*A*e)",
+    "meat": "base*(1+0.7*A*e+0.1*B*e)",
+    "concentrated": "base+(formula-base)*conc",
+    "frozenStabBonus": 20,
+    "musicStabBonus": 15,
+    "stampQualityBonus": 15,
+    "acid": {
+      "quality": 0.4,
+      "rate": 0.4,
+      "meat": 0.5
+    }
+  },
+  "risks": {
+    "activeBelowStab": 61,
+    "heatPerA": 3.2,
+    "heatDecay": 5,
+    "heatCrisis": 55,
+    "heatUnstable": 100,
+    "heatStabPenalty": 0.4,
+    "acidThreshold": 9,
+    "floatPerB": 0.45,
+    "floatDecay": 1.5,
+    "floatCrisis": 2.4,
+    "floatEscape": 7.5,
+    "escapeCost": 300,
+    "leashTo": 0.3,
+    "beltBreakChancePerAPerSec": 0.02,
+    "cableTearBelowStab": 31,
+    "cableTearChancePerSec": 0.03,
+    "blackoutSec": 12,
+    "blackoutProductionFactor": 0.5,
+    "unstableCountdownSec": 8,
+    "infectionDistance": 7,
+    "infectionChance": 0.5,
+    "infectionDays": 2
+  },
+  "warnings": {
+    "heat": [
+      30,
+      55
+    ],
+    "acidT": 4,
+    "float": [
+      1,
+      2.4
+    ],
+    "stab": 20
+  },
+  "processing": {
+    "braveMinStab": 15,
+    "braveBonus": 150,
+    "braveExplodeChance": 0.3,
+    "kolossBeltBreakChance": 0.5
+  },
+  "anger": {
+    "idleAfterSec": 6,
+    "idlePerSec": 0.6,
+    "explode": 10,
+    "collapse": 10,
+    "planFailed": 34,
+    "planMet": -20,
+    "inspectionPassed": -10,
+    "caviar": -25,
+    "wishDone": -15,
+    "wishFailed": 10,
+    "tiers": [
+      34,
+      67
+    ]
+  },
+  "authority": {
+    "base": 0.35,
+    "lowStab": 0.8,
+    "floating": 1.0,
+    "glowFactor": 0.8,
+    "omega": 1.5,
+    "koloss": 1.0,
+    "clothFactor": 0.4,
+    "musicFactor": 0.6,
+    "singingCow": -0.8,
+    "contaminated": 0.5,
+    "decay": 0.6,
+    "explodeAdd": 20,
+    "afterInspection": 15
+  },
+  "inspection": {
+    "fromDay": 2,
+    "triggerAuthority": 75,
+    "firstAfterDay2StartSec": 70,
+    "gapSec": 100,
+    "minGapSec": 45,
+    "speed": 1.5,
+    "range": 4.2,
+    "susp": {
+      "uncovered": 22,
+      "uncoveredKoloss": 40,
+      "coveredBase": 2,
+      "coveredPerDose": 0.6,
+      "coveredMaxDose": 8,
+      "coveredUnstable": 6,
+      "coveredOmega": 9,
+      "coveredKoloss": 12,
+      "contaminated": 6,
+      "rack": 12,
+      "rackRange": 2.6
+    },
+    "mult": {
+      "boss": 1.6,
+      "music": 0.7,
+      "singingCow": 0.5
+    },
+    "vodka": {
+      "pauseSec": 10,
+      "suspReduce": 40
+    },
+    "prize": 400,
+    "bossPrizeMult": 2,
+    "bossAfterUltSec": 25
+  },
+  "machinesFixed": {
+    "centrifuge": {
+      "unlockPlanIdx": 0,
+      "rpmAccel": "dt*(0.16+0.12*rpm)",
+      "zones": {
+        "tooEarly": 0.6,
+        "yellow": [
+          0.6,
+          0.75
+        ],
+        "green": [
+          0.75,
+          0.9
+        ],
+        "red": [
+          0.9,
+          1.0
+        ]
+      },
+      "concYellow": 1.25,
+      "concGreen": 1.5,
+      "spinDown": 0.8
+    },
+    "cryo": {
+      "unlockPlanIdx": 1,
+      "freezeSec": 16,
+      "takeWindowSec": 12
+    },
+    "ultimate": {
+      "unlockPlanIdx": 2
+    },
+    "tasting": {
+      "unlockPlanIdx": 1,
+      "cost": 30,
+      "qualityBonus": 15
+    },
+    "gramophone": {
+      "crankSec": 1.5,
+      "musicSec": 30,
+      "heatExtraDecay": 3
+    },
+    "rohrpost": {
+      "angerReduce": 25
+    },
+    "microscope": {
+      "cost": 20,
+      "analyseSec": 2
+    }
+  },
+  "buildMachines": {
+    "priceFactor": 1.5,
+    "grid": {
+      "cols": 14,
+      "rows": 3,
+      "cell": 2,
+      "x0": -13,
+      "z0": 5,
+      "blocked": "gz==0 && gx in 3..7"
+    },
+    "types": [
+      {
+        "id": "pump",
+        "name": "Melkpumpe",
+        "price": 400,
+        "unlockPlanIdx": 0,
+        "effect": "+1.4 t Milch/s bei Kuh, Qualität 85"
+      },
+      {
+        "id": "spray",
+        "name": "Auto-Sprüher",
+        "price": 450,
+        "unlockPlanIdx": 1,
+        "effect": "alle 15 s zuletzt benutztes Serum sprühen"
+      },
+      {
+        "id": "cool",
+        "name": "Kühlaggregat",
+        "price": 350,
+        "unlockPlanIdx": 2,
+        "effect": "Hitze -8/s"
+      },
+      {
+        "id": "doc",
+        "name": "Notfall-Automat",
+        "price": 650,
+        "unlockPlanIdx": 3,
+        "effect": "bei Krise Gegenmittel ins Tier, alle 3 s"
+      }
+    ]
+  },
+  "wishes": {
+    "fromDay": 2,
+    "firstAfterSec": 35,
+    "intervalSec": [
+      70,
+      110
+    ],
+    "reward": "150+50*planIdx",
+    "types": [
+      {
+        "id": "meat",
+        "amount": "10+5*planIdx",
+        "durationSec": 75
+      },
+      {
+        "id": "eggs",
+        "amount": "15+6*planIdx",
+        "durationSec": 70
+      },
+      {
+        "id": "quality",
+        "minQuality": 85,
+        "durationSec": 90
+      },
+      {
+        "id": "calm",
+        "durationSec": 60
+      }
+    ]
+  },
+  "contracts": {
+    "fromDay": 2,
+    "payMult": 2,
+    "list": [
+      {
+        "k": "m",
+        "minQ": 80,
+        "who": "Krankenhaus",
+        "what": "Milch"
+      },
+      {
+        "k": "e",
+        "minQ": 75,
+        "who": "Kindergarten",
+        "what": "Eier"
+      },
+      {
+        "k": "f",
+        "minQ": 70,
+        "who": "Parteibankett",
+        "what": "Fleisch"
+      },
+      {
+        "k": "m",
+        "minQ": 70,
+        "who": "Schulspeisung",
+        "what": "Milch"
+      }
+    ]
+  },
+  "ultimates": {
+    "omega": {
+      "name": "Planerfüller Ω",
+      "recipe": [
+        2,
+        3,
+        5
+      ],
+      "color": "#ffd24a",
+      "rateMult": 3.5,
+      "meatMult": 1.3,
+      "quality": 92,
+      "stability": 100,
+      "pros": [
+        "Milch bzw. Eier ×3,5",
+        "Qualität 92 %",
+        "Stabilität 100 %, keine Nebenwirkungen"
+      ],
+      "cons": [
+        "Tier leuchtet golden – Parteikontrolle steigt stark"
+      ]
+    },
+    "koloss": {
+      "name": "Fleischkoloss",
+      "recipe": [
+        4,
+        1,
+        4
+      ],
+      "color": "#ff8a3a",
+      "rateMult": 1.2,
+      "meatMult": 4.5,
+      "quality": 78,
+      "stability": 95,
+      "pros": [
+        "Fleisch ×4,5 bei der Verarbeitung",
+        "Stabilität 95 %"
+      ],
+      "cons": [
+        "Riesiges Tier – Förderband reißt oft bei der Verarbeitung",
+        "Kommissar bemerkt es sofort"
+      ]
+    }
+  },
+  "funRecipes": {
+    "milkhen": {
+      "animal": "hen",
+      "total": [
+        1,
+        3,
+        1
+      ],
+      "name": "Milchhuhn",
+      "rateMult": 1.6,
+      "pros": [
+        "Das Huhn gibt Milch statt Eiern (+60 %)"
+      ],
+      "cons": [
+        "Keine Eier mehr",
+        "Die Hühner im Stall sind verwirrt"
+      ]
+    },
+    "sing": {
+      "animal": "cow",
+      "total": [
+        3,
+        0,
+        3
+      ],
+      "name": "Singende Kuh",
+      "meatMult": 0.8,
+      "pros": [
+        "Singt Arbeiterlieder – Parteikontrolle sinkt",
+        "Volk ist gerührt"
+      ],
+      "cons": [
+        "Fleisch wird zäh vor Rührung",
+        "Kein Ertragsgewinn bei Milch"
+      ]
+    },
+    "coinhen": {
+      "animal": "hen",
+      "total": [
+        0,
+        4,
+        2
+      ],
+      "name": "Münzhuhn",
+      "coinsPerEgg": 3,
+      "qualityMalus": 15,
+      "pros": [
+        "Legt Eier mit Stalinmünzen-Prägung (+SM pro Ei)"
+      ],
+      "cons": [
+        "Eier schmecken nach Metall (Qualität −)"
+      ]
+    }
+  },
+  "comboNames": {
+    "1-0-0": "Mastformel",
+    "2-0-0": "Doppelmast",
+    "3-0-0": "Fleischberg",
+    "0-1-0": "Melkformel",
+    "0-2-0": "Euterflut",
+    "0-3-0": "Ballonformel",
+    "0-0-1": "Beruhigungsmittel",
+    "0-0-2": "Dämpfer",
+    "1-1-0": "Allrounder",
+    "2-1-0": "Mastmelker",
+    "1-2-0": "Milchmast",
+    "2-2-0": "Doppelschlag",
+    "1-1-1": "Planformel",
+    "2-2-2": "Gezähmter Doppelschlag",
+    "1-0-1": "Sanfte Mast",
+    "0-1-1": "Sanfte Melke",
+    "2-0-1": "Kontrollierte Mast",
+    "0-2-1": "Kontrollierte Melke",
+    "3-3-0": "Wahnsinnsmischung",
+    "2-3-5": "Rohserum Ω",
+    "4-1-4": "Roher Koloss"
+  },
+  "infection": {
+    "symptomIntervalSec": [
+      10,
+      22
+    ],
+    "symptomDurationSec": [
+      7,
+      12
+    ],
+    "fast": 2.4,
+    "slow": 0.45,
+    "symptoms": [
+      "green",
+      "fast",
+      "slow",
+      "blur",
+      "wobble",
+      "invert"
+    ]
+  },
+  "world": {
+    "avgQStart": 80,
+    "famine": "clamp((62-avgQ)/40,0,1)",
+    "pop": "100*(1-famine)",
+    "supply": "(m+2e+3f)/max(1,day*5)",
+    "food": "clamp(55+0.35*supply,0,130)*(1-0.6*famine)",
+    "env": "clamp(100-doses-8*explosions,0,100)",
+    "windowHunger": "pop<65 || food<50",
+    "windowParade": "pop>=85 && food>=80"
+  },
+  "news": {
+    "durationSec": 9,
+    "levels": "famine>=0.65 dead, >=0.35 crisis, >=0.05 warn, sonst boom"
+  }
+}
