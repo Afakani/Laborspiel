@@ -1,0 +1,97 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace PlanErfuellt
+{
+    /// <summary>
+    /// Der gesamte veränderliche Spielzustand als reine C#-Klasse. Gehalten vom GameManager.
+    /// Änderungen an Geld und Lager laufen über Methoden, die Events auslösen.
+    /// </summary>
+    public class GameState
+    {
+        // ---------- Kasse und Lager ----------
+        public float Money { get; private set; }
+        /// <summary>Grundstoffe im Lager: Index 0 = A, 1 = B, 2 = C.</summary>
+        public readonly int[] substances = new int[3];
+        public int antidote;
+        public int vodka;
+        public int caviar;
+
+        /// <summary>Seren im Regal (max. mixing.rackSize).</summary>
+        public readonly List<Serum> serums = new List<Serum>();
+
+        // ---------- Fortschritt ----------
+        /// <summary>Gespielte Schichten (Tag 1 = erste Schicht).</summary>
+        public int dayNum;
+        /// <summary>Index des aktuellen Plans (0 = Plan 1).</summary>
+        public int planIdx;
+        public int failedDays;
+        public float playTime;
+
+        // ---------- Druck von oben ----------
+        public float anger;
+        public float authority;
+
+        // ---------- Entdeckungen und Statistik ----------
+        /// <summary>Am Tier getestete Kombinationen (Schlüssel "A-B-C" bzw. "U:id" für Ultimative).</summary>
+        public readonly HashSet<string> discoveredRecipes = new HashSet<string>();
+        /// <summary>Gefundene Kuriositäten (Id).</summary>
+        public readonly HashSet<string> foundFunRecipes = new HashSet<string>();
+        public bool ultimateSeen;
+        /// <summary>Gesamt erzeugte Waren in t.</summary>
+        public readonly GoodsValues totals = new GoodsValues();
+        /// <summary>Rekorde nach Schlüssel (rate, meat, day_m, day_e, day_f).</summary>
+        public readonly Dictionary<string, float> records = new Dictionary<string, float>();
+        public int experiments;
+        public int explosions;
+        public int totalDoses;
+        public int machinesBuilt;
+        public float earned;
+
+        /// <summary>Neues Spiel mit den Startwerten aus der Config.</summary>
+        public static GameState Create(GameConfig cfg)
+        {
+            var s = new GameState();
+            s.Money = cfg.start.money;
+            s.substances[0] = cfg.start.inventory.A;
+            s.substances[1] = cfg.start.inventory.B;
+            s.substances[2] = cfg.start.inventory.C;
+            s.antidote = cfg.start.antidote;
+            s.vodka = cfg.start.vodka;
+            s.caviar = cfg.start.caviar;
+            return s;
+        }
+
+        /// <summary>Geld hinzufügen (negativ = abziehen).</summary>
+        public void AddMoney(float amount)
+        {
+            if (Mathf.Approximately(amount, 0f)) return;
+            Money += amount;
+            EventBus.RaiseMoneyChanged(Money);
+        }
+
+        /// <summary>Zieht Geld ab, wenn genug da ist.</summary>
+        public bool TrySpend(float amount)
+        {
+            if (Money < amount) return false;
+            AddMoney(-amount);
+            return true;
+        }
+
+        public void SetMoney(float value)
+        {
+            Money = value;
+            EventBus.RaiseMoneyChanged(Money);
+        }
+
+        /// <summary>Grundstoff ändern (Index 0..2), nie unter 0.</summary>
+        public void AddSubstance(int index, int amount)
+        {
+            substances[index] = Mathf.Max(0, substances[index] + amount);
+            EventBus.RaiseInventoryChanged();
+        }
+
+        /// <summary>Lagerartikel (Gegenmittel, Wodka, Kaviar) wurden geändert.</summary>
+        public void NotifyInventoryChanged() => EventBus.RaiseInventoryChanged();
+    }
+}

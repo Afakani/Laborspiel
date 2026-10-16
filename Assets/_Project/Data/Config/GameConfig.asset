@@ -1,0 +1,452 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a834560b7ff0004aa1be609ded4eecc, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: PlanErfuellt::PlanErfuellt.GameConfig
+  day:
+    plans: 5
+    dayLengthSec: 180
+    targets:
+    - m: 200
+      e: 60
+      f: 30
+    - m: 270
+      e: 80
+      f: 42
+    - m: 360
+      e: 105
+      f: 56
+    - m: 470
+      e: 135
+      f: 72
+    - m: 600
+      e: 170
+      f: 92
+    prizes:
+    - 300
+    - 350
+    - 400
+    - 450
+    - 0
+    payPerTon:
+      m: 1
+      e: 1.6
+      f: 2.2
+    overfulfilPayBonus: 0.5
+    lateWarningSec: 12
+  start:
+    money: 700
+    inventory:
+      A: 3
+      B: 3
+      C: 2
+    antidote: 1
+    vodka: 0
+    caviar: 0
+  prices:
+    A: 40
+    B: 60
+    C: 50
+    antidote: 150
+    vodka: 60
+    caviar: 150
+  substances:
+  - id: A
+    code: A-17
+    displayName: Wachstum
+    color: '#46d14f'
+  - id: B
+    code: B-08
+    displayName: Laktation
+    color: '#3aa0ff'
+  - id: C
+    code: C-04
+    displayName: "Stabilit\xE4t"
+    color: '#ffcc2a'
+  mixing:
+    sliderMax: 8
+    mixTimeSec: 2.5
+    rackSize: 6
+  animals:
+    cow:
+      baseRate: 2
+      baseMeat: 6
+      produces: m
+    hen:
+      baseRate: 0.8
+      baseMeat: 2
+      produces: e
+  formulas:
+    dampPerC: 0.15
+    stability:
+      base: 100
+      perA: 14
+      perB: 18
+      perAB: 6
+      perC: 20
+      overloadFrom: 5
+      overloadPer: 10
+    quality:
+      base: 80
+      perA: 8
+      perB: 12
+      perC: 8
+    rate:
+      perA: 0.15
+      perB: 0.8
+    meat:
+      perA: 0.7
+      perB: 0.1
+    statMax: 100
+    frozenStabBonus: 20
+    musicStabBonus: 15
+    stampQualityBonus: 15
+    acid:
+      quality: 0.4
+      rate: 0.4
+      meat: 0.5
+  combo:
+    extremeFromAB: 5
+    stabilizedMinC: 1
+    stabilizedRatio: 0.5
+    showEffectAboveFactor: 1.04
+    heatWarnMinA: 2
+    acidWarnMinB: 2
+    floatWarnMinB: 3
+    beltWarnMinA: 3
+  risks:
+    activeBelowStab: 61
+    heatMinA: 2
+    heatPerA: 3.2
+    heatDecay: 5
+    heatCrisis: 55
+    heatUnstable: 100
+    heatStabPenalty: 0.4
+    acidMinB: 2
+    acidThreshold: 9
+    floatMinB: 3
+    floatPerB: 0.45
+    floatFromB: 2
+    floatDecay: 1.5
+    floatCrisis: 2.4
+    floatEscape: 7.5
+    escapeCost: 300
+    leashTo: 0.3
+    beltBreakMinA: 3
+    beltBreakChancePerAPerSec: 0.02
+    cableTearBelowStab: 31
+    cableTearChancePerSec: 0.03
+    blackoutSec: 12
+    blackoutProductionFactor: 0.5
+    unstableCountdownSec: 8
+    infectionDistance: 7
+    infectionChance: 0.5
+    infectionFromDay: 2
+    infectionDays: 2
+  warnings:
+    heat:
+    - 30
+    - 55
+    acidT: 4
+    float:
+    - 1
+    - 2.4
+    stab: 20
+  processing:
+    braveMinStab: 15
+    braveBonus: 150
+    braveExplodeChance: 0.3
+    kolossBeltBreakChance: 0.5
+  anger:
+    max: 100
+    idleAfterSec: 6
+    idlePerSec: 0.6
+    explode: 10
+    collapse: 10
+    planFailed: 34
+    planMet: -20
+    inspectionPassed: -10
+    caviar: -25
+    wishDone: -15
+    wishFailed: 10
+    tiers:
+    - 34
+    - 67
+    shoutIntervalSec:
+    - 9
+    - 22
+  authority:
+    max: 100
+    base: 0.35
+    lowStab: 0.8
+    floating: 1
+    glowFactor: 0.8
+    omega: 1.5
+    koloss: 1
+    clothFactor: 0.4
+    musicFactor: 0.6
+    singingCow: -0.8
+    contaminated: 0.5
+    decay: 0.6
+    explodeAdd: 20
+    afterInspection: 15
+  inspection:
+    fromDay: 2
+    triggerAuthority: 75
+    firstAfterDay2StartSec: 70
+    gapSec: 100
+    minGapSec: 45
+    speed: 1.5
+    range: 4.2
+    suspMax: 100
+    susp:
+      uncovered: 22
+      uncoveredKoloss: 40
+      coveredBase: 2
+      coveredPerDose: 0.6
+      coveredMaxDose: 8
+      coveredUnstable: 6
+      coveredOmega: 9
+      coveredKoloss: 12
+      contaminated: 6
+      rack: 12
+      rackRange: 2.6
+      rackSuspiciousAB: 5
+    mult:
+      boss: 1.6
+      music: 0.7
+      singingCow: 0.5
+    vodka:
+      pauseSec: 10
+      suspReduce: 40
+    prize: 400
+    bossPrizeMult: 2
+    bossAfterUltSec: 25
+  machinesFixed:
+    centrifuge:
+      unlockPlanIdx: 0
+      rpmAccelBase: 0.16
+      rpmAccelPerRpm: 0.12
+      zones:
+        tooEarly: 0.6
+        yellow:
+        - 0.6
+        - 0.75
+        green:
+        - 0.75
+        - 0.9
+        red:
+        - 0.9
+        - 1
+      concYellow: 1.25
+      concGreen: 1.5
+      spinDown: 0.8
+      shakeAbove: 0.85
+    cryo:
+      unlockPlanIdx: 1
+      freezeSec: 16
+      takeWindowSec: 12
+    ultimate:
+      unlockPlanIdx: 2
+    tasting:
+      unlockPlanIdx: 1
+      cost: 30
+      qualityBonus: 15
+    gramophone:
+      crankSec: 1.5
+      musicSec: 30
+      heatExtraDecay: 3
+      directorCommentChance: 0.5
+    rohrpost:
+      angerReduce: 25
+    microscope:
+      cost: 20
+      analyseSec: 2
+      factorLevels:
+      - 1.04
+      - 1.35
+      - 1.8
+      qualityLevels:
+      - 55
+      - 75
+      - 85
+      stabLevels:
+      - 31
+      - 61
+  buildMachines:
+    priceFactor: 1.5
+    grid:
+      cols: 14
+      rows: 3
+      cell: 2
+      x0: -13
+      z0: 5
+      blockedRow: 0
+      blockedFrom: 3
+      blockedTo: 7
+  wishes:
+    fromDay: 2
+    firstAfterSec: 35
+    intervalSec:
+    - 70
+    - 110
+    reward:
+      base: 150
+      perPlan: 50
+    types:
+    - id: meat
+      amount:
+        base: 10
+        perPlan: 5
+      minQuality: 0
+      durationSec: 75
+    - id: eggs
+      amount:
+        base: 15
+        perPlan: 6
+      minQuality: 0
+      durationSec: 70
+    - id: quality
+      amount:
+        base: 0
+        perPlan: 0
+      minQuality: 85
+      durationSec: 90
+    - id: calm
+      amount:
+        base: 0
+        perPlan: 0
+      minQuality: 0
+      durationSec: 60
+  contracts:
+    fromDay: 2
+    payMult: 2
+    list:
+    - k: m
+      minQ: 80
+      who: Krankenhaus
+      what: Milch
+    - k: e
+      minQ: 75
+      who: Kindergarten
+      what: Eier
+    - k: f
+      minQ: 70
+      who: Parteibankett
+      what: Fleisch
+    - k: m
+      minQ: 70
+      who: Schulspeisung
+      what: Milch
+  infection:
+    symptomIntervalSec:
+    - 10
+    - 22
+    symptomDurationSec:
+    - 7
+    - 12
+    fast: 2.4
+    slow: 0.45
+    symptoms:
+    - green
+    - fast
+    - slow
+    - blur
+    - wobble
+    - invert
+  world:
+    avgQStart: 80
+    famineQ: 62
+    famineRange: 40
+    popMax: 100
+    supplyWeights:
+      m: 1
+      e: 2
+      f: 3
+    supplyPerDay: 5
+    foodBase: 55
+    foodPerSupply: 0.35
+    foodMax: 130
+    foodFamineFactor: 0.6
+    envMax: 100
+    envPerDose: 1
+    envPerExplosion: 8
+    windowHunger:
+      popBelow: 65
+      foodBelow: 50
+    windowParade:
+      popMin: 85
+      foodMin: 80
+  news:
+    durationSec: 9
+    levelDead: 0.65
+    levelCrisis: 0.35
+    levelWarn: 0.05
+  endings:
+    heroMinPop: 70
+    heroMaxFailedDays: 1
+    deadBelowPop: 40
+  ultimates:
+  - {fileID: 11400000, guid: 5dc976084a4515f499639506535e6f29, type: 2}
+  - {fileID: 11400000, guid: 4e589e637b093764ebf22431455450b9, type: 2}
+  funRecipes:
+  - {fileID: 11400000, guid: 5f61676c43c4e1844b7dff6fe22fa213, type: 2}
+  - {fileID: 11400000, guid: dc34f3f8c5db3d446ad66ccda623002e, type: 2}
+  - {fileID: 11400000, guid: 5d2f7b0ed24670c45bca0088658c1f8e, type: 2}
+  buildMachineTypes:
+  - {fileID: 11400000, guid: 87199909611689b4b81432f789868fa6, type: 2}
+  - {fileID: 11400000, guid: a562a086e2d77dd46bd225a8404fc355, type: 2}
+  - {fileID: 11400000, guid: 291111bc764d5e541851598ed062137d, type: 2}
+  - {fileID: 11400000, guid: 383fd195d7efcf54bbd5e9442f3919c6, type: 2}
+  comboNames:
+  - key: 1-0-0
+    displayName: Mastformel
+  - key: 2-0-0
+    displayName: Doppelmast
+  - key: 3-0-0
+    displayName: Fleischberg
+  - key: 0-1-0
+    displayName: Melkformel
+  - key: 0-2-0
+    displayName: Euterflut
+  - key: 0-3-0
+    displayName: Ballonformel
+  - key: 0-0-1
+    displayName: Beruhigungsmittel
+  - key: 0-0-2
+    displayName: "D\xE4mpfer"
+  - key: 1-1-0
+    displayName: Allrounder
+  - key: 2-1-0
+    displayName: Mastmelker
+  - key: 1-2-0
+    displayName: Milchmast
+  - key: 2-2-0
+    displayName: Doppelschlag
+  - key: 1-1-1
+    displayName: Planformel
+  - key: 2-2-2
+    displayName: "Gez\xE4hmter Doppelschlag"
+  - key: 1-0-1
+    displayName: Sanfte Mast
+  - key: 0-1-1
+    displayName: Sanfte Melke
+  - key: 2-0-1
+    displayName: Kontrollierte Mast
+  - key: 0-2-1
+    displayName: Kontrollierte Melke
+  - key: 3-3-0
+    displayName: Wahnsinnsmischung
+  - key: 2-3-5
+    displayName: "Rohserum \u03A9"
+  - key: 4-1-4
+    displayName: Roher Koloss
