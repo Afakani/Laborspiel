@@ -219,6 +219,18 @@ CLASSES = [
         F("float", "meterRateMaxCow"), F("float", "meterRateMaxHen"), F("int", "meterSegments"),
         F("float", "meterStabGood"), F("float", "meterStabMid"), F("float", "sprayToastBad"), F("float", "sprayToastWarn"),
         F("float", "gasFlashSec")]),
+    ("ChamberDoorsConfig", "Hubtüren links (Einlass) und rechts (Auslass) der Kammer.", [
+        F("float", "openSec", "Dauer Öffnen"), F("float", "closeSec", "Dauer Schließen"),
+        F("float", "width", "Lichte Breite der Schleuse"), F("float", "height", "Lichte Höhe ab Kammerboden"),
+        F("float", "lift", "Hubweg der Tür nach oben"), F("float", "radialOffset", "Abstand der Tür vor dem Glas"),
+        F("float", "waitGapCow", "Kuh wartet so weit vor der geschlossenen Tür (Mitte, mal Größe)"),
+        F("float", "waitGapHen"), F("float", "clearGapCow", "Tür schließt, wenn die Kuh so weit hindurch ist (mal Größe)"),
+        F("float", "clearGapHen")]),
+    ("ChamberFireConfig", "Feuer bei der Vernichtung (Not-Stopp) statt Gas.", [
+        F("float", "afterSec", "Nachbrennen, nachdem das Tier weg ist"),
+        F("float", "lightIntensity"), F("float", "flickerAmp"), F("float", "flickerFreq"),
+        F("string", "lightColor"), F("string", "nozzleColor", "Farbe von Düsenlicht und Kegel während des Feuers"),
+        F("float", "fadeSec", "Ein- und Ausblenden von Licht und Düsenfarbe")]),
     ("AnimalVisualsConfig", "Sichtbare Mutation am Tier (GDD 5.5).", [
         F("float", "growPerA"), F("float", "growCapA"), F("float", "kolossGrowExtra"), F("float", "kolossA"), F("float", "omegaB"),
         F("float", "inflPerA"), F("float", "inflPerBOver2"), F("float", "inflBCap"), F("float", "inflSmoothing"),

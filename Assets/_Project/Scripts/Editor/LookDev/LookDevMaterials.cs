@@ -8,7 +8,7 @@ namespace PlanErfuellt.EditorTools
         public static Material SteelPanel, SteelDark, SteelFrame, Brass, GreenPaint, RedPaint, WhitePaint, FloorConcrete, FloorPlate,
             Grate, WallConcrete, WallPanel, Hazard, Paper, Checklist, Director, PlanBoard, EmblemCream, EmblemGold, IconLeaf, IconDrop,
             IconMolecule, GlassClear, GlassTank, CoverRed, HoseGreen, HoseBlue, HoseYellow, BarGreen, BarBlue, BarYellow, LightConeGreen,
-            FogGreen, HazeWarm, DirectorCrop, PlanBoardCrop, RailYellow, Rubber, LampBulb, ScreenBlue, CreamPlate, BannerRed;
+            FogGreen, HazeWarm, FireAdd, SmokeDark, DirectorCrop, PlanBoardCrop, RailYellow, Rubber, LampBulb, Wood, CratePlanks, Chrome, Frost, CryoGlow, GlassBlue, DialFace, EnamelCream, BlackPaint, ScreenBlue, CreamPlate, BannerRed;
 
         public static void Init()
         {
@@ -48,7 +48,18 @@ namespace PlanErfuellt.EditorTools
             BarYellow = BlockoutKit.Emissive("LD_BarYellow", LabMaterials.Hex("#FFCC2A"), 3.0f, false);
             LightConeGreen = LookDevKit.Shaft("LD_LightShaftGreen", new Color(0.35f, 1f, 0.3f), 0.35f, 1.4f);
             FogGreen = LookDevKit.Additive("LD_FogGreen", "SoftSmoke.png", new Color(0.4f, 1f, 0.35f, 0.35f), false);
+            FireAdd = LookDevKit.Additive("LD_FireAdd", "SoftSmoke.png", new Color(2.4f, 1.3f, 0.45f, 0.95f), true);
+            SmokeDark = LookDevKit.Additive("LD_SmokeDark", "SoftSmoke.png", new Color(0.16f, 0.14f, 0.12f, 0.55f), false);
             HazeWarm = LookDevKit.Additive("LD_HazeWarm", "SoftSmoke.png", new Color(1f, 0.75f, 0.45f, 0.12f), false);
+            Wood = LookDevKit.Pbr("LD_Wood", "dark_wood", new Color(0.9f, 0.8f, 0.7f), 0.8f, 1.0f);
+            CratePlanks = LookDevKit.Pbr("LD_CratePlanks", "old_planks_02", new Color(0.85f, 0.78f, 0.66f), 1.2f, 1.0f);
+            Chrome = BlockoutKit.Mat("LD_Chrome", LabMaterials.Hex("#C9CCCF"), 1f, 0.82f);
+            Frost = BlockoutKit.Mat("LD_Frost", LabMaterials.Hex("#E6F2F8"), 0f, 0.55f);
+            CryoGlow = BlockoutKit.Emissive("LD_CryoGlow", LabMaterials.Hex("#7FD8FF"), 2.2f, false);
+            GlassBlue = LookDevKit.Glass("LD_GlassBlue", new Color(0.65f, 0.85f, 1f, 0.28f), 0.95f);
+            DialFace = BlockoutKit.Emissive("LD_DialFace", LabMaterials.Hex("#EFE3C2"), 0.25f, false);
+            EnamelCream = LookDevKit.Pbr("LD_EnamelCream", "rusty_metal_02", new Color(1f, 0.95f, 0.84f), 1.0f, 0.9f);
+            BlackPaint = LookDevKit.Pbr("LD_BlackPaint", "painted_metal_shutter", new Color(0.2f, 0.2f, 0.2f), 1.0f, 0.8f);
             RailYellow = BlockoutKit.Mat("LD_RailYellow", LabMaterials.Hex("#C9961A"), 0.3f, 0.45f);
             Rubber = BlockoutKit.Mat("LD_Rubber", LabMaterials.Hex("#1E1C1A"), 0f, 0.35f);
             LampBulb = BlockoutKit.Emissive("LD_LampBulb", LabMaterials.Hex("#FFC870"), 6f, true);

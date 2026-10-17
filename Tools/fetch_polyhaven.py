@@ -17,6 +17,8 @@ TEXTURES = [
     ("concrete_floor_worn_001", "2k", 0.0),
     ("concrete_wall_006", "1k", 0.0),
     ("painted_metal_shutter", "1k", 0.0),
+    ("dark_wood", "1k", 0.0),
+    ("old_planks_02", "1k", 0.0),
 ]
 
 def get(url):

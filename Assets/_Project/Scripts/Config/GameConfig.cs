@@ -40,6 +40,8 @@ namespace PlanErfuellt
         public PultConfig pult = new PultConfig();
         public AnimalConfig animal = new AnimalConfig();
         public AnimalVisualsConfig animalVisuals = new AnimalVisualsConfig();
+        public ChamberDoorsConfig chamberDoors = new ChamberDoorsConfig();
+        public ChamberFireConfig chamberFire = new ChamberFireConfig();
 
         // Diese Teile sind in der JSON als Objekte mit Schlüsseln abgelegt und werden vom Importer gesondert übertragen.
         [JsonIgnore] public List<UltimateSerum> ultimates = new List<UltimateSerum>();

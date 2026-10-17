@@ -30,7 +30,9 @@ Poly Haven (polyhaven.com), Lizenz CC0 1.0 (gemeinfrei, Nennung freiwillig). Abl
 | rusty_metal_sheet | Stahlbleche |
 | concrete_floor_worn_001 | Hallenboden |
 | concrete_wall_006 | Wände |
-| painted_metal_shutter | Wandsockel, Schilder |
+| painted_metal_shutter | Wandsockel, Schilder, schwarzer Lack |
+| dark_wood | Grammophon-Tisch und -Gehäuse |
+| old_planks_02 | Kisten und Palette im Lager |
 
 Eigene Texturen (Emblem, Direktor, Plantafel, Papier, Checkliste, Icons, Warnstreifen, Rauch, Verläufe): selbst erzeugt mit `Tools/gen_lookdev_textures.py`, Ablage `Assets/_Project/Art/Textures/LookDev/`.
 

@@ -8,14 +8,15 @@ namespace PlanErfuellt.EditorTools
     /// </summary>
     public static class LabChamberBuilder
     {
-        public static GameObject Build(LayoutConfig L, float playerRadius, GameObject cowPrefab, GameObject henPrefab)
+        public static GameObject Build(LayoutConfig L, ChamberDoorsConfig doorsCfg, float playerRadius, GameObject cowPrefab, GameObject henPrefab)
         {
             var c = L.chamber;
             float R = c.radius, H = c.height, y0 = c.baseY;
             var root = new GameObject("Chamber");
 
-            // Rahmen, Glas, Düsen, Nebel und Beschriftung im Look von Bild 08
-            var rings = LookDevChamber.Build(root.transform, c);
+            // Rahmen, Glas, Düsen, Schleusen mit Hubtüren, Nebel, Feuer-Rig und Beschriftung im Look von Bild 08
+            var parts = LookDevChamber.Build(root.transform, c, doorsCfg);
+            var rings = parts.nozzleRings;
 
             // Gas als leicht leuchtender Zylinder (wird später animiert)
             var gas = BlockoutKit.Cyl(root.transform, "GasVFX", new Vector3(0f, y0 + H * 0.5f, 0f), R - 0.06f, H - 0.2f, M.Gas, false);
@@ -50,8 +51,9 @@ namespace PlanErfuellt.EditorTools
             for (float x = b.xMin + 0.5f; x < b.xMax; x += 1f)
                 BlockoutKit.Box(belt.transform.parent, "BeltChevron", new Vector3(x, b.height + 0.005f, 0f), new Vector3(0.12f, 0.01f, b.halfWidth * 1.4f), M.Hazard, true, new Vector3(0f, 30f, 0f));
 
-            // Laken (abgedeckter Zustand, standardmäßig aus)
-            var cloth = BlockoutKit.Cyl(root.transform, "Cloth", new Vector3(0f, y0 + 4.2f, 0f), R + 0.5f, 8.4f, M.Cloth, false);
+            // Laken (abgedeckter Zustand, standardmäßig aus): über Glas und Kopfring, innerhalb des Spielerabstands
+            float clothH = y0 + H + 0.9f;
+            var cloth = BlockoutKit.Cyl(root.transform, "Cloth", new Vector3(0f, clothH * 0.5f, 0f), R + 0.55f, clothH, M.Cloth, false);
             cloth.SetActive(false);
             // Tier: Kuh und Huhn als verschachtelte Prefabs, Schild und Glühlicht
             var animals = BlockoutKit.Group(root.transform, "Animal", Vector3.zero);
@@ -68,6 +70,14 @@ namespace PlanErfuellt.EditorTools
             glow.lightmapBakeType = LightmapBakeType.Realtime;
             var chamberLogic = root.AddComponent<Chamber>();
             chamberLogic.SetModels(cow, hen, label, glow);
+
+            // Hubtüren und Feuer
+            var doors = root.AddComponent<ChamberDoors>();
+            doors.Setup(parts.leftDoor, parts.rightDoor, parts.leftLamp, parts.rightLamp);
+            chamberLogic.SetDoors(doors);
+            var fire = root.AddComponent<ChamberFire>();
+            var fireLights = new System.Collections.Generic.List<Light>(parts.nozzleLights) { light };
+            fire.Setup(parts.fire, parts.fireLight, fireLights.ToArray(), parts.nozzleCones.ToArray(), gasFx, parts.fog);
             var clothInteraction = root.AddComponent<Cloth>();
             clothInteraction.SetStationId("cloth");
             clothInteraction.SetVisual(cloth);

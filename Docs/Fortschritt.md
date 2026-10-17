@@ -104,8 +104,11 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - [x] Spieltest im Play Mode mit echtem Laufen: Mischzone → 1-1-0 gemischt → zum Pult gelaufen (Pult-Kollider stoppt bei z −7,17) → Kuh geklont → gesprüht (Stabilität 62, 3,9 t/s) → verarbeitet (10,8 t Fleisch), Werte wie im 4b-Referenztest
 - [x] Kollider: Pult-Kollider passt auf 5 cm zum Modell; neuer Kollider über dem Schlauchbündel; Kammersockel auf 2,8 m verkleinert (Spieler bleibt 3,1 m entfernt); Gang zur linken Lakenzone frei (Prompt „Laken über die Kammer werfen“ erreicht)
 - [x] EditMode-Tests 59 grün (Layout-Test auf neue Pult-Werte angepasst); Screenshot `LookDev_04_Spieltest.png`
-- [ ] Kuh und Huhn sind noch Platzhalter (Modelle offen)
-- [ ] Kammer hat keine Bandöffnung: Tiere laufen durch Glas und Sockelring hinein (wie im Blockout). Schleuse/Klappe im Art-Pass (Phase 11)
+- [x] Kuh und Huhn als glatte organische Modelle (eigener SDF-Mesher, `SdfMesher` + `AnimalBuilder`): Kuh mit Holstein-Flecken, Euter, Hufen, Halsband, Ohrmarke; Huhn mit Kamm, Kehllappen, Flügeln, Schwanzfächer. Wachsen, Aufblähen, Zusatz-Euter, Glühen, Laufen funktionieren unverändert
+- [x] Hubtüren: Schleusen links (Einlass) und rechts (Auslass) mit Führungsschienen, Antrieb und Warnlampe. Ablauf: linke Tür auf → Tier läuft ein (wartet, bis die Tür offen ist) → Tür zu → Gas erst bei geschlossenen Türen → zum Verarbeiten rechte Tür auf → Tier läuft aus → Tür zu. Glas und Sockel haben Öffnungen
+- [x] Vernichtung (Not-Stopp): Feuer statt Gas (Flammenteppich, Stichflammen aus den Düsen, Rauch, flackerndes Feuerlicht, Düsen und Kegel orange, grüner Nebel wird Qualm)
+- [x] Maschinen neu im Look-Pass (`LookDevMachines`): Verarbeitung, Bandmotor, Mikroskop, Zentrifuge, Kryokammer, Verkostungsautomat, Grammophon, Rohrpost, Bestellterminal, Lager; Mischstation im Pult-Look. Rückwand mit Bannern, Parolentafel und Lampen
+- [x] Spieltest: Türablauf geprüft (Kuh wartet bei x −5,5, Sprühen bei Türstand 0,02 abgelehnt, bei 0 erfolgreich, Auslass mit Warten, 10,8 t Fleisch), Mutation 2-3-1 mit Glühen, Not-Stopp mit Feuer. Konsole ohne Fehler, 59 EditMode-Tests grün. Screenshots `LookDev_05` bis `LookDev_09`
 
 ## Phase 4b – Tier, Produktion, Verarbeitung, HUD
 

@@ -128,10 +128,7 @@ namespace PlanErfuellt.EditorTools
 
             // Frontwand (hinter der Kammer): Banner, Laufstege und Rohre kommen aus LookDevHall
 
-            // Rückwand (zeigt zur Kammer)
-            BlockoutKit.Sign(d, "Slogan_Back", "ui.signs.wallSlogan", new Vector3(0f, 5.4f, zBack + 0.05f), 5f, M.Gold, M.PropRedBright, false, 180f);
-            for (int i = 0; i < 4; i++)
-                Banner(d, new Vector3(new[] { -9f, -4.5f, 4.5f, 9f }[i], 4.0f, zBack + 0.06f), i % 2 == 0 ? "ui.signs.bannerPlan" : "ui.signs.bannerScience", 180f);
+            // Rückwand: Banner, Parole und Lampen kommen aus LookDevHall
 
             // Kisten und Fässer (Prototyp-Positionen, z gespiegelt)
             foreach (var c in new[] { new Vector3(-12f, 1.3f, -10.6f), new Vector3(-10.4f, 1.0f, -10.9f), new Vector3(-11.4f, 0.8f, -10.6f),
@@ -142,11 +139,5 @@ namespace PlanErfuellt.EditorTools
                 BlockoutKit.Cyl(d, "Barrel", new Vector3(b.x, 0.55f, b.y), 0.45f, 1.1f, M.Barrel).AddComponent<CapsuleCollider>();
         }
 
-        static void Banner(Transform parent, Vector3 pos, string key, float yaw)
-        {
-            var g = BlockoutKit.Group(parent, "Banner", pos, yaw);
-            BlockoutKit.Quad(g, "Cloth", Vector3.zero, new Vector2(1.4f, 2.6f), M.PropRedBright);
-            BlockoutKit.Sign(g, "Text", key, new Vector3(0f, -0.2f, -0.01f), 2.2f, M.Gold, null, false);
-        }
     }
 }

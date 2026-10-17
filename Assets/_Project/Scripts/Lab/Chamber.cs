@@ -16,6 +16,7 @@ namespace PlanErfuellt
         [SerializeField] AnimalVisuals henModel;
         [SerializeField] AnimalLabel label;
         [SerializeField] Light glowLight;
+        [SerializeField] ChamberDoors doors;
 
         readonly AnimalStats stats = new AnimalStats();
         AnimalVisuals model;
@@ -48,6 +49,9 @@ namespace PlanErfuellt
             glowLight = light;
         }
 
+        /// <summary>Hubtüren (Look-Pass). Ohne Türen läuft das Tier wie im Prototyp direkt durch.</summary>
+        public void SetDoors(ChamberDoors d) => doors = d;
+
         void Start()
         {
             cowModel.gameObject.SetActive(false);
@@ -63,6 +67,7 @@ namespace PlanErfuellt
             float dt = GM.Clock.DeltaTime;
             UpdateCleaning(dt);
             S.currentRate = 0f;
+            UpdateDoorWishes();
             if (dt <= 0f || State == AnimalState.Empty || model == null) return;
 
             var a = Cfg.animal;
@@ -70,11 +75,11 @@ namespace PlanErfuellt
             {
                 case AnimalState.Enter:
                     drop = Mathf.Max(0f, drop - dt * a.enterDropSpeed);
-                    x = Mathf.Min(CenterX, x + dt * a.enterSpeed);
+                    x = HoldAtDoor(x, Mathf.Min(CenterX, x + dt * a.enterSpeed), LeftDoorX, doors == null || doors.LeftOpen >= 1f);
                     if (x >= CenterX && drop <= 0f) SetState(AnimalState.Ok);
                     break;
                 case AnimalState.Exit:
-                    x += dt * a.exitSpeed;
+                    x = HoldAtDoor(x, x + dt * a.exitSpeed, RightDoorX, doors == null || doors.RightOpen >= 1f);
                     if (x >= ProcX - a.procStopBefore)
                     {
                         pop = Mathf.Max(0f, pop - dt * a.popOutSpeed);
@@ -98,6 +103,31 @@ namespace PlanErfuellt
             }
             if (State != AnimalState.Exit) pop = Mathf.Min(1f, pop + dt * a.popInSpeed);
             UpdateVisuals(dt);
+        }
+
+        // ---------- Hubtüren ----------
+
+        float DoorX => Cfg.layout.chamber.radius + Cfg.chamberDoors.radialOffset;
+        float LeftDoorX => CenterX - DoorX;
+        float RightDoorX => CenterX + DoorX;
+        float SizeK => model != null ? model.transform.localScale.x / (stats.kind == AnimalKind.Cow ? 1f : Cfg.animalVisuals.henScale) : 1f;
+        float WaitGap => (stats.kind == AnimalKind.Cow ? Cfg.chamberDoors.waitGapCow : Cfg.chamberDoors.waitGapHen) * SizeK;
+        float ClearGap => (stats.kind == AnimalKind.Cow ? Cfg.chamberDoors.clearGapCow : Cfg.chamberDoors.clearGapHen) * SizeK;
+
+        /// <summary>Links auf zum Einlass, rechts auf zum Auslass; zu, sobald das Tier ganz hindurch ist.</summary>
+        void UpdateDoorWishes()
+        {
+            if (doors == null) return;
+            doors.WantLeft = State == AnimalState.Enter && x < LeftDoorX + ClearGap;
+            doors.WantRight = State == AnimalState.Exit && x < RightDoorX + ClearGap;
+        }
+
+        /// <summary>Vor einer noch nicht ganz offenen Tür bleibt das Tier stehen; wer schon hindurch ist, läuft weiter.</summary>
+        float HoldAtDoor(float from, float to, float doorX, bool open)
+        {
+            if (open || from > doorX) return to;
+            float stop = doorX - WaitGap;
+            return from >= stop ? from : Mathf.Min(to, stop);
         }
 
         void UpdateLiving(float dt)
@@ -255,6 +285,7 @@ namespace PlanErfuellt
         {
             if (serumIndex < 0 || serumIndex >= S.serums.Count) return Feedback.Error("ui.errors.noSerum");
             if (State != AnimalState.Ok) return Feedback.Error("ui.errors.noAnimalReady");
+            if (doors != null && !doors.BothClosed) return Feedback.Error("ui.errors.doorsMoving");
             if (S.chamberCovered) return Feedback.Error("ui.errors.covered");
             if (S.blackoutTimer > 0f) return Feedback.Error("ui.errors.blackoutSpray");
             if (IsUltimate) return Feedback.Error("ui.errors.alreadyUltimate");

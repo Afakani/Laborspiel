@@ -86,3 +86,9 @@ Abweichungen von den Übergabedokumenten und eigene Festlegungen. Neueste unten.
 | L9 | Augenhöhe | Spieler-Augenhöhe bleibt 1,7 m. Die Vergleichsaufnahme mit Bild 08 entsteht mit 2,0 m, weil Bild 08 von etwas höher blickt. |
 | L10 | Kollider | Kammersockel endet bei 2,8 m (= `playerCollisionRadius` 3,1 minus Spielerradius 0,3), damit der Spieler nicht auf dem Ring steht. Über dem Schlauchbündel zwischen Pult und Kammer liegt ein eigener Box-Kollider (aus den Schlauch-Bounds berechnet). |
 | L11 | Layout-Test | `ConfigImportTests.Layout` erwartet jetzt Pult z −6,2 und `pultZone.absXMax` 2,6 (Werte aus L3). |
+| L12 | Tiermodelle | Kuh und Huhn werden per Editor-Skript aus Abstandsfeldern erzeugt (Surface Nets, weiche Vereinigung), kostenlos und ohne Fremd-Asset. Bewegliche Teile bleiben getrennt, damit `AnimalVisuals` unverändert bleibt. Kuh ca. 75 000, Huhn ca. 35 000 Vertices (sichtbar). |
+| L13 | Hubtüren | Neue Abschnitte `chamberDoors` (Zeiten, Maße, Wartabstände) in der Balancing-JSON. Gas (Sprühen) nur bei geschlossenen Türen; neuer Fehlertext `ui.errors.doorsMoving`. Ohne Türen-Komponente läuft die Kammer wie im Prototyp. |
+| L14 | Feuer | Neuer Abschnitt `chamberFire`. Das Feuer ist rein visuell und dauert `animal.destroySec` + `chamberFire.afterSec`; Ablauf und Werte der Vernichtung bleiben wie im Prototyp. |
+| L15 | Laken | Laken jetzt so hoch wie Kammer + Kopfring (statt fest 8,4 m) und mit Radius 3,05 m innerhalb des Spielerabstands; die Schleusen ragen heraus. |
+| L16 | Texturen | Zwei weitere CC0-Texturen von Poly Haven (`dark_wood`, `old_planks_02`) für Grammophon und Kisten. Kistenaufschriften als Texte (`ui.signs.crateA` usw.). |
+| L17 | Mesh-Überschreiben | Vorhandene Mesh-Assets werden über die Mesh-API überschrieben (`SdfMesher.CopyInto`), nicht mit `CopySerialized`, weil sonst die GPU-Daten veraltet bleiben (zerknitterte Tiere beim ersten Versuch). |

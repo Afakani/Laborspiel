@@ -222,6 +222,38 @@ namespace PlanErfuellt.EditorTools
             return Save(key, b);
         }
 
+        /// <summary>
+        /// Drehkörper um Y aus einem Profil (x = Radius, y = Höhe), weich schattiert. doubleSided für offene Schalen (Horn, Trichter).
+        /// </summary>
+        public static Mesh Lathe(string name, Vector2[] profile, int segments = 32, bool doubleSided = false)
+        {
+            string key = "Lathe_" + name;
+            var b = new MeshBuilder();
+            b.Lathe(profile, segments, false);
+            if (doubleSided) b.Lathe(profile, segments, true);
+            return Save(key, b, true);
+        }
+
+        /// <summary>Ringbogen von startDeg bis endDeg (gegen den Uhrzeigersinn von +X zu +Z) mit Stirnflächen.</summary>
+        public static Mesh RingArc(float innerRadius, float outerRadius, float height, float startDeg, float endDeg, int segments = 32)
+        {
+            string key = $"RingArc_{K(innerRadius)}_{K(outerRadius)}_{K(height)}_{K(startDeg)}_{K(endDeg)}_{segments}";
+            if (TryGet(key, out var mesh)) return mesh;
+            float a0 = startDeg * Mathf.Deg2Rad, a1 = endDeg * Mathf.Deg2Rad, h = height / 2f;
+            var b = new MeshBuilder();
+            b.Wall(outerRadius, outerRadius, -h, h, segments, true, a0, a1);
+            b.Wall(innerRadius, innerRadius, -h, h, segments, false, a0, a1);
+            b.Disc(outerRadius, innerRadius, h, segments, true, a0, a1);
+            b.Disc(outerRadius, innerRadius, -h, segments, false, a0, a1);
+            foreach (var (a, sign) in new[] { (a0, -1f), (a1, 1f) })
+            {
+                var dir = new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a));
+                var tangent = new Vector3(-dir.z, 0f, dir.x) * sign;
+                b.Quad(dir * innerRadius + Vector3.down * h, dir * (outerRadius - innerRadius), Vector3.up * height, tangent);
+            }
+            return Save(key, b);
+        }
+
         /// <summary>Röhre (Schlauch, Rohr) entlang einer Bézier-Kurve durch 4 Kontrollpunkte (lokal).</summary>
         public static Mesh Tube(string name, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float radius, int steps = 24, int sides = 10)
         {
@@ -254,7 +286,7 @@ namespace PlanErfuellt.EditorTools
             var existing = AssetDatabase.LoadAssetAtPath<Mesh>(path);
             if (existing != null && overwrite)
             {
-                EditorUtility.CopySerialized(mesh, existing);
+                SdfMesher.CopyInto(mesh, existing);
                 Object.DestroyImmediate(mesh);
                 mesh = existing;
             }
@@ -351,12 +383,12 @@ namespace PlanErfuellt.EditorTools
             }
 
             /// <summary>Zylindermantel; outward = Normale nach außen.</summary>
-            public void Wall(float r0, float r1, float y0, float y1, int seg, bool outward)
+            public void Wall(float r0, float r1, float y0, float y1, int seg, bool outward, float from = 0f, float to = Mathf.PI * 2f)
             {
                 int start = v.Count;
                 for (int s = 0; s <= seg; s++)
                 {
-                    float a = s / (float)seg * Mathf.PI * 2f;
+                    float a = Mathf.Lerp(from, to, s / (float)seg);
                     var dir = new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a));
                     var nn = outward ? dir : -dir;
                     v.Add(dir * r0 + Vector3.up * y0); n.Add(nn); uv.Add(new Vector2(a * r0, 0f));
@@ -371,13 +403,13 @@ namespace PlanErfuellt.EditorTools
             }
 
             /// <summary>Kreisscheibe bzw. Kreisring auf Höhe y, Normale nach oben (up) oder unten.</summary>
-            public void Disc(float rOut, float rIn, float y, int seg, bool up)
+            public void Disc(float rOut, float rIn, float y, int seg, bool up, float from = 0f, float to = Mathf.PI * 2f)
             {
                 int start = v.Count;
                 var nn = up ? Vector3.up : Vector3.down;
                 for (int s = 0; s <= seg; s++)
                 {
-                    float a = s / (float)seg * Mathf.PI * 2f;
+                    float a = Mathf.Lerp(from, to, s / (float)seg);
                     var dir = new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a));
                     var po = dir * rOut + Vector3.up * y;
                     var pi = dir * rIn + Vector3.up * y;
@@ -389,6 +421,36 @@ namespace PlanErfuellt.EditorTools
                     int i = start + s * 2;
                     if (up) t.AddRange(new[] { i, i + 1, i + 3, i, i + 3, i + 2 });
                     else t.AddRange(new[] { i, i + 3, i + 1, i, i + 2, i + 3 });
+                }
+            }
+
+            /// <summary>Drehkörper; inside = Innenseite (Normalen umgedreht).</summary>
+            public void Lathe(Vector2[] prof, int seg, bool inside)
+            {
+                int start = v.Count, rows = prof.Length;
+                float len = 0f;
+                for (int i = 0; i < rows; i++)
+                {
+                    if (i > 0) len += Vector2.Distance(prof[i], prof[i - 1]);
+                    var tan = (prof[Mathf.Min(i + 1, rows - 1)] - prof[Mathf.Max(i - 1, 0)]).normalized;
+                    var n2 = new Vector2(tan.y, -tan.x);
+                    for (int s = 0; s <= seg; s++)
+                    {
+                        float a = s / (float)seg * Mathf.PI * 2f;
+                        var dir = new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a));
+                        v.Add(dir * prof[i].x + Vector3.up * prof[i].y);
+                        var nn = (dir * n2.x + Vector3.up * n2.y).normalized;
+                        n.Add(inside ? -nn : nn);
+                        uv.Add(new Vector2(a * Mathf.Max(0.05f, prof[i].x), len));
+                    }
+                }
+                int row = seg + 1;
+                for (int i = 0; i < rows - 1; i++)
+                for (int s = 0; s < seg; s++)
+                {
+                    int a0 = start + i * row + s, b0 = a0 + row;
+                    if (inside) t.AddRange(new[] { a0, a0 + 1, b0, a0 + 1, b0 + 1, b0 });
+                    else t.AddRange(new[] { a0, b0, a0 + 1, a0 + 1, b0, b0 + 1 });
                 }
             }
 

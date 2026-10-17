@@ -57,7 +57,7 @@ namespace PlanErfuellt.EditorTools
             // Kammer
             var cowPrefab = AnimalBuilder.LoadOrBuild(AnimalBuilder.CowPath, rebuildPrefabs, AnimalBuilder.BuildCow);
             var henPrefab = AnimalBuilder.LoadOrBuild(AnimalBuilder.HenPath, rebuildPrefabs, AnimalBuilder.BuildHen);
-            var chamber = InstantiatePrefab("Chamber", rebuildPrefabs, () => LabChamberBuilder.Build(L, cfg.player.radius, cowPrefab, henPrefab), chamberRoot);
+            var chamber = InstantiatePrefab("Chamber", rebuildPrefabs, () => LabChamberBuilder.Build(L, cfg.chamberDoors, cfg.player.radius, cowPrefab, henPrefab), chamberRoot);
             chamber.transform.position = LayoutConfig.ToUnity(L.chamber.x, 0f, L.chamber.z);
             BuildZones(chamberRoot, L);
 
