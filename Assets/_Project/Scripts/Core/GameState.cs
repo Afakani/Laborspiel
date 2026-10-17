@@ -37,6 +37,8 @@ namespace PlanErfuellt
         public Dose? mixPending;
         /// <summary>Am Pult gewähltes Serum im Regal.</summary>
         public int selectedSerum;
+        /// <summary>Zuletzt gesprühtes Serum (für den Auto-Sprüher, GDD 6.10).</summary>
+        public Serum lastSprayed;
 
         // ---------- Labor ----------
         /// <summary>Kammer nach Explosion verseucht (GDD 5.4).</summary>
@@ -69,6 +71,11 @@ namespace PlanErfuellt
         public int totalDoses;
         public int machinesBuilt;
         public float earned;
+        /// <summary>Summe Tonnen × Qualität und gelieferte Tonnen (für die Durchschnittsqualität, GDD 7.7).</summary>
+        public float qualityTons;
+        public float deliveredTons;
+        /// <summary>Gesamtertrag aller Quellen in t/s (HUD).</summary>
+        public float currentRate;
 
         /// <summary>Neues Spiel mit den Startwerten aus der Config.</summary>
         public static GameState Create(GameConfig cfg)

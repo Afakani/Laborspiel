@@ -25,10 +25,27 @@ namespace PlanErfuellt
             holdTime = Cfg.interaction.hold.cloth;
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            EventBus.ClothChanged += OnClothChanged;
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            EventBus.ClothChanged -= OnClothChanged;
+        }
+
+        void OnClothChanged(bool covered)
+        {
+            if (clothVisual != null) clothVisual.SetActive(covered);
+        }
+
         public override void Execute()
         {
             State.chamberCovered = !State.chamberCovered;
-            if (clothVisual != null) clothVisual.SetActive(State.chamberCovered);
+            EventBus.RaiseClothChanged(State.chamberCovered);
             GM.Toast(State.chamberCovered ? "ui.toasts.clothOn" : "ui.toasts.clothOff", State.chamberCovered ? ToastKind.Good : ToastKind.Info);
         }
 

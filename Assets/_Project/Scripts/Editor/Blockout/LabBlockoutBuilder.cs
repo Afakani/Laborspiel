@@ -52,7 +52,9 @@ namespace PlanErfuellt.EditorTools
             LabLightingSetup.Build(env, L);
 
             // Kammer
-            var chamber = InstantiatePrefab("Chamber", rebuildPrefabs, () => LabChamberBuilder.Build(L, cfg.player.radius), chamberRoot);
+            var cowPrefab = AnimalBuilder.LoadOrBuild(AnimalBuilder.CowPath, rebuildPrefabs, AnimalBuilder.BuildCow);
+            var henPrefab = AnimalBuilder.LoadOrBuild(AnimalBuilder.HenPath, rebuildPrefabs, AnimalBuilder.BuildHen);
+            var chamber = InstantiatePrefab("Chamber", rebuildPrefabs, () => LabChamberBuilder.Build(L, cfg.player.radius, cowPrefab, henPrefab), chamberRoot);
             chamber.transform.position = LayoutConfig.ToUnity(L.chamber.x, 0f, L.chamber.z);
             BuildZones(chamberRoot, L);
 
@@ -125,10 +127,11 @@ namespace PlanErfuellt.EditorTools
             var start = cfg.layout.playerStart;
             player.transform.position = LayoutConfig.ToUnity(start.x, 0f, start.z);
 
-            var hud = InstantiateAt(HudBuilder.PrefabPath, rebuild, HudBuilder.Build, ui);
+            var hud = InstantiateAt(HudBuilder.PrefabPath, rebuild, () => HudBuilder.Build(cfg.animal.meterSegments), ui);
             PlayerBuilder.Set(hud.GetComponent<PromptUI>(), "source", player.GetComponent<InteractionSystem>());
             var chamber = Object.FindAnyObjectByType<Chamber>();
             PlayerBuilder.Set(hud.GetComponentInChildren<PanelControl>(true), "chamber", chamber);
+            PlayerBuilder.Set(hud.GetComponentInChildren<AnimalMeter>(true), "chamber", chamber);
 
             var es = new GameObject("EventSystem", typeof(UnityEngine.EventSystems.EventSystem), typeof(UnityEngine.InputSystem.UI.InputSystemUIInputModule));
             es.transform.SetParent(ui, false);

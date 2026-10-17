@@ -211,6 +211,29 @@ CLASSES = [
         F("float", "statusVitBad", "Stabilität, unter der die Vitallampe rot wird"),
         F("float", "panelRefreshSec", "Auffrischtakt offener Panels"),
         F("float", "leashMinFloat", "Anleinen erst ab dieser Schwebehöhe möglich")]),
+    ("AnimalConfig", "Tier in der Kammer: Bewegung, Eier, Schild, Meter (Prototyp updateSubject).", [
+        F("float", "standY"), F("float", "enterDropHeight"), F("float", "enterDropSpeed"), F("float", "enterSpeed"),
+        F("float", "exitSpeed"), F("float", "procStopBefore"), F("float", "popInSpeed"), F("float", "popOutSpeed"),
+        F("float", "destroySec"), F("float", "sinkSpeed"), F("float", "flyRiseSpeed"), F("float", "flyDriftSpeed"),
+        F("float", "flyGoneHeight"), F("float", "eggInterval"), F("float", "labelHeightCow"), F("float", "labelHeightHen"),
+        F("float", "meterRateMaxCow"), F("float", "meterRateMaxHen"), F("int", "meterSegments"),
+        F("float", "meterStabGood"), F("float", "meterStabMid"), F("float", "sprayToastBad"), F("float", "sprayToastWarn"),
+        F("float", "gasFlashSec")]),
+    ("AnimalVisualsConfig", "Sichtbare Mutation am Tier (GDD 5.5).", [
+        F("float", "growPerA"), F("float", "growCapA"), F("float", "kolossGrowExtra"), F("float", "kolossA"), F("float", "omegaB"),
+        F("float", "inflPerA"), F("float", "inflPerBOver2"), F("float", "inflBCap"), F("float", "inflSmoothing"),
+        F("float", "udderPerB"), F("float", "udderBCap"), F("float", "udderSmoothing"), F("float", "henScale"),
+        F("float", "glowFromInstab"), F("float", "glowFactor"), F("float", "glowOmega"), F("float", "glowSmoothing"),
+        F("float", "emissiveFactor"), F("float", "lightFactor"),
+        F("float", "legSwingFloatDeg"), F("float", "legSwingWalkDeg"), F("float", "legWalkFreq"), F("float", "legFloatFreq"),
+        F("float", "wobbleUnstableDeg"), F("float", "wobbleLowStabDeg"), F("float", "lowStabWobbleBelow"),
+        F("float", "floatBobAmp"), F("float", "floatRollDeg"), F("float", "floatBobFrom"),
+        F("float", "wingFlapFast"), F("float", "wingFlapSlow"), F("float", "wingFlapDeg"),
+        F("float", "floatRollFreq"), F("float", "floatBobFreq"), F("float", "wobbleUnstableFreq"), F("float", "wobbleLowStabFreq"),
+        F("float", "pulseBase"), F("float", "pulseAmp"), F("float", "pulseFreq"), F("float", "pulseHeatFreq"), F("float", "pulseUnstableFreq"),
+        F("string", "glowColor"), F("string", "heatColor"), F("string", "goldColor"), F("string", "spotColor"), F("string", "spotGlowColor"),
+        F("float", "spotGlowFactor"), F("float", "unstableHeatColorMix"), F("float", "lightOffsetY"), F("float", "lightOffsetZ"),
+        F("string", "funLabelColor"), F("float", "gasFlashAlpha"), F("float", "gasIdleAlpha")]),
 ]
 
 CS_KEYWORDS = {"base", "float", "string", "int"}

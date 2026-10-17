@@ -9,7 +9,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 | 2 | Labor-Blockout und Licht | fertig |
 | 3 | Spieler und Interaktion | fertig |
 | 4a | Kernkreislauf: Panels (Mischstation, Pult) | fertig |
-| 4b | Kernkreislauf: Tier, Produktion, Verarbeitung, HUD | offen |
+| 4b | Kernkreislauf: Tier, Produktion, Verarbeitung, HUD | fertig |
 | 5 | Risiken, Warnzeichen, Explosion, Infektion | offen |
 | 6 | Tagesablauf, Bestellung, Direktor | offen |
 | 7 | Kommissar und Laken | offen |
@@ -90,6 +90,21 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - Mischstation: Regler ziehen, MISCHEN, Fläschchen erscheinen im 3D-Regal. Pult: Fläschchen wählen, KLON (Hebel klappt). Leertaste/Esc schließen.
 - Das Probenmikroskop im Misch-Panel kommt laut Prompt in Phase 9.
 - Hinweis: Wird während des Play Mode neu kompiliert, wirft Unity NullReference-Fehler (Domain-Reload); einfach Play neu starten. Empfehlung: in den Unity-Einstellungen „Script Changes While Playing“ auf „Stop Playing and Recompile“ stellen.
+
+## Phase 4b – Tier, Produktion, Verarbeitung, HUD
+
+- [x] `AnimalStats` (Dosen, Ultimativ, Konzentration, Kryo-Bonus, Kuriosität, Siegel, Säure, Hitze, Schweben …) mit Werten über `Formula`
+- [x] `Chamber`: Zustände Empty → Enter (fällt aus der Klonanlage, läuft übers Band) → Ok ↔ Unstable (8-s-Countdown) → Exit (Verarbeitung) | Destroy (Not-Stopp) | Flying; Klonen, Sprühen (Dosen addieren, Entdeckung erst nach dem Sprühen, Kuriositäten, Ultimativ ersetzt alle Dosen), Verarbeitung → Fleisch, Gegenmittel ins Tier, Anleinen, Reinigen
+- [x] `Production.Deliver`: Bezahlung pro Tonne, Gesamtmengen, Durchschnittsqualität; Münzhuhn zahlt pro Ei; Milchhuhn liefert Milch
+- [x] Kuh- und Huhn-Prefabs (Platzhalter aus Grundkörpern, Maße wie Prototyp) mit `AnimalVisuals`: Wachsen, Aufblähen, Euter/Zusatz-Euter, Glühen (grün/rot/golden, pulsierend), Laufen, Schweben, Zittern, Flügelschlag; Glühlicht folgt dem Tier
+- [x] Schild über dem Tier (`AnimalLabel`): farbige Dosen bzw. Name, Status, GEPRÜFT-Stempel
+- [x] Gas in der Kammer leuchtet beim Sprühen in Serumfarbe auf (`ChamberGas`)
+- [x] HUD: obere Leiste (Marke, Kasse, Rate t/s, Tag, Plan), Lager-Chips (A/B/C/Gegenmittel/Seren), Tier-Meter Menge/Qualität/Stabilität mit 12 Segmenten
+- [x] Prompt-Test: Kuh mit 1-1-0 → Stabilität 62, Qualität 60, Rate 3,9 t/s; Verarbeitung 10,8 t Fleisch
+- [x] Tests 59 grün; Play-Test Kuh/Huhn/Not-Stopp/Gegenmittel/Instabil; Screenshots `Docs/Screenshots/Phase4b_*.png`
+
+### Bewusst auf Phase 5 verschoben
+- Risiken (Hitze, Säure, Schweben, Bandriss, Stromausfall), Warnzeichen, volle Explosion (VFX, Wut, Parteikontrolle, Infektion), Mut-Bonus/Explosion in der Verarbeitung. Die Explosion nach dem Countdown verseucht derzeit nur die Kammer.
 
 ### Offen / Hinweise für spätere Phasen
 - Rechts überlappen sich aus manchen Blickwinkeln die Schilder von Verarbeitung, Zentrifuge und Kryokammer; Höhen in Phase 11 nachjustieren.

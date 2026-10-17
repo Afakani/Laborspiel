@@ -18,7 +18,9 @@ namespace PlanErfuellt.EditorTools
         static readonly Color Cream = new Color(0.96f, 0.93f, 0.82f);
         static readonly Color Gold = new Color(1f, 0.82f, 0.29f);
 
-        public static GameObject Build()
+        public static GameObject Build() => Build(12);
+
+        public static GameObject Build(int segments)
         {
             font = FontAssetCreator.Ensure($"{BlockoutKit.FontDir}/Oswald/Oswald-Bold.ttf", $"{BlockoutKit.FontDir}/Oswald/Oswald-Bold SDF.asset");
 
@@ -75,6 +77,9 @@ namespace PlanErfuellt.EditorTools
             var toastUi = root.AddComponent<ToastUI>();
             PlayerBuilder.Set(toastUi, "container", toastArea);
             PlayerBuilder.Set(toastUi, "template", template);
+
+            // Kasse, Lager-Chips, Tier-Meter (Phase 4b)
+            HudStatusBuilder.Build(root.transform, segments);
 
             // Panels (Mischstation, Pult) unter dem Pause-Overlay
             PanelUiBuilder.BuildMixing(root.transform);

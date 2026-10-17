@@ -38,6 +38,8 @@ namespace PlanErfuellt
         public InteractionConfig interaction = new InteractionConfig();
         public UiConfig ui = new UiConfig();
         public PultConfig pult = new PultConfig();
+        public AnimalConfig animal = new AnimalConfig();
+        public AnimalVisualsConfig animalVisuals = new AnimalVisualsConfig();
 
         // Diese Teile sind in der JSON als Objekte mit Schlüsseln abgelegt und werden vom Importer gesondert übertragen.
         [JsonIgnore] public List<UltimateSerum> ultimates = new List<UltimateSerum>();

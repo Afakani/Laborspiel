@@ -1,46 +1,227 @@
+using System.Globalization;
 using UnityEngine;
 
 namespace PlanErfuellt
 {
     /// <summary>
-    /// Kammer B-12: Schnittstelle für alle Pult-Aktionen (GDD 6.1) und Statuslampen.
-    /// Phase 4a: Prüfungen und Meldungen wie im Prototyp, Reinigung funktioniert;
-    /// das Tier selbst (Klonen, Sprühen, Produktion, Verarbeitung) folgt in Phase 4b.
+    /// Kammer B-12 mit dem Tier (GDD 5, Prototyp updateSubject/cloneAnimal/applySerum/finishProc).
+    /// Zustände: Empty → Enter → Ok ↔ Unstable → Exit | Destroy | Flying → Empty.
+    /// Risiken (Hitze, Säure, Schweben, Bandriss, Stromausfall) und die volle Explosion folgen in Phase 5.
     /// </summary>
     public class Chamber : MonoBehaviour
     {
+        static readonly CultureInfo German = CultureInfo.GetCultureInfo("de-DE");
+
+        [SerializeField] AnimalVisuals cowModel;
+        [SerializeField] AnimalVisuals henModel;
+        [SerializeField] AnimalLabel label;
+        [SerializeField] Light glowLight;
+
+        readonly AnimalStats stats = new AnimalStats();
+        AnimalVisuals model;
+        float x, drop, pop = 1f, sink, destroyTimer;
+
         GameManager GM => GameManager.Instance;
         GameState S => GM.State;
         GameConfig Cfg => GM.Config;
 
-        // ---------- Tierzustand (Phase 4b füllt diese Werte) ----------
+        // ---------- Zustand nach außen ----------
         public AnimalState State { get; private set; } = AnimalState.Empty;
-        public AnimalKind Kind { get; private set; }
+        public AnimalKind Kind => stats.kind;
         public int ExperimentNo { get; private set; }
-        public float Stability { get; private set; } = 100f;
-        public float UnstableTimer { get; private set; }
-        public float Heat { get; private set; }
-        public float FloatHeight { get; private set; }
-        public bool InCrisis { get; private set; }
-        public bool IsUltimate { get; private set; }
-
+        public float Stability => stats.stability;
+        public float UnstableTimer => stats.unstableTimer;
+        public float Heat => stats.heat;
+        public float FloatHeight => stats.floatHeight;
+        public bool InCrisis => stats.crisis != CrisisKind.None;
+        public bool IsUltimate => stats.IsUltimate;
+        public AnimalStats Stats => stats;
         public bool HasLivingAnimal => State == AnimalState.Ok || State == AnimalState.Unstable;
+        /// <summary>Lebt ein mutiertes Tier in der Kammer (für Parteikontrolle, Kommissar)?</summary>
+        public bool HasMutatedAnimal => HasLivingAnimal && stats.IsMutated;
+
+        public void SetModels(AnimalVisuals cow, AnimalVisuals hen, AnimalLabel lbl, Light light)
+        {
+            cowModel = cow;
+            henModel = hen;
+            label = lbl;
+            glowLight = light;
+        }
+
+        void Start()
+        {
+            cowModel.gameObject.SetActive(false);
+            henModel.gameObject.SetActive(false);
+            label.Show(false);
+            glowLight.intensity = 0f;
+        }
+
+        // ---------- Ablauf ----------
 
         void Update()
         {
-            if (S.cleanTimer > 0f)
+            float dt = GM.Clock.DeltaTime;
+            UpdateCleaning(dt);
+            S.currentRate = 0f;
+            if (dt <= 0f || State == AnimalState.Empty || model == null) return;
+
+            var a = Cfg.animal;
+            switch (State)
             {
-                S.cleanTimer -= GM.Clock.DeltaTime;
-                if (S.cleanTimer <= 0f)
+                case AnimalState.Enter:
+                    drop = Mathf.Max(0f, drop - dt * a.enterDropSpeed);
+                    x = Mathf.Min(CenterX, x + dt * a.enterSpeed);
+                    if (x >= CenterX && drop <= 0f) SetState(AnimalState.Ok);
+                    break;
+                case AnimalState.Exit:
+                    x += dt * a.exitSpeed;
+                    if (x >= ProcX - a.procStopBefore)
+                    {
+                        pop = Mathf.Max(0f, pop - dt * a.popOutSpeed);
+                        if (pop <= 0.03f) { FinishProcessing(); return; }
+                    }
+                    break;
+                case AnimalState.Destroy:
+                    destroyTimer -= dt;
+                    sink += dt * a.sinkSpeed;
+                    if (destroyTimer <= 0f) { Empty(); return; }
+                    break;
+                case AnimalState.Flying:
+                    stats.floatHeight += a.flyRiseSpeed * dt;
+                    x += a.flyDriftSpeed * dt;
+                    if (stats.floatHeight > a.flyGoneHeight) { Empty(); return; }
+                    break;
+                default:
+                    UpdateLiving(dt);
+                    if (State == AnimalState.Empty) return;
+                    break;
+            }
+            if (State != AnimalState.Exit) pop = Mathf.Min(1f, pop + dt * a.popInSpeed);
+            UpdateVisuals(dt);
+        }
+
+        void UpdateLiving(float dt)
+        {
+            bool music = false; // Grammophon folgt in Phase 9
+            float s0 = stats.BaseStability(music, Cfg);
+            stats.stability = Mathf.Clamp(s0 - stats.heat * Cfg.risks.heatStabPenalty, 0f, Cfg.formulas.statMax);
+            stats.minStability = Mathf.Min(stats.minStability, stats.stability);
+
+            if (State == AnimalState.Ok && (stats.stability <= 0f || stats.heat >= Cfg.risks.heatUnstable))
+            {
+                stats.unstableTimer = Cfg.risks.unstableCountdownSec;
+                SetState(AnimalState.Unstable);
+                GM.Toast("ui.toasts.unstable", ToastKind.Bad);
+            }
+
+            if (State == AnimalState.Unstable)
+            {
+                stats.unstableTimer -= dt;
+                stats.currentRate = 0f;
+                if (stats.unstableTimer <= 0f) Explode();
+                return;
+            }
+
+            float rate = stats.Rate(S.blackoutTimer > 0f, Cfg);
+            stats.currentRate = rate;
+            stats.maxRate = Mathf.Max(stats.maxRate, rate);
+            S.currentRate = rate;
+            Production.Deliver(S, Cfg, stats.Produces(Cfg), rate * dt, stats.Quality(Cfg));
+
+            // Eier zählen (Münzhuhn: Stalinmünzen pro Ei)
+            if (stats.kind == AnimalKind.Hen && stats.Produces(Cfg) != Cfg.animals.cow.produces[0])
+            {
+                stats.eggTimer -= dt * rate;
+                if (stats.eggTimer <= 0f)
                 {
-                    S.cleanTimer = 0f;
-                    S.contaminated = false;
-                    GM.Toast("ui.toasts.cleaned", ToastKind.Good);
+                    stats.eggTimer = Cfg.animal.eggInterval;
+                    if (stats.fun != null && stats.fun.coinsPerEgg > 0f) S.AddMoney(stats.fun.coinsPerEgg);
                 }
             }
         }
 
-        // ---------- Aktionen ----------
+        void UpdateCleaning(float dt)
+        {
+            if (S.cleanTimer <= 0f) return;
+            S.cleanTimer -= dt;
+            if (S.cleanTimer > 0f) return;
+            S.cleanTimer = 0f;
+            S.contaminated = false;
+            GM.Toast("ui.toasts.cleaned", ToastKind.Good);
+        }
+
+        void UpdateVisuals(float dt)
+        {
+            var a = Cfg.animal;
+            var v = Cfg.animalVisuals;
+            float t = GM.Clock.Time;
+            bool walk = State == AnimalState.Enter || State == AnimalState.Exit;
+            model.Apply(stats, State, walk, pop, dt, t, Cfg);
+
+            float bob = stats.floatHeight > v.floatBobFrom ? v.floatBobAmp * Mathf.Sin(t * v.floatBobFreq) : 0f;
+            float y = a.standY + stats.floatHeight + bob + (State == AnimalState.Enter ? drop : 0f) - (State == AnimalState.Destroy ? sink : 0f);
+            model.transform.localPosition = new Vector3(x - CenterX, y, 0f);
+
+            glowLight.color = model.GlowColor;
+            glowLight.intensity = model.Glow * v.lightFactor * model.Pulse;
+            glowLight.transform.localPosition = new Vector3(x - CenterX, y + v.lightOffsetY, v.lightOffsetZ);
+
+            UpdateLabel(y);
+        }
+
+        void UpdateLabel(float y)
+        {
+            var a = Cfg.animal;
+            var t = GM.Texts;
+            bool visible = State != AnimalState.Destroy && State != AnimalState.Flying && !(S.chamberCovered && Mathf.Abs(x - CenterX) < Cfg.layout.chamber.radius);
+            label.Show(visible);
+            if (!visible) return;
+
+            float grow = model.transform.localScale.y / (stats.kind == AnimalKind.Cow ? 1f : Cfg.animalVisuals.henScale);
+            label.transform.localPosition = new Vector3(x - CenterX, y + (stats.kind == AnimalKind.Cow ? a.labelHeightCow : a.labelHeightHen) * grow, 0f);
+
+            bool unstable = State == AnimalState.Unstable;
+            int stab = Formula.RoundHalfUp(stats.stability);
+            int sec = Mathf.CeilToInt(stats.unstableTimer);
+            string key = $"{stats.kind}|{stats.dose.Key}|{stats.ultimate?.id}|{stats.fun?.id}|{stats.stamped}|{State}|{stats.crisis}|{stab / 5}|{(unstable ? sec : 0)}";
+
+            string top;
+            Color topColor = Color.white;
+            Color? frame = null;
+            if (stats.IsUltimate)
+            {
+                top = stats.ultimate.displayName;
+                topColor = stats.ultimate.Color;
+                frame = topColor;
+            }
+            else if (stats.fun != null)
+            {
+                top = stats.fun.displayName;
+                ColorUtility.TryParseHtmlString(Cfg.animalVisuals.funLabelColor, out topColor);
+            }
+            else top = DoseLine(stats.dose);
+
+            string status = unstable ? t.Format("ui.animalLabel.unstable", ("sec", sec))
+                : stats.crisis == CrisisKind.Overheat ? t.Get("ui.animalLabel.overheated")
+                : stats.crisis == CrisisKind.Acid ? t.Get("ui.animalLabel.acid")
+                : stats.crisis == CrisisKind.Escape ? t.Get("ui.animalLabel.escape")
+                : t.Format("ui.animalLabel.stability", ("n", stab));
+            label.Set(key, top, topColor, status, unstable || stats.crisis != CrisisKind.None, frame, stats.stamped, t.Get("ui.animalLabel.stamp"));
+        }
+
+        string DoseLine(Dose d)
+        {
+            var t = GM.Texts;
+            var parts = new string[3];
+            for (int i = 0; i < 3; i++)
+            {
+                var sub = Cfg.substances[i];
+                parts[i] = t.Format("ui.animalLabel.dose", ("color", sub.color.TrimStart('#')), ("id", sub.id), ("n", d[i]));
+            }
+            return string.Join("  ", parts);
+        }
+
+        // ---------- Aktionen am Pult ----------
 
         public Feedback Clone(AnimalKind kind)
         {
@@ -48,8 +229,25 @@ namespace PlanErfuellt
             if (S.beltBroken) return Feedback.Error("ui.errors.beltBrokenRepair");
             if (S.contaminated) return Feedback.Error("ui.errors.contaminated");
             if (S.blackoutTimer > 0f) return Feedback.Error("ui.errors.blackoutClone");
+
+            stats.Reset(Cfg.animal.eggInterval);
+            stats.kind = kind;
+            model = kind == AnimalKind.Cow ? cowModel : henModel;
+            cowModel.gameObject.SetActive(kind == AnimalKind.Cow);
+            henModel.gameObject.SetActive(kind == AnimalKind.Hen);
+            model.ResetLook();
+            x = CloneX;
+            pop = 0f;
+            drop = Cfg.animal.enterDropHeight;
+            sink = 0f;
+            S.experiments++;
+            ExperimentNo = S.experiments;
+            SetState(AnimalState.Enter);
             EventBus.RaiseLeverPulled(1);
-            Placeholder();
+            GM.Toast("ui.toasts.cloned", ToastKind.Good,
+                ("kind", GM.Texts.Get(kind == AnimalKind.Cow ? "ui.common.kindCow" : "ui.common.kindHen")),
+                ("id", GM.Texts.Format("ui.common.animalId", ("n", ExperimentNo.ToString("00")))));
+            UpdateVisuals(0f);
             return Feedback.Ok;
         }
 
@@ -60,8 +258,51 @@ namespace PlanErfuellt
             if (S.chamberCovered) return Feedback.Error("ui.errors.covered");
             if (S.blackoutTimer > 0f) return Feedback.Error("ui.errors.blackoutSpray");
             if (IsUltimate) return Feedback.Error("ui.errors.alreadyUltimate");
+
+            var serum = S.serums[serumIndex];
+            S.serums.RemoveAt(serumIndex);
+            S.selectedSerum = Mathf.Min(S.selectedSerum, Mathf.Max(0, S.serums.Count - 1));
+            S.lastSprayed = serum;
             EventBus.RaiseLeverPulled(0);
-            Placeholder();
+            EventBus.RaiseSerumSprayed(SerumTexts.Color(serum, Cfg));
+
+            if (serum.IsUltimate)
+            {
+                var u = Cfg.UltimateById(serum.ultimateId);
+                var kind = stats.kind;
+                stats.Reset(Cfg.animal.eggInterval);
+                stats.kind = kind;
+                stats.ultimate = u;
+                stats.dose = u.Recipe;
+                S.discoveredRecipes.Add(SerumTexts.RecipeKey(serum));
+                GM.Toast("ui.toasts.ultimate", ToastKind.Good, ("name", u.displayName));
+                S.ultimateSeen = true; // Zwischensequenz folgt in Phase 8
+            }
+            else
+            {
+                stats.dose += serum.dose;
+                if (serum.IsConcentrated) stats.conc = Mathf.Max(stats.conc, serum.conc);
+                if (serum.frozen) stats.stabBonus += Cfg.formulas.frozenStabBonus;
+
+                var fun = Cfg.FunRecipeFor(stats.kind, stats.dose);
+                var before = stats.fun;
+                stats.fun = fun;
+                if (fun != null && fun != before)
+                {
+                    S.foundFunRecipes.Add(fun.id);
+                    GM.Toast("ui.toasts.curiosity", ToastKind.Good, ("name", fun.displayName), ("pro", fun.pros.Length > 0 ? fun.pros[0] : ""));
+                }
+
+                string key = serum.dose.Key;
+                bool first = S.discoveredRecipes.Add(key);
+                float stab = Formula.Stability(stats.dose, Cfg);
+                var a = Cfg.animal;
+                var kindToast = stab < a.sprayToastBad ? ToastKind.Bad : stab < a.sprayToastWarn ? ToastKind.Warn : ToastKind.Good;
+                GM.Toast(first ? "ui.toasts.sprayGasNew" : "ui.toasts.sprayGas", kindToast,
+                    ("name", Formula.ComboName(serum.dose, Cfg, GM.Texts)), ("stab", Formula.RoundHalfUp(stab)));
+            }
+            S.totalDoses += serum.dose.Total;
+            EventBus.RaiseSerumRackChanged();
             return Feedback.Ok;
         }
 
@@ -70,15 +311,34 @@ namespace PlanErfuellt
             if (!HasLivingAnimal) return Feedback.Error("ui.errors.noProcAnimal");
             if (S.beltBroken) return Feedback.Error("ui.errors.beltBroken");
             if (S.blackoutTimer > 0f) return Feedback.Error("ui.errors.blackoutBelt");
+            stats.brave = State == AnimalState.Unstable || stats.minStability < Cfg.processing.braveMinStab;
+            if (stats.brave) GM.Toast("ui.toasts.braveStart", ToastKind.Warn);
+            SetState(AnimalState.Exit);
             EventBus.RaiseLeverPulled(2);
-            Placeholder();
             return Feedback.Ok;
+        }
+
+        void FinishProcessing()
+        {
+            float meat = stats.Meat(Cfg);
+            // Mut-Bonus und Explosion in der Verarbeitung folgen mit den Risiken in Phase 5
+            Production.Deliver(S, Cfg, 'f', meat, stats.Quality(Cfg));
+            GM.Toast("ui.toasts.processed", ToastKind.Good, ("n", meat.ToString("0.0", German)));
+            if (stats.ultimate != null && stats.ultimate.id == "koloss" && Random.value < Cfg.processing.kolossBeltBreakChance)
+            {
+                S.beltBroken = true;
+                GM.Toast("ui.toasts.kolossBelt", ToastKind.Bad);
+            }
+            Empty();
         }
 
         public Feedback NotStop()
         {
             if (!HasLivingAnimal) return Feedback.Error("ui.errors.noAnimal");
-            Placeholder();
+            destroyTimer = Cfg.animal.destroySec;
+            sink = 0f;
+            SetState(AnimalState.Destroy);
+            GM.Toast("ui.toasts.notStop", ToastKind.Warn);
             return Feedback.Ok;
         }
 
@@ -86,13 +346,23 @@ namespace PlanErfuellt
         {
             if (!HasLivingAnimal) return Feedback.Error("ui.errors.noAnimal");
             if (S.antidote <= 0) return Feedback.Error("ui.errors.noAntidote");
-            Placeholder();
+            S.antidote--;
+            S.NotifyInventoryChanged();
+            var kind = stats.kind;
+            stats.Reset(Cfg.animal.eggInterval);
+            stats.kind = kind;
+            SetState(AnimalState.Ok);
+            GM.Toast("ui.toasts.antidoteAnimal", ToastKind.Good);
             return Feedback.Ok;
         }
 
         public Feedback Leash()
         {
-            if (HasLivingAnimal && FloatHeight > Cfg.pult.leashMinFloat) Placeholder();
+            if (HasLivingAnimal && stats.floatHeight > Cfg.pult.leashMinFloat)
+            {
+                stats.floatHeight = Cfg.risks.leashTo;
+                GM.Toast("ui.toasts.leashed", ToastKind.Good);
+            }
             return Feedback.Ok;
         }
 
@@ -106,6 +376,48 @@ namespace PlanErfuellt
             return Feedback.Ok;
         }
 
+        /// <summary>Explosion (GDD 5.4). Phase 4b: Kammer verseucht, Tier weg; Effekte, Wut, Kontrolle, Infektion folgen in Phase 5.</summary>
+        public void Explode()
+        {
+            S.explosions++;
+            S.contaminated = true;
+            if (S.chamberCovered)
+            {
+                S.chamberCovered = false;
+                EventBus.RaiseClothChanged(false);
+                GM.Toast("ui.toasts.clothTorn", ToastKind.Bad);
+            }
+            GM.Toast("ui.toasts.explosion", ToastKind.Bad);
+            EventBus.RaiseExplosion();
+            Empty();
+        }
+
+        /// <summary>Tier schwebt davon (GDD 5.2), ausgelöst durch die Risiken in Phase 5.</summary>
+        public void FlyAway()
+        {
+            S.AddMoney(-Cfg.risks.escapeCost);
+            GM.Toast("ui.toasts.flyAway", ToastKind.Bad, ("money", GM.Texts.Format("ui.common.money", ("n", Cfg.risks.escapeCost))));
+            SetState(AnimalState.Flying);
+        }
+
+        void Empty()
+        {
+            SetState(AnimalState.Empty);
+            stats.Reset(Cfg.animal.eggInterval);
+            cowModel.gameObject.SetActive(false);
+            henModel.gameObject.SetActive(false);
+            model = null;
+            label.Show(false);
+            glowLight.intensity = 0f;
+        }
+
+        void SetState(AnimalState s)
+        {
+            if (State == s) return;
+            State = s;
+            EventBus.RaiseAnimalStateChanged(s);
+        }
+
         // ---------- Statuslampen (Prototyp statusState) ----------
 
         public LampState GasLamp => S.blackoutTimer > 0f ? LampState.Bad : S.contaminated ? LampState.Warn : LampState.Ok;
@@ -117,6 +429,8 @@ namespace PlanErfuellt
             : Stability < Cfg.risks.activeBelowStab || InCrisis ? LampState.Warn
             : LampState.Ok;
 
-        void Placeholder() => GM.Toast("ui.toasts.placeholder", ToastKind.Info, ("name", GM.Texts.Get("ui.names.chamber")), ("phase", "4b"));
+        float CenterX => Cfg.layout.chamber.x;
+        float CloneX => Cfg.layout.Station("clone").x;
+        float ProcX => Cfg.layout.Station("processing").x;
     }
 }

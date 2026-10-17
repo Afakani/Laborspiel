@@ -65,4 +65,8 @@ Abweichungen von den Übergabedokumenten und eigene Festlegungen. Neueste unten.
 | D33 | Kammer-Schnittstelle | `Chamber` ist ab 4a die Schnittstelle des Pults; in 4b kommt das Tier dazu, ohne dass sich das Panel ändern muss. |
 | D34 | Neue Werte | `mixing.stirSpeedDeg`, `mixing.centrifugedColor`, Abschnitt `pult` (Reinigungsdauer, Hebelanimation, Lampenschwellen, Anleinen ab Schwebehöhe 0,5, Auffrischtakt). `interaction.hold.clean` entfernt, weil die 3 s eine Reinigungsdauer sind, keine Haltezeit. |
 | D35 | Probenmikroskop | Wie im Prompt-Plan erst in Phase 9, obwohl GDD 6.2 es im Misch-Panel beschreibt. `Formula.Probe` und Texte sind schon vorhanden. |
+| D36 | Tier (Phase 4b) | Eine Kammer mit wiederverwendeten Kuh- und Huhn-Modellen (wie Prototyp), keine Instanzen pro Klon. Bewegungs- und Optikwerte in `animal` und `animalVisuals` der Balancing-JSON. |
+| D37 | Bezahlung | Produktion bezahlt sofort pro Tonne (`day.payPerTon`). Übererfüllung, Quote, Aufträge und Wünsche kommen in Phase 6 in `Production.Deliver` dazu. |
+| D38 | Rezept-Ids | Sonderfälle werden über die Ids aus der JSON erkannt (`omega`, `koloss`, `milkhen`) wie im Prototyp. |
+| D39 | Instabil in 4b | Ein Tier wird INSTABIL, sobald die Formel-Stabilität 0 erreicht (z. B. 2-3-1); nach 8 s explodiert es vereinfacht (Kammer verseucht). Die volle Explosion folgt in Phase 5. |
 | D14 | Vorlagen entfernt | Mobile-Quality-Stufe samt `Mobile_RPAsset`/`Mobile_Renderer`, `SampleScene`, `SampleSceneProfile`, `TutorialInfo`, `Readme` gelöscht. `InputSystem_Actions.inputactions` bleibt bis Phase 3 liegen. |

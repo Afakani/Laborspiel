@@ -24,6 +24,9 @@ namespace PlanErfuellt
         public static event Action PanelCloseRequested;
         public static event Action<string> PanelRequested;
         public static event Action<int> LeverPulled;
+        public static event Action<char, float> Delivered;
+        public static event Action<Color> SerumSprayed;
+        public static event Action<bool> ClothChanged;
 
         public static void RaiseMoneyChanged(float money) => MoneyChanged?.Invoke(money);
         public static void RaiseInventoryChanged() => InventoryChanged?.Invoke();
@@ -43,6 +46,12 @@ namespace PlanErfuellt
         public static void RaisePanelRequested(string id) => PanelRequested?.Invoke(id);
         /// <summary>Hebel am Pult: 0 = GAS, 1 = KLON, 2 = FÖRDERBAND.</summary>
         public static void RaiseLeverPulled(int lever) => LeverPulled?.Invoke(lever);
+        /// <summary>Ware geliefert ('m', 'e', 'f') in Tonnen.</summary>
+        public static void RaiseDelivered(char good, float tons) => Delivered?.Invoke(good, tons);
+        /// <summary>Serum wurde in die Kammer gesprüht (Farbe für Gas und Düsen).</summary>
+        public static void RaiseSerumSprayed(Color c) => SerumSprayed?.Invoke(c);
+        /// <summary>Laken liegt jetzt auf (true) oder ist weg (false).</summary>
+        public static void RaiseClothChanged(bool covered) => ClothChanged?.Invoke(covered);
 
         /// <summary>Alle Abonnenten entfernen (bei Play-Start ohne Domain-Reload).</summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -64,6 +73,9 @@ namespace PlanErfuellt
             PanelCloseRequested = null;
             PanelRequested = null;
             LeverPulled = null;
+            Delivered = null;
+            SerumSprayed = null;
+            ClothChanged = null;
         }
     }
 }
