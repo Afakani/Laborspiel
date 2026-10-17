@@ -70,3 +70,17 @@ Abweichungen von den Übergabedokumenten und eigene Festlegungen. Neueste unten.
 | D38 | Rezept-Ids | Sonderfälle werden über die Ids aus der JSON erkannt (`omega`, `koloss`, `milkhen`) wie im Prototyp. |
 | D39 | Instabil in 4b | Ein Tier wird INSTABIL, sobald die Formel-Stabilität 0 erreicht (z. B. 2-3-1); nach 8 s explodiert es vereinfacht (Kammer verseucht). Die volle Explosion folgt in Phase 5. |
 | D14 | Vorlagen entfernt | Mobile-Quality-Stufe samt `Mobile_RPAsset`/`Mobile_Renderer`, `SampleScene`, `SampleSceneProfile`, `TutorialInfo`, `Readme` gelöscht. `InputSystem_Actions.inputactions` bleibt bis Phase 3 liegen. |
+
+## Look-Development (2026-10-17)
+
+| Nr. | Thema | Entscheidung |
+|---|---|---|
+| L1 | Quellen | Texturen kostenlos von Poly Haven (CC0), Emblem, Direktor, Plantafel, Etiketten und Verläufe selbst erzeugt (`Tools/gen_lookdev_textures.py`). Modelle aus eigenen Meshes per Editor-Skript. Keine Unity-AI-Generierung (kostet Credits). |
+| L2 | Kammerhöhe | `layout.chamber.height` von 8,3 m auf 4,5 m gesenkt (GDD: 8,3), damit Kopfring und „B-12“ wie in Bild 08 im Bild sind. Vom Auftraggeber freigegeben. |
+| L3 | Pult-Position | Pult näher an der Kammer (`z` 6,2), `pultZone` angepasst (z 5,0–8,4, |x| bis 2,6). |
+| L4 | Wandtafeln | TV (x 7,4, y 5,9), Plantafel (x 7,4, y 3,35) und Wutskala (x 3,95, y 5,9) an die Wand hinter der Kammer rechts versetzt, wie in Bild 08. Alte kleine Banner und der Wand-Slogan hinter der Kammer entfallen zugunsten hoher Banner. |
+| L5 | Sichtfeld | `player.fov` 60 (vorher 66, kurz 50). Kommt Bild 08 am nächsten. |
+| L6 | Volumetrik | Das MIT-Paket „URP Volumetric Fog“ wurde getestet und wieder entfernt: Mit URP 17.6 streuen nur das Hauptlicht (in der geschlossenen Halle im Schatten), nicht die Düsen-Spots. Stattdessen eigener Lichtkegel-Shader (`LightShaft`) plus Nebel- und Dunstpartikel. Billiger und für 60 FPS sicher. |
+| L7 | Echtzeitlichter | In der Kammer 3 grüne Düsen-Spots ohne Schatten, dazu Kammerlicht, Tierglühen und TV-Licht. Das sind mehr als „max. 4“ aus der Art Direction, aber ohne Schatten und mit kleiner Reichweite (Forward+). Wird in Phase 12 gemessen. |
+| L8 | Wandlampen | 5 zusätzliche gebackene Punktlichter an den Wandlampen; kosten zur Laufzeit nichts. |
+| L9 | Augenhöhe | Spieler-Augenhöhe bleibt 1,7 m. Die Vergleichsaufnahme mit Bild 08 entsteht mit 2,0 m, weil Bild 08 von etwas höher blickt. |

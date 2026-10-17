@@ -18,7 +18,8 @@ namespace PlanErfuellt.EditorTools
             float depth = zFront - zBack, zMid = (zFront + zBack) * 0.5f;
 
             var shell = BlockoutKit.Group(root, "Shell", Vector3.zero);
-            BlockoutKit.Box(shell, "Floor", new Vector3(0f, -0.1f, zMid), new Vector3(2f * x + t, 0.2f, depth + t), M.Concrete);
+            var floorSize = new Vector3(2f * x + t, 0.2f, depth + t);
+            Retexture(BlockoutKit.Box(shell, "Floor", new Vector3(0f, -0.1f, zMid), floorSize, M.Concrete), floorSize, LookDevMaterials.FloorConcrete);
             var ceil = BlockoutKit.Box(shell, "Ceiling", new Vector3(0f, h + 0.1f, zMid), new Vector3(2f * x + t, 0.2f, depth + t), M.Ceiling);
             BlockoutKit.CastShadows(ceil, false);
 
@@ -40,7 +41,7 @@ namespace PlanErfuellt.EditorTools
         /// <summary>Wand mit dunklerem Sockel (Fliesen) auf der Raumseite.</summary>
         static void Wall(Transform parent, string name, Vector3 center, Vector3 size, Vector3 inward)
         {
-            var w = BlockoutKit.Box(parent, name, center, size, M.WallUpper);
+            var w = Retexture(BlockoutKit.Box(parent, name, center, size, M.WallUpper), size, LookDevMaterials.WallConcrete);
             w.isStatic = true;
             BlockoutKit.CastShadows(w, true);
             const float wainscot = 2.2f, inset = 0.03f;
@@ -48,7 +49,18 @@ namespace PlanErfuellt.EditorTools
             var lowerSize = new Vector3(Mathf.Abs(inward.x) > 0 ? inset : s.x, wainscot, Mathf.Abs(inward.z) > 0 ? inset : s.z);
             var halfThick = Vector3.Scale(size * 0.5f, new Vector3(Mathf.Abs(inward.x), 0f, Mathf.Abs(inward.z)));
             var lowerCenter = new Vector3(center.x, wainscot * 0.5f, center.z) + Vector3.Scale(inward, halfThick) + inward * inset * 0.5f;
-            BlockoutKit.Box(parent, name + "_Sockel", lowerCenter, lowerSize, M.WallLower);
+            Retexture(BlockoutKit.Box(parent, name + "_Sockel", lowerCenter, lowerSize, M.WallLower), lowerSize, LookDevMaterials.WallPanel);
+        }
+
+        /// <summary>Ersetzt den Einheitswürfel durch ein Mesh mit Welt-UVs (Texturen kacheln in Metern), Kollider bleibt gleich groß.</summary>
+        static GameObject Retexture(GameObject go, Vector3 size, Material mat)
+        {
+            go.transform.localScale = Vector3.one;
+            go.GetComponent<MeshFilter>().sharedMesh = LookDevKit.Box(size);
+            go.GetComponent<MeshRenderer>().sharedMaterial = mat;
+            var col = go.GetComponent<BoxCollider>();
+            if (col != null) col.size = size;
+            return go;
         }
 
         static void BuildRightWallWithWindow(Transform parent, LayoutConfig L, float x, float t, float h, float zFront, float zBack)
@@ -60,8 +72,8 @@ namespace PlanErfuellt.EditorTools
             // Wandstücke um die Öffnung
             Wall(parent, "Wall_Right_Back", new Vector3(cx, h * 0.5f, (zBack + z0) * 0.5f), new Vector3(t, h, z0 - zBack), Vector3.left);
             Wall(parent, "Wall_Right_Front", new Vector3(cx, h * 0.5f, (z1 + zFront) * 0.5f), new Vector3(t, h, zFront - z1), Vector3.left);
-            BlockoutKit.Box(parent, "Wall_Right_Below", new Vector3(cx, y0 * 0.5f, wz), new Vector3(t, y0, win.width), M.WallUpper);
-            BlockoutKit.Box(parent, "Wall_Right_Above", new Vector3(cx, (y1 + h) * 0.5f, wz), new Vector3(t, h - y1, win.width), M.WallUpper);
+            Retexture(BlockoutKit.Box(parent, "Wall_Right_Below", new Vector3(cx, y0 * 0.5f, wz), new Vector3(t, y0, win.width), M.WallUpper), new Vector3(t, y0, win.width), LookDevMaterials.WallConcrete);
+            Retexture(BlockoutKit.Box(parent, "Wall_Right_Above", new Vector3(cx, (y1 + h) * 0.5f, wz), new Vector3(t, h - y1, win.width), M.WallUpper), new Vector3(t, h - y1, win.width), LookDevMaterials.WallConcrete);
 
             // Fenster: Himmel/Einöde als leuchtende Fläche hinter der Öffnung, davor Rahmen und Sprossen
             var w = BlockoutKit.Group(parent, "Window", new Vector3(x, win.y, wz));
@@ -114,12 +126,7 @@ namespace PlanErfuellt.EditorTools
         {
             var d = BlockoutKit.Group(root, "Decor", Vector3.zero);
 
-            // Banner an der Frontwand (Prototyp z -2.95 / -2.9)
-            BlockoutKit.Sign(d, "Slogan_Front", "ui.signs.wallSlogan", new Vector3(0f, 5.2f, zFront - 0.05f), 5f, M.Gold, M.PropRedBright, false);
-            Banner(d, new Vector3(-7.2f, 4.2f, zFront - 0.06f), "ui.signs.bannerPlan", 0f);
-            Banner(d, new Vector3(-5.6f, 4.2f, zFront - 0.06f), "ui.signs.bannerScience", 0f);
-            Banner(d, new Vector3(5.6f, 4.2f, zFront - 0.06f), "ui.signs.bannerPlan", 0f);
-            Banner(d, new Vector3(7.2f, 4.2f, zFront - 0.06f), "ui.signs.bannerScience", 0f);
+            // Frontwand (hinter der Kammer): Banner, Laufstege und Rohre kommen aus LookDevHall
 
             // Rückwand (zeigt zur Kammer)
             BlockoutKit.Sign(d, "Slogan_Back", "ui.signs.wallSlogan", new Vector3(0f, 5.4f, zBack + 0.05f), 5f, M.Gold, M.PropRedBright, false, 180f);

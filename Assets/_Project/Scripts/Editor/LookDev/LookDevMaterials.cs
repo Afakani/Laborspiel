@@ -8,7 +8,7 @@ namespace PlanErfuellt.EditorTools
         public static Material SteelPanel, SteelDark, SteelFrame, Brass, GreenPaint, RedPaint, WhitePaint, FloorConcrete, FloorPlate,
             Grate, WallConcrete, WallPanel, Hazard, Paper, Checklist, Director, PlanBoard, EmblemCream, EmblemGold, IconLeaf, IconDrop,
             IconMolecule, GlassClear, GlassTank, CoverRed, HoseGreen, HoseBlue, HoseYellow, BarGreen, BarBlue, BarYellow, LightConeGreen,
-            FogGreen, HazeWarm, RailYellow, Rubber, LampBulb, ScreenBlue, CreamPlate, BannerRed;
+            FogGreen, HazeWarm, DirectorCrop, PlanBoardCrop, RailYellow, Rubber, LampBulb, ScreenBlue, CreamPlate, BannerRed;
 
         public static void Init()
         {
@@ -29,6 +29,9 @@ namespace PlanErfuellt.EditorTools
             Checklist = LookDevKit.Textured("LD_Checklist", "Checklist.png", Color.white, 0f, 0.15f, 0.15f);
             Director = LookDevKit.Textured("LD_Director", "Director.png", Color.white, 0f, 0.6f, 1.6f);
             PlanBoard = LookDevKit.Textured("LD_PlanBoard", "PlanBoard.png", Color.white, 0f, 0.3f, 0.35f);
+            // Ausschnitte für TV (Direktor mittig) und Plantafel (ohne Rand oben/unten)
+            DirectorCrop = Crop(LookDevKit.Textured("LD_DirectorCrop", "Director.png", Color.white, 0f, 0.6f, 1.6f), new Vector2(0.68f, 1f), new Vector2(0.16f, 0f));
+            PlanBoardCrop = Crop(LookDevKit.Textured("LD_PlanBoardCrop", "PlanBoard.png", Color.white, 0f, 0.3f, 0.45f), new Vector2(1f, 0.9f), new Vector2(0f, 0.04f));
             EmblemCream = LookDevKit.Textured("LD_EmblemCream", "EmblemCream.png", Color.white, 0f, 0.2f, 0f, true);
             EmblemGold = LookDevKit.Textured("LD_EmblemGold", "EmblemGold.png", Color.white, 0f, 0.6f, 0f, true);
             IconLeaf = LookDevKit.Textured("LD_IconLeaf", "IconLeaf.png", Color.white, 0f, 0.2f, 0f, true);
@@ -52,6 +55,14 @@ namespace PlanErfuellt.EditorTools
             ScreenBlue = BlockoutKit.Emissive("LD_ScreenBlue", LabMaterials.Hex("#1F3E8A"), 1.2f, false);
             CreamPlate = BlockoutKit.Mat("LD_CreamPlate", LabMaterials.Hex("#E9DCBC"), 0f, 0.2f);
             BannerRed = LookDevKit.Pbr("LD_BannerRed", "rusty_painted_metal", new Color(0.85f, 0.25f, 0.22f), 3f, 0.3f, 0.3f);
+        }
+
+        static Material Crop(Material m, Vector2 scale, Vector2 offset)
+        {
+            m.SetTextureScale("_BaseMap", scale);
+            m.SetTextureOffset("_BaseMap", offset);
+            UnityEditor.EditorUtility.SetDirty(m);
+            return m;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace PlanErfuellt.EditorTools
 
             switch (s.id)
             {
-                case "clone": Clone(v); break;
+                case "clone": CloneLook(v); break;
                 case "processing": Processing(v); break;
                 case "pult": Pult(v, s.z); break;
                 case "beltMotor": BeltMotor(v); break;
@@ -84,19 +84,6 @@ namespace PlanErfuellt.EditorTools
         }
 
         // ---------- Stationen ----------
-
-        static void Clone(Transform v)
-        {
-            BlockoutKit.Cyl(v, "Machine", new Vector3(0f, 7.4f, 0f), 1.05f, 1.7f, M.Steel);
-            BlockoutKit.Cyl(v, "RedBand", new Vector3(0f, 6.5f, 0f), 1.13f, 0.28f, M.PropRedBright);
-            var tube = BlockoutKit.Cyl(v, "Tube", new Vector3(0f, 3.4f, 0f), 0.62f, 6.0f, M.Glass);
-            BlockoutKit.CastShadows(tube, false);
-            foreach (var y in new[] { 0.5f, 6.3f })
-                BlockoutKit.MeshObj(v, "BrassRing", MeshFactory.Torus(0.64f, 0.05f), new Vector3(0f, y, 0f), M.Brass);
-            BlockoutKit.Cyl(v, "TopPipe", new Vector3(0f, 8.4f, 0f), 0.12f, 0.6f, M.Steel);
-            BlockoutKit.Sphere(v, "Lamp", new Vector3(0f, 6.5f, -1.13f), 0.13f, M.LampGreen, false);
-            BlockoutKit.Sign(v, "Plate", "ui.signs.cloneUnit", new Vector3(0f, 7.6f, -1.1f), 1.6f, M.CreamText, M.SignPlate, false);
-        }
 
         static void Processing(Transform v)
         {
@@ -258,10 +245,19 @@ namespace PlanErfuellt.EditorTools
                 BlockoutKit.Box(v, "Crate_" + i, new Vector3(-0.85f + (i % 4) * 0.57f, 0.4f + (i / 4) * 0.5f, 0f), new Vector3(0.55f, 0.48f, 0.6f), mats[i % 4], false);
         }
 
+        /// <summary>Fernseher wie Bild 08: Direktor links, Parolen rechts auf blauem Feld, schwerer Rahmen mit Schrauben.</summary>
         static void Tv(Transform v)
         {
-            BlockoutKit.Box(v, "Frame", new Vector3(0f, 0f, 0.1f), new Vector3(5.7f, 3.6f, 0.5f), M.SteelDark);
-            BlockoutKit.Quad(v, "Screen", new Vector3(0f, 0f, -0.16f), new Vector2(5.2f, 3.05f), M.TvScreen, false);
+            LookDevKit.Box(v, "Frame", new Vector3(0f, 0f, 0.1f), new Vector3(5.7f, 3.6f, 0.4f), LookDevMaterials.SteelDark);
+            LookDevKit.Box(v, "Bezel", new Vector3(0f, 0f, -0.11f), new Vector3(5.4f, 3.3f, 0.04f), LookDevMaterials.Rubber);
+            LookDevKit.Plane(v, "Screen", new Vector3(-0.85f, 0f, -0.14f), new Vector2(3.4f, 3.1f), LookDevMaterials.DirectorCrop);
+            LookDevKit.Plane(v, "SloganPanel", new Vector3(1.7f, 0f, -0.14f), new Vector2(1.7f, 3.1f), LookDevMaterials.ScreenBlue);
+            LookDevKit.Label(v, "Slogan", "ui.signs.tvSlogan", new Vector3(1.7f, 0f, -0.16f), 2.5f, M.Hex("#DDE8FF"));
+            LookDevKit.Bolts(v, new Vector3(-2.7f, 1.68f, -0.11f), new Vector3(2.7f, 1.68f, -0.11f), 12, Vector3.back, LookDevMaterials.Brass, 0.02f);
+            LookDevKit.Bolts(v, new Vector3(-2.7f, -1.68f, -0.11f), new Vector3(2.7f, -1.68f, -0.11f), 12, Vector3.back, LookDevMaterials.Brass, 0.02f);
+            foreach (var x in new[] { -2.2f, 2.2f })
+                LookDevKit.Cyl(v, "Hanger", new Vector3(x, 2.4f, 0.1f), 0.04f, 1.6f, LookDevMaterials.SteelDark, null, true, 8);
+
             var lightGo = new GameObject("TvLight");
             lightGo.transform.SetParent(v, false);
             lightGo.transform.localPosition = new Vector3(0f, -0.2f, -1.5f);
@@ -276,15 +272,38 @@ namespace PlanErfuellt.EditorTools
 
         static void AngerScale(Transform v)
         {
-            BlockoutKit.Box(v, "Back", new Vector3(0f, 0f, 0.03f), new Vector3(0.62f, 2.5f, 0.05f), M.SteelDark);
+            LookDevKit.Box(v, "Back", new Vector3(0f, 0f, 0.03f), new Vector3(0.62f, 2.5f, 0.05f), LookDevMaterials.SteelDark);
             BlockoutKit.Quad(v, "Scale", new Vector3(0f, 0f, -0.01f), new Vector2(0.5f, 2.3f), M.TermScreen, false);
+            LookDevKit.Bolts(v, new Vector3(-0.27f, 1.2f, -0.005f), new Vector3(0.27f, 1.2f, -0.005f), 2, Vector3.back, LookDevMaterials.Brass, 0.015f);
+            LookDevKit.Bolts(v, new Vector3(-0.27f, -1.2f, -0.005f), new Vector3(0.27f, -1.2f, -0.005f), 2, Vector3.back, LookDevMaterials.Brass, 0.015f);
         }
 
+        /// <summary>Plantafel wie Bild 08: drei Felder (Milch, Eier, Fleisch) mit Wachstumsbalken, rote Leiste mit Parole.</summary>
         static void PlanBoard(Transform v)
         {
-            BlockoutKit.Box(v, "Frame", new Vector3(0f, 0f, 0.05f), new Vector3(5.7f, 3.6f, 0.3f), M.SteelDark);
-            BlockoutKit.Quad(v, "Screen", new Vector3(0f, 0f, -0.11f), new Vector2(5.3f, 3.3f), M.PlanScreen, false);
-            BlockoutKit.Sign(v, "Slogan", "ui.signs.planSlogan", new Vector3(0f, -1.45f, -0.13f), 1.6f, M.CreamText, M.PropRedBright, false);
+            LookDevKit.Box(v, "Frame", new Vector3(0f, -0.25f, 0.05f), new Vector3(5.3f, 2.0f, 0.2f), LookDevMaterials.SteelDark);
+            LookDevKit.Plane(v, "Panels", new Vector3(0f, -0.05f, -0.06f), new Vector2(5.0f, 1.45f), LookDevMaterials.PlanBoardCrop);
+            var keys = new[] { "ui.signs.planBoardMilk", "ui.signs.planBoardEggs", "ui.signs.planBoardMeat" };
+            for (int i = 0; i < 3; i++)
+                LookDevKit.Label(v, "Title_" + i, keys[i], new Vector3((i - 1) * 1.667f, 0.5f, -0.07f), 1.5f, M.Hex("#2A2119"));
+            LookDevKit.Box(v, "SloganBar", new Vector3(0f, -1.0f, -0.04f), new Vector3(5.0f, 0.36f, 0.03f), LookDevMaterials.RedPaint);
+            LookDevKit.Label(v, "Slogan", "ui.signs.planSlogan", new Vector3(0f, -1.0f, -0.06f), 1.5f, M.CreamText);
+            LookDevKit.Bolts(v, new Vector3(-2.55f, 0.68f, -0.055f), new Vector3(2.55f, 0.68f, -0.055f), 10, Vector3.back, LookDevMaterials.Brass, 0.016f);
+        }
+
+        /// <summary>Klonanlage im Look-Material (Stahl, Messing, roter Lack).</summary>
+        static void CloneLook(Transform v)
+        {
+            LookDevKit.Cyl(v, "Machine", new Vector3(0f, 7.4f, 0f), 1.05f, 1.7f, LookDevMaterials.SteelPanel, null, true, 32);
+            LookDevKit.Cyl(v, "RedBand", new Vector3(0f, 6.5f, 0f), 1.13f, 0.28f, LookDevMaterials.RedPaint, null, true, 32);
+            LookDevKit.BoltCircle(v, 1.13f, 6.5f, 24, LookDevMaterials.Brass, false, 0.02f);
+            LookDevKit.Obj(v, "Tube", LookDevKit.Ring(0.58f, 0.62f, 6.0f, 48), new Vector3(0f, 3.4f, 0f), LookDevMaterials.GlassClear, null, true, false);
+            LookDevKit.Cyl(v, "Foot", new Vector3(0f, 0.2f, 0f), 0.85f, 0.4f, LookDevMaterials.SteelFrame, null, true, 32);
+            foreach (var y in new[] { 0.5f, 6.3f })
+                BlockoutKit.MeshObj(v, "BrassRing", MeshFactory.Torus(0.64f, 0.05f), new Vector3(0f, y, 0f), LookDevMaterials.Brass);
+            LookDevKit.Cyl(v, "TopPipe", new Vector3(0f, 8.4f, 0f), 0.12f, 0.6f, LookDevMaterials.SteelDark);
+            BlockoutKit.Sphere(v, "Lamp", new Vector3(0f, 6.5f, -1.13f), 0.13f, M.LampGreen, false);
+            BlockoutKit.Sign(v, "Plate", "ui.signs.cloneUnit", new Vector3(0f, 7.6f, -1.1f), 1.6f, M.CreamText, M.SignPlate, false);
         }
     }
 }

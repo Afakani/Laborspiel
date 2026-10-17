@@ -35,7 +35,7 @@ namespace PlanErfuellt.EditorTools
             BlockoutKit.MeshObj(frame, "BrassTop", MeshFactory.Torus(R + 0.05f, 0.07f), new Vector3(0f, y0 + H - 0.08f, 0f), L.Brass);
             BlockoutKit.MeshObj(frame, "BrassHead", MeshFactory.Torus(R + 0.47f, 0.05f), new Vector3(0f, topY + 0.02f, 0f), L.Brass);
             foreach (var p in new[] { new Vector2(-1.2f, 0.9f), new Vector2(1.3f, 1.1f) })
-                LookDevKit.Cyl(frame, "SupplyPipe", new Vector3(p.x, topY + 1.3f, p.y), 0.16f, 2.2f, L.SteelDark);
+                LookDevKit.Cyl(frame, "SupplyPipe", new Vector3(p.x, topY + 2.4f, p.y), 0.16f, 4.4f, L.SteelDark);
 
             // Streben: vorn (−Z) bleibt offen
             foreach (float deg in new[] { -35f, -145f, 15f, 165f, 60f, 120f })
@@ -55,11 +55,11 @@ namespace PlanErfuellt.EditorTools
             OnRing(root, "Number", "ui.signs.chamberNumber", -112f, R + 0.47f, topY, 3.6f, LabMaterials.CreamText);
             var plaque = BlockoutKit.Group(root, "Plaque", RingPos(-62f, R + 0.47f, topY));
             plaque.localEulerAngles = new Vector3(0f, RingYaw(-62f), 0f);
-            LookDevKit.Box(plaque, "Plate", new Vector3(0f, 0f, 0.01f), new Vector3(1.55f, 0.42f, 0.03f), L.RedPaint);
-            LookDevKit.Plane(plaque, "Emblem", new Vector3(0.6f, 0f, -0.01f), new Vector2(0.32f, 0.32f), L.EmblemCream);
-            LookDevKit.Label(plaque, "Text", "ui.signs.chamberPlate", new Vector3(-0.15f, 0f, -0.012f), 1.05f, LabMaterials.CreamText);
-            LookDevKit.Bolts(plaque, new Vector3(-0.72f, 0.16f, -0.006f), new Vector3(-0.72f, -0.16f, -0.006f), 2, Vector3.back, L.Brass, 0.012f);
-            LookDevKit.Bolts(plaque, new Vector3(0.72f, 0.16f, -0.006f), new Vector3(0.72f, -0.16f, -0.006f), 2, Vector3.back, L.Brass, 0.012f);
+            LookDevKit.Box(plaque, "Plate", new Vector3(0f, 0f, 0.01f), new Vector3(2.1f, 0.42f, 0.03f), L.RedPaint);
+            LookDevKit.Plane(plaque, "Emblem", new Vector3(0.84f, 0f, -0.01f), new Vector2(0.32f, 0.32f), L.EmblemCream);
+            LookDevKit.Label(plaque, "Text", "ui.signs.chamberPlate", new Vector3(-0.17f, 0f, -0.012f), 0.85f, LabMaterials.CreamText);
+            LookDevKit.Bolts(plaque, new Vector3(-0.99f, 0.16f, -0.006f), new Vector3(-0.99f, -0.16f, -0.006f), 2, Vector3.back, L.Brass, 0.012f);
+            LookDevKit.Bolts(plaque, new Vector3(0.99f, 0.16f, -0.006f), new Vector3(0.99f, -0.16f, -0.006f), 2, Vector3.back, L.Brass, 0.012f);
 
             // Düsen mit Lichtkegel und Spotlicht
             var rings = new List<Renderer>();

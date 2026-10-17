@@ -51,6 +51,7 @@ namespace PlanErfuellt.EditorTools
             if (oldSun != null) Object.DestroyImmediate(oldSun);
 
             LabEnvironmentBuilder.Build(env, L);
+            LookDevHall.Build(env, L);
             LabLightingSetup.Build(env, L);
 
             // Kammer

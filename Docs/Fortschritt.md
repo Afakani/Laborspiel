@@ -10,6 +10,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 | 3 | Spieler und Interaktion | fertig |
 | 4a | Kernkreislauf: Panels (Mischstation, Pult) | fertig |
 | 4b | Kernkreislauf: Tier, Produktion, Verarbeitung, HUD | fertig |
+| LD | Look-Development: Kammer B-12, Pult, Halle nach Bild 08 | Look steht, Abnahme und Spieltest offen |
 | 5 | Risiken, Warnzeichen, Explosion, Infektion | offen |
 | 6 | Tagesablauf, Bestellung, Direktor | offen |
 | 7 | Kommissar und Laken | offen |
@@ -90,6 +91,18 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - Mischstation: Regler ziehen, MISCHEN, Fläschchen erscheinen im 3D-Regal. Pult: Fläschchen wählen, KLON (Hebel klappt). Leertaste/Esc schließen.
 - Das Probenmikroskop im Misch-Panel kommt laut Prompt in Phase 9.
 - Hinweis: Wird während des Play Mode neu kompiliert, wirft Unity NullReference-Fehler (Domain-Reload); einfach Play neu starten. Empfehlung: in den Unity-Einstellungen „Script Changes While Playing“ auf „Stop Playing and Recompile“ stellen.
+
+## Look-Development – Kammer B-12 und Pult aus Ego-Sicht (Bild 08)
+
+- [x] Editor-Werkzeuge `Scripts/Editor/LookDev/`: `LookDevKit` (Materialien, Meshes mit Welt-UVs, Schrauben, Schläuche als Bézier-Rohre), `LookDevMaterials`, `LookDevChamber`, `LookDevPult`, `LookDevHall`, `LookDevCapture` (Menü „Plan erfüllt/Look-Dev: Aufnahme Ego-Sicht“)
+- [x] Kammer: Sockel und Kopfring aus Stahl mit Flanschen und Schraubenkränzen, Messingbänder, Streben, doppelwandiges Glas, drei Düsen mit grünem Spotlicht und weichem Lichtkegel, Nebelpartikel, „B-12“ und Plakette
+- [x] Pult: drei Glastanks mit Etiketten und Schläuchen zur Kammer, Mischanzeige, Statustafel, NOT-STOPP mit Klappe und Warnstreifen, drei Kipphebel (bewegt von `PultLevers`)
+- [x] Halle: Boden und Wände mit CC0-Texturen, Laufstege mit gelbem Geländer, Rohrbündel, hohe Banner mit Emblem, Wandschild, Wandlampen, warmer Dunst; TV (Direktor + Parolen), Plantafel (Milch/Eier/Fleisch), Wutskala, Klonanlage im neuen Material
+- [x] Eigener Shader `Art/Shaders/LightShaft.shader` für die Lichtkegel
+- [x] Screenshots `Docs/Screenshots/LookDev_00` bis `LookDev_03`
+- [ ] Abnahme durch den Auftraggeber
+- [ ] Kernkreislauf im Play Mode neu testen (mischen, klonen, sprühen, verarbeiten), Zonen und Kollider an die neuen Modelle anpassen
+- [ ] Kuh und Huhn sind noch Platzhalter (Modelle offen)
 
 ## Phase 4b – Tier, Produktion, Verarbeitung, HUD
 
