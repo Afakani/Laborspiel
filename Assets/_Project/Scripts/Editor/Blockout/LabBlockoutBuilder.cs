@@ -36,6 +36,8 @@ namespace PlanErfuellt.EditorTools
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             BlockoutKit.Begin(texts);
             LabMaterials.Init();
+            LookDevKit.Begin();
+            LookDevMaterials.Init();
 
             var env = Root("--- Environment");
             var chamberRoot = Root("--- Chamber");

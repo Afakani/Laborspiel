@@ -98,11 +98,11 @@ namespace PlanErfuellt.EditorTools
 
             var bloom = Add<Bloom>(profile);
             bloom.threshold.Override(1.0f);
-            bloom.intensity.Override(0.9f);
+            bloom.intensity.Override(1.1f);
             bloom.scatter.Override(0.65f);
 
             var vig = Add<Vignette>(profile);
-            vig.intensity.Override(0.32f);
+            vig.intensity.Override(0.38f);
             vig.smoothness.Override(0.45f);
 
             var col = Add<ColorAdjustments>(profile);
@@ -145,7 +145,7 @@ namespace PlanErfuellt.EditorTools
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.Exponential;
             RenderSettings.fogColor = LabMaterials.Hex("#2A2119");
-            RenderSettings.fogDensity = 0.018f;
+            RenderSettings.fogDensity = 0.012f;
             RenderSettings.defaultReflectionMode = DefaultReflectionMode.Custom;
         }
 

@@ -18,7 +18,7 @@ namespace PlanErfuellt.EditorTools
             {
                 case "clone": Clone(v); break;
                 case "processing": Processing(v); break;
-                case "pult": Pult(v); break;
+                case "pult": Pult(v, s.z); break;
                 case "beltMotor": BeltMotor(v); break;
                 case "mixing": Mixing(v); break;
                 case "microscope": Microscope(v); break;
@@ -107,45 +107,16 @@ namespace PlanErfuellt.EditorTools
             BlockoutKit.Cyl(v, "VatRim", new Vector3(0f, 2.8f, 0f), 0.76f, 0.5f, M.Steel);
         }
 
-        static void Pult(Transform v)
+        /// <summary>Pult im Look von Bild 08 (LookDevPult); die Kipphebel werden von PultLevers bewegt.</summary>
+        static void Pult(Transform v, float chamberDistance)
         {
-            var g = BlockoutKit.Group(v, "Desk", new Vector3(0f, -0.15f, 0f));
-            BlockoutKit.Box(g, "Body", new Vector3(0f, 0.45f, 0f), new Vector3(3.6f, 0.9f, 0.9f), M.PultBody);
-            BlockoutKit.Box(g, "Top", new Vector3(0f, 0.97f, -0.03f), new Vector3(3.6f, 0.12f, 1.0f), M.PultTop, true, new Vector3(-16f, 0f, 0f));
-            var knobs = new[] { M.KnobA, M.KnobB, M.KnobC };
-            for (int i = 0; i < 3; i++)
-            {
-                float x = -1.45f + i * 0.32f;
-                BlockoutKit.Box(g, "SliderSlot", new Vector3(x, 1.06f, -0.02f), new Vector3(0.1f, 0.03f, 0.62f), M.Black, true, new Vector3(-16f, 0f, 0f));
-                BlockoutKit.Box(g, "SliderKnob", new Vector3(x, 1.1f, -0.25f), new Vector3(0.2f, 0.1f, 0.12f), knobs[i], false, new Vector3(-16f, 0f, 0f));
-            }
-            // Hebel GAS (grün), KLON (schwarz), FÖRDERBAND (rot)
-            var leverMats = new[] { M.LampGreen, M.Black, M.StopButton };
-            string[] leverNames = { "Lever_Gas", "Lever_Clone", "Lever_Belt" };
-            float[] lx = { 0.15f, 0.5f, 0.85f };
-            var leverPivots = new Transform[3];
-            for (int i = 0; i < 3; i++)
-            {
-                BlockoutKit.Box(g, "LeverBase", new Vector3(lx[i], 1.05f, -0.05f), new Vector3(0.22f, 0.08f, 0.3f), M.SteelDark, true, new Vector3(-16f, 0f, 0f));
-                var piv = BlockoutKit.Group(g, leverNames[i], new Vector3(lx[i], 1.08f, -0.05f));
-                piv.localEulerAngles = new Vector3(20f, 0f, 0f);
-                leverPivots[i] = piv;
-                BlockoutKit.Cyl(piv, "Stick", new Vector3(0f, 0.21f, 0f), 0.03f, 0.42f, M.Steel, false);
-                BlockoutKit.Sphere(piv, "Ball", new Vector3(0f, 0.44f, 0f), 0.075f, leverMats[i], false);
-            }
+            var pivots = LookDevPult.Build(v, chamberDistance);
             var levers = v.gameObject.AddComponent<PultLevers>();
             var lso = new UnityEditor.SerializedObject(levers);
             var lp = lso.FindProperty("levers");
-            lp.arraySize = 3;
-            for (int i = 0; i < 3; i++) lp.GetArrayElementAtIndex(i).objectReferenceValue = leverPivots[i];
+            lp.arraySize = pivots.Length;
+            for (int i = 0; i < pivots.Length; i++) lp.GetArrayElementAtIndex(i).objectReferenceValue = pivots[i];
             lso.ApplyModifiedPropertiesWithoutUndo();
-
-            // NOT-STOPP mit Warnfeld
-            BlockoutKit.Box(g, "HazardPlate", new Vector3(1.4f, 1.06f, -0.05f), new Vector3(0.5f, 0.03f, 0.5f), M.Hazard, true, new Vector3(-16f, 0f, 0f));
-            BlockoutKit.Cyl(g, "StopButton", new Vector3(1.4f, 1.13f, -0.07f), 0.16f, 0.12f, M.StopButton, false, new Vector3(-16f, 0f, 0f));
-            // Statustafel
-            BlockoutKit.Box(g, "StatusPost", new Vector3(-0.75f, 1.42f, 0.32f), new Vector3(1.0f, 0.66f, 0.06f), M.SteelDark);
-            BlockoutKit.Sign(g, "StatusTitle", "ui.signs.statusTitle", new Vector3(-0.75f, 1.62f, 0.28f), 1.1f, M.CreamText, null, false);
         }
 
         static void BeltMotor(Transform v)
