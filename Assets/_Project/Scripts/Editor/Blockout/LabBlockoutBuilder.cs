@@ -1,7 +1,6 @@
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 namespace PlanErfuellt.EditorTools
 {
@@ -53,7 +52,7 @@ namespace PlanErfuellt.EditorTools
             LabLightingSetup.Build(env, L);
 
             // Kammer
-            var chamber = InstantiatePrefab("Chamber", rebuildPrefabs, () => LabChamberBuilder.Build(L), chamberRoot);
+            var chamber = InstantiatePrefab("Chamber", rebuildPrefabs, () => LabChamberBuilder.Build(L, cfg.player.radius), chamberRoot);
             chamber.transform.position = LayoutConfig.ToUnity(L.chamber.x, 0f, L.chamber.z);
             BuildZones(chamberRoot, L);
 
@@ -70,7 +69,7 @@ namespace PlanErfuellt.EditorTools
             grid.transform.SetParent(gridRoot, false);
             grid.AddComponent<BuildGridGizmo>().SetConfig(cfg);
 
-            SetupCamera(L);
+            SetupPlayerAndHud(cfg, rebuildPrefabs);
             LabLightingSetup.EnsureLightingSettings();
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
@@ -114,18 +113,35 @@ namespace PlanErfuellt.EditorTools
             box.size = new Vector3(x1 - x0, 2f, zu1 - zu0);
         }
 
-        static void SetupCamera(LayoutConfig L)
+        /// <summary>Ersetzt die alte Szenenkamera durch das Player-Prefab und setzt das HUD ein.</summary>
+        static void SetupPlayerAndHud(GameConfig cfg, bool rebuild)
         {
-            var cam = Camera.main;
-            if (cam == null) return;
-            cam.transform.SetPositionAndRotation(LayoutConfig.ToUnity(L.playerStart.x, L.playerStart.eyeHeight, L.playerStart.z), Quaternion.Euler(4f, 0f, 0f));
-            cam.nearClipPlane = 0.05f;
-            cam.farClipPlane = 80f;
-            cam.fieldOfView = 60f;
-            cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = LabMaterials.Hex("#1C1612");
-            var data = cam.GetComponent<UniversalAdditionalCameraData>();
-            if (data != null) data.renderPostProcessing = true;
+            var chars = Root("--- Characters");
+            var ui = Root("--- UI");
+            Clear(chars);
+            Clear(ui);
+
+            var player = InstantiateAt(PlayerBuilder.PrefabPath, rebuild, () => PlayerBuilder.Build(cfg), chars);
+            var start = cfg.layout.playerStart;
+            player.transform.position = LayoutConfig.ToUnity(start.x, 0f, start.z);
+
+            var hud = InstantiateAt(HudBuilder.PrefabPath, rebuild, HudBuilder.Build, ui);
+            PlayerBuilder.Set(hud.GetComponent<PromptUI>(), "source", player.GetComponent<InteractionSystem>());
+        }
+
+        static GameObject InstantiateAt(string path, bool rebuild, System.Func<GameObject> create, Transform parent)
+        {
+            BlockoutKit.EnsureFolder(System.IO.Path.GetDirectoryName(path));
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (prefab == null || rebuild)
+            {
+                var temp = create();
+                prefab = PrefabUtility.SaveAsPrefabAsset(temp, path);
+                Object.DestroyImmediate(temp);
+            }
+            var inst = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+            inst.transform.SetParent(parent, false);
+            return inst;
         }
 
         static Transform Root(string name)

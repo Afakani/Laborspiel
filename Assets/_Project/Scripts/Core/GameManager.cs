@@ -21,6 +21,11 @@ namespace PlanErfuellt
         public GameState State { get; private set; }
         public GameClock Clock { get; private set; }
 
+        /// <summary>Ein Panel (Pult, Mischstation, Bestellung …) ist offen und braucht die Maus.</summary>
+        public bool PanelOpen { get; set; }
+        /// <summary>Darf der Spieler laufen, sich umsehen und interagieren?</summary>
+        public bool PlayerControlEnabled => !Clock.Paused && !PanelOpen;
+
         void Awake()
         {
             if (Instance != null && Instance != this)

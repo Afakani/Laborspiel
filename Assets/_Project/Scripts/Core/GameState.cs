@@ -28,6 +28,12 @@ namespace PlanErfuellt
         public int failedDays;
         public float playTime;
 
+        // ---------- Labor ----------
+        /// <summary>Laken liegt über der Kammer (GDD 6.8).</summary>
+        public bool chamberCovered;
+        /// <summary>Förderband ist gerissen (GDD 5.2).</summary>
+        public bool beltBroken;
+
         // ---------- Druck von oben ----------
         public float anger;
         public float authority;

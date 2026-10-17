@@ -21,6 +21,11 @@ namespace PlanErfuellt
         public string signKey;
         /// <summary>Höhe des Schilds über dem Boden.</summary>
         public float signHeight;
+        /// <summary>Reichweite für Interaktion um den Stationsmittelpunkt (0 = eigene Zone oder keine Interaktion).</summary>
+        public float reach;
+
+        /// <summary>Position in Prototyp-Koordinaten (x, z) für Abstandsrechnungen.</summary>
+        public Vector2 ProtoXZ => new Vector2(x, z);
 
         public Vector3 UnityPosition => LayoutConfig.ToUnity(x, y, z);
         public Quaternion UnityRotation => Quaternion.Euler(0f, facing, 0f);

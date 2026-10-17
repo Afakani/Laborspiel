@@ -21,6 +21,7 @@ namespace PlanErfuellt
         public static event Action<string> DirectorSpeak;
         public static event Action<bool> PauseChanged;
         public static event Action<float> TimeScaleChanged;
+        public static event Action PanelCloseRequested;
 
         public static void RaiseMoneyChanged(float money) => MoneyChanged?.Invoke(money);
         public static void RaiseInventoryChanged() => InventoryChanged?.Invoke();
@@ -35,6 +36,7 @@ namespace PlanErfuellt
         public static void RaiseDirectorSpeak(string text) => DirectorSpeak?.Invoke(text);
         public static void RaisePauseChanged(bool paused) => PauseChanged?.Invoke(paused);
         public static void RaiseTimeScaleChanged(float scale) => TimeScaleChanged?.Invoke(scale);
+        public static void RaisePanelCloseRequested() => PanelCloseRequested?.Invoke();
 
         /// <summary>Alle Abonnenten entfernen (bei Play-Start ohne Domain-Reload).</summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -53,6 +55,7 @@ namespace PlanErfuellt
             DirectorSpeak = null;
             PauseChanged = null;
             TimeScaleChanged = null;
+            PanelCloseRequested = null;
         }
     }
 }

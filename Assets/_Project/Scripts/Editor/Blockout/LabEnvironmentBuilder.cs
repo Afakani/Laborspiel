@@ -129,9 +129,10 @@ namespace PlanErfuellt.EditorTools
             // Kisten und Fässer (Prototyp-Positionen, z gespiegelt)
             foreach (var c in new[] { new Vector3(-12f, 1.3f, -10.6f), new Vector3(-10.4f, 1.0f, -10.9f), new Vector3(-11.4f, 0.8f, -10.6f),
                          new Vector3(12f, 1.4f, -10.4f), new Vector3(10.2f, 1.0f, -10.8f) })
-                BlockoutKit.Box(d, "Crate", new Vector3(c.x, c.y * 0.5f, c.z), Vector3.one * c.y, M.Crate, true, new Vector3(0f, c.x * 0.3f * Mathf.Rad2Deg, 0f));
+                BlockoutKit.Box(d, "Crate", new Vector3(c.x, c.y * 0.5f, c.z), Vector3.one * c.y, M.Crate, true, new Vector3(0f, c.x * 0.3f * Mathf.Rad2Deg, 0f))
+                    .AddComponent<BoxCollider>();
             foreach (var b in new[] { new Vector2(-14.5f, -9.8f), new Vector2(14.6f, -9.6f), new Vector2(14.2f, -8.4f) })
-                BlockoutKit.Cyl(d, "Barrel", new Vector3(b.x, 0.55f, b.y), 0.45f, 1.1f, M.Barrel);
+                BlockoutKit.Cyl(d, "Barrel", new Vector3(b.x, 0.55f, b.y), 0.45f, 1.1f, M.Barrel).AddComponent<CapsuleCollider>();
         }
 
         static void Banner(Transform parent, Vector3 pos, string key, float yaw)

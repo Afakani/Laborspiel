@@ -40,9 +40,32 @@ namespace PlanErfuellt.EditorTools
             col.size = s.Size;
             col.center = s.y > 0f ? Vector3.zero : new Vector3(0f, s.Size.y * 0.5f, 0f);
 
+            AddInteraction(root, s.id);
+
             if (!string.IsNullOrEmpty(s.signKey))
                 BlockoutKit.Sign(root.transform, "Sign", s.signKey, new Vector3(0f, s.signHeight - s.y, 0f), 3.2f, SignColor(s.id), M.SignPlate, true);
             return root;
+        }
+
+        /// <summary>Interaktions-Komponente passend zur Station (Architektur 05: Scripts/Stations).</summary>
+        static void AddInteraction(GameObject root, string id)
+        {
+            Interactable c;
+            switch (id)
+            {
+                case "pult": c = root.AddComponent<ControlPanel>(); break;
+                case "mixing": c = root.AddComponent<MixingStation>(); break;
+                case "gramophone": c = root.AddComponent<Gramophone>(); break;
+                case "tasting": c = root.AddComponent<TastingMachine>(); break;
+                case "rohrpost": c = root.AddComponent<Rohrpost>(); break;
+                case "beltMotor": c = root.AddComponent<BeltMotor>(); break;
+                case "centrifuge": c = root.AddComponent<Centrifuge>(); break;
+                case "cryo": c = root.AddComponent<CryoChamber>(); break;
+                case "terminal": c = root.AddComponent<OrderTerminal>(); break;
+                case "storage": c = root.AddComponent<Storage>(); break;
+                default: return;
+            }
+            c.SetStationId(id);
         }
 
         static Color SignColor(string id)

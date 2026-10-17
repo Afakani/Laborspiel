@@ -179,6 +179,31 @@ CLASSES = [
         F("float", "absXMin"), F("float", "absXMax"), F("float", "zMin"), F("float", "zMax")]),
     ("WindowLayout", "Fenster in der rechten Seitenwand.", [
         F("float", "x"), F("float", "y"), F("float", "z"), F("float", "width"), F("float", "height")]),
+    ("BobConfig", "Kopfwippen und Neigen der Kamera beim Laufen.", [
+        F("float", "phaseSpeed", "Schrittphase pro s beim Laufen"), F("float", "ampY"), F("float", "ampX"),
+        F("float", "breatheAmp"), F("float", "breatheFreq"), F("float", "rollPerSpeedDeg", "Neigung pro m/s Seitwärtslaufen"),
+        F("float", "fadeSpeed", "Ein-/Ausblenden des Wippens"), F("float", "rollSmoothing")]),
+    ("HandsConfig", "Animation der Ego-Hände mit Spritze.", [
+        F("float", "smoothing"), F("float", "bob"), F("float", "sway"), F("float", "idleAmp"),
+        F("float", "holdX"), F("float", "holdY"), F("float", "holdZ"), F("float", "holdTiltDeg"),
+        F("float", "thrustZ"), F("float", "thrustTiltDeg")]),
+    ("PlayerConfig", "Spielfigur in Ego-Sicht (GDD 2, Prototyp updatePlay).", [
+        F("float", "walkSpeed"), F("float", "turnSpeedDeg", "Q/E und Pfeiltasten"), F("float", "mouseSensitivityDeg", "Grad pro Mauspixel"),
+        F("float", "lookUpMaxDeg"), F("float", "lookDownMaxDeg"), F("float", "radius"), F("float", "height"),
+        F("float", "fov"), F("float", "fovMax"), F("float", "fovAspectRef", "Unter diesem Seitenverhältnis wird das Sichtfeld weiter"),
+        F("BobConfig", "bob"), F("HandsConfig", "hands"),
+        F("float", "fastTurnBoost", "Drehfaktor, wenn die Spielfigur beschleunigt ist (Infektion)")]),
+    ("HoldTimesConfig", "Haltezeiten der Interaktionen in Sekunden.", [
+        F("float", "pult"), F("float", "mixing"), F("float", "rackHide"), F("float", "cloth"), F("float", "vodka"),
+        F("float", "tasting"), F("float", "rohrpost"), F("float", "beltRepair"), F("float", "centrifugeLoad"),
+        F("float", "centrifugeBrake"), F("float", "cryoLoad"), F("float", "cryoTake"), F("float", "clean")]),
+    ("InteractionConfig", "Zielwahl und Haltezeiten (GDD 2, Prototyp pickTarget).", [
+        F("float", "pultScore", "Wertung, wenn der Spieler in der Pult-Zone steht"), F("float", "clothScore"),
+        F("float", "disabledHoldSec", "Haltezeit bei nicht möglichen Aktionen (nur Anzeige)"),
+        F("AreaLayout", "mixingZone", "Bereich vor der Mischstation (Prototyp-Koordinaten)"), F("HoldTimesConfig", "hold")]),
+    ("UiConfig", "Allgemeine Anzeige-Werte (GDD 7.6).", [
+        F("int", "toastMax", "Gleichzeitige Kurzmeldungen"), F("float", "toastSec", "Anzeigedauer"),
+        F("float", "toastFadeFrom", "Ab diesem Anteil der Dauer ausblenden")]),
 ]
 
 CS_KEYWORDS = {"base", "float", "string", "int"}

@@ -451,6 +451,7 @@ MonoBehaviour:
       - 2.3
       signKey: ui.signs.clone
       signHeight: 7.4
+      reach: 0
     - id: processing
       x: 9.2
       y: 0
@@ -462,6 +463,7 @@ MonoBehaviour:
       - 2.6
       signKey: ui.signs.processing
       signHeight: 3.5
+      reach: 0
     - id: pult
       x: 0
       y: 0
@@ -473,6 +475,7 @@ MonoBehaviour:
       - 1
       signKey: 
       signHeight: 0
+      reach: 0
     - id: beltMotor
       x: -6.6
       y: 0
@@ -484,6 +487,7 @@ MonoBehaviour:
       - 0.7
       signKey: ui.signs.beltMotor
       signHeight: 1.7
+      reach: 2.4
     - id: mixing
       x: -5.2
       y: 0
@@ -495,6 +499,7 @@ MonoBehaviour:
       - 1.3
       signKey: ui.signs.mixing
       signHeight: 3
+      reach: 0
     - id: microscope
       x: -6.5
       y: 0.98
@@ -506,6 +511,7 @@ MonoBehaviour:
       - 0.3
       signKey: 
       signHeight: 0
+      reach: 0
     - id: centrifuge
       x: 5.6
       y: 0
@@ -517,6 +523,7 @@ MonoBehaviour:
       - 1.7
       signKey: ui.signs.centrifuge
       signHeight: 2.5
+      reach: 2.3
     - id: cryo
       x: 7.6
       y: 0
@@ -528,6 +535,7 @@ MonoBehaviour:
       - 1.1
       signKey: ui.signs.cryo
       signHeight: 2.6
+      reach: 2.3
     - id: tasting
       x: 10.2
       y: 0
@@ -539,6 +547,7 @@ MonoBehaviour:
       - 0.7
       signKey: ui.signs.tasting
       signHeight: 2.5
+      reach: 2.1
     - id: gramophone
       x: 3.5
       y: 0
@@ -550,6 +559,7 @@ MonoBehaviour:
       - 0.8
       signKey: ui.signs.gramophone
       signHeight: 2.7
+      reach: 2.3
     - id: rohrpost
       x: -3.5
       y: 0
@@ -561,6 +571,7 @@ MonoBehaviour:
       - 0.5
       signKey: ui.signs.rohrpost
       signHeight: 2.3
+      reach: 2.3
     - id: terminal
       x: -12
       y: 0
@@ -572,6 +583,7 @@ MonoBehaviour:
       - 1
       signKey: ui.signs.terminal
       signHeight: 3
+      reach: 3.2
     - id: storage
       x: 12
       y: 0
@@ -583,6 +595,7 @@ MonoBehaviour:
       - 1.8
       signKey: ui.signs.storage
       signHeight: 2.5
+      reach: 3.4
     - id: tv
       x: -11.8
       y: 5
@@ -594,6 +607,7 @@ MonoBehaviour:
       - 0.5
       signKey: ui.signs.directorCaption
       signHeight: 7.1
+      reach: 0
     - id: angerScale
       x: -15.15
       y: 5
@@ -605,6 +619,7 @@ MonoBehaviour:
       - 0.1
       signKey: ui.signs.angerScale
       signHeight: 6.6
+      reach: 0
     - id: planBoard
       x: 11.8
       y: 5
@@ -616,6 +631,66 @@ MonoBehaviour:
       - 0.3
       signKey: ui.signs.planBoard
       signHeight: 7.1
+      reach: 0
+  player:
+    walkSpeed: 5.2
+    turnSpeedDeg: 114.6
+    mouseSensitivityDeg: 0.1375
+    lookUpMaxDeg: 65.9
+    lookDownMaxDeg: 57.3
+    radius: 0.3
+    height: 1.8
+    fov: 66
+    fovMax: 80
+    fovAspectRef: 1.5
+    bob:
+      phaseSpeed: 10
+      ampY: 0.04
+      ampX: 0.025
+      breatheAmp: 0.006
+      breatheFreq: 1.3
+      rollPerSpeedDeg: 0.183
+      fadeSpeed: 8
+      rollSmoothing: 6
+    hands:
+      smoothing: 16
+      bob: 0.012
+      sway: 0.01
+      idleAmp: 0.004
+      holdX: 0.08
+      holdY: 0.05
+      holdZ: 0.07
+      holdTiltDeg: 6.9
+      thrustZ: 0.26
+      thrustTiltDeg: 6.9
+    fastTurnBoost: 1.6
+  interaction:
+    pultScore: 0.4
+    clothScore: 0.5
+    disabledHoldSec: 1
+    mixingZone:
+      xMin: -7.1
+      xMax: -3.3
+      zMin: 4.6
+      zMax: 6.9
+    hold:
+      pult: 0.12
+      mixing: 0.12
+      rackHide: 0.5
+      cloth: 0.8
+      vodka: 0.5
+      tasting: 0.8
+      rohrpost: 0.8
+      beltRepair: 1.6
+      centrifugeLoad: 0.5
+      centrifugeBrake: 0.01
+      cryoLoad: 0.6
+      cryoTake: 0.3
+      clean: 3
+  ui:
+    toastMax: 4
+    toastSec: 3.6
+    toastFadeFrom: 0.85
   ultimates:
   - {fileID: 11400000, guid: 5dc976084a4515f499639506535e6f29, type: 2}
   - {fileID: 11400000, guid: 4e589e637b093764ebf22431455450b9, type: 2}

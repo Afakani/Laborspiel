@@ -7,7 +7,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 | 0 | Einlesen, Plan, Fragen | fertig |
 | 1 | Setup und Grundgerüst | fertig |
 | 2 | Labor-Blockout und Licht | fertig |
-| 3 | Spieler und Interaktion | offen |
+| 3 | Spieler und Interaktion | fertig |
 | 4a | Kernkreislauf: Panels (Mischstation, Pult) | offen |
 | 4b | Kernkreislauf: Tier, Produktion, Verarbeitung, HUD | offen |
 | 5 | Risiken, Warnzeichen, Explosion, Infektion | offen |
@@ -57,6 +57,23 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 5. **TV und Plantafel:** noch leere leuchtende Flächen (Direktor, Balkendiagramme Milch/Eier/Fleisch folgen in Phase 6).
 6. **Fenster:** graue Leuchtfläche statt Einöde mit Wachtürmen, Fabrik und Mond (Phase 10).
 7. **Licht:** kein volumetrischer Dunst (URP hat keinen eingebauten); später über Partikel/Lichtkegel-Meshes.
+
+## Phase 3 – Spieler und Interaktion
+
+- [x] Eigenes Input-Actions-Asset `Settings/PlanErfuellt_Input` (projektweit), Map „Player“: Move, Turn, Look, Interact, Pause, Antidote, Logbook, Build, Mute, Confirm, CaptureMouse; Vorlagen-Asset entfernt
+- [x] `FirstPersonController` (CharacterController): WASD/Pfeile laufen 5,2 m/s, Maus (Klick fängt) oder Q/E/Pfeile drehen, Blick hoch/runter begrenzt, Kopfwippen, Neigen, Sichtfeld wie Prototyp; Spielerbereich aus `layout.playerArea`, Kammer-Mindestabstand 3,1 m; Haken für Infektion (Tempo, Invertieren)
+- [x] Ego-Hände mit Spritze (`ViewModelHands`): Wippen, Atmen, Vorbeugen beim Halten, Spritzstoß vorbereitet
+- [x] `IInteractable` + `Interactable` (Liste statt Find) + `InteractionSystem` (kleinste Wertung gewinnt, Haltebalken, nach Ausführen erst wieder nach Loslassen)
+- [x] Stationen mit Komponente, Prompt aus JSON und Haltezeit aus `interaction.hold`: Pult (Zone), Mischstation (Zone), Laken (Zone, funktioniert schon), Grammophon, Verkostung (gesperrt bis Plan 2), Rohrpost, Bandmotor (Reparatur funktioniert), Zentrifuge, Kryo (gesperrt bis Plan 2), Bestellterminal, Lager
+- [x] HUD-Prefab: Fadenkreuz, Maus-Hinweis, Prompt unten mittig (ausgegraut mit Begründung), Kurzmeldungen rechts (max. 4), Pause-Overlay (P/Esc)
+- [x] Player- und HUD-Prefab werden vom Blockout-Werkzeug erzeugt und eingesetzt
+- [x] Play-Test (Einzelschritte): alle 11 Stations-Prompts korrekt, Pult 0,12 s → Platzhalter-Meldung, Laken 0,8 s an/aus, gesperrte Ziele ohne Aktion, Bandreparatur 1,6 s, Pult-Kollision, Raumgrenzen, Tempo 5,2 m/s, Kammerabstand 3,1 m, Pause stoppt Bewegung
+- [x] Tests 48 grün, Konsole ohne Fehler; Screenshot `Docs/Screenshots/Phase3_Pult_Prompt.png`
+
+### Bitte selbst prüfen (Play Mode, Game View anklicken)
+- Maus fangen per Klick, Umsehen, WASD, Q/E, Kopfwippen – fühlt sich das Tempo und die Mausempfindlichkeit richtig an?
+- Leertaste halten an Pult, Mischstation, Laken, Grammophon; P/Esc für Pause.
+- Hinweis: Echte Tastatur und Maus konnte ich über die Verbindung nicht drücken (Einzelschritt-Modus); die Logik ist über eine Test-Übersteuerung geprüft.
 
 ### Offen / Hinweise für spätere Phasen
 - Rechts überlappen sich aus manchen Blickwinkeln die Schilder von Verarbeitung, Zentrifuge und Kryokammer; Höhen in Phase 11 nachjustieren.

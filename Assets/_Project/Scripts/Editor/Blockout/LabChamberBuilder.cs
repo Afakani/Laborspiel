@@ -8,7 +8,7 @@ namespace PlanErfuellt.EditorTools
     /// </summary>
     public static class LabChamberBuilder
     {
-        public static GameObject Build(LayoutConfig L)
+        public static GameObject Build(LayoutConfig L, float playerRadius)
         {
             var c = L.chamber;
             float R = c.radius, H = c.height, y0 = c.baseY;
@@ -68,10 +68,13 @@ namespace PlanErfuellt.EditorTools
             // Laken (abgedeckter Zustand, standardmäßig aus)
             var cloth = BlockoutKit.Cyl(root.transform, "Cloth", new Vector3(0f, y0 + 4.2f, 0f), R + 0.5f, 8.4f, M.Cloth, false);
             cloth.SetActive(false);
+            var clothInteraction = root.AddComponent<Cloth>();
+            clothInteraction.SetStationId("cloth");
+            clothInteraction.SetVisual(cloth);
 
-            // Spieler-Kollision: Radius aus der Config (GDD 3: 3.1)
+            // Spieler-Kollision: Mittelpunkt des Spielers bleibt mindestens playerCollisionRadius (GDD 3: 3.1) entfernt
             var col = root.AddComponent<CapsuleCollider>();
-            col.radius = c.playerCollisionRadius;
+            col.radius = c.playerCollisionRadius - playerRadius;
             col.height = L.room.height;
             col.center = new Vector3(0f, L.room.height * 0.5f, 0f);
             return root;

@@ -34,6 +34,9 @@ namespace PlanErfuellt
         public NewsConfig news = new NewsConfig();
         public EndingsConfig endings = new EndingsConfig();
         public LayoutConfig layout = new LayoutConfig();
+        public PlayerConfig player = new PlayerConfig();
+        public InteractionConfig interaction = new InteractionConfig();
+        public UiConfig ui = new UiConfig();
 
         // Diese Teile sind in der JSON als Objekte mit Schlüsseln abgelegt und werden vom Importer gesondert übertragen.
         [JsonIgnore] public List<UltimateSerum> ultimates = new List<UltimateSerum>();
