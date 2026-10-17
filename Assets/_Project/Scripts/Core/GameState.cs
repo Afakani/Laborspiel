@@ -28,7 +28,23 @@ namespace PlanErfuellt
         public int failedDays;
         public float playTime;
 
+        // ---------- Mischstation ----------
+        /// <summary>Aktuelle Reglerstellung.</summary>
+        public Dose mix;
+        /// <summary>Restzeit des laufenden Mischvorgangs (0 = frei).</summary>
+        public float mixTimer;
+        /// <summary>Dosis, die gerade gemischt wird.</summary>
+        public Dose? mixPending;
+        /// <summary>Am Pult gewähltes Serum im Regal.</summary>
+        public int selectedSerum;
+
         // ---------- Labor ----------
+        /// <summary>Kammer nach Explosion verseucht (GDD 5.4).</summary>
+        public bool contaminated;
+        /// <summary>Restzeit der Kammerreinigung.</summary>
+        public float cleanTimer;
+        /// <summary>Restzeit des Stromausfalls (GDD 5.2).</summary>
+        public float blackoutTimer;
         /// <summary>Laken liegt über der Kammer (GDD 6.8).</summary>
         public bool chamberCovered;
         /// <summary>Förderband ist gerissen (GDD 5.2).</summary>

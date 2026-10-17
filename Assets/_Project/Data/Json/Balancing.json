@@ -87,7 +87,9 @@
   "mixing": {
     "sliderMax": 8,
     "mixTimeSec": 2.5,
-    "rackSize": 6
+    "rackSize": 6,
+    "stirSpeedDeg": 802,
+    "centrifugedColor": "#9fe8ff"
   },
   "animals": {
     "cow": {
@@ -1002,13 +1004,22 @@
       "centrifugeLoad": 0.5,
       "centrifugeBrake": 0.01,
       "cryoLoad": 0.6,
-      "cryoTake": 0.3,
-      "clean": 3
+      "cryoTake": 0.3
     }
   },
   "ui": {
     "toastMax": 4,
     "toastSec": 3.6,
     "toastFadeFrom": 0.85
+  },
+  "pult": {
+    "_doc": "Pult (GDD 6.1, Prototyp refreshPult/statusState/pullLever)",
+    "cleanSec": 3,
+    "leverPullSec": 0.6,
+    "leverPullDeg": 51.6,
+    "statusTempWarn": 25,
+    "statusVitBad": 31,
+    "panelRefreshSec": 0.2,
+    "leashMinFloat": 0.5
   }
 }

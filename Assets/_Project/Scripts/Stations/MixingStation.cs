@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace PlanErfuellt
 {
-    /// <summary>Mischstation (GDD 6.2). Ziel im Bereich davor; Wertung = seitlicher Abstand. Panel folgt in Phase 4a.</summary>
+    /// <summary>Mischstation (GDD 6.2). Ziel im Bereich davor; Wertung = seitlicher Abstand. Öffnet das Panel.</summary>
     public class MixingStation : Interactable
     {
         public override bool TryGetScore(Vector2 p, out float score)
@@ -19,6 +19,6 @@ namespace PlanErfuellt
             holdTime = Cfg.interaction.hold.mixing;
         }
 
-        public override void Execute() => Placeholder("4a");
+        public override void Execute() => EventBus.RaisePanelRequested("mixing");
     }
 }

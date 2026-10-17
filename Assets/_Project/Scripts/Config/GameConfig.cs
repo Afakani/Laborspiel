@@ -37,6 +37,7 @@ namespace PlanErfuellt
         public PlayerConfig player = new PlayerConfig();
         public InteractionConfig interaction = new InteractionConfig();
         public UiConfig ui = new UiConfig();
+        public PultConfig pult = new PultConfig();
 
         // Diese Teile sind in der JSON als Objekte mit Schlüsseln abgelegt und werden vom Importer gesondert übertragen.
         [JsonIgnore] public List<UltimateSerum> ultimates = new List<UltimateSerum>();

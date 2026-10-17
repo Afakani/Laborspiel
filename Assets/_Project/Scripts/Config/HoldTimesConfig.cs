@@ -18,6 +18,5 @@ namespace PlanErfuellt
         public float centrifugeBrake;
         public float cryoLoad;
         public float cryoTake;
-        public float clean;
     }
 }

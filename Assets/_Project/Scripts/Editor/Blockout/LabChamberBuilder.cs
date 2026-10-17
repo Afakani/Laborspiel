@@ -68,6 +68,7 @@ namespace PlanErfuellt.EditorTools
             // Laken (abgedeckter Zustand, standardmäßig aus)
             var cloth = BlockoutKit.Cyl(root.transform, "Cloth", new Vector3(0f, y0 + 4.2f, 0f), R + 0.5f, 8.4f, M.Cloth, false);
             cloth.SetActive(false);
+            root.AddComponent<Chamber>();
             var clothInteraction = root.AddComponent<Cloth>();
             clothInteraction.SetStationId("cloth");
             clothInteraction.SetVisual(cloth);

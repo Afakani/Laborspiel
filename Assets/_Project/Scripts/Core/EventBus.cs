@@ -22,6 +22,8 @@ namespace PlanErfuellt
         public static event Action<bool> PauseChanged;
         public static event Action<float> TimeScaleChanged;
         public static event Action PanelCloseRequested;
+        public static event Action<string> PanelRequested;
+        public static event Action<int> LeverPulled;
 
         public static void RaiseMoneyChanged(float money) => MoneyChanged?.Invoke(money);
         public static void RaiseInventoryChanged() => InventoryChanged?.Invoke();
@@ -37,6 +39,10 @@ namespace PlanErfuellt
         public static void RaisePauseChanged(bool paused) => PauseChanged?.Invoke(paused);
         public static void RaiseTimeScaleChanged(float scale) => TimeScaleChanged?.Invoke(scale);
         public static void RaisePanelCloseRequested() => PanelCloseRequested?.Invoke();
+        /// <summary>Panel öffnen lassen (Id: "mixing", "pult").</summary>
+        public static void RaisePanelRequested(string id) => PanelRequested?.Invoke(id);
+        /// <summary>Hebel am Pult: 0 = GAS, 1 = KLON, 2 = FÖRDERBAND.</summary>
+        public static void RaiseLeverPulled(int lever) => LeverPulled?.Invoke(lever);
 
         /// <summary>Alle Abonnenten entfernen (bei Play-Start ohne Domain-Reload).</summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -56,6 +62,8 @@ namespace PlanErfuellt
             PauseChanged = null;
             TimeScaleChanged = null;
             PanelCloseRequested = null;
+            PanelRequested = null;
+            LeverPulled = null;
         }
     }
 }

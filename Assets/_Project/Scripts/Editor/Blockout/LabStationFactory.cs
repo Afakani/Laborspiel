@@ -123,14 +123,23 @@ namespace PlanErfuellt.EditorTools
             var leverMats = new[] { M.LampGreen, M.Black, M.StopButton };
             string[] leverNames = { "Lever_Gas", "Lever_Clone", "Lever_Belt" };
             float[] lx = { 0.15f, 0.5f, 0.85f };
+            var leverPivots = new Transform[3];
             for (int i = 0; i < 3; i++)
             {
                 BlockoutKit.Box(g, "LeverBase", new Vector3(lx[i], 1.05f, -0.05f), new Vector3(0.22f, 0.08f, 0.3f), M.SteelDark, true, new Vector3(-16f, 0f, 0f));
                 var piv = BlockoutKit.Group(g, leverNames[i], new Vector3(lx[i], 1.08f, -0.05f));
                 piv.localEulerAngles = new Vector3(20f, 0f, 0f);
+                leverPivots[i] = piv;
                 BlockoutKit.Cyl(piv, "Stick", new Vector3(0f, 0.21f, 0f), 0.03f, 0.42f, M.Steel, false);
                 BlockoutKit.Sphere(piv, "Ball", new Vector3(0f, 0.44f, 0f), 0.075f, leverMats[i], false);
             }
+            var levers = v.gameObject.AddComponent<PultLevers>();
+            var lso = new UnityEditor.SerializedObject(levers);
+            var lp = lso.FindProperty("levers");
+            lp.arraySize = 3;
+            for (int i = 0; i < 3; i++) lp.GetArrayElementAtIndex(i).objectReferenceValue = leverPivots[i];
+            lso.ApplyModifiedPropertiesWithoutUndo();
+
             // NOT-STOPP mit Warnfeld
             BlockoutKit.Box(g, "HazardPlate", new Vector3(1.4f, 1.06f, -0.05f), new Vector3(0.5f, 0.03f, 0.5f), M.Hazard, true, new Vector3(-16f, 0f, 0f));
             BlockoutKit.Cyl(g, "StopButton", new Vector3(1.4f, 1.13f, -0.07f), 0.16f, 0.12f, M.StopButton, false, new Vector3(-16f, 0f, 0f));
@@ -166,6 +175,8 @@ namespace PlanErfuellt.EditorTools
             }
             var bowl = BlockoutKit.Cyl(v, "Bowl", new Vector3(0.55f, 1.25f, -0.35f), 0.32f, 0.5f, M.Glass);
             BlockoutKit.CastShadows(bowl, false);
+            var bowlLiquid = BlockoutKit.Cyl(v, "BowlLiquid", new Vector3(0.55f, 1.15f, -0.35f), 0.27f, 0.28f, M.LampGreen, false);
+            bowlLiquid.SetActive(false);
             var stirrer = BlockoutKit.Group(v, "Stirrer", new Vector3(0.55f, 1.75f, -0.35f));
             BlockoutKit.Cyl(stirrer, "Rod", new Vector3(0f, -0.35f, 0f), 0.02f, 0.8f, M.Steel, false);
             BlockoutKit.Box(stirrer, "Blade", new Vector3(0f, -0.7f, 0f), new Vector3(0.24f, 0.04f, 0.04f), M.Steel, false);
@@ -173,11 +184,25 @@ namespace PlanErfuellt.EditorTools
             BlockoutKit.Box(v, "StirArm", new Vector3(0.55f, 1.55f, 0.05f), new Vector3(0.08f, 0.9f, 0.08f), M.SteelDark);
             // Serum-Regal mit 6 Plätzen (Fläschchen werden später je nach Regal sichtbar)
             BlockoutKit.Box(v, "Rack", new Vector3(1.2f, 1.25f, -0.15f), new Vector3(0.5f, 0.06f, 0.95f), M.SteelDark);
+            var vials = new Renderer[6];
             for (int i = 0; i < 6; i++)
             {
                 var vial = BlockoutKit.Cyl(v, "Vial_" + i, new Vector3(1.08f + (i % 2) * 0.24f, 1.43f, 0.18f - (i / 2) * 0.3f), 0.07f, 0.3f, M.LampGreen, false);
                 vial.SetActive(false);
+                vials[i] = vial.GetComponent<Renderer>();
             }
+
+            var vis = v.gameObject.AddComponent<MixingStationVisuals>();
+            var so = new UnityEditor.SerializedObject(vis);
+            so.FindProperty("stirrer").objectReferenceValue = stirrer;
+            so.FindProperty("bowlLiquid").objectReferenceValue = bowlLiquid.GetComponent<Renderer>();
+            var tanks = so.FindProperty("tankLiquids");
+            tanks.arraySize = 3;
+            for (int i = 0; i < 3; i++) tanks.GetArrayElementAtIndex(i).objectReferenceValue = v.Find("Tank_" + "ABC"[i] + "/Liquid");
+            var vp = so.FindProperty("vials");
+            vp.arraySize = 6;
+            for (int i = 0; i < 6; i++) vp.GetArrayElementAtIndex(i).objectReferenceValue = vials[i];
+            so.ApplyModifiedPropertiesWithoutUndo();
         }
 
         static void Microscope(Transform v)

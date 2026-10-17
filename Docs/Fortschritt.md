@@ -8,7 +8,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 | 1 | Setup und Grundgerüst | fertig |
 | 2 | Labor-Blockout und Licht | fertig |
 | 3 | Spieler und Interaktion | fertig |
-| 4a | Kernkreislauf: Panels (Mischstation, Pult) | offen |
+| 4a | Kernkreislauf: Panels (Mischstation, Pult) | fertig |
 | 4b | Kernkreislauf: Tier, Produktion, Verarbeitung, HUD | offen |
 | 5 | Risiken, Warnzeichen, Explosion, Infektion | offen |
 | 6 | Tagesablauf, Bestellung, Direktor | offen |
@@ -74,6 +74,22 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - Maus fangen per Klick, Umsehen, WASD, Q/E, Kopfwippen – fühlt sich das Tempo und die Mausempfindlichkeit richtig an?
 - Leertaste halten an Pult, Mischstation, Laken, Grammophon; P/Esc für Pause.
 - Hinweis: Echte Tastatur und Maus konnte ich über die Verbindung nicht drücken (Einzelschritt-Modus); die Logik ist über eine Test-Übersteuerung geprüft.
+
+## Phase 4a – Panels (Mischstation, Pult)
+
+- [x] `MixingLogic` (rein, getestet): Regler 0–8 begrenzt durch Lager, Mischen verbraucht Stoffe, 2,5 s, Regal max. 6, Rohserum-Erkennung (Ultimativ-Rezept), Fehlermeldungen wie Prototyp
+- [x] `MixingSystem`: Mischvorgang in Spielzeit, Meldung „Serum gemischt … (brodelt seltsam)“, Events
+- [x] `SerumTexts`: Name (unbekannt „Mischung A#·B#·C#“ bis zum Test am Tier, Zusätze zentrifugiert/konzentriert/tiefgekühlt), Farbe (stärkster Stoff, Zentrifuge, Ultimativ)
+- [x] `Chamber` (Schnittstelle fürs Pult): alle Aktionen mit Prüfungen und Meldungen wie Prototyp, Reinigung 3 s funktioniert, Statuslampen Gas/Temperatur/Förderband/Vitalwerte; Klonen/Sprühen/Verarbeiten/Not-Stopp/Gegenmittel/Anleinen zeigen „folgt in Phase 4b“
+- [x] Panels (uGUI, Maus): `PanelMixing` (3 Regler mit Lager, Infobox bekannt/unbekannt, MISCHEN mit Restzeit, Regalzeile), `PanelControl` (Regal mit Auswahl und Infobox, Hebel GAS/KLON Kuh/KLON Huhn/FÖRDERBAND, Statuslampen, Aktionen, NOT-STOPP); Knöpfe nur aktiv, wenn möglich; schließen mit Leertaste, P/Esc oder Knopf; immer nur ein Panel offen; Spieler steht, Maus frei
+- [x] 3D: Rührer dreht beim Mischen, Schüssel in Mischfarbe, Tankfüllstände zeigen Lager, Fläschchen im Regal in Serumfarbe, Pult-Hebel klappen beim Ziehen um
+- [x] EventSystem mit Input-System-UI-Modul
+- [x] Tests 54 grün (6 neue zur Mischstation); Play-Test über Interaktion und Knöpfe; Screenshots `Docs/Screenshots/Phase4a_*.png`
+
+### Bitte selbst prüfen
+- Mischstation: Regler ziehen, MISCHEN, Fläschchen erscheinen im 3D-Regal. Pult: Fläschchen wählen, KLON (Hebel klappt). Leertaste/Esc schließen.
+- Das Probenmikroskop im Misch-Panel kommt laut Prompt in Phase 9.
+- Hinweis: Wird während des Play Mode neu kompiliert, wirft Unity NullReference-Fehler (Domain-Reload); einfach Play neu starten. Empfehlung: in den Unity-Einstellungen „Script Changes While Playing“ auf „Stop Playing and Recompile“ stellen.
 
 ### Offen / Hinweise für spätere Phasen
 - Rechts überlappen sich aus manchen Blickwinkeln die Schilder von Verarbeitung, Zentrifuge und Kryokammer; Höhen in Phase 11 nachjustieren.

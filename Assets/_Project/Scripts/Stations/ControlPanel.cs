@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace PlanErfuellt
 {
-    /// <summary>Pult vor der Kammer (GDD 6.1). Ziel, solange der Spieler in der Pult-Zone steht. Panel folgt in Phase 4a.</summary>
+    /// <summary>Pult vor der Kammer (GDD 6.1). Ziel, solange der Spieler in der Pult-Zone steht. Öffnet das Panel.</summary>
     public class ControlPanel : Interactable
     {
         public override bool TryGetScore(Vector2 p, out float score)
@@ -18,6 +18,6 @@ namespace PlanErfuellt
             holdTime = Cfg.interaction.hold.pult;
         }
 
-        public override void Execute() => Placeholder("4a");
+        public override void Execute() => EventBus.RaisePanelRequested("pult");
     }
 }

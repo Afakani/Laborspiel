@@ -32,8 +32,9 @@ CLASSES = [
         F("string", "id", "A, B oder C"), F("string", "code", "z. B. A-17"),
         F("string", "displayName", "Anzeigename", None, "name"), F("string", "color", "Farbe als Hex")]),
     ("MixingConfig", "Mischstation (GDD 4.2).", [
-        F("int", "sliderMax", "Maximale Dosis pro Regler"),
-        F("float", "mixTimeSec", "Mischdauer"), F("int", "rackSize", "Plätze im Serum-Regal")]),
+        F("int", "sliderMax", "Maximale Dosis pro Regler (auch: voller Tank in der Anzeige)"),
+        F("float", "mixTimeSec", "Mischdauer"), F("int", "rackSize", "Plätze im Serum-Regal"),
+        F("float", "stirSpeedDeg", "Rührer-Drehung pro s beim Mischen"), F("string", "centrifugedColor", "Farbe zentrifugierter Rohseren")]),
     ("AnimalBaseConfig", "Grundwerte einer Tierart.", [
         F("float", "baseRate", "Grundertrag Milch/Eier in t/s"),
         F("float", "baseMeat", "Grundfleisch in t bei Verarbeitung"),
@@ -196,7 +197,7 @@ CLASSES = [
     ("HoldTimesConfig", "Haltezeiten der Interaktionen in Sekunden.", [
         F("float", "pult"), F("float", "mixing"), F("float", "rackHide"), F("float", "cloth"), F("float", "vodka"),
         F("float", "tasting"), F("float", "rohrpost"), F("float", "beltRepair"), F("float", "centrifugeLoad"),
-        F("float", "centrifugeBrake"), F("float", "cryoLoad"), F("float", "cryoTake"), F("float", "clean")]),
+        F("float", "centrifugeBrake"), F("float", "cryoLoad"), F("float", "cryoTake")]),
     ("InteractionConfig", "Zielwahl und Haltezeiten (GDD 2, Prototyp pickTarget).", [
         F("float", "pultScore", "Wertung, wenn der Spieler in der Pult-Zone steht"), F("float", "clothScore"),
         F("float", "disabledHoldSec", "Haltezeit bei nicht möglichen Aktionen (nur Anzeige)"),
@@ -204,6 +205,12 @@ CLASSES = [
     ("UiConfig", "Allgemeine Anzeige-Werte (GDD 7.6).", [
         F("int", "toastMax", "Gleichzeitige Kurzmeldungen"), F("float", "toastSec", "Anzeigedauer"),
         F("float", "toastFadeFrom", "Ab diesem Anteil der Dauer ausblenden")]),
+    ("PultConfig", "Pult: Reinigung, Hebelanimation, Statuslampen (GDD 6.1).", [
+        F("float", "cleanSec", "Dauer der Kammerreinigung"), F("float", "leverPullSec"), F("float", "leverPullDeg"),
+        F("float", "statusTempWarn", "Hitze, ab der die Temperaturlampe gelb wird"),
+        F("float", "statusVitBad", "Stabilität, unter der die Vitallampe rot wird"),
+        F("float", "panelRefreshSec", "Auffrischtakt offener Panels"),
+        F("float", "leashMinFloat", "Anleinen erst ab dieser Schwebehöhe möglich")]),
 ]
 
 CS_KEYWORDS = {"base", "float", "string", "int"}

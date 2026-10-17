@@ -127,6 +127,17 @@ namespace PlanErfuellt.EditorTools
 
             var hud = InstantiateAt(HudBuilder.PrefabPath, rebuild, HudBuilder.Build, ui);
             PlayerBuilder.Set(hud.GetComponent<PromptUI>(), "source", player.GetComponent<InteractionSystem>());
+            var chamber = Object.FindAnyObjectByType<Chamber>();
+            PlayerBuilder.Set(hud.GetComponentInChildren<PanelControl>(true), "chamber", chamber);
+
+            var es = new GameObject("EventSystem", typeof(UnityEngine.EventSystems.EventSystem), typeof(UnityEngine.InputSystem.UI.InputSystemUIInputModule));
+            es.transform.SetParent(ui, false);
+
+            // Systeme, die keine eigene Station haben
+            var systems = Root("--- Systems");
+            var oldMix = systems.Find("MixingSystem");
+            if (oldMix != null) Object.DestroyImmediate(oldMix.gameObject);
+            new GameObject("MixingSystem", typeof(MixingSystem)).transform.SetParent(systems, false);
         }
 
         static GameObject InstantiateAt(string path, bool rebuild, System.Func<GameObject> create, Transform parent)
