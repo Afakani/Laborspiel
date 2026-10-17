@@ -129,6 +129,74 @@ namespace PlanErfuellt.EditorTools
             vol.sharedProfile = profile;
         }
 
+        public struct FxVolumes
+        {
+            public Volume dark, green, blur;
+        }
+
+        /// <summary>
+        /// Zusätzliche globale Volumes für Phase 5: Stromausfall (Belichtung auf risks.blackoutLightFactor),
+        /// Infektion grün (Farbfilter) und verschwommen (Gauß-Unschärfe). Alle mit Gewicht 0, die Laufzeit blendet ein.
+        /// </summary>
+        public static FxVolumes BuildFxVolumes(Transform root, GameConfig cfg)
+        {
+            var g = BlockoutKit.Group(root, "FxVolumes", Vector3.zero);
+
+            var dark = Profile("Assets/_Project/Art/VFX/Lab_Blackout.asset");
+            var exp = Add<ColorAdjustments>(dark);
+            exp.postExposure.Override(Mathf.Log(Mathf.Max(0.01f, cfg.risks.blackoutLightFactor), 2f));
+            exp.colorFilter.Override(new Color(0.8f, 0.85f, 1f));
+
+            var green = Profile("Assets/_Project/Art/VFX/Lab_InfectionGreen.asset");
+            var tint = Add<ColorAdjustments>(green);
+            tint.colorFilter.Override(new Color(0.6f, 1f, 0.55f));
+            tint.hueShift.Override(25f);
+            tint.saturation.Override(40f);
+
+            var blur = Profile("Assets/_Project/Art/VFX/Lab_InfectionBlur.asset");
+            var dof = Add<DepthOfField>(blur);
+            dof.mode.Override(DepthOfFieldMode.Gaussian);
+            dof.gaussianStart.Override(0.2f);
+            dof.gaussianEnd.Override(2.5f);
+            dof.gaussianMaxRadius.Override(cfg.infection.blurRadius);
+            dof.highQualitySampling.Override(true);
+
+            var v = new FxVolumes
+            {
+                dark = MakeVolume(g, "BlackoutVolume", dark),
+                green = MakeVolume(g, "InfectionGreenVolume", green),
+                blur = MakeVolume(g, "InfectionBlurVolume", blur)
+            };
+            g.gameObject.AddComponent<InfectionVolumes>().Setup(v.green, v.blur);
+            return v;
+        }
+
+        static VolumeProfile Profile(string path)
+        {
+            var profile = AssetDatabase.LoadAssetAtPath<VolumeProfile>(path);
+            if (profile == null)
+            {
+                profile = ScriptableObject.CreateInstance<VolumeProfile>();
+                AssetDatabase.CreateAsset(profile, path);
+            }
+            foreach (var c in profile.components.ToArray()) Object.DestroyImmediate(c, true);
+            profile.components.Clear();
+            EditorUtility.SetDirty(profile);
+            return profile;
+        }
+
+        static Volume MakeVolume(Transform parent, string name, VolumeProfile profile)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(parent, false);
+            var vol = go.AddComponent<Volume>();
+            vol.isGlobal = true;
+            vol.priority = 10f;
+            vol.weight = 0f;
+            vol.sharedProfile = profile;
+            return vol;
+        }
+
         static T Add<T>(VolumeProfile profile) where T : VolumeComponent
         {
             var c = profile.Add<T>(true);

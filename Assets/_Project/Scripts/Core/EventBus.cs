@@ -27,6 +27,8 @@ namespace PlanErfuellt
         public static event Action<char, float> Delivered;
         public static event Action<Color> SerumSprayed;
         public static event Action<bool> ClothChanged;
+        public static event Action<RiskEvent> Risk;
+        public static event Action<bool> InfectionChanged;
 
         public static void RaiseMoneyChanged(float money) => MoneyChanged?.Invoke(money);
         public static void RaiseInventoryChanged() => InventoryChanged?.Invoke();
@@ -52,6 +54,10 @@ namespace PlanErfuellt
         public static void RaiseSerumSprayed(Color c) => SerumSprayed?.Invoke(c);
         /// <summary>Laken liegt jetzt auf (true) oder ist weg (false).</summary>
         public static void RaiseClothChanged(bool covered) => ClothChanged?.Invoke(covered);
+        /// <summary>Risiko-Ereignis (Warnung, Bandriss, Kabelriss, Explosion …) für Effekte und Kamerawackeln.</summary>
+        public static void RaiseRisk(RiskEvent e) => Risk?.Invoke(e);
+        /// <summary>Spieler ist jetzt infiziert (true) oder geheilt (false).</summary>
+        public static void RaiseInfectionChanged(bool infected) => InfectionChanged?.Invoke(infected);
 
         /// <summary>Alle Abonnenten entfernen (bei Play-Start ohne Domain-Reload).</summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -76,6 +82,8 @@ namespace PlanErfuellt
             Delivered = null;
             SerumSprayed = null;
             ClothChanged = null;
+            Risk = null;
+            InfectionChanged = null;
         }
     }
 }

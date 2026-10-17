@@ -8,7 +8,7 @@ namespace PlanErfuellt.EditorTools
         public static Material SteelPanel, SteelDark, SteelFrame, Brass, GreenPaint, RedPaint, WhitePaint, FloorConcrete, FloorPlate,
             Grate, WallConcrete, WallPanel, Hazard, Paper, Checklist, Director, PlanBoard, EmblemCream, EmblemGold, IconLeaf, IconDrop,
             IconMolecule, GlassClear, GlassTank, CoverRed, HoseGreen, HoseBlue, HoseYellow, BarGreen, BarBlue, BarYellow, LightConeGreen,
-            FogGreen, HazeWarm, FireAdd, SmokeDark, DirectorCrop, PlanBoardCrop, RailYellow, Rubber, LampBulb, Wood, CratePlanks, Chrome, Frost, CryoGlow, GlassBlue, DialFace, EnamelCream, BlackPaint, ScreenBlue, CreamPlate, BannerRed;
+            FogGreen, HazeWarm, FireAdd, SmokeDark, Steam, Slime, SplatSlime, Scorch, DirectorCrop, PlanBoardCrop, RailYellow, Rubber, LampBulb, Wood, CratePlanks, Chrome, Frost, CryoGlow, GlassBlue, DialFace, EnamelCream, BlackPaint, ScreenBlue, CreamPlate, BannerRed;
 
         public static void Init()
         {
@@ -50,6 +50,10 @@ namespace PlanErfuellt.EditorTools
             FogGreen = LookDevKit.Additive("LD_FogGreen", "SoftSmoke.png", new Color(0.4f, 1f, 0.35f, 0.35f), false);
             FireAdd = LookDevKit.Additive("LD_FireAdd", "SoftSmoke.png", new Color(2.4f, 1.3f, 0.45f, 0.95f), true);
             SmokeDark = LookDevKit.Additive("LD_SmokeDark", "SoftSmoke.png", new Color(0.16f, 0.14f, 0.12f, 0.55f), false);
+            Steam = LookDevKit.Additive("LD_Steam", "SoftSmoke.png", new Color(0.95f, 0.95f, 0.92f, 0.35f), false);
+            Slime = LookDevKit.Additive("LD_Slime", "SoftSmoke.png", new Color(0.4f, 1f, 0.3f, 1f), false);
+            SplatSlime = LookDevKit.Textured("LD_SplatSlime", "SlimeSplat.png", Color.white, 0f, 0.85f, 0.15f, true);
+            Scorch = LookDevKit.Additive("LD_Scorch", "Scorch.png", new Color(1f, 1f, 1f, 1f), false);
             HazeWarm = LookDevKit.Additive("LD_HazeWarm", "SoftSmoke.png", new Color(1f, 0.75f, 0.45f, 0.12f), false);
             Wood = LookDevKit.Pbr("LD_Wood", "dark_wood", new Color(0.9f, 0.8f, 0.7f), 0.8f, 1.0f);
             CratePlanks = LookDevKit.Pbr("LD_CratePlanks", "old_planks_02", new Color(0.85f, 0.78f, 0.66f), 1.2f, 1.0f);

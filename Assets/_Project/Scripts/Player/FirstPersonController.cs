@@ -26,6 +26,11 @@ namespace PlanErfuellt
         public float SpeedMultiplier { get; set; } = 1f;
         /// <summary>Steuerung invertiert (Infektion).</summary>
         public bool InvertControls { get; set; }
+        /// <summary>Schwanken der Kamera in Grad (Infektion „Der Boden schwankt“) und Frequenz.</summary>
+        public float WobbleDeg { get; set; }
+        public float WobbleFreq { get; set; } = 1f;
+        /// <summary>Zusätzlicher Kameraversatz (Kamerawackeln bei Explosion, Bandriss …).</summary>
+        public Vector3 ShakeOffset { get; set; }
         /// <summary>Läuft der Spieler gerade (für Leerlauf-Erkennung und Hände)?</summary>
         public bool IsMoving { get; private set; }
         public float BobPhase => bobPhase;
@@ -108,8 +113,9 @@ namespace PlanErfuellt
             cameraRig.localPosition = new Vector3(
                 Mathf.Cos(bobPhase * 0.5f) * b.ampX * bobAmp,
                 eyeHeight + Mathf.Sin(bobPhase) * b.ampY * bobAmp + Mathf.Sin(t * b.breatheFreq) * b.breatheAmp,
-                0f);
-            cameraRig.localRotation = Quaternion.Euler(pitch, 0f, roll);
+                0f) + ShakeOffset;
+            float wobble = WobbleDeg * Mathf.Sin(t * WobbleFreq * Mathf.PI * 2f);
+            cameraRig.localRotation = Quaternion.Euler(pitch + wobble * 0.3f, 0f, roll + wobble);
 
             // Sichtfeld wie im Prototyp: bei schmalen Fenstern weiter, höchstens fovMax
             if (!Mathf.Approximately(cam.aspect, lastAspect))

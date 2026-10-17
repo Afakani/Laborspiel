@@ -149,6 +149,8 @@ MonoBehaviour:
     cableTearChancePerSec: 0.03
     blackoutSec: 12
     blackoutProductionFactor: 0.5
+    blackoutLightFactor: 0.2
+    heatMusicDecay: 3
     unstableCountdownSec: 8
     infectionDistance: 7
     infectionChance: 0.5
@@ -365,6 +367,17 @@ MonoBehaviour:
     - blur
     - wobble
     - invert
+    levelStart: 0.3
+    levelMore: 0.25
+    levelPerSec: 0.002
+    firstSymptomSec: 5
+    veilBase: 0.25
+    veilPerLevel: 0.35
+    veilPulse: 0.25
+    greenVeil: 0.3
+    wobbleDeg: 4
+    wobbleFreq: 1.3
+    blurRadius: 1.2
   world:
     avgQStart: 80
     famineQ: 62
@@ -798,6 +811,17 @@ MonoBehaviour:
     lightColor: '#FF7A1E'
     nozzleColor: '#FF8A2A'
     fadeSec: 0.35
+  fx:
+    shakeExplosion: 0.9
+    shakeProcExplosion: 0.7
+    shakeBelt: 0.3
+    shakeCable: 0.35
+    shakeDecay: 1.2
+    shakeScale: 0.6
+    slimeSplats: 10
+    splatRadiusMin: 2.8
+    splatRadiusMax: 9.3
+    alarmTurnDegPerSec: 360
   ultimates:
   - {fileID: 11400000, guid: 5dc976084a4515f499639506535e6f29, type: 2}
   - {fileID: 11400000, guid: 4e589e637b093764ebf22431455450b9, type: 2}

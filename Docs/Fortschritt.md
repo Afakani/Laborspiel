@@ -11,7 +11,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 | 4a | Kernkreislauf: Panels (Mischstation, Pult) | fertig |
 | 4b | Kernkreislauf: Tier, Produktion, Verarbeitung, HUD | fertig |
 | LD | Look-Development: Kammer B-12, Pult, Halle nach Bild 08 | fertig (Tiermodelle offen) |
-| 5 | Risiken, Warnzeichen, Explosion, Infektion | offen |
+| 5 | Risiken, Warnzeichen, Explosion, Infektion | fertig |
 | 6 | Tagesablauf, Bestellung, Direktor | offen |
 | 7 | Kommissar und Laken | offen |
 | 8 | Zentrifuge, Kryo, Ultimativ-Höhepunkt | offen |
@@ -91,6 +91,27 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - Mischstation: Regler ziehen, MISCHEN, Fläschchen erscheinen im 3D-Regal. Pult: Fläschchen wählen, KLON (Hebel klappt). Leertaste/Esc schließen.
 - Das Probenmikroskop im Misch-Panel kommt laut Prompt in Phase 9.
 - Hinweis: Wird während des Play Mode neu kompiliert, wirft Unity NullReference-Fehler (Domain-Reload); einfach Play neu starten. Empfehlung: in den Unity-Einstellungen „Script Changes While Playing“ auf „Stop Playing and Recompile“ stellen.
+
+## Phase 5 – Risiken, Warnzeichen, Explosion, Infektion
+
+- [x] `RiskLogic` (rein, getestet): Hitze, Säure-Milch, Schweben bis Davonfliegen, Bandriss, Kabelriss/Stromausfall, aktuelle Stabilität, Krisen, INSTABIL mit 8-s-Countdown – alle Werte aus `risks` und `warnings`
+- [x] Warnzeichen je einmal pro Tier mit Ursachen-Toast (Dampf, Blasen, Abheben, Zittern) und sichtbar am Tier (`AnimalCrisisFx`: Dampf, Flammen, Blasen, Säurespritzer, Schleim)
+- [x] Rote Rundum-Warnleuchte auf dem Kopfring bei INSTABIL (`ChamberAlarm`)
+- [x] Explosion: Schleim- und Feuerwolke, Kamerawackeln, Schleimflecken am Boden und Brandfleck (bis zur Reinigung), Kammer verseucht, Laken zerfetzt, Parteikontrolle +20, Wut +10
+- [x] Stromausfall: Hauptkabel reißt an zufälliger Stelle mit Funken, Bild auf 20 % (eigenes Volume), 12 s, Produktion ×0,5, Klonen/Sprühen/Band gesperrt; „Strom ist wieder da“
+- [x] Bandriss: Lampe am Bandmotor blinkt rot, Reparatur am Bandmotor (1,6 s halten)
+- [x] Verarbeitung mit Mut-Bonus: 30 % Explosion (kein Fleisch, Wut +10), sonst +150 SM
+- [x] Infektion (`InfectionLogic` + `InfectionSystem`): ab Tag 2 bei Explosion (näher als 7 m oder 50 %), Frist bis Ende des nächsten Tages, steigender Infektionswert, Symptome alle 10–22 s für 7–12 s (grün, schnell ×2,4, bleischwer ×0,45, verschwommen, schwankend, invertiert), grüner Schleier und Anzeige „INFEKTION · Frist Tag n“ im HUD, Heilung mit G
+- [x] Debug-Menü (F1): Tag ±, Kuh klonen, Serum 2-2-0, Sprühen, NOT-STOPP, Explosion, Stromausfall, Band reißen, Infizieren; Anzeige von Wut, Kontrolle, Hitze, Säure, Schweben
+- [x] Tests: 68 EditMode-Tests grün (9 neue für Risiken und Infektion)
+- [x] Spieltest im Zeitraffer: 2-2-0 auf Kuh → Warnungen → INSTABIL → NOT-STOPP vernichtet ohne Explosion; zweite Kuh ohne NOT-STOPP → Explosion (verseucht, Wut 10, Kontrolle 20, Flecken). Stromausfall, Bandriss mit Reparatur, Infektion mit Symptom „schnell“, grüne und verschwommene Sicht geprüft. Konsole ohne Fehler. Screenshots `Phase5_*.png`
+
+### Offen / für spätere Phasen
+- Sirene, Zischen, Blubbern und Explosionsknall als Ton: Phase 12 (jetzt nur sichtbar)
+- Zusammenbruch bei abgelaufener Frist (`InfectionSystem.CheckCollapse`) und Hinweis „LETZTER TAG“ ruft der Tagesablauf in Phase 6 auf
+- Anstieg der Parteikontrolle pro Sekunde bei mutiertem Tier: Phase 7 (jetzt nur +20 bei Explosion)
+- Kühlaggregat (Phase 9) und Musik (Phase 9) für schnelleres Abkühlen; Nachrichtenmeldungen zu Explosionen: Phase 10
+- Partikel laufen in Echtzeit statt in Spielzeit (Pause hält sie nicht an); im Art-Pass angleichen
 
 ## Look-Development – Kammer B-12 und Pult aus Ego-Sicht (Bild 08)
 

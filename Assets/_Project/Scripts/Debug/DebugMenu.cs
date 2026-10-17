@@ -17,10 +17,14 @@ namespace PlanErfuellt
         bool visible;
         Rect window = new Rect(20, 80, 300, 10);
         string moneyInput = "";
+        Chamber chamber;
+        InfectionSystem infection;
 
         void Awake()
         {
-            if (!Debug.isDebugBuild) Destroy(this);
+            if (!Debug.isDebugBuild) { Destroy(this); return; }
+            chamber = FindAnyObjectByType<Chamber>();
+            infection = FindAnyObjectByType<InfectionSystem>();
         }
 
         void Update()
@@ -80,9 +84,50 @@ namespace PlanErfuellt
             StockRow($"Kaviar: {s.caviar}", () => { s.caviar = Mathf.Max(0, s.caviar - 1); s.NotifyInventoryChanged(); },
                 () => { s.caviar++; s.NotifyInventoryChanged(); });
 
+            DrawRisks(gm, s);
+
             if (GUILayout.Button("Neues Spiel (Startwerte)")) gm.NewGame();
 
             GUI.DragWindow();
+        }
+
+        /// <summary>Phase 5: Risiken, Explosion und Infektion schnell auslösen.</summary>
+        void DrawRisks(GameManager gm, GameState s)
+        {
+            GUILayout.Label($"Wut {s.anger:0} · Kontrolle {s.authority:0} · Explosionen {s.explosions}");
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Tag −")) s.dayNum = Mathf.Max(0, s.dayNum - 1);
+            if (GUILayout.Button("Tag +")) s.dayNum++;
+            GUILayout.EndHorizontal();
+            if (chamber != null)
+            {
+                var st = chamber.Stats;
+                GUILayout.Label($"Tier: {chamber.State} · Stab {chamber.Stability:0} · Hitze {st.heat:0} · Säure {st.acidTimer:0.0} · Schweben {st.floatHeight:0.0}");
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Kuh klonen")) chamber.Clone(AnimalKind.Cow).Report(gm);
+                if (GUILayout.Button("Serum 2-2-0")) { s.serums.Add(new Serum(new Dose(2, 2, 0), SerumStage.Raw)); EventBus.RaiseSerumRackChanged(); }
+                GUILayout.EndHorizontal();
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Sprühen")) chamber.Spray(s.serums.Count - 1).Report(gm);
+                if (GUILayout.Button("NOT-STOPP")) chamber.NotStop().Report(gm);
+                if (GUILayout.Button("Explosion")) chamber.Explode();
+                GUILayout.EndHorizontal();
+            }
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Stromausfall") && s.blackoutTimer <= 0f)
+            {
+                s.blackoutTimer = gm.Config.risks.blackoutSec;
+                gm.Toast("ui.toasts.cableTorn", ToastKind.Bad);
+                EventBus.RaiseRisk(RiskEvent.CableTorn);
+            }
+            if (GUILayout.Button("Band reißen") && !s.beltBroken)
+            {
+                s.beltBroken = true;
+                gm.Toast("ui.toasts.beltBroken", ToastKind.Bad);
+                EventBus.RaiseRisk(RiskEvent.BeltBroken);
+            }
+            if (GUILayout.Button("Infizieren") && infection != null) infection.ForceInfect();
+            GUILayout.EndHorizontal();
         }
 
         static void StockRow(string label, System.Action minus, System.Action plus)

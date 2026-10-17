@@ -53,11 +53,13 @@ namespace PlanErfuellt.EditorTools
             LabEnvironmentBuilder.Build(env, L);
             LookDevHall.Build(env, L);
             LabLightingSetup.Build(env, L);
+            var fxVolumes = LabLightingSetup.BuildFxVolumes(env, cfg);
+            LabEnvironmentBuilder.BuildBlackoutFx(env, L, fxVolumes.dark);
 
             // Kammer
             var cowPrefab = AnimalBuilder.LoadOrBuild(AnimalBuilder.CowPath, rebuildPrefabs, AnimalBuilder.BuildCow);
             var henPrefab = AnimalBuilder.LoadOrBuild(AnimalBuilder.HenPath, rebuildPrefabs, AnimalBuilder.BuildHen);
-            var chamber = InstantiatePrefab("Chamber", rebuildPrefabs, () => LabChamberBuilder.Build(L, cfg.chamberDoors, cfg.player.radius, cowPrefab, henPrefab), chamberRoot);
+            var chamber = InstantiatePrefab("Chamber", rebuildPrefabs, () => LabChamberBuilder.Build(L, cfg.chamberDoors, cfg.fx, cfg.player.radius, cowPrefab, henPrefab), chamberRoot);
             chamber.transform.position = LayoutConfig.ToUnity(L.chamber.x, 0f, L.chamber.z);
             BuildZones(chamberRoot, L);
 

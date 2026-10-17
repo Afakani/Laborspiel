@@ -42,6 +42,8 @@ namespace PlanErfuellt.EditorTools
 
             var fps = root.AddComponent<FirstPersonController>();
             var interaction = root.AddComponent<InteractionSystem>();
+            root.AddComponent<CameraShake>();
+            root.AddComponent<InfectionSystem>();
             Set(fps, "cameraRig", rig);
             Set(fps, "cam", cam);
 

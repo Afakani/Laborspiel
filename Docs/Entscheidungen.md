@@ -92,3 +92,15 @@ Abweichungen von den Übergabedokumenten und eigene Festlegungen. Neueste unten.
 | L15 | Laken | Laken jetzt so hoch wie Kammer + Kopfring (statt fest 8,4 m) und mit Radius 3,05 m innerhalb des Spielerabstands; die Schleusen ragen heraus. |
 | L16 | Texturen | Zwei weitere CC0-Texturen von Poly Haven (`dark_wood`, `old_planks_02`) für Grammophon und Kisten. Kistenaufschriften als Texte (`ui.signs.crateA` usw.). |
 | L17 | Mesh-Überschreiben | Vorhandene Mesh-Assets werden über die Mesh-API überschrieben (`SdfMesher.CopyInto`), nicht mit `CopySerialized`, weil sonst die GPU-Daten veraltet bleiben (zerknitterte Tiere beim ersten Versuch). |
+
+## Phase 5 (2026-10-17)
+
+| Nr. | Thema | Entscheidung |
+|---|---|---|
+| D40 | Risiko-Logik | Risiken laufen in `RiskLogic.Step` (rein, mit Zufallsfunktion) und melden `RiskEvent`s. Die Kammer macht daraus Meldungen und Zustände, Effekte und Kamerawackeln hören auf `EventBus.Risk`. |
+| D41 | Neue Werte | `risks.blackoutLightFactor` (GDD: Licht 20 %), `risks.heatMusicDecay` (GDD: Musik −3/s), Abschnitt `fx` (Wackelstärken und Abbau wie Prototyp `shake`, Anzahl und Abstand der Schleimflecken, Drehtempo der Warnleuchte) und in `infection` die Prototyp-Werte für Infektionswert, Schleier, erstes Symptom; `wobbleDeg`/`blurRadius` sind eigene Festlegungen. |
+| D42 | Kamerawackeln | Stärke ×0,6 gegenüber dem Prototyp (`fx.shakeScale`), weil ±0,45 m Versatz in Ego-Sicht zu heftig wirkt. |
+| D43 | Sirene | Vorerst nur eine drehende rote Warnleuchte auf dem Kopfring; der Sirenenton kommt mit dem Ton in Phase 12. |
+| D44 | Stromausfall-Licht | Abdunkeln über ein eigenes Post-Processing-Volume (Belichtung log2(0,2)), weil die Hallenlampen gebacken sind und sich nicht dimmen lassen. |
+| D45 | Infektions-Bild | Grün und Unschärfe über zwei globale Volumes (Farbfilter bzw. Gauß-Tiefenunschärfe), der Schleier als HUD-Bild. Schnell, bleischwer, invertiert und schwankend wirken auf den Spieler-Controller. |
+| D46 | Zusammenbruch | Die Frist-Prüfung ist fertig (`InfectionLogic.TryCollapse`), wird aber erst vom Tagesablauf in Phase 6 aufgerufen. |

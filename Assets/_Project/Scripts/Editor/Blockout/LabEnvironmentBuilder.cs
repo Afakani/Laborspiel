@@ -38,6 +38,54 @@ namespace PlanErfuellt.EditorTools
             BuildDecor(root, zFront, zBack);
         }
 
+        /// <summary>
+        /// Stromausfall-Effekt (Phase 5): Teilstücke und herabhängende Enden des Hauptkabels (versteckt),
+        /// Funken und BlackoutFx am Deckenträger.
+        /// </summary>
+        public static void BuildBlackoutFx(Transform root, LayoutConfig L, UnityEngine.Rendering.Volume darkVolume)
+        {
+            var c = root.Find("CeilingStructure");
+            var main = c.Find("Cable_Main").GetComponent<Renderer>();
+            float x = L.room.sideWallX;
+            var g = BlockoutKit.Group(c, "CableTear", Vector3.zero);
+            Transform Piece(string name, float halfLen, Vector3 euler)
+            {
+                var go = BlockoutKit.Cyl(g, name, main.transform.position, 0.045f, halfLen * 2f, M.Black, false, euler);
+                go.SetActive(false);
+                return go.transform;
+            }
+            var left = Piece("HalfLeft", 1f, new Vector3(0f, 0f, 90f));
+            var right = Piece("HalfRight", 1f, new Vector3(0f, 0f, 90f));
+            var dl = Piece("DangleLeft", 0.45f, Vector3.zero);
+            var dr = Piece("DangleRight", 0.45f, Vector3.zero);
+
+            var sparkGo = new GameObject("Sparks");
+            sparkGo.transform.SetParent(g, false);
+            var ps = sparkGo.AddComponent<ParticleSystem>();
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var main2 = ps.main;
+            main2.playOnAwake = false;
+            main2.simulationSpace = ParticleSystemSimulationSpace.World;
+            main2.startLifetime = new ParticleSystem.MinMaxCurve(0.4f, 0.9f);
+            main2.startSpeed = new ParticleSystem.MinMaxCurve(2f, 6f);
+            main2.startSize = new ParticleSystem.MinMaxCurve(0.03f, 0.08f);
+            main2.startColor = new Color(1f, 0.85f, 0.4f);
+            main2.gravityModifier = 1.5f;
+            main2.maxParticles = 120;
+            var em = ps.emission;
+            em.rateOverTime = 0f;
+            var shape = ps.shape;
+            shape.shapeType = ParticleSystemShapeType.Sphere;
+            shape.radius = 0.08f;
+            var r = sparkGo.GetComponent<ParticleSystemRenderer>();
+            r.sharedMaterial = LookDevMaterials.FireAdd;
+            r.renderMode = ParticleSystemRenderMode.Stretch;
+            r.velocityScale = 0.06f;
+            r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
+            g.gameObject.AddComponent<BlackoutFx>().Setup(main, left, right, dl, dr, ps, darkVolume, -x, x);
+        }
+
         /// <summary>Wand mit dunklerem Sockel (Fliesen) auf der Raumseite.</summary>
         static void Wall(Transform parent, string name, Vector3 center, Vector3 size, Vector3 inward)
         {

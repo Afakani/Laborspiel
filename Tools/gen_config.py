@@ -76,6 +76,8 @@ CLASSES = [
         F("int", "beltBreakMinA"), F("float", "beltBreakChancePerAPerSec"),
         F("float", "cableTearBelowStab"), F("float", "cableTearChancePerSec"),
         F("float", "blackoutSec"), F("float", "blackoutProductionFactor"),
+        F("float", "blackoutLightFactor", "Helligkeit während des Stromausfalls (0.2 = 20 %)"),
+        F("float", "heatMusicDecay", "Zusätzliches Abkühlen pro s während Musik"),
         F("float", "unstableCountdownSec"),
         F("float", "infectionDistance"), F("float", "infectionChance"), F("int", "infectionFromDay"), F("int", "infectionDays")]),
     ("WarningsConfig", "Warnzeichen vor Krisen (GDD 5.3).", [
@@ -147,7 +149,13 @@ CLASSES = [
         F("int", "fromDay"), F("float", "payMult"), F("ContractConfig[]", "list")]),
     ("InfectionConfig", "Infektion des Spielers (GDD 8).", [
         F("float[]", "symptomIntervalSec"), F("float[]", "symptomDurationSec"),
-        F("float", "fast"), F("float", "slow"), F("string[]", "symptoms")]),
+        F("float", "fast"), F("float", "slow"), F("string[]", "symptoms"),
+        F("float", "levelStart", "Infektionswert bei Ansteckung"), F("float", "levelMore", "Zuwachs bei erneuter Ansteckung"),
+        F("float", "levelPerSec", "Langsamer Anstieg pro s"), F("float", "firstSymptomSec", "Erstes Symptom nach"),
+        F("float", "veilBase", "Grüner Schleier: Grunddeckkraft"), F("float", "veilPerLevel", "Schleier pro Infektionswert"),
+        F("float", "veilPulse", "Anteil des Pulsierens"), F("float", "greenVeil", "Deckkraft beim Symptom grün"),
+        F("float", "wobbleDeg", "Schwanken der Kamera beim Symptom wobble"), F("float", "wobbleFreq"),
+        F("float", "blurRadius", "Unschärfe beim Symptom blur")]),
     ("WindowHungerConfig", "Fenster zeigt Warteschlange, wenn Volk oder Nahrung darunter.", [
         F("float", "popBelow"), F("float", "foodBelow")]),
     ("WindowParadeConfig", "Fenster zeigt Festumzug, wenn beide Werte erreicht sind.", [
@@ -231,6 +239,11 @@ CLASSES = [
         F("float", "lightIntensity"), F("float", "flickerAmp"), F("float", "flickerFreq"),
         F("string", "lightColor"), F("string", "nozzleColor", "Farbe von Düsenlicht und Kegel während des Feuers"),
         F("float", "fadeSec", "Ein- und Ausblenden von Licht und Düsenfarbe")]),
+    ("FxConfig", "Kamerawackeln und Effektstärken (Prototyp shake).", [
+        F("float", "shakeExplosion"), F("float", "shakeProcExplosion"), F("float", "shakeBelt"), F("float", "shakeCable"),
+        F("float", "shakeDecay", "Abbau pro s"), F("float", "shakeScale", "Meter Kameraversatz pro Wackel-Einheit"),
+        F("int", "slimeSplats", "Schleimflecken am Boden nach einer Explosion"),
+        F("float", "splatRadiusMin"), F("float", "splatRadiusMax"), F("float", "alarmTurnDegPerSec", "Drehung der Warnleuchte")]),
     ("AnimalVisualsConfig", "Sichtbare Mutation am Tier (GDD 5.5).", [
         F("float", "growPerA"), F("float", "growCapA"), F("float", "kolossGrowExtra"), F("float", "kolossA"), F("float", "omegaB"),
         F("float", "inflPerA"), F("float", "inflPerBOver2"), F("float", "inflBCap"), F("float", "inflSmoothing"),

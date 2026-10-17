@@ -30,6 +30,8 @@ namespace PlanErfuellt
         public float maxRate;
         public float eggTimer;
         public bool brave;
+        /// <summary>Schon gezeigte Warnzeichen.</summary>
+        public RiskWarnings warned;
 
         /// <summary>Alles außer der Tierart zurücksetzen (Prototyp resetSubj).</summary>
         public void Reset(float eggInterval)
@@ -52,6 +54,7 @@ namespace PlanErfuellt
             maxRate = 0f;
             eggTimer = eggInterval;
             brave = false;
+            warned = RiskWarnings.None;
         }
 
         public bool IsUltimate => ultimate != null;

@@ -56,6 +56,15 @@ namespace PlanErfuellt
         public float anger;
         public float authority;
 
+        // ---------- Infektion des Spielers (GDD 8) ----------
+        public bool infected;
+        /// <summary>Frist: bis Ende dieses Tages.</summary>
+        public int infectedUntilDay;
+        /// <summary>Infektionswert 0..1 (Schleier, Anzeige).</summary>
+        public float infectionLevel;
+        /// <summary>Gerade wirkendes Symptom (nur zur Laufzeit, für Anzeige und Effekte).</summary>
+        public string infectionSymptom;
+
         // ---------- Entdeckungen und Statistik ----------
         /// <summary>Am Tier getestete Kombinationen (Schlüssel "A-B-C" bzw. "U:id" für Ultimative).</summary>
         public readonly HashSet<string> discoveredRecipes = new HashSet<string>();
@@ -119,6 +128,12 @@ namespace PlanErfuellt
             substances[index] = Mathf.Max(0, substances[index] + amount);
             EventBus.RaiseInventoryChanged();
         }
+
+        /// <summary>Direktor-Wut ändern, begrenzt auf 0..max.</summary>
+        public void AddAnger(float amount, GameConfig cfg) => anger = Mathf.Clamp(anger + amount, 0f, cfg.anger.max);
+
+        /// <summary>Parteikontrolle ändern, begrenzt auf 0..max.</summary>
+        public void AddAuthority(float amount, GameConfig cfg) => authority = Mathf.Clamp(authority + amount, 0f, cfg.authority.max);
 
         /// <summary>Lagerartikel (Gegenmittel, Wodka, Kaviar) wurden geändert.</summary>
         public void NotifyInventoryChanged() => EventBus.RaiseInventoryChanged();

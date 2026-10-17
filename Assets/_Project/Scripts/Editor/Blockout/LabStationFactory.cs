@@ -19,7 +19,10 @@ namespace PlanErfuellt.EditorTools
                 case "clone": CloneLook(v); break;
                 case "processing": LookDevMachines.Processing(v); break;
                 case "pult": Pult(v, s.z); break;
-                case "beltMotor": LookDevMachines.BeltMotor(v); break;
+                case "beltMotor":
+                    LookDevMachines.BeltMotor(v);
+                    v.gameObject.AddComponent<BeltMotorFx>().Setup(v.Find("Lamp/Bulb").GetComponent<Renderer>());
+                    break;
                 case "mixing": Mixing(v); break;
                 case "microscope": LookDevMachines.Microscope(v); break;
                 case "centrifuge": LookDevMachines.Centrifuge(v); break;

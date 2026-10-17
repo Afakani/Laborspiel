@@ -8,7 +8,7 @@ namespace PlanErfuellt.EditorTools
     /// </summary>
     public static class LabChamberBuilder
     {
-        public static GameObject Build(LayoutConfig L, ChamberDoorsConfig doorsCfg, float playerRadius, GameObject cowPrefab, GameObject henPrefab)
+        public static GameObject Build(LayoutConfig L, ChamberDoorsConfig doorsCfg, FxConfig fxCfg, float playerRadius, GameObject cowPrefab, GameObject henPrefab)
         {
             var c = L.chamber;
             float R = c.radius, H = c.height, y0 = c.baseY;
@@ -78,6 +78,12 @@ namespace PlanErfuellt.EditorTools
             var fire = root.AddComponent<ChamberFire>();
             var fireLights = new System.Collections.Generic.List<Light>(parts.nozzleLights) { light };
             fire.Setup(parts.fire, parts.fireLight, fireLights.ToArray(), parts.nozzleCones.ToArray(), gasFx, parts.fog);
+
+            // Risiken (Phase 5): Warnleuchte, Krisen am Tier, Explosion mit Flecken
+            var fx = LookDevChamberFx.Build(root.transform, c, fxCfg);
+            root.AddComponent<ChamberAlarm>().Setup(chamberLogic, fx.alarmRotor, fx.alarmLight, fx.alarmDome);
+            fx.crisisRoot.gameObject.AddComponent<AnimalCrisisFx>().Setup(chamberLogic, fx.steam, fx.heatFire, fx.bubbles, fx.acidSpray, fx.slime);
+            root.AddComponent<ExplosionFx>().Setup(fx.slimeBurst, fx.fireBurst, fx.splats, fx.scorch);
             var clothInteraction = root.AddComponent<Cloth>();
             clothInteraction.SetStationId("cloth");
             clothInteraction.SetVisual(cloth);

@@ -42,6 +42,7 @@ namespace PlanErfuellt
         public AnimalVisualsConfig animalVisuals = new AnimalVisualsConfig();
         public ChamberDoorsConfig chamberDoors = new ChamberDoorsConfig();
         public ChamberFireConfig chamberFire = new ChamberFireConfig();
+        public FxConfig fx = new FxConfig();
 
         // Diese Teile sind in der JSON als Objekte mit Schlüsseln abgelegt und werden vom Importer gesondert übertragen.
         [JsonIgnore] public List<UltimateSerum> ultimates = new List<UltimateSerum>();

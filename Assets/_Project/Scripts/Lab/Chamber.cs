@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace PlanErfuellt
     /// <summary>
     /// Kammer B-12 mit dem Tier (GDD 5, Prototyp updateSubject/cloneAnimal/applySerum/finishProc).
     /// Zustände: Empty → Enter → Ok ↔ Unstable → Exit | Destroy | Flying → Empty.
-    /// Risiken (Hitze, Säure, Schweben, Bandriss, Stromausfall) und die volle Explosion folgen in Phase 5.
+    /// Risiken kommen aus RiskLogic; Effekte, Kamerawackeln und Infektion hören auf EventBus.Risk.
     /// </summary>
     public class Chamber : MonoBehaviour
     {
@@ -19,6 +20,7 @@ namespace PlanErfuellt
         [SerializeField] ChamberDoors doors;
 
         readonly AnimalStats stats = new AnimalStats();
+        readonly List<RiskEvent> riskEvents = new List<RiskEvent>();
         AnimalVisuals model;
         float x, drop, pop = 1f, sink, destroyTimer;
 
@@ -37,6 +39,8 @@ namespace PlanErfuellt
         public bool InCrisis => stats.crisis != CrisisKind.None;
         public bool IsUltimate => stats.IsUltimate;
         public AnimalStats Stats => stats;
+        /// <summary>Sichtbares Tiermodell (für Effekte, die dem Tier folgen) oder null.</summary>
+        public Transform ModelTransform => model != null ? model.transform : null;
         public bool HasLivingAnimal => State == AnimalState.Ok || State == AnimalState.Unstable;
         /// <summary>Lebt ein mutiertes Tier in der Kammer (für Parteikontrolle, Kommissar)?</summary>
         public bool HasMutatedAnimal => HasLivingAnimal && stats.IsMutated;
@@ -66,6 +70,7 @@ namespace PlanErfuellt
         {
             float dt = GM.Clock.DeltaTime;
             UpdateCleaning(dt);
+            UpdateBlackout(dt);
             S.currentRate = 0f;
             UpdateDoorWishes();
             if (dt <= 0f || State == AnimalState.Empty || model == null) return;
@@ -133,15 +138,12 @@ namespace PlanErfuellt
         void UpdateLiving(float dt)
         {
             bool music = false; // Grammophon folgt in Phase 9
-            float s0 = stats.BaseStability(music, Cfg);
-            stats.stability = Mathf.Clamp(s0 - stats.heat * Cfg.risks.heatStabPenalty, 0f, Cfg.formulas.statMax);
-            stats.minStability = Mathf.Min(stats.minStability, stats.stability);
-
-            if (State == AnimalState.Ok && (stats.stability <= 0f || stats.heat >= Cfg.risks.heatUnstable))
+            riskEvents.Clear();
+            RiskLogic.Step(stats, State, S, Cfg, dt, music, RandomValue, riskEvents);
+            foreach (var e in riskEvents)
             {
-                stats.unstableTimer = Cfg.risks.unstableCountdownSec;
-                SetState(AnimalState.Unstable);
-                GM.Toast("ui.toasts.unstable", ToastKind.Bad);
+                HandleRisk(e);
+                if (State == AnimalState.Flying || State == AnimalState.Empty) return;
             }
 
             if (State == AnimalState.Unstable)
@@ -169,6 +171,40 @@ namespace PlanErfuellt
                 }
             }
         }
+
+        /// <summary>Risiko-Ereignis in Meldung und Zustand übersetzen, dann an Effekte weitergeben.</summary>
+        void HandleRisk(RiskEvent e)
+        {
+            switch (e)
+            {
+                case RiskEvent.WarnHeat: GM.Toast("ui.toasts.warnHeat", ToastKind.Warn); break;
+                case RiskEvent.WarnAcid: GM.Toast("ui.toasts.warnAcid", ToastKind.Warn); break;
+                case RiskEvent.WarnFloat: GM.Toast("ui.toasts.warnFloat", ToastKind.Warn); break;
+                case RiskEvent.WarnStab: GM.Toast("ui.toasts.warnStab", ToastKind.Warn); break;
+                case RiskEvent.AcidMilk: GM.Toast("ui.toasts.acidMilk", ToastKind.Bad); break;
+                case RiskEvent.BeltBroken: GM.Toast("ui.toasts.beltBroken", ToastKind.Bad); break;
+                case RiskEvent.CableTorn: GM.Toast("ui.toasts.cableTorn", ToastKind.Bad); break;
+                case RiskEvent.FlyAway: FlyAway(); break;
+                case RiskEvent.Unstable:
+                    SetState(AnimalState.Unstable);
+                    GM.Toast("ui.toasts.unstable", ToastKind.Bad);
+                    break;
+            }
+            EventBus.RaiseRisk(e);
+        }
+
+        /// <summary>Stromausfall läuft ab (GDD 5.2: 12 s).</summary>
+        void UpdateBlackout(float dt)
+        {
+            if (S.blackoutTimer <= 0f) return;
+            S.blackoutTimer -= dt;
+            if (S.blackoutTimer > 0f) return;
+            S.blackoutTimer = 0f;
+            GM.Toast("ui.toasts.powerBack", ToastKind.Good);
+            EventBus.RaiseRisk(RiskEvent.PowerBack);
+        }
+
+        static float RandomValue() => Random.value;
 
         void UpdateCleaning(float dt)
         {
@@ -351,14 +387,30 @@ namespace PlanErfuellt
 
         void FinishProcessing()
         {
+            var p = Cfg.processing;
+            // Mut-Bonus (GDD 5.6): instabil oder fast instabil gewesen → Explosion möglich, sonst Bonus
+            if (stats.brave && Random.value < p.braveExplodeChance)
+            {
+                S.explosions++;
+                S.AddAnger(Cfg.anger.explode, Cfg);
+                GM.Toast("ui.toasts.procExploded", ToastKind.Bad);
+                EventBus.RaiseRisk(RiskEvent.ProcessingExplosion);
+                Empty();
+                return;
+            }
             float meat = stats.Meat(Cfg);
-            // Mut-Bonus und Explosion in der Verarbeitung folgen mit den Risiken in Phase 5
             Production.Deliver(S, Cfg, 'f', meat, stats.Quality(Cfg));
             GM.Toast("ui.toasts.processed", ToastKind.Good, ("n", meat.ToString("0.0", German)));
-            if (stats.ultimate != null && stats.ultimate.id == "koloss" && Random.value < Cfg.processing.kolossBeltBreakChance)
+            if (stats.brave)
+            {
+                S.AddMoney(p.braveBonus);
+                GM.Toast("ui.toasts.braveBonus", ToastKind.Good, ("money", GM.Texts.Format("ui.common.money", ("n", p.braveBonus))));
+            }
+            if (stats.ultimate != null && stats.ultimate.id == "koloss" && Random.value < p.kolossBeltBreakChance)
             {
                 S.beltBroken = true;
                 GM.Toast("ui.toasts.kolossBelt", ToastKind.Bad);
+                EventBus.RaiseRisk(RiskEvent.BeltBroken);
             }
             Empty();
         }
@@ -407,11 +459,16 @@ namespace PlanErfuellt
             return Feedback.Ok;
         }
 
-        /// <summary>Explosion (GDD 5.4). Phase 4b: Kammer verseucht, Tier weg; Effekte, Wut, Kontrolle, Infektion folgen in Phase 5.</summary>
+        /// <summary>
+        /// Explosion (GDD 5.4): Kammer verseucht, Laken zerfetzt, Parteikontrolle und Wut steigen.
+        /// Effekte, Flecken, Kamerawackeln und die Infektion des Spielers hängen an EventBus.Explosion.
+        /// </summary>
         public void Explode()
         {
             S.explosions++;
             S.contaminated = true;
+            S.AddAuthority(Cfg.authority.explodeAdd, Cfg);
+            S.AddAnger(Cfg.anger.explode, Cfg);
             if (S.chamberCovered)
             {
                 S.chamberCovered = false;
@@ -419,11 +476,12 @@ namespace PlanErfuellt
                 GM.Toast("ui.toasts.clothTorn", ToastKind.Bad);
             }
             GM.Toast("ui.toasts.explosion", ToastKind.Bad);
+            EventBus.RaiseRisk(RiskEvent.Explosion);
             EventBus.RaiseExplosion();
             Empty();
         }
 
-        /// <summary>Tier schwebt davon (GDD 5.2), ausgelöst durch die Risiken in Phase 5.</summary>
+        /// <summary>Tier schwebt davon (GDD 5.2), ausgelöst vom Risiko-System.</summary>
         public void FlyAway()
         {
             S.AddMoney(-Cfg.risks.escapeCost);

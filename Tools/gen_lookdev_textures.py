@@ -246,6 +246,48 @@ def soft():
     save(cone, "ConeGradient.png")
 
 
+def splats():
+    # Schleimfleck: grüner Klecks mit Spritzern, glänzendem Kern, Alpha am Rand
+    size = 512
+    img = Image.new("L", (size, size), 0)
+    d = ImageDraw.Draw(img)
+    cx = cy = size // 2
+    for i in range(14):
+        a = random.uniform(0, math.tau)
+        r = random.uniform(40, 120)
+        rr = random.uniform(50, 110)
+        x, y = cx + math.cos(a) * r * 0.6, cy + math.sin(a) * r * 0.6
+        d.ellipse([x - rr, y - rr, x + rr, y + rr], fill=255)
+    for i in range(40):
+        a = random.uniform(0, math.tau)
+        r = random.uniform(150, 240)
+        rr = random.uniform(5, 18)
+        x, y = cx + math.cos(a) * r, cy + math.sin(a) * r
+        d.ellipse([x - rr, y - rr, x + rr, y + rr], fill=255)
+    alpha = img.filter(ImageFilter.GaussianBlur(5)).point(lambda v: 255 if v > 120 else int(v * 1.6))
+    shade = noise_layer((size, size), 18, 1.0).filter(ImageFilter.GaussianBlur(3))
+    rgb = Image.merge("RGB", (shade.point(lambda v: 40 + v // 6), shade.point(lambda v: 150 + v // 3), shade.point(lambda v: 30 + v // 8)))
+    out = rgb.convert("RGBA")
+    out.putalpha(alpha.point(lambda v: int(v * 0.92)))
+    save(out, "SlimeSplat.png")
+
+    # Brandfleck: dunkel, rußig, weicher Rand
+    sc = Image.new("L", (size, size), 0)
+    d = ImageDraw.Draw(sc)
+    for i in range(10):
+        a = random.uniform(0, math.tau)
+        r = random.uniform(0, 70)
+        rr = random.uniform(110, 180)
+        x, y = cx + math.cos(a) * r, cy + math.sin(a) * r
+        d.ellipse([x - rr, y - rr, x + rr, y + rr], fill=180)
+    sc = sc.filter(ImageFilter.GaussianBlur(28))
+    grain = noise_layer((size, size), 10, 1.0)
+    a2 = Image.composite(sc, sc.point(lambda v: int(v * 0.6)), grain)
+    out2 = Image.new("RGBA", (size, size), (20, 14, 10, 0))
+    out2.putalpha(a2)
+    save(out2, "Scorch.png")
+
+
 hazard()
 emblem(CREAM + (255,), "EmblemCream.png")
 emblem(GOLD + (255,), "EmblemGold.png")
@@ -255,3 +297,4 @@ paper()
 checklist()
 icons()
 soft()
+splats()
