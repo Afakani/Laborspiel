@@ -104,6 +104,28 @@ namespace PlanErfuellt.EditorTools
             lp.arraySize = pivots.Length;
             for (int i = 0; i < pivots.Length; i++) lp.GetArrayElementAtIndex(i).objectReferenceValue = pivots[i];
             lso.ApplyModifiedPropertiesWithoutUndo();
+            AddHoseCollider(v);
+        }
+
+        /// <summary>Kollider über dem Schlauchbündel zwischen Pult und Kammer, damit der Spieler nicht hindurchläuft.</summary>
+        static void AddHoseCollider(Transform v)
+        {
+            Bounds b = default;
+            bool any = false;
+            foreach (var r in v.GetComponentsInChildren<MeshRenderer>())
+            {
+                if (r.name != "Hose") continue;
+                var c = v.InverseTransformPoint(r.bounds.center);
+                var e = v.InverseTransformVector(r.bounds.extents);
+                var lb = new Bounds(c, new Vector3(Mathf.Abs(e.x), Mathf.Abs(e.y), Mathf.Abs(e.z)) * 2f);
+                if (!any) { b = lb; any = true; } else b.Encapsulate(lb);
+            }
+            if (!any) return;
+            // Nur der Teil hinter dem Pult (lokal +z); der Pult selbst hat seinen eigenen Kollider
+            float zStart = 0.65f, zEnd = b.max.z + 0.1f;
+            var col = v.gameObject.AddComponent<BoxCollider>();
+            col.center = new Vector3(b.center.x, 0.5f, (zStart + zEnd) * 0.5f);
+            col.size = new Vector3(b.size.x + 0.2f, 1f, zEnd - zStart);
         }
 
         static void BeltMotor(Transform v)

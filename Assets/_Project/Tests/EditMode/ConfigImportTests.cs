@@ -76,9 +76,9 @@ namespace PlanErfuellt.Tests
             Assert.AreEqual(16, L.stations.Length);
             var pult = L.Station("pult");
             Assert.NotNull(pult);
-            Assert.AreEqual(new UnityEngine.Vector3(0f, 0f, -3.75f), pult.UnityPosition, "z wird gespiegelt");
+            Assert.AreEqual(new UnityEngine.Vector3(0f, 0f, -6.2f), pult.UnityPosition, "z wird gespiegelt");
             Assert.AreEqual(180f, L.Station("gramophone").facing);
-            Assert.AreEqual(1.95f, L.pultZone.absXMax, 0.0001f);
+            Assert.AreEqual(2.6f, L.pultZone.absXMax, 0.0001f);
         }
 
         [Test]

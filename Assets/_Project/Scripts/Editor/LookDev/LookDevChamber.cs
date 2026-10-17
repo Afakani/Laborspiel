@@ -18,10 +18,10 @@ namespace PlanErfuellt.EditorTools
             float R = c.radius, H = c.height, y0 = c.baseY;
             var frame = BlockoutKit.Group(root, "Frame", Vector3.zero);
 
-            // Sockel
-            LookDevKit.Obj(frame, "Plinth", LookDevKit.Cylinder(R + 0.45f, 0.3f, 64), new Vector3(0f, 0.15f, 0f), L.FloorPlate);
-            LookDevKit.Obj(frame, "BaseRing", LookDevKit.Ring(R + 0.2f, R + 0.6f, 0.5f, 64), new Vector3(0f, 0.25f, 0f), L.SteelFrame);
-            LookDevKit.BoltCircle(frame, R + 0.4f, 0.505f, 36, L.Brass, true, 0.03f);
+            // Sockel: bleibt innerhalb von playerCollisionRadius minus Spielerradius (2,8 m), damit niemand auf dem Ring steht
+            LookDevKit.Obj(frame, "Plinth", LookDevKit.Cylinder(R + 0.28f, 0.3f, 64), new Vector3(0f, 0.15f, 0f), L.FloorPlate);
+            LookDevKit.Obj(frame, "BaseRing", LookDevKit.Ring(R - 0.02f, R + 0.3f, 0.5f, 64), new Vector3(0f, 0.25f, 0f), L.SteelFrame);
+            LookDevKit.BoltCircle(frame, R + 0.2f, 0.505f, 36, L.Brass, true, 0.03f);
             BlockoutKit.MeshObj(frame, "BrassBase", MeshFactory.Torus(R + 0.05f, 0.07f), new Vector3(0f, y0 + 0.18f, 0f), L.Brass);
 
             // Kopfring mit Flanschen

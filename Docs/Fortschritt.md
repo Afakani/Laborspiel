@@ -10,7 +10,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 | 3 | Spieler und Interaktion | fertig |
 | 4a | Kernkreislauf: Panels (Mischstation, Pult) | fertig |
 | 4b | Kernkreislauf: Tier, Produktion, Verarbeitung, HUD | fertig |
-| LD | Look-Development: Kammer B-12, Pult, Halle nach Bild 08 | Look steht, Abnahme und Spieltest offen |
+| LD | Look-Development: Kammer B-12, Pult, Halle nach Bild 08 | fertig (Tiermodelle offen) |
 | 5 | Risiken, Warnzeichen, Explosion, Infektion | offen |
 | 6 | Tagesablauf, Bestellung, Direktor | offen |
 | 7 | Kommissar und Laken | offen |
@@ -100,9 +100,12 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - [x] Halle: Boden und Wände mit CC0-Texturen, Laufstege mit gelbem Geländer, Rohrbündel, hohe Banner mit Emblem, Wandschild, Wandlampen, warmer Dunst; TV (Direktor + Parolen), Plantafel (Milch/Eier/Fleisch), Wutskala, Klonanlage im neuen Material
 - [x] Eigener Shader `Art/Shaders/LightShaft.shader` für die Lichtkegel
 - [x] Screenshots `Docs/Screenshots/LookDev_00` bis `LookDev_03`
-- [ ] Abnahme durch den Auftraggeber
-- [ ] Kernkreislauf im Play Mode neu testen (mischen, klonen, sprühen, verarbeiten), Zonen und Kollider an die neuen Modelle anpassen
+- [x] Abnahme des Looks durch den Auftraggeber
+- [x] Spieltest im Play Mode mit echtem Laufen: Mischzone → 1-1-0 gemischt → zum Pult gelaufen (Pult-Kollider stoppt bei z −7,17) → Kuh geklont → gesprüht (Stabilität 62, 3,9 t/s) → verarbeitet (10,8 t Fleisch), Werte wie im 4b-Referenztest
+- [x] Kollider: Pult-Kollider passt auf 5 cm zum Modell; neuer Kollider über dem Schlauchbündel; Kammersockel auf 2,8 m verkleinert (Spieler bleibt 3,1 m entfernt); Gang zur linken Lakenzone frei (Prompt „Laken über die Kammer werfen“ erreicht)
+- [x] EditMode-Tests 59 grün (Layout-Test auf neue Pult-Werte angepasst); Screenshot `LookDev_04_Spieltest.png`
 - [ ] Kuh und Huhn sind noch Platzhalter (Modelle offen)
+- [ ] Kammer hat keine Bandöffnung: Tiere laufen durch Glas und Sockelring hinein (wie im Blockout). Schleuse/Klappe im Art-Pass (Phase 11)
 
 ## Phase 4b – Tier, Produktion, Verarbeitung, HUD
 

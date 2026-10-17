@@ -84,3 +84,5 @@ Abweichungen von den Übergabedokumenten und eigene Festlegungen. Neueste unten.
 | L7 | Echtzeitlichter | In der Kammer 3 grüne Düsen-Spots ohne Schatten, dazu Kammerlicht, Tierglühen und TV-Licht. Das sind mehr als „max. 4“ aus der Art Direction, aber ohne Schatten und mit kleiner Reichweite (Forward+). Wird in Phase 12 gemessen. |
 | L8 | Wandlampen | 5 zusätzliche gebackene Punktlichter an den Wandlampen; kosten zur Laufzeit nichts. |
 | L9 | Augenhöhe | Spieler-Augenhöhe bleibt 1,7 m. Die Vergleichsaufnahme mit Bild 08 entsteht mit 2,0 m, weil Bild 08 von etwas höher blickt. |
+| L10 | Kollider | Kammersockel endet bei 2,8 m (= `playerCollisionRadius` 3,1 minus Spielerradius 0,3), damit der Spieler nicht auf dem Ring steht. Über dem Schlauchbündel zwischen Pult und Kammer liegt ein eigener Box-Kollider (aus den Schlauch-Bounds berechnet). |
+| L11 | Layout-Test | `ConfigImportTests.Layout` erwartet jetzt Pult z −6,2 und `pultZone.absXMax` 2,6 (Werte aus L3). |
