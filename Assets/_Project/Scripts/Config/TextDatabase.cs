@@ -53,6 +53,9 @@ namespace PlanErfuellt
             return list;
         }
 
+        /// <summary>Anzahl der Einträge einer Liste beliebiger Art (z. B. Nachrichten-Objekte), 0 wenn keine Liste.</summary>
+        public int Count(string path) => root.SelectToken(path) is JArray arr ? arr.Count : 0;
+
         /// <summary>Zufälliger Text aus einer Liste.</summary>
         public string Pick(string path) => PickFrom(GetList(path), path);
 

@@ -14,8 +14,6 @@ namespace PlanErfuellt
         public float directorLineDelaySec;
         /// <summary>Tier leuchtet heller, damit es im Dunkeln strahlt</summary>
         public float animalGlowBoost;
-        /// <summary>Dauer der Sondersendung (bis Phase 10 als Einblendung)</summary>
-        public float specialNewsSec;
         /// <summary>Abdunkeln/Aufhellen pro s</summary>
         public float fadeSpeed;
     }

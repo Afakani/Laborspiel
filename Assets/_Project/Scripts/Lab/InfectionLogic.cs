@@ -33,6 +33,7 @@ namespace PlanErfuellt
                 return InfectResult.More;
             }
             s.infected = true;
+            s.newsFacts.Add("newsFacts.infection");
             s.infectedUntilDay = s.dayNum + r.infectionDays - 1;
             s.infectionLevel = cfg.infection.levelStart;
             sym.current = null;

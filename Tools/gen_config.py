@@ -131,7 +131,7 @@ CLASSES = [
     ("CinematicConfig", "Ultimativ-Höhepunkt (GDD 10, Prototyp ultCinematic).", [
         F("float", "durationSec", "Licht gedimmt, Tier leuchtet"), F("float", "lightFactor", "Bildhelligkeit während der Sequenz"),
         F("float", "directorLineDelaySec", "„… … …“, dann der Spruch"), F("float", "animalGlowBoost", "Tier leuchtet heller, damit es im Dunkeln strahlt"),
-        F("float", "specialNewsSec", "Dauer der Sondersendung (bis Phase 10 als Einblendung)"), F("float", "fadeSpeed", "Abdunkeln/Aufhellen pro s")]),
+        F("float", "fadeSpeed", "Abdunkeln/Aufhellen pro s")]),
     ("ClothFxConfig", "Laken über der Kammer: Animation und verräterische Bewegung (GDD 6.8, Prototyp clothK).", [
         F("float", "speed", "Annäherung pro s beim Werfen/Abnehmen"),
         F("float", "wobbleDegPerLevel", "Wackeln je Mutationsgrad"), F("float", "wobbleBaseFreq", "Frequenz = Basis + Grad"),
@@ -207,7 +207,19 @@ CLASSES = [
         F("float", "envMax"), F("float", "envPerDose"), F("float", "envPerExplosion"),
         F("WindowHungerConfig", "windowHunger"), F("WindowParadeConfig", "windowParade")]),
     ("NewsConfig", "Staats-TV (GDD 11).", [
-        F("float", "durationSec"), F("float", "levelDead"), F("float", "levelCrisis"), F("float", "levelWarn")]),
+        F("float", "durationSec"), F("float", "levelDead"), F("float", "levelCrisis"), F("float", "levelWarn"),
+        F("float", "anchorGoneFrom", "Ab diesem Hunger ist der Sprecher verschwunden (Automatikbetrieb)"),
+        F("float", "skipAfterSec", "Überspringen erst nach"), F("int", "factsMax", "Höchstens so viele Taten im Lauftext"),
+        F("float", "prognosisYearsPerPlan", "„PROGNOSE JAHR +n“ = Plan-Index × Wert"),
+        F("float", "meatBarBase"), F("float", "meatBarPerPct"), F("float", "meatBarMin"), F("float", "meatBarMax"),
+        F("float", "qualityBarBase"), F("float", "qualityBarPerPct"), F("float", "qualityBarMax"),
+        F("float", "tickerSpeed", "Lauftext in Pixeln pro Sekunde")]),
+    ("RecordsConfig", "Rekorde (GDD 12).", [
+        F("float", "epsilon", "Neuer Rekord erst ab altem Wert + epsilon"), F("float", "directorChance", "Direktor meldet den Rekord")]),
+    ("NewsStudioConfig", "Kamerafahrt und Sprecher im Studio (Prototyp studio, Studio-Koordinaten).", [
+        F("float[]", "widePos"), F("float[]", "wideTarget"), F("float[]", "closePos"), F("float[]", "closeTarget"),
+        F("float[]", "closeDeadPos"), F("float[]", "closeDeadTarget"), F("float", "fov"),
+        F("float", "slumpDelaySec", "Sprecher sackt nach dieser Zeit zusammen"), F("float", "slumpSpeed")]),
     ("EndingsConfig", "Schwellen für die Spielenden (GDD 13).", [
         F("float", "heroMinPop"), F("int", "heroMaxFailedDays"), F("float", "deadBelowPop")]),
     ("ComboNameEntry", "Fester Name einer Kombination, z. B. 1-1-1 = Planformel.", [

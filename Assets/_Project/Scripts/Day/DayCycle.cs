@@ -22,12 +22,16 @@ namespace PlanErfuellt
         FirstPersonController player;
         InteractionSystem interaction;
         readonly List<DayEvent> events = new List<DayEvent>();
-        float idleTimer, dayOverTimer, contractTimer, newsTimer;
-        bool finalAfterDay;
+        float idleTimer, dayOverTimer, contractTimer, newsTime;
+        bool finalAfterDay, newsAfterDay;
 
         public DayMode Mode { get; private set; }
-        /// <summary>Schlagzeile der laufenden Sondersendung (gültig in Mode News).</summary>
-        public string NewsHead { get; private set; }
+        /// <summary>Laufende Sendung im Staats-TV (gültig in Mode News).</summary>
+        public NewsCopy CurrentNews { get; private set; }
+        /// <summary>Sekunden seit Beginn der Sendung.</summary>
+        public float NewsTime => newsTime;
+        /// <summary>Darf die Sendung schon übersprungen werden?</summary>
+        public bool CanSkipNews => Mode == DayMode.News && newsTime >= GM.Config.news.skipAfterSec;
         /// <summary>Grund des Spielendes (gültig in Mode GameOver).</summary>
         public GameOverKind EndKind { get; private set; }
 
@@ -131,8 +135,21 @@ namespace PlanErfuellt
         {
             var gm = GM;
             var s = gm.State;
+            // Tagesrekorde und Lob für den Sonderauftrag (Prototyp endDay)
+            var q = s.quota;
+            if (q != null)
+            {
+                Records.Report(RecordLogic.DayMilk, q.prod.m);
+                Records.Report(RecordLogic.DayEggs, q.prod.e);
+                Records.Report(RecordLogic.DayMeat, q.prod.f);
+            }
+            if (s.contract != null && s.contract.got > 0f)
+                s.newsFacts.Add(gm.Texts.Format("newsFacts.contract", ("who", s.contract.data.who), ("what", s.contract.data.what)));
             bool collapse = infection != null && infection.CheckCollapse();
             var r = DayLogic.EndDay(s, gm.Config, collapse);
+            s.lastPlanLine = r.met
+                ? gm.Texts.Format("ui.news.planMetLine", ("n", s.dayNum), ("plan", s.planIdx), ("max", gm.Config.day.plans))
+                : gm.Texts.Format("ui.news.planFailedLine", ("n", s.dayNum));
             if (collapse) director.SayAny("director.collapse");
             if (!r.met)
             {
@@ -154,12 +171,33 @@ namespace PlanErfuellt
             SetMode(DayMode.DayOver);
         }
 
-        /// <summary>Sondersendung einblenden (GDD 10); danach geht die Schicht weiter.</summary>
-        public void ShowSpecialNews(string head, float seconds)
+        /// <summary>
+        /// Staats-TV (GDD 11): nach jedem Tag automatisch (afterDay), sonst als Sondersendung oder über den Knopf.
+        /// Spielzeit steht; danach Bestellterminal, Spielende oder zurück in die Schicht.
+        /// </summary>
+        public void ShowNews(bool afterDay)
         {
-            NewsHead = head;
-            newsTimer = seconds;
+            var gm = GM;
+            CurrentNews = NewsLogic.Compose(gm.State, gm.Config, gm.Texts, () => Random.value);
+            newsAfterDay = afterDay;
+            newsTime = 0f;
             SetMode(DayMode.News);
+            if (NewsStudio.Instance != null) NewsStudio.Instance.Play(CurrentNews);
+        }
+
+        /// <summary>Sendung überspringen (Knopf „Weiter“ oder Leertaste), sobald erlaubt.</summary>
+        public void SkipNews()
+        {
+            if (CanSkipNews) EndNews();
+        }
+
+        void EndNews()
+        {
+            if (NewsStudio.Instance != null) NewsStudio.Instance.Stop();
+            CurrentNews = null;
+            if (!newsAfterDay) SetMode(DayMode.Play);
+            else if (finalAfterDay) GameOver(GameOverKind.Final);
+            else OpenOrder();
         }
 
         public void GameOver(GameOverKind kind)
@@ -185,17 +223,16 @@ namespace PlanErfuellt
             if (gm == null) return;
             if (Mode == DayMode.News)
             {
-                newsTimer -= Time.unscaledDeltaTime;
-                if (newsTimer <= 0f) SetMode(DayMode.Play);
+                newsTime += Time.unscaledDeltaTime;
+                if (InputReader.InteractPressed) SkipNews();
+                if (Mode == DayMode.News && newsTime >= gm.Config.news.durationSec) EndNews();
                 return;
             }
             if (Mode == DayMode.DayOver)
             {
                 dayOverTimer -= Time.unscaledDeltaTime;
                 if (dayOverTimer > 0f) return;
-                // Staats-TV zwischen den Tagen folgt in Phase 10
-                if (finalAfterDay) GameOver(GameOverKind.Final);
-                else OpenOrder();
+                ShowNews(true);
                 return;
             }
             if (Mode != DayMode.Play) return;

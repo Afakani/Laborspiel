@@ -37,7 +37,7 @@ namespace PlanErfuellt.EditorTools
             BuildOrder(canvas);
             BuildIntro(canvas);
             BuildEnd(canvas);
-            BuildSpecialNews(canvas);
+            BuildNews(canvas);
         }
 
         // ---------- HUD ----------
@@ -288,24 +288,72 @@ namespace PlanErfuellt.EditorTools
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        /// <summary>Sondersendung (GDD 10): Staats-TV-Einblendung mit roter Kennung, Schlagzeile und Laufband.</summary>
-        static void BuildSpecialNews(Transform canvas)
+        /// <summary>Bauchbinde des Staats-TV (GDD 11): Sender oben links, unten Kennung, Zeitzeile, Schlagzeile, Laufband, „Weiter“.</summary>
+        static void BuildNews(Transform canvas)
         {
-            var holder = Holder(canvas, "SpecialNewsOverlay");
-            var root = FullScreen(holder, "Screen", new Color(0.03f, 0.05f, 0.12f, 0.93f));
-            var frame = CenterFrame(root, "Frame", new Vector2(1500f, 560f));
-            var box = P.Img(frame, "TagBox", new Vector2(60f, -50f), new Vector2(560f, 92f), new Color(0.82f, 0.1f, 0.1f), null, false);
-            box.rectTransform.pivot = new Vector2(0.5f, 0.5f);
-            box.rectTransform.anchoredPosition = new Vector2(60f + 280f, -50f - 46f);
-            var tag = P.Text(box.rectTransform, "Tag", 58, Color.white, new Vector2(0f, 0f), new Vector2(560f, 92f), TextAlignmentOptions.Center);
-            tag.characterSpacing = 6f;
-            var head = P.Text(frame, "Head", 54, Gold, new Vector2(60f, -180f), new Vector2(1380f, 230f), TextAlignmentOptions.TopLeft);
+            var holder = Holder(canvas, "NewsOverlay");
+            var root = new GameObject("Root", typeof(RectTransform));
+            var rootRt = (RectTransform)root.transform;
+            rootRt.SetParent(holder, false);
+            P.Stretch(rootRt);
+
+            var channel = P.Text(rootRt, "Channel", 26, Color.white, new Vector2(40f, -30f), new Vector2(900f, 40f), TextAlignmentOptions.Left);
+            channel.characterSpacing = 4f;
+
+            // Band unten
+            var band = Anchored(rootRt, "Band", new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0f, 0f), new Vector2(0f, 250f), new Color(0.04f, 0.05f, 0.12f, 0.92f));
+            band.pivot = new Vector2(0.5f, 0f);
+            var tagBox = Anchored(band, "TagBox", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(40f, -20f), new Vector2(420f, 64f), new Color(0.82f, 0.1f, 0.1f));
+            tagBox.pivot = new Vector2(0f, 1f);
+            var tag = P.Text(tagBox, "Tag", 38, Color.white, new Vector2(16f, -6f), new Vector2(390f, 52f), TextAlignmentOptions.Left);
+            tag.enableAutoSizing = true;
+            tag.fontSizeMin = 20f;
+            tag.fontSizeMax = 38f;
+            var year = P.Text(band, "Year", 22, P.Muted, new Vector2(480f, -38f), new Vector2(1000f, 30f), TextAlignmentOptions.Left, P.mono);
+            var head = P.Text(band, "Head", 40, Gold, new Vector2(40f, -96f), new Vector2(1840f, 96f), TextAlignmentOptions.TopLeft);
             head.textWrappingMode = TMPro.TextWrappingModes.Normal;
-            var bar = P.Img(frame, "TickerBar", new Vector2(2f, -470f), new Vector2(1496f, 70f), new Color(0.6f, 0.05f, 0.06f), null, false);
-            var ticker = P.Text(bar.rectTransform, "Ticker", 26, P.Cream, new Vector2(30f, -14f), new Vector2(1440f, 44f), TextAlignmentOptions.Left);
+            head.enableAutoSizing = true;
+            head.fontSizeMin = 26f;
+            head.fontSizeMax = 40f;
+
+            // Laufband
+            var strip = Anchored(band, "TickerStrip", new Vector2(0f, 0f), new Vector2(1f, 0f), Vector2.zero, new Vector2(0f, 48f), new Color(0.6f, 0.05f, 0.06f));
+            strip.pivot = new Vector2(0.5f, 0f);
+            strip.gameObject.AddComponent<RectMask2D>();
+            var track = new GameObject("Track", typeof(RectTransform));
+            var trackRt = (RectTransform)track.transform;
+            trackRt.SetParent(strip, false);
+            trackRt.anchorMin = trackRt.anchorMax = new Vector2(0f, 0.5f);
+            trackRt.pivot = new Vector2(0f, 0.5f);
+            trackRt.sizeDelta = new Vector2(4000f, 48f);
+            var ticker = new GameObject("Ticker", typeof(RectTransform)).AddComponent<TextMeshProUGUI>();
+            ticker.transform.SetParent(trackRt, false);
+            P.Stretch(ticker.rectTransform);
+            ticker.font = P.font;
+            ticker.fontSize = 24;
+            ticker.color = P.Cream;
+            ticker.alignment = TextAlignmentOptions.MidlineLeft;
             ticker.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
-            ticker.overflowMode = TextOverflowModes.Ellipsis;
-            holder.gameObject.AddComponent<SpecialNewsUI>().Setup(root, tag, head, box.rectTransform, ticker);
+            ticker.raycastTarget = false;
+
+            var skip = P.MakeButton(rootRt, "Skip", new Vector2(-40f, -30f), new Vector2(220f, 56f), ConfirmBg, ConfirmBorder, 24, false);
+            holder.gameObject.AddComponent<NewsUI>().Setup(root, tag, head, year, channel, trackRt, ticker, skip, tagBox.GetComponent<Image>());
+        }
+
+        /// <summary>Bild mit frei gesetzten Ankern.</summary>
+        static RectTransform Anchored(Transform parent, string name, Vector2 min, Vector2 max, Vector2 pos, Vector2 size, Color color)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(Image));
+            var rt = (RectTransform)go.transform;
+            rt.SetParent(parent, false);
+            rt.anchorMin = min;
+            rt.anchorMax = max;
+            rt.anchoredPosition = pos;
+            rt.sizeDelta = size;
+            var img = go.GetComponent<Image>();
+            img.color = color;
+            img.raycastTarget = false;
+            return rt;
         }
 
         // ---------- Hilfen ----------

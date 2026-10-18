@@ -10,6 +10,10 @@ namespace PlanErfuellt
         public float pop;
         public float food;
         public float env;
+        /// <summary>Fleisch in % über Plan seit Spielbeginn (Prototyp W.meat).</summary>
+        public float meat;
+        /// <summary>Durchschnittsqualität minus Startwert in Prozentpunkten (Prototyp W.quality).</summary>
+        public float quality;
 
         public static WorldValues Compute(GameState s, GameConfig cfg)
         {
@@ -22,6 +26,10 @@ namespace PlanErfuellt
             float supply = (s.totals.m * sw.m + s.totals.e * sw.e + s.totals.f * sw.f) / Mathf.Max(1f, s.dayNum * w.supplyPerDay);
             v.food = Mathf.Clamp(w.foodBase + w.foodPerSupply * supply, 0f, w.foodMax) * (1f - w.foodFamineFactor * v.famine);
             v.env = Mathf.Clamp(w.envMax - s.totalDoses * w.envPerDose - s.explosions * w.envPerExplosion, 0f, w.envMax);
+            // Fleisch-Soll bis jetzt: abgeschlossene Tage plus anteilig der laufende Tag
+            float fT = s.meatTargetTotal + (s.quota != null ? s.quota.target.f * (1f - s.quota.left / cfg.day.dayLengthSec) : 0f);
+            v.meat = fT > 1f ? Mathf.Round((s.totals.f / fT - 1f) * 100f) : 0f;
+            v.quality = Mathf.Round(v.avgQuality - w.avgQStart);
             return v;
         }
 

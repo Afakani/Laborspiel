@@ -354,6 +354,109 @@ def build_icons():
     save(img, "Coin.png")
 
 
+# ---------- Logbuch-Skizzen und Fenster (Phase 10) ----------
+def sketches():
+    ink = (52, 40, 30, 255)
+    # Kuh als Strichzeichnung (Seitenansicht)
+    s = 256
+    img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.ellipse([50, 92, 196, 168], outline=ink, width=5)
+    d.ellipse([178, 70, 236, 118], outline=ink, width=5)
+    d.line([(190, 74), (182, 56)], fill=ink, width=4)
+    d.line([(222, 74), (232, 56)], fill=ink, width=4)
+    for x in (72, 98, 150, 176):
+        d.line([(x, 160), (x, 210)], fill=ink, width=6)
+    d.line([(52, 120), (28, 150)], fill=ink, width=4)
+    d.ellipse([110, 108, 140, 132], outline=ink, width=3)
+    d.ellipse([150, 120, 172, 140], outline=ink, width=3)
+    save(img, "SketchCow.png")
+    # Huhn
+    img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.ellipse([70, 100, 186, 186], outline=ink, width=5)
+    d.ellipse([150, 60, 200, 110], outline=ink, width=5)
+    d.polygon([(200, 84), (226, 92), (200, 98)], outline=ink, width=4)
+    d.arc([160, 40, 196, 74], 200, 340, fill=ink, width=5)
+    d.line([(110, 184), (106, 222)], fill=ink, width=5)
+    d.line([(146, 184), (150, 222)], fill=ink, width=5)
+    d.arc([40, 90, 110, 160], 120, 260, fill=ink, width=5)
+    save(img, "SketchHen.png")
+    # Euter (rosa Schraffur)
+    s2 = 128
+    img = Image.new("RGBA", (s2, s2), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.ellipse([16, 20, 112, 88], outline=(160, 70, 90, 255), width=5, fill=(240, 170, 190, 120))
+    for x in (36, 56, 76, 96):
+        d.line([(x, 86), (x, 112)], fill=(160, 70, 90, 255), width=5)
+    save(img, "SketchUdder.png")
+    # gestrichelter Rahmen
+    img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    for i in range(0, s, 24):
+        for (a, b) in [((i, 4), (i + 12, 4)), ((i, s - 5), (i + 12, s - 5)), ((4, i), (4, i + 12)), ((s - 5, i), (s - 5, i + 12))]:
+            d.line([a, b], fill=(40, 70, 140, 255), width=5)
+    save(img, "SketchFrame.png")
+
+
+def window_view():
+    # Einöde hinter dem Fenster (Prototyp winTex ohne Volk): Himmel, Hügel, Fabrik, Laternen, Stacheldraht
+    w, h = 1024, 512
+    img = Image.new("RGB", (w, h))
+    d = ImageDraw.Draw(img)
+    for y in range(h):
+        k = y / h
+        if k < 0.55:
+            c = tuple(int(a + (b - a) * k / 0.55) for a, b in zip((79, 86, 100), (154, 152, 144)))
+        else:
+            c = tuple(int(a + (b - a) * (k - 0.55) / 0.45) for a, b in zip((154, 152, 144), (94, 89, 79)))
+        d.line([(0, y), (w, y)], fill=c)
+    d.ellipse([796, 106, 864, 174], fill=(255, 240, 210))
+    pts = [(0, 310)] + [(x, 268 - abs(math.sin(x * 0.011)) * 64 - math.sin(x * 0.05) * 10) for x in range(0, w + 32, 32)] + [(w, h), (0, h)]
+    d.polygon(pts, fill=(74, 74, 82))
+    d.rectangle([0, 330, w, h], fill=(90, 84, 75))
+    for i in range(420):
+        x, y = random.uniform(0, w), random.uniform(335, h)
+        d.rectangle([x, y, x + random.uniform(2, 8), y + random.uniform(1, 4)], fill=(30, 26, 22))
+    d.rectangle([560, 196, 710, 308], fill=(46, 45, 48))
+    d.rectangle([586, 128, 616, 308], fill=(46, 45, 48))
+    d.rectangle([654, 150, 680, 310], fill=(46, 45, 48))
+    d.rectangle([586, 116, 616, 156], fill=(179, 18, 27))
+    d.rectangle([654, 138, 680, 172], fill=(179, 18, 27))
+    for (x, y) in [(150, 330), (380, 345), (900, 336)]:
+        d.rectangle([x - 3, y - 90, x + 3, y], fill=(38, 38, 38))
+        d.polygon([(x - 25, y - 108), (x, y - 130), (x + 25, y - 108)], fill=(38, 38, 38))
+    for r in range(3):
+        d.line([(x2, 410 + r * 12 + (3 if (x2 // 10) % 2 else -3)) for x2 in range(0, w + 10, 10)], fill=(30, 30, 30), width=2)
+    for pp in range(0, w + 1, 70):
+        d.rectangle([pp, 396, pp + 5, 456], fill=(30, 30, 30))
+    save(img, "WindowView.png")
+
+    # Figur (Silhouette) für Schlange und Umzug
+    img = Image.new("RGBA", (64, 128), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.ellipse([20, 4, 44, 28], fill=(255, 255, 255, 255))
+    d.rectangle([18, 30, 46, 88], fill=(255, 255, 255, 255))
+    d.rectangle([19, 88, 30, 124], fill=(255, 255, 255, 255))
+    d.rectangle([34, 88, 45, 124], fill=(255, 255, 255, 255))
+    save(img, "Figure.png")
+
+
+# ---------- Studio-Wand (Staats-TV): heller Verlauf mit goldenem Raster, Farbe kommt per Material ----------
+def studio_wall():
+    w, h = 1024, 512
+    img = Image.new("RGB", (w, h))
+    d = ImageDraw.Draw(img)
+    for y in range(h):
+        v = int(150 + 105 * y / h)
+        d.line([(0, y), (w, y)], fill=(v, v, v))
+    for x in range(0, w + 1, 64):
+        d.line([(x, 0), (x, h)], fill=(255, 230, 150), width=1)
+    for y in range(0, h + 1, 64):
+        d.line([(0, y), (w, y)], fill=(255, 230, 150), width=1)
+    save(img, "StudioWall.png")
+
+
 hazard()
 emblem(CREAM + (255,), "EmblemCream.png")
 emblem(GOLD + (255,), "EmblemGold.png")
@@ -366,3 +469,6 @@ soft()
 splats()
 canvas()
 build_icons()
+sketches()
+window_view()
+studio_wall()

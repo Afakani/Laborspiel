@@ -435,6 +435,7 @@ namespace PlanErfuellt
                 S.explosions++;
                 S.AddAnger(Cfg.anger.explode, Cfg);
                 GM.Toast("ui.toasts.procExploded", ToastKind.Bad);
+                S.newsFacts.Add("newsFacts.procExplosion");
                 EventBus.RaiseRisk(RiskEvent.ProcessingExplosion);
                 Empty();
                 return;
@@ -444,6 +445,8 @@ namespace PlanErfuellt
             Production.Deliver(S, Cfg, 'f', meat, quality);
             DayLogic.OnProcessed(S, quality);
             GM.Toast("ui.toasts.processed", ToastKind.Good, ("n", meat.ToString("0.0", German)));
+            Records.Report(RecordLogic.Rate, stats.maxRate);
+            Records.Report(RecordLogic.Meat, meat);
             if (stats.brave)
             {
                 S.AddMoney(p.braveBonus);
@@ -519,6 +522,7 @@ namespace PlanErfuellt
                 GM.Toast("ui.toasts.clothTorn", ToastKind.Bad);
             }
             GM.Toast("ui.toasts.explosion", ToastKind.Bad);
+            S.newsFacts.Add("newsFacts.explosion");
             EventBus.RaiseRisk(RiskEvent.Explosion);
             EventBus.RaiseExplosion();
             Empty();
@@ -528,6 +532,7 @@ namespace PlanErfuellt
         public void FlyAway()
         {
             S.AddMoney(-Cfg.risks.escapeCost);
+            S.newsFacts.Add("newsFacts.flyAway");
             GM.Toast("ui.toasts.flyAway", ToastKind.Bad, ("money", GM.Texts.Format("ui.common.money", ("n", Cfg.risks.escapeCost))));
             SetState(AnimalState.Flying);
         }

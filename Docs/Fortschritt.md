@@ -16,7 +16,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 | 7 | Kommissar und Laken | fertig |
 | 8 | Zentrifuge, Kryo, Ultimativ-Höhepunkt | fertig |
 | 9 | Nebenstationen und Baumodus | fertig |
-| 10 | Staats-TV, Logbuch, Rekorde, Fenster | offen |
+| 10 | Staats-TV, Logbuch, Rekorde, Fenster | fertig |
 | 11 | Grafik und Animation (Art-Pass) | offen |
 | 12 | Ton, Feinschliff, Performance, Build | offen |
 
@@ -91,6 +91,26 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - Mischstation: Regler ziehen, MISCHEN, Fläschchen erscheinen im 3D-Regal. Pult: Fläschchen wählen, KLON (Hebel klappt). Leertaste/Esc schließen.
 - Das Probenmikroskop im Misch-Panel kommt laut Prompt in Phase 9.
 - Hinweis: Wird während des Play Mode neu kompiliert, wirft Unity NullReference-Fehler (Domain-Reload); einfach Play neu starten. Empfehlung: in den Unity-Einstellungen „Script Changes While Playing“ auf „Stop Playing and Recompile“ stellen.
+
+## Phase 10 – Staats-TV, Logbuch, Rekorde, Fenster
+
+- [x] `NewsLogic` (rein, getestet): Stufe nach Hungersnot (boom/warn/crisis/dead), Schlagzeile und Laufband aus `news.*` mit {year} {meat} {quality} {pop} {earned}, davor die verdrehten Taten (Explosion, Verarbeitungsexplosion, davongeschwebte Kuh, Infektion, Kuriositäten, Kontrollen, gelobter Sonderauftrag) und die Tageszeile; Sondersendung nach dem ersten Ultimativ; Fleisch- und Qualitätsprozent wie Prototyp `W.meat`/`W.quality`
+- [x] Staats-TV als eigene Szene `NewsStudio` (additiv geladen, in den Build-Einstellungen): Studiowand mit Raster, Senderschild „ZF Staatsfernsehen“ mit LIVE bzw. PLANSENDUNG, Diagramm (Planerfüllung: Fleisch/Qualität bzw. „Bevölkerung (offiziell)“: Plan/Ist), Pult mit Logo und Leiste, Sprecher mit Atmen und Kopfbewegung, Pflanze, Tasse, Papier, Führungslicht; Kamerafahrt von der Totalen zum Sprecher; im Automatikbetrieb sackt der Sprecher zusammen (Kreuzaugen, grau-grün), Pflanze welkt, Fliegen kreisen, Licht flackert grünlich
+- [x] Bauchbinde: Kennung, Zeitzeile, Schlagzeile, laufendes Band, „Weiter“ ab 1,5 s (auch Leertaste); das Labor-HUD ist während der Sendung ausgeblendet
+- [x] Ablauf: nach jedem Tag automatisch (danach Bestellterminal bzw. Spielende), Sondersendung nach dem ersten Ultimativ, sonst über den Knopf „Staats-TV“ im Pausemenü (erst nach der ersten Mutation); dort auch „Logbuch“
+- [x] Rekorde (`RecordLogic`, getestet): höchster Ertrag und meistes Fleisch bei der Verarbeitung, Tagesmengen je Ware beim Schichtende; erster Wert still, danach „NEUER REKORD: …“ und zu 50 % der Direktor
+- [x] Forschungslogbuch (L): Notizbuch mit Ledereinband, Papier, Randlinie; Karten mit Bleistiftskizze (Kuh/Huhn, Größe nach A, Euter nach B, gestrichelter Rahmen bei C), Name, Dosis, Vor- und Nachteile; Abschnitte Geheimakte (gold), Kuriositäten (rosa), Rekordtafel; nur Entdecktes, sortiert nach Gesamtdosis
+- [x] Fenster: Einöde als eigenes Bild (Hügel, Fabrik, Laternen, Stacheldraht), bei Hunger Warteschlange vor „MILCH · LEER“, bei satten Bürgern Festumzug mit Fahnen, Banner „DANKE, GENOSSE BIOCHEMIKER!“ und Konfetti; Figuren wippen
+- [x] Tests: 118 EditMode-Tests grün (9 neue)
+- [x] Spieltest: Schichtende → Sendung automatisch („SONDERMELDUNG … Fleisch +33 %“, Taten im Laufband) → Bestellterminal; Hungersnot → Automatikbetrieb mit zusammengesacktem Sprecher; Logbuch mit 7 Kombinationen, Ω in der Geheimakte, Milchhuhn und Singende Kuh, Rekordtafel mit den echten Tageswerten; Fenster mit Schlange und Festumzug. Konsole ohne Fehler. Screenshots `Phase10_*.png`
+- [x] Korrigiert im Test: Studio war seitenverkehrt (x gespiegelt); Werte über den Balken saßen zu hoch; Labor-HUD lag über dem Fernsehbild; Karten im Logbuch etwas höher
+
+### Offen / für spätere Phasen
+- Ton (Jingle, Sprecher, Fanfare beim Rekord): Phase 12
+- Diagrammtitel und Fleischwert berühren sich bei hohen Werten knapp; Studio-Feinschliff im Art-Pass
+- Konfetti im Fenster ist schwach sichtbar
+- Nicht geprüft: Knöpfe „Logbuch“ und „Staats-TV“ im Pausemenü und die Rekord-Meldung im laufenden Spiel (Logik getestet); erhöhte Logbuchkarten nach der Korrektur nicht erneut im Bild
+- Zum Testen: Die Sendung läuft in unskalierter Zeit; für Aufnahmen über die Verbindung `Time.captureDeltaTime` setzen
 
 ## Phase 9 – Nebenstationen und Baumodus
 

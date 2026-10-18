@@ -105,6 +105,7 @@ namespace PlanErfuellt.EditorTools
             // Panels (Mischstation, Pult) unter dem Pause-Overlay
             PanelUiBuilder.BuildMixing(root.transform);
             PanelUiBuilder.BuildControl(root.transform);
+            LogbookUiBuilder.Build(root.transform);
 
             // Bestellterminal, Start- und Endbildschirm (Phase 6)
             HudDayBuilder.BuildOverlays(root.transform);
@@ -117,7 +118,28 @@ namespace PlanErfuellt.EditorTools
             PlayerBuilder.Set(pm, "overlay", pause.gameObject);
             PlayerBuilder.Set(pm, "title", title);
             PlayerBuilder.Set(pm, "hint", sub);
+            var logBtn = PanelUiBuilder.MakeButton(pause.rectTransform, "Logbook", Vector2.zero, new Vector2(300f, 60f), PanelUiBuilder.ButtonBg, Gold, 24, false);
+            var newsBtn = PanelUiBuilder.MakeButton(pause.rectTransform, "News", Vector2.zero, new Vector2(300f, 60f), PanelUiBuilder.ButtonBg, Gold, 24, false);
+            foreach (var (b, x) in new[] { (logBtn, -170f), (newsBtn, 170f) })
+            {
+                var rt = (RectTransform)b.transform;
+                rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+                rt.anchoredPosition = new Vector2(x, -140f);
+            }
+            PlayerBuilder.Set(pm, "logbook", logBtn);
+            PlayerBuilder.Set(pm, "news", newsBtn);
             pause.gameObject.SetActive(false);
+
+            // Während des Staats-TV alles außer Sendung und Pause ausblenden
+            var groups = new System.Collections.Generic.List<CanvasGroup>();
+            foreach (Transform child in root.transform)
+            {
+                if (child.name == "NewsOverlay" || child.name == "PauseOverlay" || child.name == "ToastTemplate") continue;
+                var g = child.GetComponent<CanvasGroup>();
+                if (g == null) g = child.gameObject.AddComponent<CanvasGroup>();
+                groups.Add(g);
+            }
+            root.GetComponentInChildren<NewsUI>(true).SetHud(groups.ToArray());
             return root;
         }
 

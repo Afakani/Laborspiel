@@ -55,6 +55,8 @@ namespace PlanErfuellt.EditorTools
             LabLightingSetup.Build(env, L);
             var fxVolumes = LabLightingSetup.BuildFxVolumes(env, cfg);
             LabEnvironmentBuilder.BuildBlackoutFx(env, L, fxVolumes.dark);
+            var window = env.Find("Shell/Window");
+            if (window != null) WindowViewBuilder.Build(window, L, L.room.wallThickness);
 
             // Kammer
             var cowPrefab = AnimalBuilder.LoadOrBuild(AnimalBuilder.CowPath, rebuildPrefabs, AnimalBuilder.BuildCow);
@@ -78,6 +80,7 @@ namespace PlanErfuellt.EditorTools
             BuildModeBuilder.Build(gridRoot, env, cfg);
 
             SetupPlayerAndHud(cfg, rebuildPrefabs);
+            NewsStudioBuilder.Build();
             LabLightingSetup.EnsureLightingSettings();
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
@@ -146,7 +149,7 @@ namespace PlanErfuellt.EditorTools
             var systems = Root("--- Systems");
             var oldMix = systems.Find("MixingSystem");
             if (oldMix != null) Object.DestroyImmediate(oldMix.gameObject);
-            new GameObject("MixingSystem", typeof(MixingSystem), typeof(MachineSystem)).transform.SetParent(systems, false);
+            new GameObject("MixingSystem", typeof(MixingSystem), typeof(MachineSystem), typeof(NewsStudioLoader)).transform.SetParent(systems, false);
             var oldDay = systems.Find("DayCycle");
             if (oldDay != null) Object.DestroyImmediate(oldDay.gameObject);
             new GameObject("DayCycle", typeof(Director), typeof(DayCycle), typeof(InspectionSystem)).transform.SetParent(systems, false);

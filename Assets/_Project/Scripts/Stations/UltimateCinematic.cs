@@ -66,8 +66,8 @@ namespace PlanErfuellt
             s.cinematicLeft -= dt;
             if (s.cinematicLeft > 0f) return;
             s.cinematicLeft = 0f;
-            string name = current != null ? current.displayName : "";
-            dc.ShowSpecialNews(gm.Texts.Format("newsFacts.specialHead", ("name", name)), c.specialNewsSec);
+            s.specialNewsUltimate = current != null ? current.id : null;
+            dc.ShowNews(false);
         }
     }
 }

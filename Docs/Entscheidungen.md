@@ -149,3 +149,17 @@ Abweichungen von den Übergabedokumenten und eigene Festlegungen. Neueste unten.
 | D69 | Esc im Baumodus | Esc gehört zur Pause; im Baumodus meldet das Pause-Menü „Panel schließen“, darauf beendet sich der Baumodus. Eigene Tasten liegen in der neuen Eingabegruppe „Build“. |
 | D70 | Text | `ui.build.remove` ohne „✕“, weil die Schrift das Zeichen nicht enthält; neuer Text `ui.build.refund` („{n} % zurück“). |
 | D71 | Maschinen-Look | Bedienseite (Kreuz, Bildschirm, Lüfter, Manometer) zeigt zur Kammer, eigener sauberer Lack statt der rostigen Look-Dev-Emaille. |
+
+## Phase 10 (2026-10-18)
+
+| Nr. | Thema | Entscheidung |
+|---|---|---|
+| D72 | Neue Werte | In `news`: `anchorGoneFrom` 0,5 (Prototyp `G.newsDead`), `skipAfterSec` 1,5, `factsMax` 4, `prognosisYearsPerPlan` 3, Balkenmaße wie Prototyp-Diagramm, `tickerSpeed` 140 (eigener Wert). Abschnitt `records` (epsilon 0,05, Direktor 50 %) und `newsStudio` (Kamerafahrt, Sichtfeld 38, Zusammensacken nach 1,8 s). `cinematic.specialNewsSec` entfällt; die Sondersendung dauert wie jede Sendung `news.durationSec`. |
+| D73 | Studio als Szene | Das Studio ist eine eigene Szene `NewsStudio`, die das Labor beim Start additiv lädt, und liegt 200 m unter dem Labor, damit sich Lichter nicht beeinflussen. Während der Sendung rendert die Studiokamera, die Spielerkamera ist aus. |
+| D74 | Spiegelung | Die Studio-Koordinaten des Prototyps (three.js, rechtshändig) werden in x gespiegelt, sonst stünden Schild, Diagramm und Pflanze auf der falschen Seite. |
+| D75 | Taten im Laufband | `GameState.newsFacts` enthält Textpfade unter `newsFacts.*` (Liste → Zufallseintrag) oder fertige Texte (Sonderauftrag mit Platzhaltern). Neueste zuerst, höchstens 4, danach die Tageszeile. |
+| D76 | Neue Texte | `ui.news.chartTitleAlive`, `chartMeat`, `chartQuality`, `planBroadcast`, `signName` (im Prototyp fest im Bild) und `ui.logbook.funLine`. |
+| D77 | TV-Knopf | „sonst über Knopf“ (GDD 11) als Knopf im Pausemenü, sichtbar während der Schicht nach der ersten Mutation; daneben ein Logbuch-Knopf. |
+| D78 | Rekord-Meldung | Die Meldung nutzt `ui.records.*` (wie Prototyp), die Rekordtafel `ui.logbook.record*`. |
+| D79 | Logbuch-Skizzen | Eigene Strichzeichnungen (Kuh, Huhn, Euter, gestrichelter Rahmen) als Sprites; Größe nach `animalVisuals.growPerA`/`growCapA` wie am echten Tier. |
+| D80 | Fenster | Einöde als eigenes Bild, Volk und Schilder als Ebenen davor (Texte aus der JSON), statt alles in eine Textur zu malen. |

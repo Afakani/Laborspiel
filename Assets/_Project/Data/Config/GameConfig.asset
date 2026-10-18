@@ -431,6 +431,18 @@ MonoBehaviour:
     levelDead: 0.65
     levelCrisis: 0.35
     levelWarn: 0.05
+    anchorGoneFrom: 0.5
+    skipAfterSec: 1.5
+    factsMax: 4
+    prognosisYearsPerPlan: 3
+    meatBarBase: 40
+    meatBarPerPct: 9
+    meatBarMin: 30
+    meatBarMax: 200
+    qualityBarBase: 12
+    qualityBarPerPct: 5
+    qualityBarMax: 110
+    tickerSpeed: 140
   endings:
     heroMinPop: 70
     heroMaxFailedDays: 1
@@ -882,7 +894,6 @@ MonoBehaviour:
     lightFactor: 0.1
     directorLineDelaySec: 2.5
     animalGlowBoost: 6
-    specialNewsSec: 8
     fadeSpeed: 4
   buildView:
     camX: -13
@@ -895,6 +906,37 @@ MonoBehaviour:
     hideBehindZ: 11.2
     hideLeftX: -16.2
     hideAboveY: 7.6
+  records:
+    epsilon: 0.05
+    directorChance: 0.5
+  newsStudio:
+    widePos:
+    - 0
+    - 2.7
+    - 8.6
+    wideTarget:
+    - 0
+    - 1.9
+    - 0
+    closePos:
+    - 0.5
+    - 2.75
+    - 3.6
+    closeTarget:
+    - 0
+    - 2.7
+    - 0.2
+    closeDeadPos:
+    - 1
+    - 2
+    - 3.8
+    closeDeadTarget:
+    - 0
+    - 1.5
+    - 1.4
+    fov: 38
+    slumpDelaySec: 1.8
+    slumpSpeed: 2.2
   ultimates:
   - {fileID: 11400000, guid: 5dc976084a4515f499639506535e6f29, type: 2}
   - {fileID: 11400000, guid: 4e589e637b093764ebf22431455450b9, type: 2}

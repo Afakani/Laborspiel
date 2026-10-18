@@ -73,6 +73,7 @@ namespace PlanErfuellt
         {
             var q = s.quota;
             var r = new DayResult { planBefore = s.planIdx, collapse = collapse, met = q != null && q.met && !collapse };
+            if (q != null) s.meatTargetTotal += q.target.f;
             s.quota = null;
             s.wish = null;
             s.contract = null;

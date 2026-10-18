@@ -98,7 +98,13 @@ namespace PlanErfuellt
         public bool bossDone;
         /// <summary>Serum-Regal an der Mischstation abgedeckt.</summary>
         public bool rackHidden;
-        /// <summary>Textschlüssel für die Nachrichten zwischen den Tagen (Phase 10).</summary>
+        /// <summary>Summe der Fleisch-Tagesziele abgeschlossener Tage (für „Fleisch … % über Plan“ im Staats-TV).</summary>
+        public float meatTargetTotal;
+        /// <summary>Zeile zum letzten Tagesergebnis für den Lauftext.</summary>
+        public string lastPlanLine;
+        /// <summary>Ultimativ für die nächste Sondersendung oder null.</summary>
+        public string specialNewsUltimate;
+        /// <summary>Taten für den Lauftext: Textpfad unter newsFacts oder fertiger Text.</summary>
         public readonly List<string> newsFacts = new List<string>();
 
         // ---------- Infektion des Spielers (GDD 8) ----------

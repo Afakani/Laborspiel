@@ -48,6 +48,8 @@ namespace PlanErfuellt
         public MachineFxConfig machineFx = new MachineFxConfig();
         public CinematicConfig cinematic = new CinematicConfig();
         public BuildViewConfig buildView = new BuildViewConfig();
+        public RecordsConfig records = new RecordsConfig();
+        public NewsStudioConfig newsStudio = new NewsStudioConfig();
 
         // Diese Teile sind in der JSON als Objekte mit Schlüsseln abgelegt und werden vom Importer gesondert übertragen.
         [JsonIgnore] public List<UltimateSerum> ultimates = new List<UltimateSerum>();
