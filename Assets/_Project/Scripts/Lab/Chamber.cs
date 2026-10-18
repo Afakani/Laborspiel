@@ -45,6 +45,16 @@ namespace PlanErfuellt
         /// <summary>Lebt ein mutiertes Tier in der Kammer (für Parteikontrolle, Kommissar)?</summary>
         public bool HasMutatedAnimal => HasLivingAnimal && stats.IsMutated;
 
+        /// <summary>Verstärkt Tierleuchten und Glühlicht (Ultimativ-Zwischensequenz).</summary>
+        public float GlowBoost
+        {
+            set
+            {
+                cowModel.GlowBoost = value;
+                henModel.GlowBoost = value;
+            }
+        }
+
         /// <summary>Glühen des Tiers 0..1 (für die Parteikontrolle).</summary>
         public float Glow => model != null && HasLivingAnimal ? model.Glow : 0f;
 
@@ -246,7 +256,7 @@ namespace PlanErfuellt
             model.transform.localPosition = new Vector3(x - CenterX, y, 0f);
 
             glowLight.color = model.GlowColor;
-            glowLight.intensity = model.Glow * v.lightFactor * model.Pulse;
+            glowLight.intensity = model.Glow * v.lightFactor * model.Pulse * model.GlowBoost;
             glowLight.transform.localPosition = new Vector3(x - CenterX, y + v.lightOffsetY, v.lightOffsetZ);
 
             UpdateLabel(y);
@@ -361,8 +371,9 @@ namespace PlanErfuellt
                 S.discoveredRecipes.Add(SerumTexts.RecipeKey(serum));
                 GM.Toast("ui.toasts.ultimate", ToastKind.Good, ("name", u.displayName));
                 bool first = !S.ultimateSeen;
-                S.ultimateSeen = true; // Zwischensequenz folgt in Phase 8
+                S.ultimateSeen = true;
                 if (first && InspectionLogic.ScheduleBoss(S, Cfg)) GM.Toast("ui.toasts.bossIncoming", ToastKind.Bad);
+                EventBus.RaiseUltimateSprayed(u, first);
             }
             else
             {

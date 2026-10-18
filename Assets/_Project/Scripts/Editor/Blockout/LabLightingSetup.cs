@@ -131,7 +131,7 @@ namespace PlanErfuellt.EditorTools
 
         public struct FxVolumes
         {
-            public Volume dark, green, blur;
+            public Volume dark, green, blur, cinematic;
         }
 
         /// <summary>
@@ -146,6 +146,11 @@ namespace PlanErfuellt.EditorTools
             var exp = Add<ColorAdjustments>(dark);
             exp.postExposure.Override(Mathf.Log(Mathf.Max(0.01f, cfg.risks.blackoutLightFactor), 2f));
             exp.colorFilter.Override(new Color(0.8f, 0.85f, 1f));
+
+            // Ultimativ-Zwischensequenz (Phase 8): Licht auf cinematic.lightFactor
+            var cine = Profile("Assets/_Project/Art/VFX/Lab_Cinematic.asset");
+            var cexp = Add<ColorAdjustments>(cine);
+            cexp.postExposure.Override(Mathf.Log(Mathf.Max(0.01f, cfg.cinematic.lightFactor), 2f));
 
             var green = Profile("Assets/_Project/Art/VFX/Lab_InfectionGreen.asset");
             var tint = Add<ColorAdjustments>(green);
@@ -165,8 +170,10 @@ namespace PlanErfuellt.EditorTools
             {
                 dark = MakeVolume(g, "BlackoutVolume", dark),
                 green = MakeVolume(g, "InfectionGreenVolume", green),
-                blur = MakeVolume(g, "InfectionBlurVolume", blur)
+                blur = MakeVolume(g, "InfectionBlurVolume", blur),
+                cinematic = MakeVolume(g, "CinematicVolume", cine)
             };
+            g.gameObject.AddComponent<UltimateCinematic>().Setup(v.cinematic);
             g.gameObject.AddComponent<InfectionVolumes>().Setup(v.green, v.blur);
             return v;
         }

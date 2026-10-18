@@ -73,6 +73,13 @@ namespace PlanErfuellt.EditorTools
             PlayerBuilder.Set(promptUi, "label", label);
             PlayerBuilder.Set(promptUi, "frame", frame);
             PlayerBuilder.Set(promptUi, "fill", fill);
+            // Drehzahlbalken der Zentrifuge unter dem Prompt (Zonen werden zur Laufzeit aus der Config gesetzt)
+            var gauge = Img("Gauge", prompt, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, -16f), new Vector2(580f, 18f), new Color(0.16f, 0.18f, 0.2f));
+            var zy = Img("Yellow", gauge.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero, new Color(0.69f, 0.54f, 0.1f));
+            var zg = Img("Green", gauge.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero, new Color(0.18f, 0.75f, 0.29f));
+            var zr = Img("Red", gauge.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero, new Color(0.75f, 0.16f, 0.12f));
+            var needle = Img("Needle", gauge.rectTransform, Vector2.zero, new Vector2(0f, 1f), Vector2.zero, new Vector2(5f, 8f), Color.white);
+            promptUi.SetGauge(gauge.gameObject, zy.rectTransform, zg.rectTransform, zr.rectTransform, needle.rectTransform);
             prompt.gameObject.SetActive(false);
 
             // Kurzmeldungen rechts

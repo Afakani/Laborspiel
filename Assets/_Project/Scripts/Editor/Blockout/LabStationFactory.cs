@@ -25,8 +25,8 @@ namespace PlanErfuellt.EditorTools
                     break;
                 case "mixing": Mixing(v); break;
                 case "microscope": LookDevMachines.Microscope(v); break;
-                case "centrifuge": LookDevMachines.Centrifuge(v); break;
-                case "cryo": LookDevMachines.Cryo(v); break;
+                case "centrifuge": LookDevMachines.Centrifuge(v); CentrifugeFx(v); break;
+                case "cryo": LookDevMachines.Cryo(v); CryoFx(v); break;
                 case "tasting": LookDevMachines.Tasting(v); break;
                 case "gramophone": LookDevMachines.Gramophone(v); break;
                 case "rohrpost": LookDevMachines.Rohrpost(v); break;
@@ -87,6 +87,26 @@ namespace PlanErfuellt.EditorTools
         }
 
         // ---------- Stationen ----------
+
+        /// <summary>Zentrifuge (Phase 8): Rotor, wackelndes Gehäuse, Zonenlampe, Glassplitter und Säure bei Überdrehzahl.</summary>
+        static void CentrifugeFx(Transform v)
+        {
+            foreach (var t in v.GetComponentsInChildren<Transform>(true)) t.gameObject.isStatic = false;
+            var shards = LookDevChamberFx.Emitter(v, "Shards", new Vector3(0f, 1.3f, 0f), LookDevMaterials.Steam, new Color(0.85f, 0.95f, 1f, 0.95f),
+                0.5f, 1.0f, 2.5f, 4.5f, 0.03f, 0.07f, 1.4f, ParticleSystemShapeType.Sphere, new Vector3(0.3f, 0f, 0f), 0.6f);
+            var acid = LookDevChamberFx.Emitter(v, "Acid", new Vector3(0f, 1.3f, 0f), LookDevMaterials.Slime, new Color(0.75f, 1f, 0.2f, 0.9f),
+                0.5f, 0.9f, 1.5f, 3f, 0.08f, 0.16f, 1.2f, ParticleSystemShapeType.Sphere, new Vector3(0.3f, 0f, 0f), 0.5f);
+            v.gameObject.AddComponent<PlanErfuellt.CentrifugeFx>().Setup(v.Find("Rotor"), v, v.Find("ControlPanel/Lamp/Bulb").GetComponent<Renderer>(), shards, acid);
+        }
+
+        /// <summary>Kryokammer (Phase 8): leuchtendes Fenster, Kältenebel, blinkende Lampe, vereistes Fenster als Eisblock.</summary>
+        static void CryoFx(Transform v)
+        {
+            var mist = LookDevChamberFx.Emitter(v, "Mist", new Vector3(0f, 0.25f, -0.62f), LookDevMaterials.Steam, new Color(0.8f, 0.92f, 1f, 0.45f),
+                2f, 3.5f, 0.15f, 0.4f, 0.25f, 0.5f, 0.03f, ParticleSystemShapeType.Box, new Vector3(1.0f, 0.1f, 0.05f), 2.2f);
+            var ice = LookDevKit.Cyl(v.Find("Door"), "IceBlock", new Vector3(0f, 0.18f, -0.063f), 0.29f, 0.01f, LookDevMaterials.Frost, new Vector3(90f, 0f, 0f), false, 40);
+            v.gameObject.AddComponent<PlanErfuellt.CryoFx>().Setup(v.Find("Door/Inside").GetComponent<Renderer>(), v.Find("Lamp/Bulb").GetComponent<Renderer>(), mist, ice);
+        }
 
 
         /// <summary>Pult im Look von Bild 08 (LookDevPult); die Kipphebel werden von PultLevers bewegt.</summary>

@@ -36,6 +36,7 @@ namespace PlanErfuellt.EditorTools
             BuildOrder(canvas);
             BuildIntro(canvas);
             BuildEnd(canvas);
+            BuildSpecialNews(canvas);
         }
 
         // ---------- HUD ----------
@@ -247,6 +248,26 @@ namespace PlanErfuellt.EditorTools
             so.FindProperty("again").objectReferenceValue = again;
             so.FindProperty("againLabel").objectReferenceValue = again.GetComponentInChildren<TMP_Text>();
             so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>Sondersendung (GDD 10): Staats-TV-Einblendung mit roter Kennung, Schlagzeile und Laufband.</summary>
+        static void BuildSpecialNews(Transform canvas)
+        {
+            var holder = Holder(canvas, "SpecialNewsOverlay");
+            var root = FullScreen(holder, "Screen", new Color(0.03f, 0.05f, 0.12f, 0.93f));
+            var frame = CenterFrame(root, "Frame", new Vector2(1500f, 560f));
+            var box = P.Img(frame, "TagBox", new Vector2(60f, -50f), new Vector2(560f, 92f), new Color(0.82f, 0.1f, 0.1f), null, false);
+            box.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            box.rectTransform.anchoredPosition = new Vector2(60f + 280f, -50f - 46f);
+            var tag = P.Text(box.rectTransform, "Tag", 58, Color.white, new Vector2(0f, 0f), new Vector2(560f, 92f), TextAlignmentOptions.Center);
+            tag.characterSpacing = 6f;
+            var head = P.Text(frame, "Head", 54, Gold, new Vector2(60f, -180f), new Vector2(1380f, 230f), TextAlignmentOptions.TopLeft);
+            head.textWrappingMode = TMPro.TextWrappingModes.Normal;
+            var bar = P.Img(frame, "TickerBar", new Vector2(2f, -470f), new Vector2(1496f, 70f), new Color(0.6f, 0.05f, 0.06f), null, false);
+            var ticker = P.Text(bar.rectTransform, "Ticker", 26, P.Cream, new Vector2(30f, -14f), new Vector2(1440f, 44f), TextAlignmentOptions.Left);
+            ticker.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
+            ticker.overflowMode = TextOverflowModes.Ellipsis;
+            holder.gameObject.AddComponent<SpecialNewsUI>().Setup(root, tag, head, box.rectTransform, ticker);
         }
 
         // ---------- Hilfen ----------

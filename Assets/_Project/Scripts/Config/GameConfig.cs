@@ -45,6 +45,8 @@ namespace PlanErfuellt
         public ChamberFireConfig chamberFire = new ChamberFireConfig();
         public FxConfig fx = new FxConfig();
         public ClothFxConfig clothFx = new ClothFxConfig();
+        public MachineFxConfig machineFx = new MachineFxConfig();
+        public CinematicConfig cinematic = new CinematicConfig();
 
         // Diese Teile sind in der JSON als Objekte mit Schlüsseln abgelegt und werden vom Importer gesondert übertragen.
         [JsonIgnore] public List<UltimateSerum> ultimates = new List<UltimateSerum>();

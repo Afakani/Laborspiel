@@ -113,6 +113,18 @@ namespace PlanErfuellt
             if (GUILayout.Button("Wut −20")) s.AddAnger(-20f, gm.Config);
             if (GUILayout.Button("Wunsch jetzt") && q != null) s.wishTimer = 0.01f;
             GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label($"Plan {s.planIdx + 1}", GUILayout.Width(60));
+            if (GUILayout.Button("Plan −")) s.planIdx = Mathf.Max(0, s.planIdx - 1);
+            if (GUILayout.Button("Plan +")) s.planIdx = Mathf.Min(gm.Config.day.plans - 1, s.planIdx + 1);
+            GUILayout.EndHorizontal();
+            var z = s.centrifuge;
+            var k = s.cryo;
+            GUILayout.Label($"Zentrifuge {(z != null ? $"{z.rpm * 100f:0} % {(z.spinning ? "hoch" : "aus")}" : "-")} · Kryo {(k != null ? (k.Ready ? $"raus {k.windowLeft:0} s" : $"friert {k.freezeLeft:0} s") : "-")}");
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Mix 2-3-5")) { s.serums.Add(new Serum(new Dose(2, 3, 5), SerumStage.Raw)); EventBus.RaiseSerumRackChanged(); }
+            if (GUILayout.Button("Kryo fertig") && k != null) k.freezeLeft = 0.01f;
+            GUILayout.EndHorizontal();
         }
 
         /// <summary>Phase 7: Parteikontrolle und Kommissar.</summary>

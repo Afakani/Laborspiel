@@ -22,10 +22,12 @@ namespace PlanErfuellt
         FirstPersonController player;
         InteractionSystem interaction;
         readonly List<DayEvent> events = new List<DayEvent>();
-        float idleTimer, dayOverTimer, contractTimer;
+        float idleTimer, dayOverTimer, contractTimer, newsTimer;
         bool finalAfterDay;
 
         public DayMode Mode { get; private set; }
+        /// <summary>Schlagzeile der laufenden Sondersendung (gültig in Mode News).</summary>
+        public string NewsHead { get; private set; }
         /// <summary>Grund des Spielendes (gültig in Mode GameOver).</summary>
         public GameOverKind EndKind { get; private set; }
 
@@ -152,6 +154,14 @@ namespace PlanErfuellt
             SetMode(DayMode.DayOver);
         }
 
+        /// <summary>Sondersendung einblenden (GDD 10); danach geht die Schicht weiter.</summary>
+        public void ShowSpecialNews(string head, float seconds)
+        {
+            NewsHead = head;
+            newsTimer = seconds;
+            SetMode(DayMode.News);
+        }
+
         public void GameOver(GameOverKind kind)
         {
             EndKind = kind;
@@ -173,6 +183,12 @@ namespace PlanErfuellt
         {
             var gm = GM;
             if (gm == null) return;
+            if (Mode == DayMode.News)
+            {
+                newsTimer -= Time.unscaledDeltaTime;
+                if (newsTimer <= 0f) SetMode(DayMode.Play);
+                return;
+            }
             if (Mode == DayMode.DayOver)
             {
                 dayOverTimer -= Time.unscaledDeltaTime;

@@ -125,3 +125,14 @@ Abweichungen von den Übergabedokumenten und eigene Festlegungen. Neueste unten.
 | D55 | Regal-Plane | Abgedecktes Regal wird als Leinenplane über dem Regal gezeigt (der Prototyp zeigt nur den Zustand im Text). |
 | D56 | Laken-Look | Neues Laken-Mesh mit Falten (wie die Sinus-Falten im Prototyp) und eigener Leinen-Textur `Canvas.png` (selbst erzeugt, Längsstreifen und roter Saum wie Prototyp `clothTex`). |
 | D57 | Ids | Sonderregeln für Ω, Koloss und Singende Kuh prüfen die Ids aus der JSON über `UltimateIds` (eine Stelle statt verstreuter Zeichenketten). |
+
+## Phase 8 (2026-10-18)
+
+| Nr. | Thema | Entscheidung |
+|---|---|---|
+| D58 | Neue Werte | Abschnitt `machineFx` (Prototyp: Rotor 40 rad/s bei voller Drehzahl, Gehäusewackeln 0,05, Kamerawackeln 0,25 beim Zerspringen, Fenster 0,15 / 0,8 + 0,3·sin) und `iceBlockShowSec` 6 (eigener Wert). Abschnitt `cinematic` (Prototyp: 4,5 s, Licht 0,1, Direktor nach 2,5 s, Abdunkeln mit dt·4) und eigene Werte `animalGlowBoost` 6 und `specialNewsSec` 8. |
+| D59 | Sondersendung | Bis Phase 10 als Vollbild-Einblendung im Staats-TV-Stil (Kennung SONDERSENDUNG, Schlagzeile `newsFacts.specialHead`, Laufband `newsFacts.specialTicker`). Neuer Abschnitt `DayMode.News`: Spielzeit steht, danach geht die Schicht weiter. |
+| D60 | Neuer Text | `director.speechless` („… … …“), im Prototyp fest im Code. |
+| D61 | Abdunkeln | Eigenes Volume `Lab_Cinematic` (Belichtung log2(0,1)) wie beim Stromausfall, weil die Hallenlampen gebacken sind. Damit das Tier im Dunkeln strahlt, werden Leuchten und Glühlicht des Tiers während der Sequenz verstärkt (`AnimalVisuals.GlowBoost`). |
+| D62 | Zeitfenster | Zentrifuge, Kryokammer und Zwischensequenz laufen nur während der Schicht (`DayMode.Play`) und in Spielzeit, wie `updateMachines`/`G.cine` im Prototyp. |
+| D63 | Eisblock | Der Eisblock wird als vereistes Kryo-Fenster gezeigt (Prototyp: nur Meldung). |

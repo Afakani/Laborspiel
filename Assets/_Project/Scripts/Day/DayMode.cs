@@ -7,6 +7,8 @@ namespace PlanErfuellt
         Order,
         Play,
         DayOver,
+        /// <summary>Sondersendung im Staats-TV (Spielzeit steht).</summary>
+        News,
         GameOver
     }
 }

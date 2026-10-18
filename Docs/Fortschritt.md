@@ -14,7 +14,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 | 5 | Risiken, Warnzeichen, Explosion, Infektion | fertig |
 | 6 | Tagesablauf, Bestellung, Direktor | fertig |
 | 7 | Kommissar und Laken | fertig |
-| 8 | Zentrifuge, Kryo, Ultimativ-Höhepunkt | offen |
+| 8 | Zentrifuge, Kryo, Ultimativ-Höhepunkt | fertig |
 | 9 | Nebenstationen und Baumodus | offen |
 | 10 | Staats-TV, Logbuch, Rekorde, Fenster | offen |
 | 11 | Grafik und Animation (Art-Pass) | offen |
@@ -92,6 +92,25 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - Das Probenmikroskop im Misch-Panel kommt laut Prompt in Phase 9.
 - Hinweis: Wird während des Play Mode neu kompiliert, wirft Unity NullReference-Fehler (Domain-Reload); einfach Play neu starten. Empfehlung: in den Unity-Einstellungen „Script Changes While Playing“ auf „Stop Playing and Recompile“ stellen.
 
+## Phase 8 – Zentrifuge, Kryokammer, Ultimativ-Höhepunkt
+
+- [x] `MachineLogic` (rein, getestet): Zentrifuge lädt das erste passende Serum (Rohserum oder normales, nicht konzentriertes), Drehzahl rpm += dt·(0,16 + 0,12·rpm); Bremsen unter 60 % ohne Wirkung, gelb/rot ×1,25, grün ×1,5 (Rohserum → zentrifugiert); ab 100 % Überdrehzahl, Serum verloren; Auslauf, dann zurück ins Regal (wartet bei vollem Regal)
+- [x] Kryokammer ab Plan 2: zentrifugiertes oder normales, nicht tiefgekühltes Serum, 16 s einfrieren, 12 s Zeitfenster, sonst Eisblock; Ergebnis tiefgekühlt (+20 Stabilität) bzw. ab Plan 3 ultimativ, vorher „Die Probe reagiert nicht richtig …“
+- [x] Drehzahlbalken im Prompt mit Zonen grau/gelb/grün/rot aus der Config und weißer Nadel; Hinweise im Plan-Panel
+- [x] Zentrifuge sichtbar: Rotor dreht mit der Drehzahl, Gehäuse wackelt über 85 %, Lampe gelb/grün/rot, bei Überdrehzahl Glassplitter, Säurespritzer, Kamerawackeln
+- [x] Kryokammer sichtbar: Fenster leuchtet und pulsiert beim Einfrieren, Kältenebel quillt aus der Tür, Lampe blinkt im Entnahmefenster (rot = gesperrt), vereistes Fenster nach Eisblock. Behoben: Die Leuchtscheibe saß hinter der Türplatte und war nie zu sehen
+- [x] Ultimativ-Höhepunkt beim ersten Ω/Koloss: Bild auf 10 % (eigenes Volume), Tier leuchtet verstärkt, Direktor „… … …“, nach 2,5 s sein Spruch; nach 4,5 s Sondersendung (Kennung, Schlagzeile, Laufband, Spielzeit steht), danach weiter; Oberkommissar 25 s nach dem ersten Ultimativ. Weitere Ultimative: nur ein Spruch
+- [x] Debug-Menü: Plan ±, Rohserum 2-3-5, Kryo sofort fertig, Anzeige von Drehzahl und Kryo-Zeit
+- [x] Tests: 100 EditMode-Tests grün (10 neue, darunter die ganze Kette 2-3-5 → Zentrifuge grün → Kryo → Ω)
+- [x] Spieltest nach Prompt: Plan 3, 2-3-5 gemischt (brodelndes Rohserum) → Zentrifuge bei 77 % (grün) gebremst → Kryokammer → „ULTIMATIVES SERUM: Planerfüller Ω“ → auf Kuh gesprüht → Sequenz, Sondersendung, Oberkommissar mit dunkelrotem Schild; Laken leuchtet golden. Unterwegs auch Überdrehzahl und Eisblock im Spiel ausgelöst. Konsole ohne Fehler. Screenshots `Phase8_*.png`
+- Hinweis zum Test: Die Unity-Verbindung braucht mehrere Sekunden pro Befehl. Für das Timing an Zentrifuge und Kryo wurde die Spielzeit mit `GameClock.SetTimeScale` verlangsamt und das Hochdrehen bis 72 % bzw. der Rest des Einfrierens per Befehl übersprungen.
+
+### Offen / für spätere Phasen
+- Fanfare, Surren der Zentrifuge, Glasklirren, Warnton der Kryokammer: Ton in Phase 12
+- Sondersendung als Einblendung; das volle Staats-TV-Studio mit Nachrichten zwischen den Tagen folgt in Phase 10 (dort auch die Meldung zum Ultimativ im Laufband)
+- Laufband der Sondersendung steht still (wird abgeschnitten); Lauftext in Phase 10
+- Nach dem Neubau des Labors markiert Unity die Szene einen Frame später erneut als geändert; vor Tests über die Verbindung deshalb in einem eigenen Befehl speichern
+
 ## Phase 7 – Parteikontrolle, Kommissar, Laken
 
 - [x] `InspectionLogic` (rein, getestet): Parteikontrolle pro s (mutiertes Tier, niedrige Stabilität, Schweben, Glühen, Ω/Koloss, ×0,4 Laken, Singende Kuh, verseuchte Kammer, Abbau 0,6/s), Start ab Tag 2 bei Kontrolle ≥ 75, nach Zeitplan (erste 70 s nach Beginn von Tag 2, dann alle 100 s) oder Oberkommissar, mindestens 45 s Abstand
@@ -108,7 +127,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 
 ### Offen / für spätere Phasen
 - Musik (Grammophon) als Multiplikator für Parteikontrolle und Verdacht: Phase 9 (Logik nimmt den Wert schon entgegen)
-- Ω-Leuchten des Lakens und Oberkommissar im Spiel sichtbar erst mit den Ultimativen in Phase 8
+- ~~Ω-Leuchten des Lakens und Oberkommissar~~ in Phase 8 im Spiel geprüft
 - Nachrichtenmeldung nach der Kontrolle: Phase 10
 - Hinweis: Tests über die Unity-Verbindung erst nach dem Speichern der Szene starten, sonst blockiert der Dialog „Scene(s) Have Been Modified“ den Editor
 

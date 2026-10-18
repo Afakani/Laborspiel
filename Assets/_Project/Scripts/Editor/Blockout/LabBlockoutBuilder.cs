@@ -145,7 +145,7 @@ namespace PlanErfuellt.EditorTools
             var systems = Root("--- Systems");
             var oldMix = systems.Find("MixingSystem");
             if (oldMix != null) Object.DestroyImmediate(oldMix.gameObject);
-            new GameObject("MixingSystem", typeof(MixingSystem)).transform.SetParent(systems, false);
+            new GameObject("MixingSystem", typeof(MixingSystem), typeof(MachineSystem)).transform.SetParent(systems, false);
             var oldDay = systems.Find("DayCycle");
             if (oldDay != null) Object.DestroyImmediate(oldDay.gameObject);
             new GameObject("DayCycle", typeof(Director), typeof(DayCycle), typeof(InspectionSystem)).transform.SetParent(systems, false);

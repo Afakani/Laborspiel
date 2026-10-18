@@ -35,6 +35,11 @@ namespace PlanErfuellt
         public float mixTimer;
         /// <summary>Dosis, die gerade gemischt wird.</summary>
         public Dose? mixPending;
+        /// <summary>Serum in der Zentrifuge bzw. Kryokammer (GDD 6.3, 6.4), sonst null.</summary>
+        public CentrifugeJob centrifuge;
+        public CryoJob cryo;
+        /// <summary>Restzeit der Ultimativ-Zwischensequenz (GDD 10).</summary>
+        public float cinematicLeft;
         /// <summary>Am Pult gewähltes Serum im Regal.</summary>
         public int selectedSerum;
         /// <summary>Zuletzt gesprühtes Serum (für den Auto-Sprüher, GDD 6.10).</summary>

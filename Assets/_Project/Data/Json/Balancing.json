@@ -1189,5 +1189,24 @@
     "omegaGlow": 0.3,
     "omegaPulse": 0.15,
     "omegaFreq": 3
+  },
+  "machineFx": {
+    "_doc": "Prototyp: rotor.rotation.y += dt*rpm*40; Gehäuse ±0.05*rpm über shakeAbove; Zerspringen shake 0.25; kryWin 0.15 aus, 0.8+0.3*sin beim Einfrieren. iceBlockShowSec eigener Wert.",
+    "centrifugeRotorRadPerSec": 40,
+    "centrifugeShakeAmp": 0.05,
+    "centrifugeBreakShake": 0.25,
+    "cryoGlowIdle": 0.15,
+    "cryoGlowFreezing": 0.8,
+    "cryoGlowPulse": 0.3,
+    "iceBlockShowSec": 6
+  },
+  "cinematic": {
+    "_doc": "Prototyp ultCinematic: G.cine 4.5 s, Licht 0.1, Direktor nach 2.5 s; lightF nähert sich mit dt*4. animalGlowBoost und specialNewsSec eigene Werte.",
+    "durationSec": 4.5,
+    "lightFactor": 0.1,
+    "directorLineDelaySec": 2.5,
+    "animalGlowBoost": 6,
+    "specialNewsSec": 8,
+    "fadeSpeed": 4
   }
 }

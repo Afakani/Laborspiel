@@ -108,7 +108,7 @@ namespace PlanErfuellt.EditorTools
         }
 
         /// <summary>Partikel-Emitter (Weltraum, Rate 0 – die Laufzeit-Komponente steuert die Menge).</summary>
-        static ParticleSystem Emitter(Transform parent, string name, Vector3 pos, Material mat, Color color,
+        internal static ParticleSystem Emitter(Transform parent, string name, Vector3 pos, Material mat, Color color,
             float life0, float life1, float speed0, float speed1, float size0, float size1, float gravity,
             ParticleSystemShapeType shapeType, Vector3 shapeSize, float growTo)
         {

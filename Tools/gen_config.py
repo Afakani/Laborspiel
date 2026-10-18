@@ -120,6 +120,15 @@ CLASSES = [
         F("float", "bossScale", "Größe des Oberkommissars"), F("float", "swayDeg", "Schwanken beim Trinken"),
         F("float", "swayFreq"), F("float", "stepFreq", "Schritte pro s beim Gehen"), F("float", "legSwingDeg"),
         F("float", "startShake", "Kamerawackeln beim Eintreffen")]),
+    ("MachineFxConfig", "Darstellung von Zentrifuge und Kryokammer (Prototyp updatePlay/kryWin).", [
+        F("float", "centrifugeRotorRadPerSec", "Rotordrehung bei voller Drehzahl"), F("float", "centrifugeShakeAmp", "Wackeln des Gehäuses in m bei voller Drehzahl"),
+        F("float", "centrifugeBreakShake", "Kamerawackeln beim Zerspringen"),
+        F("float", "cryoGlowIdle"), F("float", "cryoGlowFreezing"), F("float", "cryoGlowPulse"),
+        F("float", "iceBlockShowSec", "Eisblock im Fenster sichtbar")]),
+    ("CinematicConfig", "Ultimativ-Höhepunkt (GDD 10, Prototyp ultCinematic).", [
+        F("float", "durationSec", "Licht gedimmt, Tier leuchtet"), F("float", "lightFactor", "Bildhelligkeit während der Sequenz"),
+        F("float", "directorLineDelaySec", "„… … …“, dann der Spruch"), F("float", "animalGlowBoost", "Tier leuchtet heller, damit es im Dunkeln strahlt"),
+        F("float", "specialNewsSec", "Dauer der Sondersendung (bis Phase 10 als Einblendung)"), F("float", "fadeSpeed", "Abdunkeln/Aufhellen pro s")]),
     ("ClothFxConfig", "Laken über der Kammer: Animation und verräterische Bewegung (GDD 6.8, Prototyp clothK).", [
         F("float", "speed", "Annäherung pro s beim Werfen/Abnehmen"),
         F("float", "wobbleDegPerLevel", "Wackeln je Mutationsgrad"), F("float", "wobbleBaseFreq", "Frequenz = Basis + Grad"),

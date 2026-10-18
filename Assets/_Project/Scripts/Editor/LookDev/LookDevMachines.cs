@@ -143,8 +143,8 @@ namespace PlanErfuellt.EditorTools
             var door = BlockoutKit.Group(v, "Door", new Vector3(0f, 0.98f, -0.5f));
             LookDevKit.Box(door, "Panel", new Vector3(0f, 0f, -0.02f), new Vector3(1.1f, 1.6f, 0.05f), L.SteelFrame);
             LookDevKit.Obj(door, "WindowRing", LookDevKit.Ring(0.3f, 0.36f, 0.06f, 40), new Vector3(0f, 0.18f, -0.06f), L.Brass, new Vector3(90f, 0f, 0f));
-            LookDevKit.Cyl(door, "Window", new Vector3(0f, 0.18f, -0.05f), 0.3f, 0.02f, L.GlassBlue, new Vector3(90f, 0f, 0f), true, 40);
-            LookDevKit.Cyl(door, "Inside", new Vector3(0f, 0.18f, 0.02f), 0.29f, 0.02f, L.CryoGlow, new Vector3(90f, 0f, 0f), true, 40);
+            LookDevKit.Cyl(door, "Window", new Vector3(0f, 0.18f, -0.075f), 0.3f, 0.01f, L.GlassBlue, new Vector3(90f, 0f, 0f), true, 40);
+            LookDevKit.Cyl(door, "Inside", new Vector3(0f, 0.18f, -0.05f), 0.29f, 0.01f, L.CryoGlow, new Vector3(90f, 0f, 0f), true, 40);
             for (int i = 0; i < 12; i++)
             {
                 float a = i / 12f * Mathf.PI * 2f;

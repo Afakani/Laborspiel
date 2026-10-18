@@ -30,6 +30,8 @@ namespace PlanErfuellt
         public AnimalKind Kind => kind;
         /// <summary>Aktuelles Glühen 0..1 (für das Kammerlicht).</summary>
         public float Glow => glow;
+        /// <summary>Faktor für Leuchten und Glühlicht (Zwischensequenz, sonst 1).</summary>
+        public float GlowBoost { get; set; } = 1f;
         public Color GlowColor { get; private set; }
         public float Pulse { get; private set; } = 1f;
 
@@ -88,7 +90,7 @@ namespace PlanErfuellt
             GlowColor = omega
                 ? Hex(v.goldColor)
                 : Color.Lerp(Hex(v.glowColor), Hex(v.heatColor), Mathf.Max(s.heat / 100f, state == AnimalState.Unstable ? v.unstableHeatColorMix : 0f));
-            Tint(bodyRenderers, null, GlowColor * (glow * v.emissiveFactor * Pulse));
+            Tint(bodyRenderers, null, GlowColor * (glow * v.emissiveFactor * Pulse * GlowBoost));
             if (kind == AnimalKind.Cow)
                 Tint(spotRenderers, Color.Lerp(Hex(v.spotColor), omega ? Hex(v.goldColor) : Hex(v.spotGlowColor), glow * v.spotGlowFactor), null);
 
