@@ -18,7 +18,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 | 9 | Nebenstationen und Baumodus | fertig |
 | 10 | Staats-TV, Logbuch, Rekorde, Fenster | fertig |
 | 11 | Grafik und Animation (Art-Pass) | fertig |
-| 12 | Ton, Feinschliff, Performance, Build | offen |
+| 12 | Ton, Feinschliff, Performance, Build | fertig |
 
 ## Phase 1 – Setup und Grundgerüst
 
@@ -91,6 +91,30 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - Mischstation: Regler ziehen, MISCHEN, Fläschchen erscheinen im 3D-Regal. Pult: Fläschchen wählen, KLON (Hebel klappt). Leertaste/Esc schließen.
 - Das Probenmikroskop im Misch-Panel kommt laut Prompt in Phase 9.
 - Hinweis: Wird während des Play Mode neu kompiliert, wirft Unity NullReference-Fehler (Domain-Reload); einfach Play neu starten. Empfehlung: in den Unity-Einstellungen „Script Changes While Playing“ auf „Stop Playing and Recompile“ stellen.
+
+## Phase 12 – Ton, Feinschliff, Performance, Build
+
+- [x] Ton (GDD 14): 24 Klänge prozedural nach der WebAudio-Synthese des Prototyps (`Tools/gen_audio.py`): Muhen (tiefer mit A, wobbelig ab B ≥ 2 / Ultimativ), Gackern, Singende Kuh, Zischen, Blubbern, Explosion, Sirene bei INSTABIL (Schleife), Zentrifugensurren (Tonhöhe nach Drehzahl), Glas, Eis, Kurbel, Marschmusik vom Grammophon, Münze, Fanfare, trauriges Motiv, Stempel, Rohrpost, Warnton, Klick, Direktor-Grummeln (Silben nach Textlänge, tiefer und lauter bei Wut)
+- [x] `AudioService`: 16 Effektquellen im Ring, Kanäle Gesamt × Musik/Effekte, Klang zu Meldungen über `audio.toastSounds`, Pause hält den Ton an, **M** = Ton an/aus
+- [x] Einstellungen (gespeichert): Lautstärke gesamt, Musik, Effekte, Mausempfindlichkeit, Kamerawackeln, Grafik Hoch/Niedrig (zweite URP-Einstellung), Ton an/aus; erreichbar aus Hauptmenü und Pause
+- [x] Hauptmenü: Startbildschirm mit „Für den Plan!“, „Einstellungen“, „Beenden“; Pause mit „Ton an · M“ und „Einstellungen“
+- [x] Performance-Pass (GDD 15): kleine Teile ohne Schatten, statisches Batching, Licht neu gebacken. Editor-Messung (Play Mode, Kuh in der Kammer, Game View 1400 × 828): **156 FPS** (vorher 111), CPU 7,9 ms, Render-Thread 4,2 ms, Draw Calls 1 318 (vorher 5 160, davon 1 253 statisch gebündelt), Schattenwerfer 722 (vorher 4 104), ca. 850 000 Dreiecke
+- [x] Windows-Build `Builds/Windows/PlanErfuellt.exe` (230 MB, 0 Fehler), Probestart: Hauptmenü erscheint, Player.log ohne Ausnahmen. Startanleitung in `Docs/README.md`
+- [x] Durchlauf im Zeitraffer (Autopilot, 10×, Log `Docs/Durchlauf_Plan2.log`): Plan 1 an Tag 1 erfüllt (+300 SM Prämie, Freischaltungen), Plan 2 an Tag 2–5 mit Sonderauftrag, Sonderwünschen, Kontrollen (Laken drauf/ab, bestanden, +400 SM), Sendungen, Bestellungen, Rekorden; 0 Fehler in der Konsole
+- [x] Tests: 127 EditMode-Tests grün (5 neue)
+- [x] Korrigiert im Test: URP entfernte im Build zwei Post-Processing-Shader und schaltete damit das ganze Post-Processing ab (Einstellung geändert, D99); Einstellungsfenster schien durch; gewählte Grafikstufe sah ausgegraut aus; Vollbild-Hintergründe bekamen das Schild-Sprite
+
+### Befunde aus dem Durchlauf
+- Kein Programmfehler. Der einfache Autopilot (immer 1-1-1, viele Hühner) schafft die 42 t Fleisch von Plan 2 nicht; nach mehreren verfehlten Tagen wird er entlassen (Wut 100). Das ist Spielregel, kein Fehler; ob Plan 2 für Menschen zu schwer ist, bitte selbst prüfen
+- Ohne Bewegung steigt die Wut (Leerlauf, GDD 7.2); der Autopilot setzt den Leerlauf daher zurück wie der Prototyp-Testschritt
+- Bei einem Kontrollbeginn direkt zum Schichtstart erscheint die Meldung schon vor dem Wechsel in die Schicht (unkritisch)
+
+### Offen
+- Ton nur technisch geprüft (Quellen, Tonhöhe, Lautstärke), nicht angehört
+- Build-Warnungen (649) stammen aus den Shadern des Pakets `com.unity.ai.inference` (Unity-KI-Assistent), das mitgebaut wird; ohne den Assistenten wäre der Build kleiner
+- Firmenname im Build ist noch „DefaultCompany“
+- Aus früheren Phasen: Partikel laufen in Echtzeit statt Spielzeit, Schilder rechts überlappen teils, Baumodus-Kamera, Diagrammtitel im Studio, animiertes Direktor-Gesicht (D49)
+- Nicht geprüft: Einstellungen und Pausemenü mit echter Maus, Grafik „Niedrig“ im Build
 
 ## Phase 11 – Grafik und Animation (Art-Pass)
 

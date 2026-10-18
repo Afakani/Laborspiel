@@ -177,3 +177,19 @@ Abweichungen von den Übergabedokumenten und eigene Festlegungen. Neueste unten.
 | D87 | Deko-Lage | Prototyp-Lagen an unseren Raum angepasst: Büroecke unter dem Fenster mit Teppich, rechte Fässer an die Rückwand gerückt, Rückwand-Plakate bei x ±5,9 (bei ±8,5 hängen die Banner). |
 | D88 | HUD-Stil | Industrieschild als 9-Slice-Sprite für alle großen dunklen HUD- und Panelflächen; Logbuch (Papier), Sendung und Pause bleiben, wie sie sind. |
 | D89 | Testlauf | Die EditMode-Tests starten über den Menüpunkt *Plan erfüllt > EditMode-Tests ausführen* (die Verbindung lässt den Test-Runner nicht mehr direkt starten). |
+
+## Phase 12 (2026-10-18)
+
+| Nr. | Thema | Entscheidung |
+|---|---|---|
+| D90 | Klänge | Alle Klänge prozedural als WAV, Nachbau der WebAudio-Synthese des Prototyps (`Tools/gen_audio.py`): Oszillatoren mit denselben Frequenzen, Rampen und Lautstärken, gefiltertes Rauschen. Keine Fremdquelle, daher keine Rückfrage. Tonhöhe (Muhen nach A, Grummeln nach Wut, Zentrifuge nach Drehzahl, Marschmelodie) zur Laufzeit über die Tonhöhe der Quelle. |
+| D91 | Mixer | Kanäle Gesamt × Musik bzw. Effekte im Code (`AudioLogic.Channel`) statt eines AudioMixer-Assets: Unity bietet keine öffentliche Schnittstelle, um Mixergruppen per Skript anzulegen. Grundpegel `audio.master` 0,45 wie Prototyp. Pause hält den Ton an (`AudioListener.pause`). |
+| D92 | Klang zur Meldung | Wie im Prototyp (SFX neben `toast()`): Tabelle `audio.toastSounds` (Textpfad → Klang). Dafür meldet `GameManager.Toast` zusätzlich den Textpfad (`EventBus.ToastKey`). Dazu Mischen, Sprühen, Hebel, Direktor-Grummeln, Tierlaute, Sirene, Zentrifuge, Marsch und Münzhuhn direkt. |
+| D93 | Neue Werte | Abschnitt `audio` (Prototyp-Werte; `voices` 16 eigener Wert) und `settings` (Mausfaktor 0,3–3; Grafik Niedrig: Renderskala 0,75, Schatten 25 m, 1024er Karte, 2 Kaskaden – eigene Werte). |
+| D94 | Grafik Hoch/Niedrig | Zweite URP-Einstellung `PC_RPAsset_Low` (Kopie mit den Werten aus `settings`, ohne weiche Schatten), zur Laufzeit über `QualitySettings.renderPipeline`; das Projekt hatte nur eine Qualitätsstufe. |
+| D95 | Hauptmenü | Der Startbildschirm ist das Hauptmenü (Für den Plan!, Einstellungen, Beenden). Einstellungen auch in der Pause, dazu dort „Ton an · M“. Zusätzlicher Regler „Kamerawackeln“ (0 = aus) als Dosierung für empfindliche Spieler. |
+| D96 | Neue Texte | `ui.settings.*`, `ui.intro.settings`, `ui.intro.quit`, `ui.hud.btnSettings`. |
+| D97 | Performance | Teile unter 0,6 m Diagonale werfen keinen Schatten (GDD 15 „Schatten nur für große Objekte“), statisches Batching für Windows an. Licht nach dem Neubau neu gebacken. |
+| D98 | Autopilot | Für den Durchlauf ein Debug-Autopilot (`DebugAutoPlay`, nur Editor/Development), der über die echten Systeme spielt. Er setzt den Leerlauf zurück wie der Testschritt im Prototyp (`G.idleT = 0`), sonst steigt die Wut, weil er die Figur nicht bewegt. |
+| D99 | Shader im Build | „Unbenutzte Post-Processing-Varianten entfernen“ ist aus: sonst entfernt der Build Motion-Blur- und Panini-Shader und URP schaltet das ganze Post-Processing ab (Meldung im Player.log). |
+| D100 | Build | Produktname „Plan erfüllt“, randloses Vollbild 1920 × 1080, Ausgabe `Builds/Windows/` (nicht im Git). Firmenname unverändert (DefaultCompany), bitte bei Bedarf selbst setzen. |

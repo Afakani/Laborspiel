@@ -1,0 +1,51 @@
+# Plan erfüllt – Startanleitung
+
+Unity-Umsetzung des Prototyps „Plan erfüllt“ (Satire auf Planwirtschaft: Kühe und Hühner mit Seren mutieren, Pläne erfüllen, Kommissar täuschen).
+
+## Spiel starten (Windows-Build)
+
+1. Ordner `Builds/Windows/` öffnen (wird beim Build erzeugt, liegt nicht im Git).
+2. `PlanErfuellt.exe` starten. Das Spiel läuft im randlosen Vollbild (1920 × 1080).
+3. Im Hauptmenü „Für den Plan!“ wählen; vor jeder Schicht am Bestellterminal Grundstoffe kaufen.
+
+Beenden: Hauptmenü „Beenden“ oder Alt+F4.
+
+## Steuerung
+
+| Taste | Aktion |
+|---|---|
+| W A S D | laufen |
+| Maus oder Q / E | umsehen bzw. drehen |
+| Leertaste halten | Station benutzen (Mischstation, Pult, Laken, Zentrifuge …) |
+| G | Gegenmittel selbst spritzen (nach Infektion) |
+| L | Forschungslogbuch |
+| B | Baumodus (Maschinen, ab Plan 2) |
+| M | Ton an/aus |
+| P oder Esc | Pause (dort: Logbuch, Staats-TV, Ton, Einstellungen) |
+| Mausklick ins Bild | Maus fangen |
+
+Einstellungen (Hauptmenü oder Pause): Lautstärke gesamt, Musik, Effekte, Mausempfindlichkeit, Kamerawackeln, Grafik Hoch/Niedrig, Ton an/aus. Sie werden gespeichert.
+
+## Im Unity-Editor öffnen
+
+- Unity **6000.6.6f1** (URP). Projektordner im Unity Hub hinzufügen.
+- Szene `Assets/_Project/Scenes/Lab.unity` öffnen und Play drücken.
+- Menü **Plan erfüllt**:
+  - *Labor-Blockout bauen* – baut Halle, Stationen, Tiere, HUD und Systeme aus den Editor-Skripten neu
+  - *Balancing importieren* – überträgt `Assets/_Project/Data/Json/Balancing.json` in das GameConfig-Asset
+  - *EditMode-Tests ausführen* – Ergebnis in `Temp/editmode_result.txt`
+  - *Windows-Build erstellen* – Ausgabe nach `Builds/Windows/`
+- F1 im Play Mode: Debug-Menü (Zeitraffer, Geld, Lager …), nur im Editor und in Development-Builds.
+
+## Daten
+
+- Spielwerte: `Assets/_Project/Data/Json/Balancing.json` (Arbeitskopie von `Docs/02_Balancing.json`)
+- Texte: `Assets/_Project/Data/Json/Texte_de.json` (Arbeitskopie von `Docs/03_Texte_de.json`)
+- Klänge: selbst erzeugt mit `python Tools/gen_audio.py Assets/_Project/Audio/Generated`
+- Texturen: selbst erzeugt mit `Tools/gen_lookdev_textures.py`, dazu Poly-Haven-Texturen (CC0, siehe `Docs/Credits.md`)
+
+## Weitere Dokumente
+
+- `Docs/Fortschritt.md` – Stand jeder Phase, offene Punkte
+- `Docs/Entscheidungen.md` – eigene Entscheidungen (D1 …)
+- `Docs/Screenshots/` – Aufnahmen je Phase

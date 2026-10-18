@@ -123,21 +123,28 @@ namespace PlanErfuellt.EditorTools
             PlayerBuilder.Set(pm, "hint", sub);
             var logBtn = PanelUiBuilder.MakeButton(pause.rectTransform, "Logbook", Vector2.zero, new Vector2(300f, 60f), PanelUiBuilder.ButtonBg, Gold, 24, false);
             var newsBtn = PanelUiBuilder.MakeButton(pause.rectTransform, "News", Vector2.zero, new Vector2(300f, 60f), PanelUiBuilder.ButtonBg, Gold, 24, false);
-            foreach (var (b, x) in new[] { (logBtn, -170f), (newsBtn, 170f) })
+            var soundBtn = PanelUiBuilder.MakeButton(pause.rectTransform, "Sound", Vector2.zero, new Vector2(300f, 60f), PanelUiBuilder.ButtonBg, Gold, 24, false);
+            var settingsBtn = PanelUiBuilder.MakeButton(pause.rectTransform, "Settings", Vector2.zero, new Vector2(300f, 60f), PanelUiBuilder.ButtonBg, Gold, 24, false);
+            foreach (var (b, x, y) in new[] { (logBtn, -170f, -140f), (newsBtn, 170f, -140f), (soundBtn, -170f, -220f), (settingsBtn, 170f, -220f) })
             {
                 var rt = (RectTransform)b.transform;
                 rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
-                rt.anchoredPosition = new Vector2(x, -140f);
+                rt.anchoredPosition = new Vector2(x, y);
             }
             PlayerBuilder.Set(pm, "logbook", logBtn);
             PlayerBuilder.Set(pm, "news", newsBtn);
+            PlayerBuilder.Set(pm, "sound", soundBtn);
+            PlayerBuilder.Set(pm, "settings", settingsBtn);
             pause.gameObject.SetActive(false);
+
+            // Einstellungen über allem (Hauptmenü und Pause)
+            SettingsUiBuilder.Build(root.transform);
 
             // Während des Staats-TV alles außer Sendung und Pause ausblenden
             var groups = new System.Collections.Generic.List<CanvasGroup>();
             foreach (Transform child in root.transform)
             {
-                if (child.name == "NewsOverlay" || child.name == "PauseOverlay" || child.name == "ToastTemplate") continue;
+                if (child.name == "NewsOverlay" || child.name == "PauseOverlay" || child.name == "SettingsOverlay" || child.name == "ToastTemplate") continue;
                 var g = child.GetComponent<CanvasGroup>();
                 if (g == null) g = child.gameObject.AddComponent<CanvasGroup>();
                 groups.Add(g);

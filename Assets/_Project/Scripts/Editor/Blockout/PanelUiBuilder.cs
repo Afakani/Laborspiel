@@ -295,7 +295,7 @@ namespace PlanErfuellt.EditorTools
             return b;
         }
 
-        static Slider MakeSlider(Transform parent, string name, Vector2 pos, Vector2 size)
+        internal static Slider MakeSlider(Transform parent, string name, Vector2 pos, Vector2 size)
         {
             var rt = Rect(parent, name, pos, size);
             var bg = new GameObject("Background", typeof(RectTransform), typeof(Image));

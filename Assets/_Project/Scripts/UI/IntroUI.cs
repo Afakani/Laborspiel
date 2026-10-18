@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace PlanErfuellt
 {
-    /// <summary>Startbildschirm vor Tag 1 (Texte ui.intro): Titel, Auftrag, Steuerung, Knopf „Für den Plan!“.</summary>
+    /// <summary>Startbildschirm und Hauptmenü vor Tag 1 (Texte ui.intro): Titel, Auftrag, Steuerung, Knöpfe Start, Einstellungen, Beenden.</summary>
     public class IntroUI : MonoBehaviour
     {
         [SerializeField] GameObject root;
@@ -13,12 +13,16 @@ namespace PlanErfuellt
         [SerializeField] TMP_Text body;
         [SerializeField] Button start;
         [SerializeField] TMP_Text startLabel;
+        [SerializeField] Button settings;
+        [SerializeField] Button quit;
 
         bool shown;
 
         void Awake()
         {
             start.onClick.AddListener(() => DayCycle.Instance.StartFromIntro());
+            settings.onClick.AddListener(() => SettingsUI.Instance.Open());
+            quit.onClick.AddListener(Quit);
             root.SetActive(false);
         }
 
@@ -39,6 +43,17 @@ namespace PlanErfuellt
             foreach (var b in t.GetList("ui.intro.bullets")) sb.Append("• ").AppendLine(b);
             body.text = sb.ToString();
             startLabel.text = t.Get("ui.intro.start");
+            settings.GetComponentInChildren<TMP_Text>().text = t.Get("ui.intro.settings");
+            quit.GetComponentInChildren<TMP_Text>().text = t.Get("ui.intro.quit");
+        }
+
+        static void Quit()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         }
     }
 }

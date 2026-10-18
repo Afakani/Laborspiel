@@ -13,6 +13,7 @@ namespace PlanErfuellt.EditorTools
         const string TexDir = "Assets/_Project/Art/Textures/LookDev";
         const float MaxDark = 0.13f, MinAlpha = 0.8f, MinWidth = 100f, MinHeight = 40f;
         static readonly string[] Skip = { "PanelLogbook", "NewsOverlay", "PauseOverlay" };
+        const string FullScreenName = "Screen";
 
         /// <summary>Schild-Sprite auf alle großen, dunklen, ungemusterten Flächen unter root legen.</summary>
         public static int Apply(Transform root)
@@ -22,6 +23,8 @@ namespace PlanErfuellt.EditorTools
             foreach (var img in root.GetComponentsInChildren<Image>(true))
             {
                 if (img.sprite != null || InSkipped(img.transform, root)) continue;
+                // Vollbild-Hintergründe (Start, Ende, Bestellung, Einstellungen) bleiben dunkel und deckend
+                if (img.name == FullScreenName) continue;
                 var c = img.color;
                 if (c.a < MinAlpha || Mathf.Max(c.r, Mathf.Max(c.g, c.b)) > MaxDark) continue;
                 var rt = img.rectTransform;

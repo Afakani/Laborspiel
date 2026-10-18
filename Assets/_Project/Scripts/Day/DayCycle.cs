@@ -71,6 +71,9 @@ namespace PlanErfuellt
 
         public void ShowIntro() => SetMode(DayMode.Intro);
 
+        /// <summary>Nur für den Autopiloten (wie Prototyp-Testschritt G.idleT = 0): Leerlauf zurücksetzen.</summary>
+        internal void DebugResetIdle() => idleTimer = 0f;
+
         /// <summary>Intro bestätigt → erstes Bestellterminal.</summary>
         public void StartFromIntro() => OpenOrder();
 

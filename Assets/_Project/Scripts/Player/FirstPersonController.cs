@@ -83,8 +83,8 @@ namespace PlanErfuellt
             if (Cursor.lockState == CursorLockMode.Locked)
             {
                 var d = InputReader.LookDelta;
-                yaw += d.x * P.mouseSensitivityDeg * inv;
-                pitch = Mathf.Clamp(pitch - d.y * P.mouseSensitivityDeg, -P.lookUpMaxDeg, P.lookDownMaxDeg);
+                yaw += d.x * P.mouseSensitivityDeg * GameSettings.Mouse * inv;
+                pitch = Mathf.Clamp(pitch - d.y * P.mouseSensitivityDeg * GameSettings.Mouse, -P.lookUpMaxDeg, P.lookDownMaxDeg);
             }
             transform.rotation = Quaternion.Euler(0f, yaw, 0f);
 

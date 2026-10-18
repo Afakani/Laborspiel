@@ -50,6 +50,8 @@ namespace PlanErfuellt
         public BuildViewConfig buildView = new BuildViewConfig();
         public RecordsConfig records = new RecordsConfig();
         public NewsStudioConfig newsStudio = new NewsStudioConfig();
+        public AudioConfig audio = new AudioConfig();
+        public SettingsConfig settings = new SettingsConfig();
 
         // Diese Teile sind in der JSON als Objekte mit Schlüsseln abgelegt und werden vom Importer gesondert übertragen.
         [JsonIgnore] public List<UltimateSerum> ultimates = new List<UltimateSerum>();

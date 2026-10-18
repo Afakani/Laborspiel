@@ -44,6 +44,7 @@ namespace PlanErfuellt
             }
 
             Texts = new TextDatabase(textsJson.text, config.anger.tiers);
+            GameSettings.Init(config);
             Clock = new GameClock(maxFrameStep);
             NewGame();
         }
@@ -68,7 +69,10 @@ namespace PlanErfuellt
         }
 
         /// <summary>Kurzmeldung aus einem Textpfad anzeigen.</summary>
-        public void Toast(string path, ToastKind kind, params (string key, object value)[] values) =>
+        public void Toast(string path, ToastKind kind, params (string key, object value)[] values)
+        {
             EventBus.RaiseToast(Texts.Format(path, values), kind);
+            EventBus.RaiseToastKey(path);
+        }
     }
 }

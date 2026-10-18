@@ -4,7 +4,8 @@ namespace PlanErfuellt
 {
     /// <summary>
     /// Kamerawackeln wie im Prototyp (shake): Explosion, Explosion in der Verarbeitung, Bandriss, Kabelriss.
-    /// Stärke und Abbau aus fx; der Versatz geht über FirstPersonController.ShakeOffset an die Kamera.
+    /// Stärke und Abbau aus fx, abgeschwächt über die Einstellung Kamerawackeln; der Versatz geht über
+    /// FirstPersonController.ShakeOffset an die Kamera.
     /// </summary>
     [RequireComponent(typeof(FirstPersonController))]
     public class CameraShake : MonoBehaviour
@@ -38,7 +39,7 @@ namespace PlanErfuellt
             var fx = gm.Config.fx;
             shake = Mathf.Max(0f, shake - gm.Clock.DeltaTime * fx.shakeDecay);
             fpc.ShakeOffset = shake > 0f
-                ? new Vector3(Random.value - 0.5f, Random.value - 0.5f, 0f) * (shake * fx.shakeScale)
+                ? new Vector3(Random.value - 0.5f, Random.value - 0.5f, 0f) * (shake * fx.shakeScale * GameSettings.Shake)
                 : Vector3.zero;
         }
     }

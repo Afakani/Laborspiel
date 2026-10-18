@@ -490,7 +490,7 @@ def hud_plate():
     s = 128
     img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
-    d.rectangle([0, 0, s - 1, s - 1], fill=(26, 25, 24, 236))
+    d.rectangle([0, 0, s - 1, s - 1], fill=(26, 25, 24, 250))
     d.rectangle([0, 0, s - 1, s - 1], outline=(98, 90, 76, 255), width=3)
     d.rectangle([4, 4, s - 5, s - 5], outline=(14, 13, 12, 255), width=2)
     d.line([(6, 6), (s - 7, 6)], fill=(132, 120, 98, 160), width=1)
@@ -498,7 +498,7 @@ def hud_plate():
         d.ellipse([cx - 4, cy - 4, cx + 4, cy + 4], fill=(150, 128, 82, 255))
         d.ellipse([cx - 2, cy - 3, cx + 1, cy], fill=(212, 190, 140, 255))
     grime = noise_layer((s, s), 6, 0.5)
-    dark = Image.new("RGBA", (s, s), (8, 8, 8, 236))
+    dark = Image.new("RGBA", (s, s), (8, 8, 8, 250))
     inner = Image.new("L", (s, s), 0)
     ImageDraw.Draw(inner).rectangle([7, 7, s - 8, s - 8], fill=255)
     mask = Image.composite(grime, Image.new("L", (s, s), 0), inner)

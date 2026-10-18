@@ -38,4 +38,6 @@ Eigene Texturen (Emblem, Direktor, Plantafel, Papier, Checkliste, Icons, Warnstr
 
 ## 3D-Modelle, Ton
 
-Noch keine.
+Keine Fremdquellen.
+- 3D-Modelle (Halle, Stationen, Deko, Kuh und Huhn mit Skelett): selbst per Editor-Skript erzeugt (`Assets/_Project/Scripts/Editor/`).
+- Klänge: selbst erzeugt mit `Tools/gen_audio.py` (Nachbau der WebAudio-Synthese des Prototyps), Ablage `Assets/_Project/Audio/Generated/`.

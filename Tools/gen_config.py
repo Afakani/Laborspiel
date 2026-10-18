@@ -220,6 +220,24 @@ CLASSES = [
         F("float[]", "widePos"), F("float[]", "wideTarget"), F("float[]", "closePos"), F("float[]", "closeTarget"),
         F("float[]", "closeDeadPos"), F("float[]", "closeDeadTarget"), F("float", "fov"),
         F("float", "slumpDelaySec", "Sprecher sackt nach dieser Zeit zusammen"), F("float", "slumpSpeed")]),
+    ("ToastSound", "Klang zu einer Meldung (Prototyp: SFX-Aufruf neben toast()).", [
+        F("string", "key", "Textpfad der Meldung, z. B. ui.toasts.planMet"), F("string", "sound", "Klang-Id (Dateiname ohne Endung)")]),
+    ("AudioConfig", "Ton (GDD 14, Prototyp SFX/updateAudio): Pegel, Tierlaute, Musik, Schleifen, Zuordnung zu Meldungen.", [
+        F("float", "master", "Gesamtpegel (Prototyp master 0.45)"), F("float", "music", "Standard Musik 0..1"), F("float", "sfx", "Standard Effekte 0..1"),
+        F("int", "voices", "Gleichzeitige Effektquellen"),
+        F("float", "mooEveryMin", "Tierlaut frühestens nach s"), F("float", "mooEveryRand", "plus Zufall bis s"),
+        F("float", "cloneVoiceDelay", "Tierlaut nach dem Klonen in s"),
+        F("float", "mooBaseHz", "Grundton der Datei moo"), F("float", "mooHzPerA", "tiefer je A"), F("int", "mooWobbleFromB", "wobbelig ab B"),
+        F("float", "marchBeatSec", "Marsch: Notenabstand"), F("float", "marchBaseHz", "Grundton der Datei march_note"), F("float[]", "marchNotes", "Melodie in Hz"),
+        F("float", "grumbleBaseHz", "Direktor: Grundton bei Wut 0"), F("float", "grumbleHzPerAnger"), F("float", "grumbleRandHz"),
+        F("float", "grumbleGapSec"), F("int", "grumbleMax"), F("int", "grumbleCharsPerSyllable"), F("float", "grumbleVolPerAnger", "Lautstärke +Anteil je Wutpunkt"),
+        F("float", "whirClipHz", "Grundton der Datei whir_loop"), F("float", "whirBaseHz"), F("float", "whirHzPerRpm"),
+        F("float", "coinEggChance", "Münzhuhn: Münzklang je Ei"),
+        F("ToastSound[]", "toastSounds", "Meldung → Klang")]),
+    ("SettingsConfig", "Einstellungen: Vorgaben und Grenzen (Maus, Grafik).", [
+        F("float", "mouseDefault", "Mausempfindlichkeit Faktor"), F("float", "mouseMin"), F("float", "mouseMax"),
+        F("float", "lowRenderScale", "Grafik Niedrig: Auflösungsfaktor"), F("float", "lowShadowDistance", "Grafik Niedrig: Schattenweite m"),
+        F("int", "lowShadowResolution", "Grafik Niedrig: Schattenkarte"), F("int", "lowShadowCascades", "Grafik Niedrig: Kaskaden")]),
     ("EndingsConfig", "Schwellen für die Spielenden (GDD 13).", [
         F("float", "heroMinPop"), F("int", "heroMaxFailedDays"), F("float", "deadBelowPop")]),
     ("ComboNameEntry", "Fester Name einer Kombination, z. B. 1-1-1 = Planformel.", [

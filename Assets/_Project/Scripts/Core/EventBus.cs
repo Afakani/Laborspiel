@@ -18,6 +18,8 @@ namespace PlanErfuellt
         public static event Action DayEnded;
         public static event Action<bool> InspectionStarted;
         public static event Action<string, ToastKind> Toast;
+        /// <summary>Textpfad einer Meldung (für Klänge zur Meldung).</summary>
+        public static event Action<string> ToastKey;
         public static event Action<string> DirectorSpeak;
         public static event Action<bool> PauseChanged;
         public static event Action<float> TimeScaleChanged;
@@ -45,6 +47,7 @@ namespace PlanErfuellt
         public static void RaiseDayEnded() => DayEnded?.Invoke();
         public static void RaiseInspectionStarted(bool boss) => InspectionStarted?.Invoke(boss);
         public static void RaiseToast(string text, ToastKind kind) => Toast?.Invoke(text, kind);
+        public static void RaiseToastKey(string path) => ToastKey?.Invoke(path);
         public static void RaiseDirectorSpeak(string text) => DirectorSpeak?.Invoke(text);
         public static void RaisePauseChanged(bool paused) => PauseChanged?.Invoke(paused);
         public static void RaiseTimeScaleChanged(float scale) => TimeScaleChanged?.Invoke(scale);
@@ -88,6 +91,7 @@ namespace PlanErfuellt
             DayEnded = null;
             InspectionStarted = null;
             Toast = null;
+            ToastKey = null;
             DirectorSpeak = null;
             PauseChanged = null;
             TimeScaleChanged = null;

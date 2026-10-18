@@ -157,6 +157,8 @@ namespace PlanErfuellt.EditorTools
             var oldInspector = systems.Find("Inspector");
             if (oldInspector != null) Object.DestroyImmediate(oldInspector.gameObject);
             LookDevInspector.Build(systems);
+            AudioBuilder.Build(systems, cfg);
+            Debug.Log("Performance-Pass: " + PerformancePass.Apply(Root("--- Environment"), Root("--- Stations"), Root("--- Chamber")));
             PlayerBuilder.Set(hud.GetComponentInChildren<QuotaPanel>(true), "chamber", chamber);
         }
 

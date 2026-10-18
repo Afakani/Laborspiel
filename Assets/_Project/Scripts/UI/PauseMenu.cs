@@ -6,7 +6,8 @@ namespace PlanErfuellt
 {
     /// <summary>
     /// Pause mit P oder Esc (GDD 2). Ist ein Panel offen, schließt Esc/P zuerst das Panel (ab Phase 4a über PanelCloseRequested).
-    /// Knöpfe Logbuch und Staats-TV (GDD 11: nur nach der ersten Mutation) führen aus der Pause dorthin.
+    /// Knöpfe Logbuch und Staats-TV (GDD 11: nur nach der ersten Mutation) führen aus der Pause dorthin;
+    /// dazu Ton an/aus (M) und Einstellungen.
     /// </summary>
     public class PauseMenu : MonoBehaviour
     {
@@ -15,6 +16,8 @@ namespace PlanErfuellt
         [SerializeField] TMP_Text hint;
         [SerializeField] Button logbook;
         [SerializeField] Button news;
+        [SerializeField] Button sound;
+        [SerializeField] Button settings;
 
         void Start()
         {
@@ -33,15 +36,29 @@ namespace PlanErfuellt
                 gm.Clock.SetPaused(false);
                 DayCycle.Instance.ShowNews(false);
             });
+            settings.GetComponentInChildren<TMP_Text>().text = gm.Texts.Get("ui.hud.btnSettings");
+            settings.onClick.AddListener(() => SettingsUI.Instance.Open());
+            sound.onClick.AddListener(() => GameSettings.Muted = !GameSettings.Muted);
+            SoundLabel();
             overlay.SetActive(gm.Clock.Paused);
             EventBus.PauseChanged += OnPauseChanged;
+            GameSettings.Changed += SoundLabel;
         }
 
-        void OnDestroy() => EventBus.PauseChanged -= OnPauseChanged;
+        void OnDestroy()
+        {
+            EventBus.PauseChanged -= OnPauseChanged;
+            GameSettings.Changed -= SoundLabel;
+        }
+
+        void SoundLabel() =>
+            sound.GetComponentInChildren<TMP_Text>().text = GameManager.Instance.Texts.Get(GameSettings.Muted ? "ui.hud.btnSoundOff" : "ui.hud.btnSoundOn");
 
         void Update()
         {
             if (!InputReader.PausePressed) return;
+            // Esc schließt zuerst das Einstellungsfenster (SettingsUI)
+            if (SettingsUI.Instance != null && SettingsUI.Instance.IsOpen) return;
             var gm = GameManager.Instance;
             if (gm.PanelOpen)
             {

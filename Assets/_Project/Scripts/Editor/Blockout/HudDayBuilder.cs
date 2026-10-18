@@ -252,7 +252,9 @@ namespace PlanErfuellt.EditorTools
             body.enableAutoSizing = true;
             body.fontSizeMin = 14f;
             body.fontSizeMax = 21f;
-            var start = P.MakeButton(frame, "Start", new Vector2(510f, -800f), new Vector2(380f, 70f), ConfirmBg, ConfirmBorder, 30, false);
+            var start = P.MakeButton(frame, "Start", new Vector2(250f, -800f), new Vector2(380f, 70f), ConfirmBg, ConfirmBorder, 30, false);
+            var settings = P.MakeButton(frame, "Settings", new Vector2(660f, -800f), new Vector2(260f, 70f), P.ButtonBg, Gold, 26, false);
+            var quit = P.MakeButton(frame, "Quit", new Vector2(950f, -800f), new Vector2(200f, 70f), P.ButtonBg, Gold, 26, false);
             var ui = holder.gameObject.AddComponent<IntroUI>();
             var so = new SerializedObject(ui);
             so.FindProperty("root").objectReferenceValue = root;
@@ -261,6 +263,8 @@ namespace PlanErfuellt.EditorTools
             so.FindProperty("body").objectReferenceValue = body;
             so.FindProperty("start").objectReferenceValue = start;
             so.FindProperty("startLabel").objectReferenceValue = start.GetComponentInChildren<TMP_Text>();
+            so.FindProperty("settings").objectReferenceValue = settings;
+            so.FindProperty("quit").objectReferenceValue = quit;
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
