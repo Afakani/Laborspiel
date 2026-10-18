@@ -45,6 +45,23 @@ namespace PlanErfuellt
         /// <summary>Lebt ein mutiertes Tier in der Kammer (für Parteikontrolle, Kommissar)?</summary>
         public bool HasMutatedAnimal => HasLivingAnimal && stats.IsMutated;
 
+        /// <summary>Glühen des Tiers 0..1 (für die Parteikontrolle).</summary>
+        public float Glow => model != null && HasLivingAnimal ? model.Glow : 0f;
+
+        /// <summary>Sicht von Parteikontrolle und Kommissar auf das Tier.</summary>
+        public ChamberView View => new ChamberView
+        {
+            mutated = HasMutatedAnimal,
+            ok = State == AnimalState.Ok,
+            unstable = State == AnimalState.Unstable,
+            stability = stats.stability,
+            floatHeight = stats.floatHeight,
+            glow = Glow,
+            ultimateId = stats.ultimate != null ? stats.ultimate.id : null,
+            funId = stats.fun != null ? stats.fun.id : null,
+            doseTotal = stats.dose.Total
+        };
+
         public void SetModels(AnimalVisuals cow, AnimalVisuals hen, AnimalLabel lbl, Light light)
         {
             cowModel = cow;
@@ -343,7 +360,9 @@ namespace PlanErfuellt
                 stats.dose = u.Recipe;
                 S.discoveredRecipes.Add(SerumTexts.RecipeKey(serum));
                 GM.Toast("ui.toasts.ultimate", ToastKind.Good, ("name", u.displayName));
+                bool first = !S.ultimateSeen;
                 S.ultimateSeen = true; // Zwischensequenz folgt in Phase 8
+                if (first && InspectionLogic.ScheduleBoss(S, Cfg)) GM.Toast("ui.toasts.bossIncoming", ToastKind.Bad);
             }
             else
             {
@@ -408,7 +427,7 @@ namespace PlanErfuellt
                 S.AddMoney(p.braveBonus);
                 GM.Toast("ui.toasts.braveBonus", ToastKind.Good, ("money", GM.Texts.Format("ui.common.money", ("n", p.braveBonus))));
             }
-            if (stats.ultimate != null && stats.ultimate.id == "koloss" && Random.value < p.kolossBeltBreakChance)
+            if (stats.ultimate != null && stats.ultimate.id == UltimateIds.Koloss && Random.value < p.kolossBeltBreakChance)
             {
                 S.beltBroken = true;
                 GM.Toast("ui.toasts.kolossBelt", ToastKind.Bad);

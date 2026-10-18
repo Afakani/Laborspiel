@@ -85,6 +85,7 @@ namespace PlanErfuellt
                 () => { s.caviar++; s.NotifyInventoryChanged(); });
 
             DrawDay(gm, s);
+            DrawInspection(gm, s);
             DrawRisks(gm, s);
 
             if (GUILayout.Button("Neues Spiel (Startwerte)")) gm.NewGame();
@@ -111,6 +112,25 @@ namespace PlanErfuellt
             if (GUILayout.Button("Wut +20")) s.AddAnger(20f, gm.Config);
             if (GUILayout.Button("Wut −20")) s.AddAnger(-20f, gm.Config);
             if (GUILayout.Button("Wunsch jetzt") && q != null) s.wishTimer = 0.01f;
+            GUILayout.EndHorizontal();
+        }
+
+        /// <summary>Phase 7: Parteikontrolle und Kommissar.</summary>
+        void DrawInspection(GameManager gm, GameState s)
+        {
+            var ins = s.inspection;
+            GUILayout.Label(ins != null
+                ? $"Kontrolle: x {ins.x:0.0} · Verdacht {ins.suspicion:0} · Pause {ins.pause:0.0} · {(ins.boss ? "Oberkommissar" : "Kommissar")} · Regal {(s.rackHidden ? "zu" : "offen")}"
+                : $"Keine Kontrolle · nächste bei {s.nextInspectionAt:0} s (jetzt {s.playTime:0} s) · Wodka {s.vodka}");
+            GUILayout.BeginHorizontal();
+            var sys = FindAnyObjectByType<InspectionSystem>();
+            if (GUILayout.Button("Kontrolle jetzt") && sys != null) sys.ForceStart(false);
+            if (GUILayout.Button("Oberkommissar") && sys != null) sys.ForceStart(true);
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Kontrolle +25")) s.AddAuthority(25f, gm.Config);
+            if (GUILayout.Button("Verdacht +25") && ins != null) ins.suspicion += 25f;
+            if (GUILayout.Button("Kommissar zur Kammer") && ins != null) ins.x = gm.Config.layout.chamber.x + gm.Config.inspection.range;
             GUILayout.EndHorizontal();
         }
 

@@ -99,6 +99,8 @@ namespace PlanErfuellt
             if (s.tutorialStep >= 0 && s.tutorialStep < DayLogic.TutorialSteps)
                 return t.Format("ui.quota.tutorial", ("n", s.tutorialStep + 1), ("max", DayLogic.TutorialSteps),
                     ("text", t.Get($"director.tutorial[{s.tutorialStep}].step")));
+            if (s.inspection != null && !s.rackHidden && InspectionLogic.RackSuspicious(s, gm.Config)) return t.Get("ui.hints.inspectRack");
+            if (s.inspection != null && chamber != null && chamber.HasMutatedAnimal && !s.chamberCovered) return t.Get("ui.hints.inspectCloth");
             if (s.beltBroken) return t.Get("ui.hints.beltBroken");
             if (s.contaminated) return t.Get("ui.hints.contaminated");
             if (chamber == null || chamber.State == AnimalState.Empty) return t.Get("ui.hints.emptyChamber");

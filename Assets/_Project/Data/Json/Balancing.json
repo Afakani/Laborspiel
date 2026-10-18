@@ -245,7 +245,8 @@
     "contaminated": 0.5,
     "decay": 0.6,
     "explodeAdd": 20,
-    "afterInspection": 15
+    "afterInspection": 15,
+    "floatingFrom": 1
   },
   "inspection": {
     "fromDay": 2,
@@ -268,7 +269,8 @@
       "contaminated": 6,
       "rack": 12,
       "rackRange": 2.6,
-      "rackSuspiciousAB": 5
+      "rackSuspiciousAB": 5,
+      "ultLevel": 6
     },
     "mult": {
       "boss": 1.6,
@@ -282,6 +284,20 @@
     "prize": 400,
     "bossPrizeMult": 2,
     "bossAfterUltSec": 25
+  },
+  "inspector": {
+    "_doc": "Prototyp: inspG läuft bei z 3.0 von x 16 nach x -16; Wodka-Ziel im Umkreis 2.4 (Wertung Abstand − 0.6); Oberkommissar ×1.25; Schwanken ±0.12 rad mit 3/s; Wackeln 0.2 beim Eintreffen. stepFreq/legSwingDeg eigene Werte.",
+    "startX": 16,
+    "endX": -16,
+    "pathZ": 3.0,
+    "vodkaReach": 2.4,
+    "vodkaScoreOffset": 0.6,
+    "bossScale": 1.25,
+    "swayDeg": 6.9,
+    "swayFreq": 3,
+    "stepFreq": 1.8,
+    "legSwingDeg": 22,
+    "startShake": 0.2
   },
   "machinesFixed": {
     "centrifuge": {
@@ -1161,5 +1177,17 @@
     "funLabelColor": "#ff9ae0",
     "gasFlashAlpha": 0.35,
     "gasIdleAlpha": 0.07
+  },
+  "clothFx": {
+    "_doc": "Prototyp: clothK nähert sich mit dt*3; Wackeln sin(t*(2+lvl))*0.0025*lvl rad, INSTABIL sin(t*25)*0.01 rad; Ω golden 0.3+0.15*sin(3t).",
+    "speed": 3,
+    "wobbleDegPerLevel": 0.143,
+    "wobbleBaseFreq": 2,
+    "unstableDeg": 0.573,
+    "unstableFreq": 25,
+    "omegaColor": "#ffd24a",
+    "omegaGlow": 0.3,
+    "omegaPulse": 0.15,
+    "omegaFreq": 3
   }
 }

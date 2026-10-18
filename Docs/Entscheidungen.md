@@ -114,3 +114,14 @@ Abweichungen von den Übergabedokumenten und eigene Festlegungen. Neueste unten.
 | D49 | Fernseher | Der Direktor-Spruch erscheint auf dem Parolenfeld neben dem Direktor-Bild statt über eine Render-Textur mit animiertem Gesicht. Billiger; ein animiertes Gesicht kann im Art-Pass (Phase 11) folgen. |
 | D50 | Plantafel | Die Plantafel zeigt Ist/Soll als echte 3D-Balken und Zahlen unter den gemalten Diagrammen. |
 | D51 | Endbildschirm | Feste gemeinsame Zeilenhöhe für Beschriftung und Werte (`lineHeightFactor` 1,45 × Schriftgröße), weil Oswald und die Mono-Schrift unterschiedliche Zeilenabstände haben. |
+
+## Phase 7 (2026-10-18)
+
+| Nr. | Thema | Entscheidung |
+|---|---|---|
+| D52 | Neue Werte | Abschnitt `inspector` (Weg x 16 → −16 bei z 3,0, Wodka-Reichweite 2,4 und Vorrang 0,6, Oberkommissar ×1,25, Schwanken, Wackeln 0,2 beim Eintreffen – alles Prototyp `inspG`/`pickTarget`; Schrittfrequenz und Beinschwung eigene Werte), Abschnitt `clothFx` (Prototyp `clothK`: Fallgeschwindigkeit, Wackeln, Zittern, Ω-Leuchten), `inspection.susp.ultLevel` 6 (Prototyp `c.ult ? 6`) und `authority.floatingFrom` 1 (Prototyp `floatH > 1`). Für „Stabilität < 61“ wird `risks.activeBelowStab` verwendet. |
+| D53 | Zeitbasis | Kontrollen laufen auf `GameState.playTime` (steht bei Pause und Overlays), wie `G.t` im Prototyp. Eine laufende Kontrolle bleibt über das Tagesende hinaus bestehen und geht am nächsten Tag weiter (wie im Prototyp). |
+| D54 | Kopfdrehung | Der Kommissar dreht den Kopf zur Kammer, solange sie in seiner Reichweite ist (eigene Ergänzung, nur optisch). Beim Wodka hebt er die Flasche. |
+| D55 | Regal-Plane | Abgedecktes Regal wird als Leinenplane über dem Regal gezeigt (der Prototyp zeigt nur den Zustand im Text). |
+| D56 | Laken-Look | Neues Laken-Mesh mit Falten (wie die Sinus-Falten im Prototyp) und eigener Leinen-Textur `Canvas.png` (selbst erzeugt, Längsstreifen und roter Saum wie Prototyp `clothTex`). |
+| D57 | Ids | Sonderregeln für Ω, Koloss und Singende Kuh prüfen die Ids aus der JSON über `UltimateIds` (eine Stelle statt verstreuter Zeichenketten). |

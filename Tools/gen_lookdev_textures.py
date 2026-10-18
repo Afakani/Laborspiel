@@ -288,6 +288,33 @@ def splats():
     save(out2, "Scorch.png")
 
 
+# ---------- Leinen für Laken und Regal-Plane (Prototyp clothTex: hell, Längsstreifen, roter Saum) ----------
+def canvas():
+    w, h = 512, 1024
+    img = Image.new("RGB", (w, h), (217, 210, 191))
+    d = ImageDraw.Draw(img, "RGBA")
+    # feines Gewebe: Kett- und Schussfäden
+    for x in range(0, w, 3):
+        d.line([(x, 0), (x, h)], fill=(120, 108, 84, random.randint(10, 26)))
+    for y in range(0, h, 3):
+        d.line([(0, y), (w, y)], fill=(120, 108, 84, random.randint(8, 20)))
+    # Längsstreifen wie im Prototyp (nahtlos in x)
+    for i in range(28):
+        x = int(i * w / 28 + random.uniform(0, 8))
+        d.rectangle([x, 0, x + random.randint(5, 9), h], fill=(90, 80, 60, int(255 * random.uniform(0.06, 0.16))))
+    # Flecken und Abnutzung
+    stains = noise_layer((w, h), 24, 0.5)
+    img = Image.composite(Image.new("RGB", (w, h), (168, 150, 112)), img, stains)
+    d = ImageDraw.Draw(img, "RGBA")
+    # roter Saum unten, doppelte Naht
+    y0 = int(h * 0.9)
+    d.rectangle([0, y0, w, y0 + 26], fill=(150, 30, 30, 150))
+    for y in (y0 - 8, y0 + 34):
+        for x in range(0, w, 12):
+            d.line([(x, y), (x + 6, y)], fill=(70, 50, 30, 160), width=2)
+    save(img, "Canvas.png")
+
+
 hazard()
 emblem(CREAM + (255,), "EmblemCream.png")
 emblem(GOLD + (255,), "EmblemGold.png")
@@ -298,3 +325,4 @@ checklist()
 icons()
 soft()
 splats()
+canvas()

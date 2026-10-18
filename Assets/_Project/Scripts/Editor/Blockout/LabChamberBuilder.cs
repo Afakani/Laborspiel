@@ -51,10 +51,9 @@ namespace PlanErfuellt.EditorTools
             for (float x = b.xMin + 0.5f; x < b.xMax; x += 1f)
                 BlockoutKit.Box(belt.transform.parent, "BeltChevron", new Vector3(x, b.height + 0.005f, 0f), new Vector3(0.12f, 0.01f, b.halfWidth * 1.4f), M.Hazard, true, new Vector3(0f, 30f, 0f));
 
-            // Laken (abgedeckter Zustand, standardmäßig aus): über Glas und Kopfring, innerhalb des Spielerabstands
+            // Laken (abgedeckter Zustand, standardmäßig aus): Leinen mit Falten über Glas und Kopfring, Drehpunkt oben
             float clothH = y0 + H + 0.9f;
-            var cloth = BlockoutKit.Cyl(root.transform, "Cloth", new Vector3(0f, clothH * 0.5f, 0f), R + 0.55f, clothH, M.Cloth, false);
-            cloth.SetActive(false);
+            var cloth = LookDevCloth.Build(root.transform, R + 0.35f, R + 0.42f, clothH - 0.02f, clothH);
             // Tier: Kuh und Huhn als verschachtelte Prefabs, Schild und Glühlicht
             var animals = BlockoutKit.Group(root.transform, "Animal", Vector3.zero);
             var cow = ((GameObject)UnityEditor.PrefabUtility.InstantiatePrefab(cowPrefab, animals)).GetComponent<AnimalVisuals>();
@@ -86,7 +85,7 @@ namespace PlanErfuellt.EditorTools
             root.AddComponent<ExplosionFx>().Setup(fx.slimeBurst, fx.fireBurst, fx.splats, fx.scorch);
             var clothInteraction = root.AddComponent<Cloth>();
             clothInteraction.SetStationId("cloth");
-            clothInteraction.SetVisual(cloth);
+            root.AddComponent<ClothVisual>().Setup(cloth.transform, cloth.GetComponentInChildren<Renderer>(), chamberLogic);
 
             // Spieler-Kollision: Mittelpunkt des Spielers bleibt mindestens playerCollisionRadius (GDD 3: 3.1) entfernt
             var col = root.AddComponent<CapsuleCollider>();

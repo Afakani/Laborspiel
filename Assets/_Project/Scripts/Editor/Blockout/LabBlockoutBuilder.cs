@@ -148,7 +148,10 @@ namespace PlanErfuellt.EditorTools
             new GameObject("MixingSystem", typeof(MixingSystem)).transform.SetParent(systems, false);
             var oldDay = systems.Find("DayCycle");
             if (oldDay != null) Object.DestroyImmediate(oldDay.gameObject);
-            new GameObject("DayCycle", typeof(Director), typeof(DayCycle)).transform.SetParent(systems, false);
+            new GameObject("DayCycle", typeof(Director), typeof(DayCycle), typeof(InspectionSystem)).transform.SetParent(systems, false);
+            var oldInspector = systems.Find("Inspector");
+            if (oldInspector != null) Object.DestroyImmediate(oldInspector.gameObject);
+            LookDevInspector.Build(systems);
             PlayerBuilder.Set(hud.GetComponentInChildren<QuotaPanel>(true), "chamber", chamber);
         }
 

@@ -206,6 +206,7 @@ MonoBehaviour:
     decay: 0.6
     explodeAdd: 20
     afterInspection: 15
+    floatingFrom: 1
   inspection:
     fromDay: 2
     triggerAuthority: 75
@@ -228,6 +229,7 @@ MonoBehaviour:
       rack: 12
       rackRange: 2.6
       rackSuspiciousAB: 5
+      ultLevel: 6
     mult:
       boss: 1.6
       music: 0.7
@@ -238,6 +240,18 @@ MonoBehaviour:
     prize: 400
     bossPrizeMult: 2
     bossAfterUltSec: 25
+  inspector:
+    startX: 16
+    endX: -16
+    pathZ: 3
+    vodkaReach: 2.4
+    vodkaScoreOffset: 0.6
+    bossScale: 1.25
+    swayDeg: 6.9
+    swayFreq: 3
+    stepFreq: 1.8
+    legSwingDeg: 22
+    startShake: 0.2
   machinesFixed:
     centrifuge:
       unlockPlanIdx: 0
@@ -830,6 +844,16 @@ MonoBehaviour:
     splatRadiusMin: 2.8
     splatRadiusMax: 9.3
     alarmTurnDegPerSec: 360
+  clothFx:
+    speed: 3
+    wobbleDegPerLevel: 0.143
+    wobbleBaseFreq: 2
+    unstableDeg: 0.573
+    unstableFreq: 25
+    omegaColor: '#ffd24a'
+    omegaGlow: 0.3
+    omegaPulse: 0.15
+    omegaFreq: 3
   ultimates:
   - {fileID: 11400000, guid: 5dc976084a4515f499639506535e6f29, type: 2}
   - {fileID: 11400000, guid: 4e589e637b093764ebf22431455450b9, type: 2}

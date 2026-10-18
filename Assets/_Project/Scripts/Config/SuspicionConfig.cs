@@ -18,5 +18,7 @@ namespace PlanErfuellt
         public float rack;
         public float rackRange;
         public int rackSuspiciousAB;
+        /// <summary>Mutationsgrad eines Ultimativs (Laken-Verdacht und Wackeln)</summary>
+        public float ultLevel;
     }
 }

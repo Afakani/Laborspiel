@@ -97,11 +97,13 @@ CLASSES = [
     ("AuthorityConfig", "Parteikontrolle (GDD 9).", [
         F("float", "max"), F("float", "base"), F("float", "lowStab"), F("float", "floating"), F("float", "glowFactor"),
         F("float", "omega"), F("float", "koloss"), F("float", "clothFactor"), F("float", "musicFactor"),
-        F("float", "singingCow"), F("float", "contaminated"), F("float", "decay"), F("float", "explodeAdd"), F("float", "afterInspection")]),
+        F("float", "singingCow"), F("float", "contaminated"), F("float", "decay"), F("float", "explodeAdd"), F("float", "afterInspection"),
+        F("float", "floatingFrom", "Schwebehöhe, ab der „schwebend“ zählt")]),
     ("SuspicionConfig", "Verdacht pro Sekunde während der Kontrolle (GDD 9).", [
         F("float", "uncovered"), F("float", "uncoveredKoloss"), F("float", "coveredBase"), F("float", "coveredPerDose"),
         F("float", "coveredMaxDose"), F("float", "coveredUnstable"), F("float", "coveredOmega"), F("float", "coveredKoloss"),
-        F("float", "contaminated"), F("float", "rack"), F("float", "rackRange"), F("int", "rackSuspiciousAB")]),
+        F("float", "contaminated"), F("float", "rack"), F("float", "rackRange"), F("int", "rackSuspiciousAB"),
+        F("float", "ultLevel", "Mutationsgrad eines Ultimativs (Laken-Verdacht und Wackeln)")]),
     ("InspectionMultConfig", "Multiplikatoren für den Verdacht.", [
         F("float", "boss"), F("float", "music"), F("float", "singingCow")]),
     ("VodkaConfig", "Wirkung von Wodka am Kommissar.", [
@@ -111,6 +113,18 @@ CLASSES = [
         F("float", "minGapSec"), F("float", "speed"), F("float", "range"), F("float", "suspMax"),
         F("SuspicionConfig", "susp"), F("InspectionMultConfig", "mult"), F("VodkaConfig", "vodka"),
         F("float", "prize"), F("float", "bossPrizeMult"), F("float", "bossAfterUltSec")]),
+    ("InspectorConfig", "Weg und Darstellung des Kommissars (Prototyp inspG, Prototyp-Koordinaten).", [
+        F("float", "startX", "Start rechts"), F("float", "endX", "Ende links (Kontrolle bestanden)"),
+        F("float", "pathZ", "Weg vor der Kammer"), F("float", "vodkaReach", "Abstand für Wodka anbieten"),
+        F("float", "vodkaScoreOffset", "Vorrang vor anderen Zielen (Wertung = Abstand − Wert)"),
+        F("float", "bossScale", "Größe des Oberkommissars"), F("float", "swayDeg", "Schwanken beim Trinken"),
+        F("float", "swayFreq"), F("float", "stepFreq", "Schritte pro s beim Gehen"), F("float", "legSwingDeg"),
+        F("float", "startShake", "Kamerawackeln beim Eintreffen")]),
+    ("ClothFxConfig", "Laken über der Kammer: Animation und verräterische Bewegung (GDD 6.8, Prototyp clothK).", [
+        F("float", "speed", "Annäherung pro s beim Werfen/Abnehmen"),
+        F("float", "wobbleDegPerLevel", "Wackeln je Mutationsgrad"), F("float", "wobbleBaseFreq", "Frequenz = Basis + Grad"),
+        F("float", "unstableDeg", "Zittern bei INSTABIL"), F("float", "unstableFreq"),
+        F("string", "omegaColor", "Goldenes Leuchten bei Ω"), F("float", "omegaGlow"), F("float", "omegaPulse"), F("float", "omegaFreq")]),
     ("CentrifugeZones", "Zonen des Drehzahlbalkens (0..1).", [
         F("float", "tooEarly"), F("float[]", "yellow"), F("float[]", "green"), F("float[]", "red")]),
     ("CentrifugeConfig", "Zentrifuge (GDD 6.3).", [

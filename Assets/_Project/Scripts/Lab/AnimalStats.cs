@@ -90,8 +90,8 @@ namespace PlanErfuellt
         }
 
         /// <summary>Wachstums-Kennzahl für die Optik (Koloss zählt als volles A).</summary>
-        public int VisualA(GameConfig cfg) => ultimate != null && ultimate.id == "koloss" ? Mathf.RoundToInt(cfg.animalVisuals.kolossA) : dose.A;
+        public int VisualA(GameConfig cfg) => ultimate != null && ultimate.id == UltimateIds.Koloss ? Mathf.RoundToInt(cfg.animalVisuals.kolossA) : dose.A;
         /// <summary>Laktations-Kennzahl für die Optik (Ω zählt als B 3).</summary>
-        public int VisualB(GameConfig cfg) => ultimate != null && ultimate.id == "omega" ? Mathf.RoundToInt(cfg.animalVisuals.omegaB) : dose.B;
+        public int VisualB(GameConfig cfg) => ultimate != null && ultimate.id == UltimateIds.Omega ? Mathf.RoundToInt(cfg.animalVisuals.omegaB) : dose.B;
     }
 }

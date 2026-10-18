@@ -184,6 +184,10 @@ namespace PlanErfuellt.EditorTools
                 vials[i] = vial.GetComponent<Renderer>();
             }
 
+            // Plane zum Abdecken des Regals während der Kontrolle (GDD 9)
+            var cover = LookDevCloth.BuildRackCover(v, new Vector3(1.2f, 1.66f, -0.15f), new Vector3(0.62f, 0.68f, 1.08f));
+            v.gameObject.AddComponent<RackCover>().Setup(cover);
+
             var vis = v.gameObject.AddComponent<MixingStationVisuals>();
             var so = new UnityEditor.SerializedObject(vis);
             so.FindProperty("stirrer").objectReferenceValue = stirrer;

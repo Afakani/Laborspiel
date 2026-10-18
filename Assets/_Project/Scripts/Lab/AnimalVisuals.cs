@@ -59,8 +59,8 @@ namespace PlanErfuellt
         {
             var v = cfg.animalVisuals;
             int a = s.VisualA(cfg), b = s.VisualB(cfg);
-            bool omega = s.ultimate != null && s.ultimate.id == "omega";
-            bool koloss = s.ultimate != null && s.ultimate.id == "koloss";
+            bool omega = s.ultimate != null && s.ultimate.id == UltimateIds.Omega;
+            bool koloss = s.ultimate != null && s.ultimate.id == UltimateIds.Koloss;
 
             float grow = 1f + v.growPerA * Mathf.Min(a, v.growCapA) + (koloss ? v.kolossGrowExtra : 0f);
             float inflTarget = (b >= 3 && !s.IsUltimate ? v.inflPerBOver2 * Mathf.Min(b - 2, v.inflBCap) : 0f) + v.inflPerA * Mathf.Min(a, v.growCapA);

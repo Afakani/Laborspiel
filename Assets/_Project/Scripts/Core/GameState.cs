@@ -69,6 +69,21 @@ namespace PlanErfuellt
         public float anger;
         public float authority;
 
+        // ---------- Kontrolle (GDD 9) ----------
+        /// <summary>Laufende Kontrolle oder null.</summary>
+        public Inspection inspection;
+        /// <summary>Spielzeit der letzten bestandenen Kontrolle.</summary>
+        public float inspectionDoneAt = float.NegativeInfinity;
+        /// <summary>Spielzeit der nächsten planmäßigen Kontrolle.</summary>
+        public float nextInspectionAt = float.PositiveInfinity;
+        /// <summary>Spielzeit, ab der der Oberkommissar kommt (0 = nicht angekündigt).</summary>
+        public float bossAt;
+        public bool bossDone;
+        /// <summary>Serum-Regal an der Mischstation abgedeckt.</summary>
+        public bool rackHidden;
+        /// <summary>Textschlüssel für die Nachrichten zwischen den Tagen (Phase 10).</summary>
+        public readonly List<string> newsFacts = new List<string>();
+
         // ---------- Infektion des Spielers (GDD 8) ----------
         public bool infected;
         /// <summary>Frist: bis Ende dieses Tages.</summary>

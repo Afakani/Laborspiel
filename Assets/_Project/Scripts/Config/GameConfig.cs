@@ -25,6 +25,7 @@ namespace PlanErfuellt
         public AngerConfig anger = new AngerConfig();
         public AuthorityConfig authority = new AuthorityConfig();
         public InspectionConfig inspection = new InspectionConfig();
+        public InspectorConfig inspector = new InspectorConfig();
         public MachinesFixedConfig machinesFixed = new MachinesFixedConfig();
         public BuildMachinesConfig buildMachines = new BuildMachinesConfig();
         public WishesConfig wishes = new WishesConfig();
@@ -43,6 +44,7 @@ namespace PlanErfuellt
         public ChamberDoorsConfig chamberDoors = new ChamberDoorsConfig();
         public ChamberFireConfig chamberFire = new ChamberFireConfig();
         public FxConfig fx = new FxConfig();
+        public ClothFxConfig clothFx = new ClothFxConfig();
 
         // Diese Teile sind in der JSON als Objekte mit Schlüsseln abgelegt und werden vom Importer gesondert übertragen.
         [JsonIgnore] public List<UltimateSerum> ultimates = new List<UltimateSerum>();

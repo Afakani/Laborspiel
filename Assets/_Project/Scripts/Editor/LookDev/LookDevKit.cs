@@ -277,11 +277,14 @@ namespace PlanErfuellt.EditorTools
             return mesh != null;
         }
 
-        static Mesh Save(string key, MeshBuilder b, bool overwrite = false)
+        static Mesh Save(string key, MeshBuilder b, bool overwrite = false) => SaveMesh(key, b.Build(key), overwrite);
+
+        /// <summary>Fertiges Mesh als Asset unter Models/LookDev speichern (overwrite: vorhandenes über die Mesh-API ersetzen).</summary>
+        public static Mesh SaveMesh(string key, Mesh mesh, bool overwrite = false)
         {
             BlockoutKit.EnsureFolder(MeshDir);
             string path = $"{MeshDir}/{key}.asset";
-            var mesh = b.Build(key);
+            mesh.name = key;
             Unwrapping.GenerateSecondaryUVSet(mesh);
             var existing = AssetDatabase.LoadAssetAtPath<Mesh>(path);
             if (existing != null && overwrite)

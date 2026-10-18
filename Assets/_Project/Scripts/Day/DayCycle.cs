@@ -111,6 +111,7 @@ namespace PlanErfuellt
             var gm = GM;
             var s = gm.State;
             DayLogic.StartDay(s, gm.Config, () => Random.value);
+            InspectionLogic.OnDayStart(s, gm.Config);
             idleTimer = 0f;
             contractTimer = gm.Config.ui.contractAnnounceDelaySec;
             director.ResetTimer(s.dayNum == 1);

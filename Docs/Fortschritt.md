@@ -13,7 +13,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 | LD | Look-Development: Kammer B-12, Pult, Halle nach Bild 08 | fertig (Tiermodelle offen) |
 | 5 | Risiken, Warnzeichen, Explosion, Infektion | fertig |
 | 6 | Tagesablauf, Bestellung, Direktor | fertig |
-| 7 | Kommissar und Laken | offen |
+| 7 | Kommissar und Laken | fertig |
 | 8 | Zentrifuge, Kryo, Ultimativ-Höhepunkt | offen |
 | 9 | Nebenstationen und Baumodus | offen |
 | 10 | Staats-TV, Logbuch, Rekorde, Fenster | offen |
@@ -91,6 +91,26 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - Mischstation: Regler ziehen, MISCHEN, Fläschchen erscheinen im 3D-Regal. Pult: Fläschchen wählen, KLON (Hebel klappt). Leertaste/Esc schließen.
 - Das Probenmikroskop im Misch-Panel kommt laut Prompt in Phase 9.
 - Hinweis: Wird während des Play Mode neu kompiliert, wirft Unity NullReference-Fehler (Domain-Reload); einfach Play neu starten. Empfehlung: in den Unity-Einstellungen „Script Changes While Playing“ auf „Stop Playing and Recompile“ stellen.
+
+## Phase 7 – Parteikontrolle, Kommissar, Laken
+
+- [x] `InspectionLogic` (rein, getestet): Parteikontrolle pro s (mutiertes Tier, niedrige Stabilität, Schweben, Glühen, Ω/Koloss, ×0,4 Laken, Singende Kuh, verseuchte Kammer, Abbau 0,6/s), Start ab Tag 2 bei Kontrolle ≥ 75, nach Zeitplan (erste 70 s nach Beginn von Tag 2, dann alle 100 s) oder Oberkommissar, mindestens 45 s Abstand
+- [x] Verdacht pro s in 4,2 m um die Kammer: ohne Laken 22 (Koloss 40), mit Laken 2 + 0,6 × Mutationsgrad (+6 instabil, Ω 9, Koloss 12), verseuchte Kammer +6; Multiplikatoren Oberkommissar/Musik/Singende Kuh; Verdacht 100 → Skandal (Spielende)
+- [x] Serum-Regal: verdächtig bei Ultimativ, Roh-/Zentrifugenserum oder A+B ≥ 5; +12/s, wenn der Kommissar an der Mischstation vorbeigeht; Warnung „beäugt das Regal“; an der Mischstation wird während der Kontrolle aus „Mischstation benutzen“ „Serum-Regal abdecken!“ (0,5 s), eine Plane senkt sich über das Regal
+- [x] Wodka: am Kommissar 0,5 s halten → 10 s Pause (er hebt die Flasche und schwankt), Verdacht −40
+- [x] Kontrolle bestanden: +400 SM (Oberkommissar ×2), Wut −10, Parteikontrolle auf 15, nächste Kontrolle in 100 s, Nachrichtenmeldung vorgemerkt (für Phase 10); Direktor kommentiert Beginn und Ende
+- [x] Oberkommissar: wird beim ersten Ultimativ für 25 s später angekündigt (Ultimativ selbst folgt in Phase 8)
+- [x] Kommissar-Figur: graue Uniform mit Mantel, Schirmmütze mit rotem Band, Schnurrbart, Klemmbrett, Stiefel; geht mit Bein- und Armschwung, dreht den Kopf zur Kammer; Schild KOMMISSAR/OBERKOMMISSAR und Verdachtsbalken drehen sich zur Kamera
+- [x] Laken neu: Leinen mit Falten, gewölbter Haube und rotem Saum; fällt von oben herab und wird hochgezogen; verrät das Tier (Wackeln je Mutationsgrad, Zittern bei INSTABIL, goldenes Leuchten bei Ω)
+- [x] Hinweise im Plan-Panel („Kommissar! … abdecken“, „… Laken überwerfen“), Debug-Menü: Kontrolle/Oberkommissar starten, Kontrolle +25, Verdacht +25, Kommissar zur Kammer
+- [x] Tests: 90 EditMode-Tests grün (10 neue für die Kontrolle, darunter die beiden Prompt-Fälle)
+- [x] Spieltest: Tag 2, Kuh mit 1-1-0 ohne Laken → Kontrolle → Verdacht 100 → „Skandal in der Säule“. Neues Spiel, Kuh mit 1-1-0 unter dem Laken, verdächtiges Serum (3-3-0) im Regal abgedeckt, Wodka angeboten → Verdacht 18 → „Kontrolle bestanden. Verschwiegenheitsprämie +400 SM“. Konsole ohne Fehler. Screenshots `Phase7_*.png`
+
+### Offen / für spätere Phasen
+- Musik (Grammophon) als Multiplikator für Parteikontrolle und Verdacht: Phase 9 (Logik nimmt den Wert schon entgegen)
+- Ω-Leuchten des Lakens und Oberkommissar im Spiel sichtbar erst mit den Ultimativen in Phase 8
+- Nachrichtenmeldung nach der Kontrolle: Phase 10
+- Hinweis: Tests über die Unity-Verbindung erst nach dem Speichern der Szene starten, sonst blockiert der Dialog „Scene(s) Have Been Modified“ den Editor
 
 ## Phase 6 – Tagesablauf, Bestellung, Direktor
 

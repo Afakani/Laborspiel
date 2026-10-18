@@ -20,5 +20,7 @@ namespace PlanErfuellt
         public float decay;
         public float explodeAdd;
         public float afterInspection;
+        /// <summary>Schwebehöhe, ab der „schwebend“ zählt</summary>
+        public float floatingFrom;
     }
 }
