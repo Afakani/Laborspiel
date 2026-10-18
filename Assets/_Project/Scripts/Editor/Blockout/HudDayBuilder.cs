@@ -27,6 +27,7 @@ namespace PlanErfuellt.EditorTools
             BuildQuota(canvas);
             BuildWorld(canvas);
             BuildSubtitle(canvas);
+            BuildBuildBar(canvas);
         }
 
         /// <summary>Vollbild-Overlays über allem außer der Pause.</summary>
@@ -196,6 +197,43 @@ namespace PlanErfuellt.EditorTools
             so.FindProperty("sum").objectReferenceValue = sum;
             so.FindProperty("confirm").objectReferenceValue = confirm;
             so.FindProperty("confirmLabel").objectReferenceValue = confirm.GetComponentInChildren<TMP_Text>();
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>Leiste des Baumodus unten (Prototyp #build): Titel, vier Maschinen, Abriss.</summary>
+        static void BuildBuildBar(Transform canvas)
+        {
+            var holder = Holder(canvas, "BuildBar");
+            var bar = new GameObject("Bar", typeof(RectTransform), typeof(Image));
+            var rt = (RectTransform)bar.transform;
+            rt.SetParent(holder, false);
+            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0f);
+            rt.anchoredPosition = new Vector2(0f, 20f);
+            rt.sizeDelta = new Vector2(1560f, 176f);
+            bar.GetComponent<Image>().color = P.Bg;
+            var title = P.Text(rt, "Title", 22, Gold, new Vector2(20f, -8f), new Vector2(800f, 30f), TextAlignmentOptions.Left);
+
+            var ui = holder.gameObject.AddComponent<BuildUI>();
+            var so = new SerializedObject(ui);
+            var tools = so.FindProperty("tools");
+            tools.arraySize = 4;
+            for (int i = 0; i < 5; i++)
+            {
+                var b = P.MakeButton(rt, i < 4 ? "Tool" + i : "Sell", new Vector2(20f + i * 306f, -44f), new Vector2(294f, 120f), P.ButtonBg, P.Border, 18, true);
+                b.GetComponentInChildren<TMP_Text>().text = "";
+                var name = P.Text(b.transform, "Name", 20, P.Cream, new Vector2(10f, -8f), new Vector2(274f, 28f), TextAlignmentOptions.Left);
+                var price = P.Text(b.transform, "Price", 18, Gold, new Vector2(10f, -38f), new Vector2(274f, 26f), TextAlignmentOptions.Left, P.mono);
+                var desc = P.Text(b.transform, "Desc", 15, P.Muted, new Vector2(10f, -66f), new Vector2(274f, 48f), TextAlignmentOptions.TopLeft);
+                desc.textWrappingMode = TMPro.TextWrappingModes.Normal;
+                var e = i < 4 ? tools.GetArrayElementAtIndex(i) : so.FindProperty("sell");
+                e.FindPropertyRelative("button").objectReferenceValue = b;
+                e.FindPropertyRelative("frame").objectReferenceValue = b.GetComponent<Image>();
+                e.FindPropertyRelative("name").objectReferenceValue = name;
+                e.FindPropertyRelative("price").objectReferenceValue = price;
+                e.FindPropertyRelative("desc").objectReferenceValue = desc;
+            }
+            so.FindProperty("root").objectReferenceValue = bar;
+            so.FindProperty("title").objectReferenceValue = title;
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 

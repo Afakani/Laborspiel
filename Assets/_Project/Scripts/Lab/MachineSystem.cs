@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PlanErfuellt
 {
-    /// <summary>Lässt Zentrifuge und Kryokammer während der Schicht laufen und meldet Ereignisse (Toasts, Effekte).</summary>
+    /// <summary>Lässt Zentrifuge, Kryokammer, Musik, Mikroskop und Rohrpost während der Schicht laufen und meldet Ereignisse (Toasts, Effekte).</summary>
     public class MachineSystem : MonoBehaviour
     {
         readonly List<MachineEvent> events = new List<MachineEvent>();
@@ -15,6 +15,7 @@ namespace PlanErfuellt
             if (gm == null || dc == null || dc.Mode != DayMode.Play) return;
             float dt = gm.Clock.DeltaTime;
             if (dt <= 0f) return;
+            StationLogic.Tick(gm.State, dt);
             events.Clear();
             MachineLogic.Tick(gm.State, gm.Config, dt, events);
             foreach (var e in events)

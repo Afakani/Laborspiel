@@ -136,3 +136,16 @@ Abweichungen von den Übergabedokumenten und eigene Festlegungen. Neueste unten.
 | D61 | Abdunkeln | Eigenes Volume `Lab_Cinematic` (Belichtung log2(0,1)) wie beim Stromausfall, weil die Hallenlampen gebacken sind. Damit das Tier im Dunkeln strahlt, werden Leuchten und Glühlicht des Tiers während der Sequenz verstärkt (`AnimalVisuals.GlowBoost`). |
 | D62 | Zeitfenster | Zentrifuge, Kryokammer und Zwischensequenz laufen nur während der Schicht (`DayMode.Play`) und in Spielzeit, wie `updateMachines`/`G.cine` im Prototyp. |
 | D63 | Eisblock | Der Eisblock wird als vereistes Kryo-Fenster gezeigt (Prototyp: nur Meldung). |
+
+## Phase 9 (2026-10-18)
+
+| Nr. | Thema | Entscheidung |
+|---|---|---|
+| D64 | Neue Werte | `machinesFixed.tasting.hiFrom` 75 / `midFrom` 50 und `rohrpost.capsuleSec` 1,2 (Prototyp), `buildMachines.sellRefund` 0,6, `autoSprayRetrySec` 5, `autoSprayWarnGapSec` 40, `pipeGap` 0,25 (Prototyp), Abschnitt `buildView` (Kamera Prototyp `camTop`; Sichtfeld 42 und Ausblendgrenzen eigene Werte), in `machineFx` Werte für Grammophon, Noten, Milchtropfen, Stempel und Mikroskop. |
+| D65 | Doppelte Werte | Hitzeabbau durch Musik kommt aus `risks.heatMusicDecay` (gleicher Wert wie `gramophone.heatExtraDecay`), Kaviar-Wirkung aus `anger.caviar` (gleich `rohrpost.angerReduce`). Die zweiten Felder bleiben in der JSON, werden aber nicht gelesen. |
+| D66 | Raster-Treffer | Feld unter der Maus über die Feldmitte gerundet. Der Prototyp rechnet in z mit `(z − 4) / 2` und trifft dadurch teils das Nachbarfeld. |
+| D67 | Rohre | Rohre zur Kammer als Bodenleitungen (`pipeY` 0,12 statt 1,1 m), weil sie in Hüfthöhe wie Absperrstangen quer durch die Halle liefen. Sie enden 0,25 m vor dem Kammerrand auf der Seite der Maschine (der Prototyp zielt auf die gegenüberliegende Seite). |
+| D68 | Ausblenden | Im Baumodus werden Rückwand, linke Wand und Decke über ihre Lage (`buildView.hide*`) beim Bauen des Labors gesammelt und zur Laufzeit ausgeblendet; Stationen bleiben sichtbar. |
+| D69 | Esc im Baumodus | Esc gehört zur Pause; im Baumodus meldet das Pause-Menü „Panel schließen“, darauf beendet sich der Baumodus. Eigene Tasten liegen in der neuen Eingabegruppe „Build“. |
+| D70 | Text | `ui.build.remove` ohne „✕“, weil die Schrift das Zeichen nicht enthält; neuer Text `ui.build.refund` („{n} % zurück“). |
+| D71 | Maschinen-Look | Bedienseite (Kreuz, Bildschirm, Lüfter, Manometer) zeigt zur Kammer, eigener sauberer Lack statt der rostigen Look-Dev-Emaille. |

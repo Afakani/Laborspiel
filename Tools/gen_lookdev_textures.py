@@ -315,6 +315,45 @@ def canvas():
     save(img, "Canvas.png")
 
 
+# ---------- Baumodus-Rasterfeld, Musiknote, Stalinmünze (Phase 9) ----------
+def build_icons():
+    # Rasterfeld: transparente Mitte, gelber Rand mit Ecken
+    s = 256
+    img = Image.new("RGBA", (s, s), (255, 210, 74, 14))
+    d = ImageDraw.Draw(img)
+    d.rectangle([4, 4, s - 5, s - 5], outline=(255, 210, 74, 200), width=6)
+    for (x, y) in [(4, 4), (s - 5, 4), (4, s - 5), (s - 5, s - 5)]:
+        d.rectangle([x - 4, y - 4, x + 4, y + 4], fill=(255, 230, 140, 255))
+    save(img, "GridCell.png")
+
+    # Musiknote (Achtelnote), weiß mit weichem Rand
+    s = 128
+    img = Image.new("L", (s, s), 0)
+    d = ImageDraw.Draw(img)
+    d.ellipse([22, 78, 62, 108], fill=255)
+    d.rectangle([54, 18, 62, 94], fill=255)
+    d.polygon([(62, 18), (98, 36), (98, 52), (62, 34)], fill=255)
+    img = img.filter(ImageFilter.GaussianBlur(1.2))
+    out = Image.new("RGBA", (s, s), (255, 255, 255, 0))
+    out.putalpha(img)
+    save(out, "Note.png")
+
+    # Münze: goldene Scheibe mit Rand und Stern
+    s = 128
+    img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.ellipse([6, 6, s - 7, s - 7], fill=(212, 160, 23, 255), outline=(120, 80, 10, 255), width=6)
+    d.ellipse([22, 22, s - 23, s - 23], outline=(250, 210, 90, 255), width=4)
+    cx, cy, r1, r2 = s / 2, s / 2, 30, 12
+    pts = []
+    for i in range(10):
+        a = -math.pi / 2 + i * math.pi / 5
+        r = r1 if i % 2 == 0 else r2
+        pts.append((cx + math.cos(a) * r, cy + math.sin(a) * r))
+    d.polygon(pts, fill=(255, 230, 120, 255))
+    save(img, "Coin.png")
+
+
 hazard()
 emblem(CREAM + (255,), "EmblemCream.png")
 emblem(GOLD + (255,), "EmblemGold.png")
@@ -326,3 +365,4 @@ icons()
 soft()
 splats()
 canvas()
+build_icons()

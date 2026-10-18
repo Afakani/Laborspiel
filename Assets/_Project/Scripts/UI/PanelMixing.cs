@@ -6,7 +6,7 @@ namespace PlanErfuellt
 {
     /// <summary>
     /// Mischstation (GDD 6.2): 3 Regler 0..sliderMax, begrenzt durch das Lager, Infobox (bekannt/unbekannt),
-    /// MISCHEN mit Restzeit, Regalanzeige. Das Probenmikroskop folgt in Phase 9.
+    /// MISCHEN mit Restzeit, Regalanzeige, Probenmikroskop für unbekannte Mischungen (grobe Tendenzen).
     /// </summary>
     public class PanelMixing : PanelBase
     {
@@ -29,6 +29,9 @@ namespace PlanErfuellt
         [SerializeField] Button mixButton;
         [SerializeField] TMP_Text mixLabel;
         [SerializeField] Button closeButton;
+        [SerializeField] Button probeButton;
+        [SerializeField] TMP_Text probeLabel;
+        [SerializeField] TMP_Text probeText;
 
         bool updatingSliders;
 
@@ -41,6 +44,7 @@ namespace PlanErfuellt
                 rows[i].slider.onValueChanged.AddListener(v => OnSlider(idx, v));
             }
             mixButton.onClick.AddListener(OnMix);
+            probeButton.onClick.AddListener(OnProbe);
             closeButton.onClick.AddListener(Close);
         }
 
@@ -75,6 +79,14 @@ namespace PlanErfuellt
             Refresh(true);
         }
 
+        void OnProbe()
+        {
+            if (!StationLogic.TakeProbe(GM.State, GM.Config).Report(GM)) return;
+            GM.Toast("ui.toasts.probeRunning", ToastKind.Info);
+            EventBus.RaiseStation("probe");
+            Refresh(true);
+        }
+
         public override void Refresh(bool force)
         {
             var s = GM.State;
@@ -100,6 +112,17 @@ namespace PlanErfuellt
             bool mixing = MixingLogic.IsMixing(s);
             mixButton.interactable = MixingLogic.CanMix(s, cfg);
             mixLabel.text = mixing ? t.Format("ui.mixing.mixing", ("sec", Mathf.CeilToInt(s.mixTimer))) : t.Get("ui.mixing.mix");
+
+            // Mikroskop: nur für unbekannte Mischungen
+            var m = cfg.machinesFixed.microscope;
+            bool known = s.discoveredRecipes.Contains(d.Key);
+            bool probed = s.probedRecipes.Contains(d.Key);
+            probeLabel.text = t.Format("ui.mixing.probeButton", ("cost", Mathf.RoundToInt(m.cost)));
+            probeButton.interactable = StationLogic.CanProbe(s) && s.Money >= m.cost;
+            if (d.Total == 0 || known) probeText.text = "";
+            else if (!probed) probeText.text = t.Format("ui.mixing.probeUnknown", ("cost", Mathf.RoundToInt(m.cost)));
+            else if (s.probeLeft > 0f) probeText.text = t.Get("ui.mixing.probeRunning");
+            else probeText.text = t.Format("ui.mixing.probeResult", ("text", ComboTexts.Probe(Formula.Probe(d, cfg), t)));
 
             string count = t.Format("ui.mixing.rackCount", ("n", s.serums.Count), ("max", cfg.mixing.rackSize));
             if (s.serums.Count > 0)

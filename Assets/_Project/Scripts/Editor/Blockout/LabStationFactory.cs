@@ -24,12 +24,18 @@ namespace PlanErfuellt.EditorTools
                     v.gameObject.AddComponent<BeltMotorFx>().Setup(v.Find("Lamp/Bulb").GetComponent<Renderer>());
                     break;
                 case "mixing": Mixing(v); break;
-                case "microscope": LookDevMachines.Microscope(v); break;
+                case "microscope":
+                    LookDevMachines.Microscope(v);
+                    v.gameObject.AddComponent<PlanErfuellt.MicroscopeFx>().Setup(v.Find("Dish").GetComponent<Renderer>());
+                    break;
                 case "centrifuge": LookDevMachines.Centrifuge(v); CentrifugeFx(v); break;
                 case "cryo": LookDevMachines.Cryo(v); CryoFx(v); break;
-                case "tasting": LookDevMachines.Tasting(v); break;
-                case "gramophone": LookDevMachines.Gramophone(v); break;
-                case "rohrpost": LookDevMachines.Rohrpost(v); break;
+                case "tasting":
+                    LookDevMachines.Tasting(v);
+                    v.gameObject.AddComponent<TastingFx>().Setup(v.Find("StampArm"), v.Find("Lamp/Bulb").GetComponent<Renderer>());
+                    break;
+                case "gramophone": LookDevMachines.Gramophone(v); GramophoneFx(v); break;
+                case "rohrpost": LookDevMachines.Rohrpost(v); RohrpostFx(v); break;
                 case "terminal": LookDevMachines.Terminal(v); break;
                 case "storage": LookDevMachines.Storage(v); break;
                 case "tv": Tv(v); break;
@@ -46,7 +52,7 @@ namespace PlanErfuellt.EditorTools
             AddInteraction(root, s.id);
 
             if (!string.IsNullOrEmpty(s.signKey))
-                BlockoutKit.Sign(root.transform, "Sign", s.signKey, new Vector3(0f, s.signHeight - s.y, 0f), 3.2f, SignColor(s.id), M.SignPlate, true);
+                BlockoutKit.Sign(root.transform, "Sign", s.signKey, new Vector3(0f, s.signHeight - s.y, SignOffsetZ(s.id)), 3.2f, SignColor(s.id), M.SignPlate, true);
             return root;
         }
 
@@ -71,6 +77,9 @@ namespace PlanErfuellt.EditorTools
             c.SetStationId(id);
         }
 
+        /// <summary>Schild vor dem Rohr der Rohrpost, damit das Rohr es nicht durchschneidet.</summary>
+        static float SignOffsetZ(string id) => id == "rohrpost" ? -0.45f : 0f;
+
         static Color SignColor(string id)
         {
             switch (id)
@@ -87,6 +96,24 @@ namespace PlanErfuellt.EditorTools
         }
 
         // ---------- Stationen ----------
+
+        /// <summary>Grammophon (Phase 9): Platte, Kurbel, Noten aus dem Horn.</summary>
+        static void GramophoneFx(Transform v)
+        {
+            var noteMat = LookDevKit.Additive("LD_Note", "Note.png", new Color(1f, 0.85f, 0.4f, 1f), false);
+            var notes = LookDevChamberFx.Emitter(v, "Notes", new Vector3(-0.22f, 1.85f, 0.75f), noteMat, Color.white,
+                1.2f, 1.8f, 0.5f, 0.9f, 0.12f, 0.18f, -0.1f, ParticleSystemShapeType.Sphere, new Vector3(0.15f, 0f, 0f), 1.1f);
+            v.gameObject.AddComponent<PlanErfuellt.GramophoneFx>().Setup(v.Find("Record"), v.Find("Crank"), notes);
+        }
+
+        /// <summary>Rohrpost (Phase 9): Kapsel, die nach dem Absenden das Rohr hochsaust.</summary>
+        static void RohrpostFx(Transform v)
+        {
+            var cap = BlockoutKit.Group(v, "Capsule", new Vector3(0f, 1.7f, 0.05f));
+            LookDevKit.Cyl(cap, "Body", Vector3.zero, 0.155f, 0.32f, LookDevMaterials.Chrome, null, false, 20);
+            LookDevKit.Cyl(cap, "Band", Vector3.zero, 0.16f, 0.06f, LookDevMaterials.RedPaint, null, false, 20);
+            v.gameObject.AddComponent<PlanErfuellt.RohrpostFx>().Setup(cap, 1.7f, 7.9f);
+        }
 
         /// <summary>Zentrifuge (Phase 8): Rotor, wackelndes Gehäuse, Zonenlampe, Glassplitter und Säure bei Überdrehzahl.</summary>
         static void CentrifugeFx(Transform v)

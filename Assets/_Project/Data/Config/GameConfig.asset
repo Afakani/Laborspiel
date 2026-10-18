@@ -282,6 +282,8 @@ MonoBehaviour:
       unlockPlanIdx: 1
       cost: 30
       qualityBonus: 15
+      hiFrom: 75
+      midFrom: 50
     gramophone:
       crankSec: 1.5
       musicSec: 30
@@ -289,6 +291,7 @@ MonoBehaviour:
       directorCommentChance: 0.5
     rohrpost:
       angerReduce: 25
+      capsuleSec: 1.2
     microscope:
       cost: 20
       analyseSec: 2
@@ -314,6 +317,11 @@ MonoBehaviour:
       blockedRow: 0
       blockedFrom: 3
       blockedTo: 7
+    sellRefund: 0.6
+    autoSprayRetrySec: 5
+    autoSprayWarnGapSec: 40
+    pipeY: 0.12
+    pipeGap: 0.25
   wishes:
     fromDay: 2
     firstAfterSec: 35
@@ -862,6 +870,13 @@ MonoBehaviour:
     cryoGlowFreezing: 0.8
     cryoGlowPulse: 0.3
     iceBlockShowSec: 6
+    recordRadPerSec: 3.5
+    crankRadPerSec: 2
+    notesPerSec: 3
+    singNotesPerSec: 3
+    milkDropsPerRate: 0.7
+    stampSec: 0.6
+    probeGlowPulse: 10
   cinematic:
     durationSec: 4.5
     lightFactor: 0.1
@@ -869,6 +884,17 @@ MonoBehaviour:
     animalGlowBoost: 6
     specialNewsSec: 8
     fadeSpeed: 4
+  buildView:
+    camX: -13
+    camY: 15.5
+    camZ: 19.5
+    lookX: 0.5
+    lookY: 0
+    lookZ: 3.6
+    fov: 42
+    hideBehindZ: 11.2
+    hideLeftX: -16.2
+    hideAboveY: 7.6
   ultimates:
   - {fileID: 11400000, guid: 5dc976084a4515f499639506535e6f29, type: 2}
   - {fileID: 11400000, guid: 4e589e637b093764ebf22431455450b9, type: 2}

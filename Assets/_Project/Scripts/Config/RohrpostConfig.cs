@@ -7,5 +7,7 @@ namespace PlanErfuellt
     public class RohrpostConfig
     {
         public float angerReduce;
+        /// <summary>Flugzeit der Kapsel im Rohr</summary>
+        public float capsuleSec;
     }
 }

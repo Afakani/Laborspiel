@@ -33,6 +33,7 @@ namespace PlanErfuellt
         public static event Action<GameOverKind> GameOver;
         public static event Action<MachineEvent> Machine;
         public static event Action<UltimateSerum, bool> UltimateSprayed;
+        public static event Action<string> Station;
 
         public static void RaiseMoneyChanged(float money) => MoneyChanged?.Invoke(money);
         public static void RaiseInventoryChanged() => InventoryChanged?.Invoke();
@@ -70,6 +71,8 @@ namespace PlanErfuellt
         public static void RaiseMachine(MachineEvent e) => Machine?.Invoke(e);
         /// <summary>Ultimatives Serum wurde aufs Tier gesprüht (first = erstes Mal im Spiel, GDD 10).</summary>
         public static void RaiseUltimateSprayed(UltimateSerum u, bool first) => UltimateSprayed?.Invoke(u, first);
+        /// <summary>Nebenstation benutzt (gramophone, tasting, rohrpost, probe, coinEgg, buildPlaced, buildSold) – für Effekte.</summary>
+        public static void RaiseStation(string id) => Station?.Invoke(id);
 
         /// <summary>Alle Abonnenten entfernen (bei Play-Start ohne Domain-Reload).</summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -95,6 +98,7 @@ namespace PlanErfuellt
             SerumSprayed = null;
             Machine = null;
             UltimateSprayed = null;
+            Station = null;
             ClothChanged = null;
             Risk = null;
             InfectionChanged = null;

@@ -63,6 +63,10 @@ namespace PlanErfuellt.EditorTools
 
             var info = InfoBox(root, new Vector2(680f, -104f), new Vector2(496f, 260f));
             var mix = MakeButton(root, "Mix", new Vector2(680f, -380f), new Vector2(496f, 64f), MixBg, LeverBorder, 26, false);
+            // Probenmikroskop (Phase 9)
+            var probe = MakeButton(root, "Probe", new Vector2(24f, -330f), new Vector2(620f, 48f), ButtonBg, Border, 18, true);
+            var probeText = Text(root, "ProbeText", 17, Muted, new Vector2(24f, -388f), new Vector2(620f, 64f), TextAlignmentOptions.TopLeft);
+            probeText.textWrappingMode = TMPro.TextWrappingModes.Normal;
 
             var p = host.AddComponent<PanelMixing>();
             var so = new SerializedObject(p);
@@ -87,6 +91,9 @@ namespace PlanErfuellt.EditorTools
             so.FindProperty("mixButton").objectReferenceValue = mix;
             so.FindProperty("mixLabel").objectReferenceValue = mix.GetComponentInChildren<TMP_Text>();
             so.FindProperty("closeButton").objectReferenceValue = close;
+            so.FindProperty("probeButton").objectReferenceValue = probe;
+            so.FindProperty("probeLabel").objectReferenceValue = probe.GetComponentInChildren<TMP_Text>();
+            so.FindProperty("probeText").objectReferenceValue = probeText;
             so.ApplyModifiedPropertiesWithoutUndo();
             return p;
         }

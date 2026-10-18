@@ -7,5 +7,7 @@ namespace PlanErfuellt
         public const string Koloss = "koloss";
         /// <summary>Kuriosität „Singende Kuh“ (GDD 4.6, 9).</summary>
         public const string SingingCow = "sing";
+        /// <summary>Kuriosität „Milchhuhn“.</summary>
+        public const string MilkHen = "milkhen";
     }
 }

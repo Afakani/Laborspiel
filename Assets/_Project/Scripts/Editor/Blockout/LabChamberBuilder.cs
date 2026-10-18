@@ -83,6 +83,16 @@ namespace PlanErfuellt.EditorTools
             root.AddComponent<ChamberAlarm>().Setup(chamberLogic, fx.alarmRotor, fx.alarmLight, fx.alarmDome);
             fx.crisisRoot.gameObject.AddComponent<AnimalCrisisFx>().Setup(chamberLogic, fx.steam, fx.heatFire, fx.bubbles, fx.acidSpray, fx.slime);
             root.AddComponent<ExplosionFx>().Setup(fx.slimeBurst, fx.fireBurst, fx.splats, fx.scorch);
+
+            // Kuriositäten (Phase 9): Noten, Milchtropfen, Münzen
+            var funRoot = BlockoutKit.Group(root.transform, "FunFx", Vector3.zero);
+            var notes = LookDevChamberFx.Emitter(funRoot, "Notes", Vector3.up * 2.4f, LookDevKit.Additive("LD_Note", "Note.png", new Color(1f, 0.85f, 0.4f, 1f), false), Color.white,
+                1.4f, 2.0f, 0.4f, 0.8f, 0.18f, 0.26f, -0.08f, ParticleSystemShapeType.Sphere, new Vector3(0.4f, 0f, 0f), 1.1f);
+            var milk = LookDevChamberFx.Emitter(funRoot, "MilkDrops", Vector3.up * 0.6f, LookDevMaterials.Steam, new Color(1f, 1f, 0.97f, 0.95f),
+                0.5f, 0.8f, 0.2f, 0.6f, 0.05f, 0.09f, 1.2f, ParticleSystemShapeType.Sphere, new Vector3(0.15f, 0f, 0f), 0.6f);
+            var coins = LookDevChamberFx.Emitter(funRoot, "Coins", Vector3.up * 0.6f, LookDevKit.Additive("LD_Coin", "Coin.png", Color.white, false), Color.white,
+                0.9f, 1.2f, 1.5f, 2.2f, 0.16f, 0.2f, 1.6f, ParticleSystemShapeType.Sphere, new Vector3(0.1f, 0f, 0f), 1f);
+            root.AddComponent<FunFx>().Setup(chamberLogic, notes, milk, coins);
             var clothInteraction = root.AddComponent<Cloth>();
             clothInteraction.SetStationId("cloth");
             root.AddComponent<ClothVisual>().Setup(cloth.transform, cloth.GetComponentInChildren<Renderer>(), chamberLogic);

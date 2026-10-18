@@ -4,12 +4,14 @@ using UnityEngine.InputSystem;
 namespace PlanErfuellt
 {
     /// <summary>
-    /// Liest die projektweiten Input Actions (Settings/PlanErfuellt_Input, Map „Player“).
+    /// Liest die projektweiten Input Actions (Settings/PlanErfuellt_Input, Maps „Player“ und „Build“).
     /// Einziger Ort, an dem Aktionsnamen stehen.
     /// </summary>
     public static class InputReader
     {
         static InputAction move, turn, look, interact, pause, antidote, logbook, build, mute, confirm, capture;
+        static InputAction point, place, deselect, sell;
+        static readonly InputAction[] tools = new InputAction[4];
         static bool ready;
 
         static void Init()
@@ -33,6 +35,12 @@ namespace PlanErfuellt
             confirm = a.FindAction("Player/Confirm", true);
             capture = a.FindAction("Player/CaptureMouse", true);
             a.FindActionMap("Player", true).Enable();
+            point = a.FindAction("Build/Point", true);
+            place = a.FindAction("Build/Place", true);
+            deselect = a.FindAction("Build/Deselect", true);
+            sell = a.FindAction("Build/Sell", true);
+            for (int i = 0; i < tools.Length; i++) tools[i] = a.FindAction("Build/Tool" + (i + 1), true);
+            a.FindActionMap("Build", true).Enable();
             ready = true;
         }
 
@@ -65,5 +73,24 @@ namespace PlanErfuellt
         public static bool MutePressed { get { Init(); return ready && mute.WasPressedThisFrame(); } }
         public static bool ConfirmPressed { get { Init(); return ready && confirm.WasPressedThisFrame(); } }
         public static bool CapturePressed { get { Init(); return ready && capture.WasPressedThisFrame(); } }
+
+        // ---------- Baumodus ----------
+        /// <summary>Mausposition in Bildschirmpixeln.</summary>
+        public static Vector2 Point { get { Init(); return ready ? point.ReadValue<Vector2>() : Vector2.zero; } }
+        public static bool PlacePressed { get { Init(); return ready && place.WasPressedThisFrame(); } }
+        public static bool DeselectPressed { get { Init(); return ready && deselect.WasPressedThisFrame(); } }
+        public static bool SellPressed { get { Init(); return ready && sell.WasPressedThisFrame(); } }
+        /// <summary>Werkzeug-Taste 1..4 in diesem Frame gedrückt? Liefert den Index oder −1.</summary>
+        public static int ToolPressed
+        {
+            get
+            {
+                Init();
+                if (!ready) return -1;
+                for (int i = 0; i < tools.Length; i++)
+                    if (tools[i].WasPressedThisFrame()) return i;
+                return -1;
+            }
+        }
     }
 }

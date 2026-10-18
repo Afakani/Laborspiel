@@ -54,6 +54,18 @@ namespace PlanErfuellt
         public float blackoutTimer;
         /// <summary>Laken liegt über der Kammer (GDD 6.8).</summary>
         public bool chamberCovered;
+        /// <summary>Restzeit der Volksmusik vom Grammophon (GDD 6.5).</summary>
+        public float musicLeft;
+        /// <summary>Restzeit der Probe unter dem Mikroskop (GDD 6.2).</summary>
+        public float probeLeft;
+        /// <summary>Mischungen, die schon unter dem Mikroskop waren (Schlüssel "A-B-C").</summary>
+        public readonly HashSet<string> probedRecipes = new HashSet<string>();
+        /// <summary>Restflugzeit der Rohrpost-Kapsel.</summary>
+        public float rohrpostLeft;
+        /// <summary>Gebaute Maschinen (GDD 6.10).</summary>
+        public readonly List<PlacedMachine> machines = new List<PlacedMachine>();
+        /// <summary>Spielzeit der letzten Meldung „Auto-Sprüher: kein Serum“.</summary>
+        public float autoSprayWarnedAt = float.NegativeInfinity;
         /// <summary>Förderband ist gerissen (GDD 5.2).</summary>
         public bool beltBroken;
 

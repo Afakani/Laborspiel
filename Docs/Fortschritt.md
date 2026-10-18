@@ -15,7 +15,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 | 6 | Tagesablauf, Bestellung, Direktor | fertig |
 | 7 | Kommissar und Laken | fertig |
 | 8 | Zentrifuge, Kryo, Ultimativ-Höhepunkt | fertig |
-| 9 | Nebenstationen und Baumodus | offen |
+| 9 | Nebenstationen und Baumodus | fertig |
 | 10 | Staats-TV, Logbuch, Rekorde, Fenster | offen |
 | 11 | Grafik und Animation (Art-Pass) | offen |
 | 12 | Ton, Feinschliff, Performance, Build | offen |
@@ -92,6 +92,27 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - Das Probenmikroskop im Misch-Panel kommt laut Prompt in Phase 9.
 - Hinweis: Wird während des Play Mode neu kompiliert, wirft Unity NullReference-Fehler (Domain-Reload); einfach Play neu starten. Empfehlung: in den Unity-Einstellungen „Script Changes While Playing“ auf „Stop Playing and Recompile“ stellen.
 
+## Phase 9 – Nebenstationen und Baumodus
+
+- [x] `StationLogic` (rein, getestet): Grammophon (Kurbel 1,5 s → 30 s Volksmusik: Stabilität +15, Hitze −3/s, Parteikontrolle ×0,6, Verdacht ×0,7; 50 % Direktor-Spruch), Verkostungsautomat ab Plan 2 (30 SM, Siegel „STAATLICH GEPRÜFT“, Qualität +15, Spruch nach Qualität), Rohrpost (Kaviar: Wut −25, Direktor-Spruch), Probenmikroskop (20 SM, 2 s, nur für unbekannte Mischungen)
+- [x] Darstellung: Platte und Kurbel drehen sich, Noten steigen aus dem Horn; Stempelarm schlägt beim Siegel, Lampe pulsiert bei ungeprüftem Tier; Kapsel saust das Rohr hoch; Mikroskopschale leuchtet während der Probe
+- [x] Misch-Panel: Knopf „PROBE UNTERS MIKROSKOP · 20 SM“ und Ergebniszeile („Fleisch ↑↑↑ · Milch ↑↑↑ · Geschmack ↓ · Probe ruhig“)
+- [x] Kuriositäten: erste Entdeckung mit Direktor-Spruch und Nachrichtenmeldung; Noten über der Singenden Kuh, Milchtropfen beim Milchhuhn, Münze pro Ei beim Münzhuhn; Wirkungen (Parteikontrolle −0,8/s, Verdacht ×0,5, Milch ×1,6, Münzen, Qualitätsabzug) aus Phase 4b/7 bleiben
+- [x] `BuildLogic` (rein, getestet): Raster 14 × 3 mit gesperrtem Gang, Preis ×1,5 pro gleichem Typ, Freischaltung nach Plan, Bauen, Abriss mit 60 % Erstattung, Wirkung der Maschinen
+- [x] Baumodus (B): Draufsicht wie Prototyp, Rückwand, linke Wand und Decke ausgeblendet, Raster mit gesperrten Feldern, Feldmarkierung grün/rot, halbdurchsichtige Vorschau, Leiste mit Preisen bzw. „GESPERRT · ab Plan n“, Tasten 1–4, X = Abriss, Rechtsklick = abwählen, B/Esc = zurück; das Spiel läuft weiter
+- [x] Maschinen im Look-Pass: Melkpumpe (+1,4 t Milch/s bei Kuh, Qualität 85, Kolben arbeitet), Auto-Sprüher (alle 15 s das zuletzt benutzte Serum, sonst neuer Versuch nach 5 s), Kühlaggregat (Hitze −8/s, Lüfter dreht), Notfall-Automat (bei INSTABIL, Säure oder Überhitzung Gegenmittel, alle 3 s möglich); Rohre als Bodenleitungen zur Kammer; Stromausfall halbiert die Pumpenleistung
+- [x] Neue Eingabegruppe „Build“ im Input-Asset (Mausposition, Platzieren, Abwählen, Werkzeuge 1–4, Abriss)
+- [x] Tests: 109 EditMode-Tests grün (9 neue)
+- [x] Spieltest: Grammophon mit Noten, Singende Kuh (3-0-3) mit Noten und Nachricht, Siegel (Qualität 80 → 95), Kaviar mit Spruch und Kapsel, Mikroskop-Ergebnis im Panel. Baumodus: 5 Maschinen gebaut (zweite Pumpe 600 SM, gesperrtes Feld abgelehnt, Kasse 6.000 → 3.550); Ertrag 2,0 → 4,8 t/s mit zwei Pumpen; Hitze 50 → 0 durch das Kühlaggregat; Auto-Sprüher hat nachgesprüht; Notfall-Automat hat bei Überhitzung Gegenmittel gegeben. Konsole ohne Fehler. Screenshots `Phase9_*.png`
+- [x] Korrigiert im Test: Noten kamen neben dem Horn heraus; Rohrpost-Rohr schnitt das Schild; Bedienseite der Maschinen zeigte von der Kammer weg; Emaille zu rostig; „✕“ fehlt in der Schrift
+
+### Offen / für spätere Phasen
+- Kurbel-, Stempel-, Rohrpost- und Musikton: Phase 12
+- Nachrichten zu Kuriositäten, Kontrollen und Ultimativ im Staats-TV: Phase 10
+- Baumodus-Ansicht: Maschinen in der vorderen Reihe liegen teils hinter der Bauleiste; Kameraposition im Art-Pass nachjustieren
+- Hinweis zum Testen: Dateien nicht ändern, während der Play Mode läuft (Unity kompiliert neu und verliert den Spielstand)
+- Nicht geprüft: Baumodus mit echter Tastatur und Maus (getestet über die Methoden Enter/Select/Click); Lage der Noten am Grammophon nach der Korrektur und Rohrpost-Schild nach dem Versatz nicht erneut im Bild kontrolliert
+
 ## Phase 8 – Zentrifuge, Kryokammer, Ultimativ-Höhepunkt
 
 - [x] `MachineLogic` (rein, getestet): Zentrifuge lädt das erste passende Serum (Rohserum oder normales, nicht konzentriertes), Drehzahl rpm += dt·(0,16 + 0,12·rpm); Bremsen unter 60 % ohne Wirkung, gelb/rot ×1,25, grün ×1,5 (Rohserum → zentrifugiert); ab 100 % Überdrehzahl, Serum verloren; Auslauf, dann zurück ins Regal (wartet bei vollem Regal)
@@ -126,7 +147,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - [x] Spieltest: Tag 2, Kuh mit 1-1-0 ohne Laken → Kontrolle → Verdacht 100 → „Skandal in der Säule“. Neues Spiel, Kuh mit 1-1-0 unter dem Laken, verdächtiges Serum (3-3-0) im Regal abgedeckt, Wodka angeboten → Verdacht 18 → „Kontrolle bestanden. Verschwiegenheitsprämie +400 SM“. Konsole ohne Fehler. Screenshots `Phase7_*.png`
 
 ### Offen / für spätere Phasen
-- Musik (Grammophon) als Multiplikator für Parteikontrolle und Verdacht: Phase 9 (Logik nimmt den Wert schon entgegen)
+- ~~Musik als Multiplikator für Parteikontrolle und Verdacht~~ in Phase 9 angebunden
 - ~~Ω-Leuchten des Lakens und Oberkommissar~~ in Phase 8 im Spiel geprüft
 - Nachrichtenmeldung nach der Kontrolle: Phase 10
 - Hinweis: Tests über die Unity-Verbindung erst nach dem Speichern der Szene starten, sonst blockiert der Dialog „Scene(s) Have Been Modified“ den Editor

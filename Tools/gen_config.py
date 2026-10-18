@@ -124,7 +124,10 @@ CLASSES = [
         F("float", "centrifugeRotorRadPerSec", "Rotordrehung bei voller Drehzahl"), F("float", "centrifugeShakeAmp", "Wackeln des Gehäuses in m bei voller Drehzahl"),
         F("float", "centrifugeBreakShake", "Kamerawackeln beim Zerspringen"),
         F("float", "cryoGlowIdle"), F("float", "cryoGlowFreezing"), F("float", "cryoGlowPulse"),
-        F("float", "iceBlockShowSec", "Eisblock im Fenster sichtbar")]),
+        F("float", "iceBlockShowSec", "Eisblock im Fenster sichtbar"),
+        F("float", "recordRadPerSec", "Grammophon-Platte"), F("float", "crankRadPerSec"), F("float", "notesPerSec", "Noten am Grammophon"),
+        F("float", "singNotesPerSec", "Noten über der Singenden Kuh"), F("float", "milkDropsPerRate", "Milchtropfen beim Milchhuhn"),
+        F("float", "stampSec", "Stempelbewegung des Verkostungsautomaten"), F("float", "probeGlowPulse")]),
     ("CinematicConfig", "Ultimativ-Höhepunkt (GDD 10, Prototyp ultCinematic).", [
         F("float", "durationSec", "Licht gedimmt, Tier leuchtet"), F("float", "lightFactor", "Bildhelligkeit während der Sequenz"),
         F("float", "directorLineDelaySec", "„… … …“, dann der Spruch"), F("float", "animalGlowBoost", "Tier leuchtet heller, damit es im Dunkeln strahlt"),
@@ -144,10 +147,11 @@ CLASSES = [
         F("int", "unlockPlanIdx"), F("float", "freezeSec"), F("float", "takeWindowSec")]),
     ("UnlockConfig", "Nur eine Freischaltung.", [F("int", "unlockPlanIdx")]),
     ("TastingConfig", "Verkostungsautomat (GDD 6.6).", [
-        F("int", "unlockPlanIdx"), F("float", "cost"), F("float", "qualityBonus")]),
+        F("int", "unlockPlanIdx"), F("float", "cost"), F("float", "qualityBonus"),
+        F("float", "hiFrom", "Qualität ab der ein Lob kommt"), F("float", "midFrom", "Qualität für den mittleren Spruch")]),
     ("GramophoneConfig", "Grammophon (GDD 6.5).", [
         F("float", "crankSec"), F("float", "musicSec"), F("float", "heatExtraDecay"), F("float", "directorCommentChance")]),
-    ("RohrpostConfig", "Rohrpost (GDD 6.7).", [F("float", "angerReduce")]),
+    ("RohrpostConfig", "Rohrpost (GDD 6.7).", [F("float", "angerReduce"), F("float", "capsuleSec", "Flugzeit der Kapsel im Rohr")]),
     ("MicroscopeConfig", "Probenmikroskop (GDD 6.2).", [
         F("float", "cost"), F("float", "analyseSec"),
         F("float[]", "factorLevels", "Schwellen für ↑ / ↑↑ / ↑↑↑"),
@@ -161,7 +165,17 @@ CLASSES = [
         F("int", "cols"), F("int", "rows"), F("float", "cell"), F("float", "x0"), F("float", "z0"),
         F("int", "blockedRow"), F("int", "blockedFrom"), F("int", "blockedTo")]),
     ("BuildMachinesConfig", "Baumodus allgemein (GDD 6.10). Maschinentypen liegen als eigene Assets vor.", [
-        F("float", "priceFactor", "Preisfaktor pro gleichem Typ"), F("BuildGridConfig", "grid")]),
+        F("float", "priceFactor", "Preisfaktor pro gleichem Typ"), F("BuildGridConfig", "grid"),
+        F("float", "sellRefund", "Anteil des Kaufpreises beim Abriss"),
+        F("float", "autoSprayRetrySec", "Auto-Sprüher: neuer Versuch nach, wenn nichts passt"),
+        F("float", "autoSprayWarnGapSec", "Auto-Sprüher: Meldung „kein Serum“ höchstens so oft"),
+        F("float", "pipeY", "Höhe der Rohre zur Kammer"), F("float", "pipeGap", "Rohrende vor dem Kammerrand")]),
+    ("BuildViewConfig", "Draufsicht im Baumodus (Prototyp camTop, Prototyp-Koordinaten).", [
+        F("float", "camX"), F("float", "camY"), F("float", "camZ"), F("float", "lookX"), F("float", "lookY"), F("float", "lookZ"),
+        F("float", "fov"),
+        F("float", "hideBehindZ", "Umgebung hinter dieser z-Linie (Rückwand) wird ausgeblendet"),
+        F("float", "hideLeftX", "Umgebung links dieser x-Linie (linke Wand) wird ausgeblendet"),
+        F("float", "hideAboveY", "Umgebung über dieser Höhe (Decke) wird ausgeblendet")]),
     ("WishTypeConfig", "Ein Sonderwunsch-Typ (GDD 7.3).", [
         F("string", "id"), F("LinearValue", "amount", "Menge in t (falls benötigt)"),
         F("float", "minQuality"), F("float", "durationSec")]),

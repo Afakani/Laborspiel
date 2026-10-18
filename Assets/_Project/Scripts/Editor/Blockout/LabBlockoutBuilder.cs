@@ -71,10 +71,11 @@ namespace PlanErfuellt.EditorTools
                 go.transform.SetPositionAndRotation(s.UnityPosition, s.UnityRotation);
             }
 
-            // Baugitter (unsichtbar, nur Gizmo)
+            // Baugitter (Gizmo) und Baumodus
             var grid = new GameObject("BuildGrid");
             grid.transform.SetParent(gridRoot, false);
             grid.AddComponent<BuildGridGizmo>().SetConfig(cfg);
+            BuildModeBuilder.Build(gridRoot, env, cfg);
 
             SetupPlayerAndHud(cfg, rebuildPrefabs);
             LabLightingSetup.EnsureLightingSettings();

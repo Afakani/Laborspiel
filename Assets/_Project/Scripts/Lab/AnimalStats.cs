@@ -86,7 +86,7 @@ namespace PlanErfuellt
         public char Produces(GameConfig cfg)
         {
             if (kind == AnimalKind.Cow) return cfg.animals.cow.produces[0];
-            return fun != null && fun.id == "milkhen" ? cfg.animals.cow.produces[0] : cfg.animals.hen.produces[0];
+            return fun != null && fun.id == UltimateIds.MilkHen ? cfg.animals.cow.produces[0] : cfg.animals.hen.produces[0];
         }
 
         /// <summary>Wachstums-Kennzahl für die Optik (Koloss zählt als volles A).</summary>

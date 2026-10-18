@@ -37,7 +37,7 @@ namespace PlanErfuellt
             var s = gm.State;
             var cfg = gm.Config;
             var view = chamber != null ? chamber.View : default;
-            bool music = false; // Grammophon folgt in Phase 9
+            bool music = s.musicLeft > 0f;
             float mixingX = cfg.layout.Station("mixing").x;
             events.Clear();
             InspectionLogic.Step(s, cfg, dt, view, music, cfg.layout.chamber.x, mixingX, events, out var passed);

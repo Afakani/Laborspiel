@@ -164,7 +164,7 @@ namespace PlanErfuellt
 
         void UpdateLiving(float dt)
         {
-            bool music = false; // Grammophon folgt in Phase 9
+            bool music = S.musicLeft > 0f;
             riskEvents.Clear();
             RiskLogic.Step(stats, State, S, Cfg, dt, music, RandomValue, riskEvents);
             foreach (var e in riskEvents)
@@ -194,7 +194,11 @@ namespace PlanErfuellt
                 if (stats.eggTimer <= 0f)
                 {
                     stats.eggTimer = Cfg.animal.eggInterval;
-                    if (stats.fun != null && stats.fun.coinsPerEgg > 0f) S.AddMoney(stats.fun.coinsPerEgg);
+                    if (stats.fun != null && stats.fun.coinsPerEgg > 0f)
+                    {
+                        S.AddMoney(stats.fun.coinsPerEgg);
+                        EventBus.RaiseStation("coinEgg");
+                    }
                 }
             }
         }
@@ -344,7 +348,8 @@ namespace PlanErfuellt
             return Feedback.Ok;
         }
 
-        public Feedback Spray(int serumIndex)
+        /// <summary>Serum aus dem Regal sprühen; auto = Auto-Sprüher aus dem Baumodus (eigene Meldung).</summary>
+        public Feedback Spray(int serumIndex, bool auto = false)
         {
             if (serumIndex < 0 || serumIndex >= S.serums.Count) return Feedback.Error("ui.errors.noSerum");
             if (State != AnimalState.Ok) return Feedback.Error("ui.errors.noAnimalReady");
@@ -386,8 +391,14 @@ namespace PlanErfuellt
                 stats.fun = fun;
                 if (fun != null && fun != before)
                 {
-                    S.foundFunRecipes.Add(fun.id);
+                    bool firstFun = S.foundFunRecipes.Add(fun.id);
                     GM.Toast("ui.toasts.curiosity", ToastKind.Good, ("name", fun.displayName), ("pro", fun.pros.Length > 0 ? fun.pros[0] : ""));
+                    if (firstFun)
+                    {
+                        var director = FindAnyObjectByType<Director>();
+                        if (director != null) director.SayAny("director.fun");
+                        S.newsFacts.Add("newsFacts." + fun.id);
+                    }
                 }
 
                 string key = serum.dose.Key;
@@ -395,7 +406,7 @@ namespace PlanErfuellt
                 float stab = Formula.Stability(stats.dose, Cfg);
                 var a = Cfg.animal;
                 var kindToast = stab < a.sprayToastBad ? ToastKind.Bad : stab < a.sprayToastWarn ? ToastKind.Warn : ToastKind.Good;
-                GM.Toast(first ? "ui.toasts.sprayGasNew" : "ui.toasts.sprayGas", kindToast,
+                GM.Toast(auto ? (first ? "ui.toasts.sprayAutoNew" : "ui.toasts.sprayAuto") : first ? "ui.toasts.sprayGasNew" : "ui.toasts.sprayGas", kindToast,
                     ("name", Formula.ComboName(serum.dose, Cfg, GM.Texts)), ("stab", Formula.RoundHalfUp(stab)));
             }
             S.totalDoses += serum.dose.Total;

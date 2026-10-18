@@ -336,7 +336,9 @@
     "tasting": {
       "unlockPlanIdx": 1,
       "cost": 30,
-      "qualityBonus": 15
+      "qualityBonus": 15,
+      "hiFrom": 75,
+      "midFrom": 50
     },
     "gramophone": {
       "crankSec": 1.5,
@@ -345,7 +347,8 @@
       "directorCommentChance": 0.5
     },
     "rohrpost": {
-      "angerReduce": 25
+      "angerReduce": 25,
+      "capsuleSec": 1.2
     },
     "microscope": {
       "cost": 20,
@@ -379,6 +382,12 @@
       "blockedFrom": 3,
       "blockedTo": 7
     },
+    "_doc2": "Prototyp: Abriss 60 % zurück, Auto-Sprüher neuer Versuch nach 5 s (m.t = 10 von 15), Warnung höchstens alle 40 s, Rohr bis 0.25 m vor die Kammer; im Prototyp auf 1.1 m, hier als Bodenleitung 0.12 m (D67).",
+    "sellRefund": 0.6,
+    "autoSprayRetrySec": 5,
+    "autoSprayWarnGapSec": 40,
+    "pipeY": 0.12,
+    "pipeGap": 0.25,
     "types": [
       {
         "id": "pump",
@@ -1198,7 +1207,14 @@
     "cryoGlowIdle": 0.15,
     "cryoGlowFreezing": 0.8,
     "cryoGlowPulse": 0.3,
-    "iceBlockShowSec": 6
+    "iceBlockShowSec": 6,
+    "recordRadPerSec": 3.5,
+    "crankRadPerSec": 2,
+    "notesPerSec": 3,
+    "singNotesPerSec": 3,
+    "milkDropsPerRate": 0.7,
+    "stampSec": 0.6,
+    "probeGlowPulse": 10
   },
   "cinematic": {
     "_doc": "Prototyp ultCinematic: G.cine 4.5 s, Licht 0.1, Direktor nach 2.5 s; lightF nähert sich mit dt*4. animalGlowBoost und specialNewsSec eigene Werte.",
@@ -1208,5 +1224,18 @@
     "animalGlowBoost": 6,
     "specialNewsSec": 8,
     "fadeSpeed": 4
+  },
+  "buildView": {
+    "_doc": "Prototyp camTop: Position (-13, 15.5, 19.5), Blick auf (0.5, 0, 3.6); Rückwand und linke Wand ausgeblendet (buildHide). fov und Decke eigene Werte.",
+    "camX": -13,
+    "camY": 15.5,
+    "camZ": 19.5,
+    "lookX": 0.5,
+    "lookY": 0,
+    "lookZ": 3.6,
+    "fov": 42,
+    "hideBehindZ": 11.2,
+    "hideLeftX": -16.2,
+    "hideAboveY": 7.6
   }
 }
