@@ -5,7 +5,7 @@ Unity-Umsetzung des Prototyps „Plan erfüllt“ (Satire auf Planwirtschaft: K�
 ## Spiel starten (Windows-Build)
 
 1. Ordner `Builds/Windows/` öffnen (wird beim Build erzeugt, liegt nicht im Git).
-2. `PlanErfuellt.exe` starten. Das Spiel läuft im randlosen Vollbild (1920 × 1080).
+2. `PlanErfuellt.exe` starten. Das Spiel startet im randlosen Vollbild in Bildschirmauflösung (umstellbar in den Einstellungen).
 3. Im Hauptmenü „Für den Plan!“ wählen; vor jeder Schicht am Bestellterminal Grundstoffe kaufen.
 
 Beenden: Hauptmenü „Beenden“ oder Alt+F4.
@@ -15,6 +15,7 @@ Beenden: Hauptmenü „Beenden“ oder Alt+F4.
 | Taste | Aktion |
 |---|---|
 | W A S D | laufen |
+| Shift halten | sprinten |
 | Maus oder Q / E | umsehen bzw. drehen |
 | Leertaste halten | Station benutzen (Mischstation, Pult, Laken, Zentrifuge …) |
 | G | Gegenmittel selbst spritzen (nach Infektion) |
@@ -24,7 +25,7 @@ Beenden: Hauptmenü „Beenden“ oder Alt+F4.
 | P oder Esc | Pause (dort: Logbuch, Staats-TV, Ton, Einstellungen) |
 | Mausklick ins Bild | Maus fangen |
 
-Einstellungen (Hauptmenü oder Pause): Lautstärke gesamt, Musik, Effekte, Mausempfindlichkeit, Kamerawackeln, Grafik Hoch/Niedrig, Ton an/aus. Sie werden gespeichert.
+Einstellungen (Hauptmenü oder Pause → „Einstellungen“): Lautstärke gesamt, Musik, Effekte, Mausempfindlichkeit, Kamerawackeln, Grafik Hoch/Niedrig, Anzeige Vollbild/Fenster (Fenster 1600 × 900), Ton an/aus. Sie werden gespeichert. Alt+Enter schaltet ebenfalls zwischen Vollbild und Fenster um.
 
 ## Im Unity-Editor öffnen
 

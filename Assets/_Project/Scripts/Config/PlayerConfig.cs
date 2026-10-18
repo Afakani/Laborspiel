@@ -23,5 +23,7 @@ namespace PlanErfuellt
         public HandsConfig hands = new HandsConfig();
         /// <summary>Drehfaktor, wenn die Spielfigur beschleunigt ist (Infektion)</summary>
         public float fastTurnBoost;
+        /// <summary>Tempo-Faktor beim Sprinten (Shift)</summary>
+        public float sprintMultiplier;
     }
 }

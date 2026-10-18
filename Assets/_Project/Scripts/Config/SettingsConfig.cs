@@ -18,5 +18,9 @@ namespace PlanErfuellt
         public int lowShadowResolution;
         /// <summary>Grafik Niedrig: Kaskaden</summary>
         public int lowShadowCascades;
+        /// <summary>Fenstermodus: Breite</summary>
+        public int windowedWidth;
+        /// <summary>Fenstermodus: Höhe</summary>
+        public int windowedHeight;
     }
 }

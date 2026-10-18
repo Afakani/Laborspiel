@@ -104,6 +104,11 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - [x] Tests: 127 EditMode-Tests grün (5 neue)
 - [x] Korrigiert im Test: URP entfernte im Build zwei Post-Processing-Shader und schaltete damit das ganze Post-Processing ab (Einstellung geändert, D99); Einstellungsfenster schien durch; gewählte Grafikstufe sah ausgegraut aus; Vollbild-Hintergründe bekamen das Schild-Sprite
 
+### Nachtrag (auf Wunsch)
+- [x] Sprinten mit Shift (gemessen: Gehen 5,19 m/s, Sprinten 8,28 m/s = ×1,6)
+- [x] Einstellung „Anzeige“: Vollbild/Fenster, im Build geprüft (Start mit Fenster-Parametern wird auf Vollbild 1920 × 1080 umgestellt)
+- [x] Tests: 130 grün (3 neue), Build neu erstellt, Player.log ohne Fehler
+
 ### Befunde aus dem Durchlauf
 - Kein Programmfehler. Der einfache Autopilot (immer 1-1-1, viele Hühner) schafft die 42 t Fleisch von Plan 2 nicht; nach mehreren verfehlten Tagen wird er entlassen (Wut 100). Das ist Spielregel, kein Fehler; ob Plan 2 für Menschen zu schwer ist, bitte selbst prüfen
 - Ohne Bewegung steigt die Wut (Leerlauf, GDD 7.2); der Autopilot setzt den Leerlauf daher zurück wie der Prototyp-Testschritt

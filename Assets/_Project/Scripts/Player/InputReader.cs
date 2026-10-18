@@ -9,7 +9,7 @@ namespace PlanErfuellt
     /// </summary>
     public static class InputReader
     {
-        static InputAction move, turn, look, interact, pause, antidote, logbook, build, mute, confirm, capture;
+        static InputAction move, turn, look, interact, pause, antidote, logbook, build, mute, confirm, capture, sprint;
         static InputAction point, place, deselect, sell;
         static readonly InputAction[] tools = new InputAction[4];
         static bool ready;
@@ -34,6 +34,7 @@ namespace PlanErfuellt
             mute = a.FindAction("Player/Mute", true);
             confirm = a.FindAction("Player/Confirm", true);
             capture = a.FindAction("Player/CaptureMouse", true);
+            sprint = a.FindAction("Player/Sprint", true);
             a.FindActionMap("Player", true).Enable();
             point = a.FindAction("Build/Point", true);
             place = a.FindAction("Build/Place", true);
@@ -50,12 +51,15 @@ namespace PlanErfuellt
             ready = false;
             TestMove = null;
             TestInteract = null;
+            TestSprint = null;
         }
 
         /// <summary>Nur für automatisierte Tests: ersetzt die Laufeingabe, solange gesetzt.</summary>
         public static Vector2? TestMove { get; set; }
         /// <summary>Nur für automatisierte Tests: ersetzt „Leertaste gehalten“, solange gesetzt.</summary>
         public static bool? TestInteract { get; set; }
+        /// <summary>Nur für automatisierte Tests: ersetzt „Shift gehalten“, solange gesetzt.</summary>
+        public static bool? TestSprint { get; set; }
 
         /// <summary>x = seitwärts, y = vorwärts.</summary>
         public static Vector2 Move { get { if (TestMove.HasValue) return TestMove.Value; Init(); return ready ? move.ReadValue<Vector2>() : Vector2.zero; } }
@@ -65,6 +69,8 @@ namespace PlanErfuellt
         public static Vector2 LookDelta { get { Init(); return ready ? look.ReadValue<Vector2>() : Vector2.zero; } }
 
         public static bool InteractHeld { get { if (TestInteract.HasValue) return TestInteract.Value; Init(); return ready && interact.IsPressed(); } }
+        /// <summary>Sprinten (Shift gehalten).</summary>
+        public static bool SprintHeld { get { if (TestSprint.HasValue) return TestSprint.Value; Init(); return ready && sprint.IsPressed(); } }
         public static bool InteractPressed { get { Init(); return ready && interact.WasPressedThisFrame(); } }
         public static bool PausePressed { get { Init(); return ready && pause.WasPressedThisFrame(); } }
         public static bool AntidotePressed { get { Init(); return ready && antidote.WasPressedThisFrame(); } }

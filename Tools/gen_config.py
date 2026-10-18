@@ -237,7 +237,8 @@ CLASSES = [
     ("SettingsConfig", "Einstellungen: Vorgaben und Grenzen (Maus, Grafik).", [
         F("float", "mouseDefault", "Mausempfindlichkeit Faktor"), F("float", "mouseMin"), F("float", "mouseMax"),
         F("float", "lowRenderScale", "Grafik Niedrig: Auflösungsfaktor"), F("float", "lowShadowDistance", "Grafik Niedrig: Schattenweite m"),
-        F("int", "lowShadowResolution", "Grafik Niedrig: Schattenkarte"), F("int", "lowShadowCascades", "Grafik Niedrig: Kaskaden")]),
+        F("int", "lowShadowResolution", "Grafik Niedrig: Schattenkarte"), F("int", "lowShadowCascades", "Grafik Niedrig: Kaskaden"),
+        F("int", "windowedWidth", "Fenstermodus: Breite"), F("int", "windowedHeight", "Fenstermodus: Höhe")]),
     ("EndingsConfig", "Schwellen für die Spielenden (GDD 13).", [
         F("float", "heroMinPop"), F("int", "heroMaxFailedDays"), F("float", "deadBelowPop")]),
     ("ComboNameEntry", "Fester Name einer Kombination, z. B. 1-1-1 = Planformel.", [
@@ -271,7 +272,8 @@ CLASSES = [
         F("float", "lookUpMaxDeg"), F("float", "lookDownMaxDeg"), F("float", "radius"), F("float", "height"),
         F("float", "fov"), F("float", "fovMax"), F("float", "fovAspectRef", "Unter diesem Seitenverhältnis wird das Sichtfeld weiter"),
         F("BobConfig", "bob"), F("HandsConfig", "hands"),
-        F("float", "fastTurnBoost", "Drehfaktor, wenn die Spielfigur beschleunigt ist (Infektion)")]),
+        F("float", "fastTurnBoost", "Drehfaktor, wenn die Spielfigur beschleunigt ist (Infektion)"),
+        F("float", "sprintMultiplier", "Tempo-Faktor beim Sprinten (Shift)")]),
     ("HoldTimesConfig", "Haltezeiten der Interaktionen in Sekunden.", [
         F("float", "pult"), F("float", "mixing"), F("float", "rackHide"), F("float", "cloth"), F("float", "vodka"),
         F("float", "tasting"), F("float", "rohrpost"), F("float", "beltRepair"), F("float", "centrifugeLoad"),

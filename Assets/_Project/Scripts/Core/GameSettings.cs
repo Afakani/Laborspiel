@@ -5,12 +5,12 @@ namespace PlanErfuellt
 {
     /// <summary>
     /// Einstellungen des Spielers (GDD 14, Phase 12): Lautstärke Gesamt/Musik/Effekte, Ton aus (M), Mausempfindlichkeit, Kamerawackeln,
-    /// Grafik Hoch/Niedrig (umgesetzt von GraphicsQuality). Gespeichert in den PlayerPrefs, Vorgaben und Grenzen aus der Balancing-JSON.
+    /// Grafik Hoch/Niedrig und Vollbild/Fenster (umgesetzt von GraphicsQuality). Gespeichert in den PlayerPrefs, Vorgaben und Grenzen aus der Balancing-JSON.
     /// </summary>
     public static class GameSettings
     {
         const string KeyMaster = "pe.master", KeyMusic = "pe.music", KeySfx = "pe.sfx", KeyMuted = "pe.muted",
-            KeyMouse = "pe.mouse", KeyHigh = "pe.highQuality", KeyShake = "pe.shake";
+            KeyMouse = "pe.mouse", KeyHigh = "pe.highQuality", KeyShake = "pe.shake", KeyFull = "pe.fullscreen";
 
         static GameConfig cfg;
 
@@ -42,6 +42,17 @@ namespace PlanErfuellt
 
         /// <summary>Faktor auf das Kamerawackeln 0..1 (0 = aus).</summary>
         public static float Shake { get => PlayerPrefs.GetFloat(KeyShake, 1f); set => SetFloat(KeyShake, Mathf.Clamp01(value)); }
+
+        /// <summary>Vollbild (randlos) oder Fenster.</summary>
+        public static bool Fullscreen
+        {
+            get => PlayerPrefs.GetInt(KeyFull, 1) == 1;
+            set
+            {
+                PlayerPrefs.SetInt(KeyFull, value ? 1 : 0);
+                Changed?.Invoke();
+            }
+        }
 
         public static bool HighQuality
         {

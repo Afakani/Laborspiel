@@ -5,7 +5,7 @@ using UnityEngine.UI;
 namespace PlanErfuellt
 {
     /// <summary>
-    /// Einstellungen (Phase 12): Lautstärke Gesamt/Musik/Effekte, Mausempfindlichkeit, Kamerawackeln, Grafik Hoch/Niedrig, Ton an/aus.
+    /// Einstellungen (Phase 12): Lautstärke Gesamt/Musik/Effekte, Mausempfindlichkeit, Kamerawackeln, Grafik Hoch/Niedrig, Vollbild/Fenster, Ton an/aus.
     /// Geöffnet aus Hauptmenü und Pause; Werte sofort in GameSettings. Esc/P schließt nur das Fenster.
     /// </summary>
     public class SettingsUI : MonoBehaviour
@@ -14,9 +14,9 @@ namespace PlanErfuellt
 
         [SerializeField] GameObject root;
         [SerializeField] TMP_Text title;
-        [SerializeField] TMP_Text[] labels = new TMP_Text[6];
+        [SerializeField] TMP_Text[] labels = new TMP_Text[7];
         [SerializeField] Slider master, music, sfx, mouse, shake;
-        [SerializeField] Button graphicsHigh, graphicsLow, sound, back;
+        [SerializeField] Button graphicsHigh, graphicsLow, fullscreen, windowed, sound, back;
         [SerializeField] Color selectedColor = new Color(0.55f, 1f, 0.45f);
         [SerializeField] Color normalColor = new Color(0.96f, 0.93f, 0.82f);
 
@@ -39,10 +39,12 @@ namespace PlanErfuellt
             var t = gm.Texts;
             var s = gm.Config.settings;
             title.text = t.Get("ui.settings.title");
-            string[] keys = { "master", "music", "sfx", "mouse", "shake", "graphics" };
+            string[] keys = { "master", "music", "sfx", "mouse", "shake", "graphics", "display" };
             for (int i = 0; i < labels.Length && i < keys.Length; i++) labels[i].text = t.Get("ui.settings." + keys[i]);
             Label(graphicsHigh, t.Get("ui.settings.high"));
             Label(graphicsLow, t.Get("ui.settings.low"));
+            Label(fullscreen, t.Get("ui.settings.fullscreen"));
+            Label(windowed, t.Get("ui.settings.windowed"));
             Label(back, t.Get("ui.settings.back"));
             foreach (var sl in new[] { master, music, sfx, shake }) Range(sl, 0f, 1f);
             Range(mouse, s.mouseMin, s.mouseMax);
@@ -53,6 +55,8 @@ namespace PlanErfuellt
             shake.onValueChanged.AddListener(v => GameSettings.Shake = v);
             graphicsHigh.onClick.AddListener(() => GameSettings.HighQuality = true);
             graphicsLow.onClick.AddListener(() => GameSettings.HighQuality = false);
+            fullscreen.onClick.AddListener(() => GameSettings.Fullscreen = true);
+            windowed.onClick.AddListener(() => GameSettings.Fullscreen = false);
             sound.onClick.AddListener(() => GameSettings.Muted = !GameSettings.Muted);
             back.onClick.AddListener(Close);
             GameSettings.Changed += Refresh;
@@ -94,6 +98,9 @@ namespace PlanErfuellt
             bool high = GameSettings.HighQuality;
             graphicsHigh.GetComponentInChildren<TMP_Text>().color = high ? selectedColor : normalColor;
             graphicsLow.GetComponentInChildren<TMP_Text>().color = high ? normalColor : selectedColor;
+            bool full = GameSettings.Fullscreen;
+            fullscreen.GetComponentInChildren<TMP_Text>().color = full ? selectedColor : normalColor;
+            windowed.GetComponentInChildren<TMP_Text>().color = full ? normalColor : selectedColor;
             Label(sound, GameManager.Instance.Texts.Get(GameSettings.Muted ? "ui.hud.btnSoundOff" : "ui.hud.btnSoundOn"));
         }
     }

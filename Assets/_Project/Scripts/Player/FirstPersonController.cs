@@ -76,7 +76,8 @@ namespace PlanErfuellt
             }
 
             float inv = InvertControls ? -1f : 1f;
-            float mf = SpeedMultiplier;
+            // Sprinten mit Shift (eigener Faktor aus player.sprintMultiplier), zusätzlich zu Infektionseffekten
+            float mf = SpeedMultiplier * (InputReader.SprintHeld ? P.sprintMultiplier : 1f);
 
             // Drehen: Tasten (zeitbasiert) und Maus (pixelbasiert)
             yaw += InputReader.Turn * P.turnSpeedDeg * dt * inv * (mf > 1f ? P.fastTurnBoost : 1f);
