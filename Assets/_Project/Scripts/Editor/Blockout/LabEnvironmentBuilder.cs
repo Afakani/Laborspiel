@@ -178,13 +178,33 @@ namespace PlanErfuellt.EditorTools
 
             // Rückwand: Banner, Parole und Lampen kommen aus LookDevHall
 
-            // Kisten und Fässer (Prototyp-Positionen, z gespiegelt)
+            // Kisten und Fässer (Prototyp-Positionen, z gespiegelt; rechte Fässer an die Rückwand gerückt,
+            // weil dort die Büroecke steht). Holzkisten mit Leisten, Fässer mit Sicken, abgenutzte Texturen.
             foreach (var c in new[] { new Vector3(-12f, 1.3f, -10.6f), new Vector3(-10.4f, 1.0f, -10.9f), new Vector3(-11.4f, 0.8f, -10.6f),
                          new Vector3(12f, 1.4f, -10.4f), new Vector3(10.2f, 1.0f, -10.8f) })
-                BlockoutKit.Box(d, "Crate", new Vector3(c.x, c.y * 0.5f, c.z), Vector3.one * c.y, M.Crate, true, new Vector3(0f, c.x * 0.3f * Mathf.Rad2Deg, 0f))
-                    .AddComponent<BoxCollider>();
-            foreach (var b in new[] { new Vector2(-14.5f, -9.8f), new Vector2(14.6f, -9.6f), new Vector2(14.2f, -8.4f) })
-                BlockoutKit.Cyl(d, "Barrel", new Vector3(b.x, 0.55f, b.y), 0.45f, 1.1f, M.Barrel).AddComponent<CapsuleCollider>();
+            {
+                var crate = BlockoutKit.Group(d, "Crate", new Vector3(c.x, 0f, c.z), c.x * 0.3f * Mathf.Rad2Deg);
+                LookDevKit.Box(crate, "Box", new Vector3(0f, c.y * 0.5f, 0f), Vector3.one * c.y, LookDevMaterials.CratePlanks);
+                foreach (var s in new[] { -1f, 1f })
+                {
+                    LookDevKit.Box(crate, "Slat", new Vector3(0f, c.y * 0.5f, s * (c.y * 0.5f + 0.012f)), new Vector3(c.y + 0.02f, 0.1f, 0.025f), LookDevMaterials.Wood);
+                    LookDevKit.Box(crate, "Slat", new Vector3(s * (c.y * 0.5f + 0.012f), c.y * 0.5f, 0f), new Vector3(0.025f, 0.1f, c.y + 0.02f), LookDevMaterials.Wood);
+                }
+                var col = crate.gameObject.AddComponent<BoxCollider>();
+                col.center = new Vector3(0f, c.y * 0.5f, 0f);
+                col.size = Vector3.one * c.y;
+            }
+            var barrel = LookDevKit.Lathe("Barrel", new[] { new Vector2(0f, 0f), new Vector2(0.43f, 0f), new Vector2(0.45f, 0.04f), new Vector2(0.45f, 0.3f),
+                new Vector2(0.47f, 0.32f), new Vector2(0.45f, 0.34f), new Vector2(0.45f, 0.76f), new Vector2(0.47f, 0.78f), new Vector2(0.45f, 0.8f),
+                new Vector2(0.45f, 1.06f), new Vector2(0.43f, 1.1f), new Vector2(0f, 1.1f) }, 24);
+            foreach (var b in new[] { new Vector2(-14.5f, -9.8f), new Vector2(13.6f, -11.3f), new Vector2(14.6f, -11.25f) })
+            {
+                var go = LookDevKit.Obj(d, "Barrel", barrel, new Vector3(b.x, 0f, b.y), LookDevMaterials.RedPaint, new Vector3(0f, b.x * 40f, 0f));
+                var cc = go.AddComponent<CapsuleCollider>();
+                cc.center = new Vector3(0f, 0.55f, 0f);
+                cc.radius = 0.45f;
+                cc.height = 1.1f;
+            }
         }
 
     }

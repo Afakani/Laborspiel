@@ -59,5 +59,41 @@ namespace PlanErfuellt
         public string funLabelColor;
         public float gasFlashAlpha;
         public float gasIdleAlpha;
+        /// <summary>Weiches Wachsen: Annäherung pro s</summary>
+        public float growSmoothing;
+        /// <summary>Zusatz-Euter/Wucherungen: Ein-/Ausblenden pro s</summary>
+        public float extraGrowSpeed;
+        /// <summary>Atmen: Kreisfrequenz</summary>
+        public float breatheFreq;
+        /// <summary>Atmen: Stärke 0..1 (Blendshape)</summary>
+        public float breatheAmp;
+        /// <summary>Atmen schneller bei INSTABIL</summary>
+        public float breatheUnstableMult;
+        /// <summary>Kopf: Umschauen in Grad</summary>
+        public float headLookDeg;
+        /// <summary>Kopf: Umschau-Frequenz</summary>
+        public float headLookFreq;
+        /// <summary>Kopf: Nicken in Grad</summary>
+        public float headNodDeg;
+        /// <summary>Kopf: Nicken beim Laufen</summary>
+        public float headWalkBobDeg;
+        /// <summary>Huhn: Kopf vor/zurück beim Laufen in m</summary>
+        public float henHeadBob;
+        /// <summary>Ohrenzucken in Grad</summary>
+        public float earFlickDeg;
+        /// <summary>Ohrenzucken alle n s</summary>
+        public float earFlickEverySec;
+        /// <summary>Dauer eines Zuckens</summary>
+        public float earFlickSec;
+        /// <summary>Schwanz: Pendeln in Grad</summary>
+        public float tailSwingDeg;
+        /// <summary>Schwanz: Frequenz</summary>
+        public float tailFreq;
+        /// <summary>Knie beim Laufen in Grad</summary>
+        public float kneeBendDeg;
+        /// <summary>Zittern des Rumpfs bei INSTABIL in Grad</summary>
+        public float shiverDeg;
+        /// <summary>Zittern: Frequenz</summary>
+        public float shiverFreq;
     }
 }

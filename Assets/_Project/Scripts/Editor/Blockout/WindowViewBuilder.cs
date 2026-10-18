@@ -76,12 +76,14 @@ namespace PlanErfuellt.EditorTools
             }
             Quad(parade, "Banner", 330f, 300f, 690f, 334f, red, 0.05f);
             Label(parade, "BannerText", "windowBanner", 510f, 317f, 1.6f, LabMaterials.Hex("#FFD24A"), 0.06f);
-            var confetti = LookDevChamberFx.Emitter(parade, "Confetti", P(512f, 40f, 0.05f), LookDevMaterials.Steam, Color.white,
-                2.5f, 3.5f, 0.05f, 0.2f, 0.04f, 0.07f, 0.15f, ParticleSystemShapeType.Box, new Vector3(0.1f, viewW * 0.9f, 0.1f), 1f);
+            // Konfetti: deckende Papierschnipsel statt weicher Dampfpartikel (vorher kaum sichtbar)
+            var confettiMat = LookDevKit.Additive("LD_Confetti", "Paper.png", Color.white, false);
+            var confetti = LookDevChamberFx.Emitter(parade, "Confetti", P(512f, 40f, 0.05f), confettiMat, Color.white,
+                2.5f, 3.5f, 0.05f, 0.2f, 0.07f, 0.12f, 0.15f, ParticleSystemShapeType.Box, new Vector3(0.1f, viewW * 0.9f, 0.1f), 1f);
             var main = confetti.main;
             main.startColor = new ParticleSystem.MinMaxGradient(LabMaterials.Hex("#D01A1A"), LabMaterials.Hex("#FFD24A"));
             var em = confetti.emission;
-            em.rateOverTime = 40f;
+            em.rateOverTime = 70f;
 
             window.gameObject.AddComponent<WindowView>().Setup(hunger.gameObject, parade.gameObject, figures.ToArray(), confetti);
         }

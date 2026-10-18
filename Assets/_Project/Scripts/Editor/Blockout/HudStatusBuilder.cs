@@ -109,10 +109,17 @@ namespace PlanErfuellt.EditorTools
             var info = Text(box, "Info", 16, Gold, new Vector2(14f, -10f), new Vector2(400f, 26f), TextAlignmentOptions.Left, font, new Vector2(0f, 1f));
             var labels = new TMP_Text[3];
             var segs = new Image[3][];
+            // Symbole wie im Pult-Bild: Flasche (Menge), Stern (Qualität), Sanduhr (Stabilität)
+            string[] icons = { "IconBottle.png", "IconStar.png", "IconHourglass.png" };
             for (int r = 0; r < 3; r++)
             {
                 float y = -46f - r * 34f;
-                labels[r] = Text(box, "Label" + r, 15, Cream, new Vector2(14f, y), new Vector2(130f, 26f), TextAlignmentOptions.Left, font, new Vector2(0f, 1f));
+                var icon = Rect(box, "Icon" + r, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(14f, y - 3f), new Vector2(20f, 20f)).gameObject.AddComponent<Image>();
+                icon.sprite = HudStyle.Sprite(icons[r]);
+                icon.color = Gold;
+                icon.preserveAspect = true;
+                icon.raycastTarget = false;
+                labels[r] = Text(box, "Label" + r, 15, Cream, new Vector2(40f, y), new Vector2(108f, 26f), TextAlignmentOptions.Left, font, new Vector2(0f, 1f));
                 segs[r] = new Image[segments];
                 for (int i = 0; i < segments; i++)
                 {

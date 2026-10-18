@@ -163,3 +163,17 @@ Abweichungen von den Übergabedokumenten und eigene Festlegungen. Neueste unten.
 | D78 | Rekord-Meldung | Die Meldung nutzt `ui.records.*` (wie Prototyp), die Rekordtafel `ui.logbook.record*`. |
 | D79 | Logbuch-Skizzen | Eigene Strichzeichnungen (Kuh, Huhn, Euter, gestrichelter Rahmen) als Sprites; Größe nach `animalVisuals.growPerA`/`growCapA` wie am echten Tier. |
 | D80 | Fenster | Einöde als eigenes Bild, Volk und Schilder als Ebenen davor (Texte aus der JSON), statt alles in eine Textur zu malen. |
+
+## Phase 11 (2026-10-18)
+
+| Nr. | Thema | Entscheidung |
+|---|---|---|
+| D81 | Quellen | Nur eigene Modelle (Rückfrage beantwortet): alles per Editor-Skript aus Abstandsfeldern und Drehkörpern, Texturen selbst erzeugt bzw. Poly Haven (CC0, schon in Credits). |
+| D82 | Tierskelett | Neu mit Skelett (Rückfrage beantwortet). Eine Haut statt Einzelteile; Knochengewichte aus dem Abstand zu den Körperteilen (weicher Übergang 3,5 cm, höchstens 4 Knochen). Augen, Hörner, Hufe, Ohren, Kamm, Schnabel, Euter und Flügel sind starre Teile an Knochen. |
+| D83 | Mutation | Aufblähen als Blendshape: Rumpf längs nur 60 % (sonst schiebt er sich über Hals und Kopf), Hals quer zur Achse 80 %; angehängte Teile werden mit derselben Formel verschoben (`AnimalVisuals.Swell`). Euter wächst über die Knochenskalierung. |
+| D84 | Neue Werte | In `animalVisuals`: `growSmoothing`, `extraGrowSpeed`, Atmen, Kopf, Ohren, Schwanz, Knie, Zittern (eigene Werte; im Prototyp gab es diese Bewegungen nicht). |
+| D85 | Plakattexte | `posters` in der JSON: „|“ und „ · “ brechen die Parole um, „ – “ trennt die kleine Unterzeile. Die letzte Zeile (ACHTUNG …) ist das Warnschild aus dem Prototyp (`warnTex`). Plakatfarben wie im Prototyp. |
+| D86 | Neuer Text | `ui.signs.books` (GENETIK, NÄHRSTOFFE, WACHSTUM, NEBENWIRKUNGEN?) aus der Art Direction für die Buchrücken. |
+| D87 | Deko-Lage | Prototyp-Lagen an unseren Raum angepasst: Büroecke unter dem Fenster mit Teppich, rechte Fässer an die Rückwand gerückt, Rückwand-Plakate bei x ±5,9 (bei ±8,5 hängen die Banner). |
+| D88 | HUD-Stil | Industrieschild als 9-Slice-Sprite für alle großen dunklen HUD- und Panelflächen; Logbuch (Papier), Sendung und Pause bleiben, wie sie sind. |
+| D89 | Testlauf | Die EditMode-Tests starten über den Menüpunkt *Plan erfüllt > EditMode-Tests ausführen* (die Verbindung lässt den Test-Runner nicht mehr direkt starten). |

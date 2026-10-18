@@ -19,6 +19,10 @@ namespace PlanErfuellt.EditorTools
         static readonly Dictionary<string, Material> Cache = new Dictionary<string, Material>();
         static TMP_FontAsset signFont;
         static TextDatabase texts;
+        /// <summary>Texte des laufenden Baus (für Bauteile, die Text selbst aufbereiten).</summary>
+        public static TextDatabase Texts => texts;
+        /// <summary>Schrift der 3D-Schilder (Oswald Bold).</summary>
+        public static TMP_FontAsset SignFont => signFont;
 
         /// <summary>Vor jedem Bau aufrufen (leert Zwischenspeicher, lädt Texte).</summary>
         public static void Begin(TextDatabase textDb)

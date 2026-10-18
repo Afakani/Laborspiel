@@ -10,14 +10,14 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 | 3 | Spieler und Interaktion | fertig |
 | 4a | Kernkreislauf: Panels (Mischstation, Pult) | fertig |
 | 4b | Kernkreislauf: Tier, Produktion, Verarbeitung, HUD | fertig |
-| LD | Look-Development: Kammer B-12, Pult, Halle nach Bild 08 | fertig (Tiermodelle offen) |
+| LD | Look-Development: Kammer B-12, Pult, Halle nach Bild 08 | fertig |
 | 5 | Risiken, Warnzeichen, Explosion, Infektion | fertig |
 | 6 | Tagesablauf, Bestellung, Direktor | fertig |
 | 7 | Kommissar und Laken | fertig |
 | 8 | Zentrifuge, Kryo, Ultimativ-Höhepunkt | fertig |
 | 9 | Nebenstationen und Baumodus | fertig |
 | 10 | Staats-TV, Logbuch, Rekorde, Fenster | fertig |
-| 11 | Grafik und Animation (Art-Pass) | offen |
+| 11 | Grafik und Animation (Art-Pass) | fertig |
 | 12 | Ton, Feinschliff, Performance, Build | offen |
 
 ## Phase 1 – Setup und Grundgerüst
@@ -91,6 +91,25 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - Mischstation: Regler ziehen, MISCHEN, Fläschchen erscheinen im 3D-Regal. Pult: Fläschchen wählen, KLON (Hebel klappt). Leertaste/Esc schließen.
 - Das Probenmikroskop im Misch-Panel kommt laut Prompt in Phase 9.
 - Hinweis: Wird während des Play Mode neu kompiliert, wirft Unity NullReference-Fehler (Domain-Reload); einfach Play neu starten. Empfehlung: in den Unity-Einstellungen „Script Changes While Playing“ auf „Stop Playing and Recompile“ stellen.
+
+## Phase 11 – Grafik und Animation (Art-Pass)
+
+- [x] Kuh und Huhn neu mit Skelett: eine durchgehende Haut aus Abstandsfeldern (Kopf, Hals, Beine und Schwanz verschmolzen), gehäutet auf Knochen (Kuh 14: Rumpf, Hals, Kopf, 3 Schwanzglieder, 4 Beine mit Knie; Huhn 4 plus Flügel und Beine), Gewichte weich über die Körperteile; Fleckenschale mit denselben Gewichten
+- [x] Mutationen: Blendshape „Inflate“ (Rumpf bläht, Hals quer zur Achse; Kopf, Schwanz, Euter, Flügel, Zusatz-Euter und Halsband wandern mit), Euter wächst über den Knochen, Zusatz-Euter und Wucherungen wachsen weich heraus, Wachsen mit A weich statt sprunghaft
+- [x] Animationen: Laufen mit Kniebeuge, Atmen (Blendshape „Breathe“, schneller bei INSTABIL), Umschauen und Nicken, Ohrenzucken, Schwanz pendelt als Kette, Huhn ruckt beim Laufen den Kopf, Beine baumeln beim Schweben, Rumpf zittert bei Instabilität; Glühen und Flecken-Tönung wie bisher. Neue Werte in `animalVisuals`
+- [x] Deko nach Bild 07 und Prototyp (alles eigene Meshes): 5 Plakate und 2 Warnschilder mit Texten aus `posters`, 2 Glasregale mit 36 leuchtenden Gläsern, 4 Spinde, Büroecke unter dem Fenster (Schreibtisch, Röhrenmonitor, Schreibmaschine, Bücherstapel mit Titeln aus der JSON, Emaille-Tasse, Papiere, Reagenzglas-Ständer, Lampe mit gebackenem Licht, Stuhl), roter Teppich mit Emblem, 2 Aktenschränke, Feuerlöscher, Topfpflanze, Wanduhr (Zeiger = Schichtfortschritt wie Prototyp), Rohre an den Seitenwänden; Kisten mit Leisten und Fässer mit Sicken in abgenutzten Texturen
+- [x] HUD und Panels im Industrie-Stil: dunkle Flächen als Metallschild (9-Slice mit Lichtkante, Messingnieten, Schmutz); Tier-Meter mit Flasche, Stern und Sanduhr
+- [x] Konfetti im Fenster als deckende Papierschnipsel (vorher kaum sichtbar)
+- [x] Tests: 122 EditMode-Tests grün (4 neue)
+- [x] FPS im Editor (Play Mode, Kuh in der Kammer, Game View 1400 × 828): 111 FPS, CPU 8,4 ms, Render-Thread 4,2 ms, ca. 490 000 Dreiecke, 5 100 Draw Calls (SRP Batcher), 2 gehäutete Meshes
+- [x] Vorher/Nachher: `Phase11_Vorher_*.png` (Kuh, Huhn, Labor) und `Phase11_Nachher_*.png` (Kuh, Kuh mutiert, Huhn, Huhn mutiert, Labor, Plakate, Büroecke, Schreibtisch, Rückwand, Warnschild)
+- [x] Korrigiert im Test: Hals verschluckte beim Aufblähen Kopf, Ohren und Halsband; Wucherungen des Huhns schwebten neben dem Körper; Plakate trennen Schlagzeile und Unterzeile mit „–“, nicht „·“; Warnschild an der Mischstation war hinter den Tanks verdeckt
+
+### Offen / für spätere Phasen
+- Statisches Batching ist in den Player-Einstellungen aus; viele Deko-Teile sind einzelne Draw Calls (Phase 12, Performance)
+- Licht der neuen Schreibtischlampe ist „Baked“ und wirkt erst nach erneutem Lichtbacken
+- Aus früheren Phasen weiter offen: Partikel laufen in Echtzeit statt Spielzeit, Schilder rechts überlappen sich teils, Baumodus-Kamera, Diagrammtitel im Studio, animiertes Direktor-Gesicht (D49)
+- Nicht geprüft: Tier-Animationen über einen ganzen Spieltag mit echter Eingabe (Posen über `Apply` im Play Mode geprüft)
 
 ## Phase 10 – Staats-TV, Logbuch, Rekorde, Fenster
 

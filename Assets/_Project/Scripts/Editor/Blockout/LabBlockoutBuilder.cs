@@ -52,6 +52,7 @@ namespace PlanErfuellt.EditorTools
 
             LabEnvironmentBuilder.Build(env, L);
             LookDevHall.Build(env, L);
+            LookDevDecor.Build(env, L);
             LabLightingSetup.Build(env, L);
             var fxVolumes = LabLightingSetup.BuildFxVolumes(env, cfg);
             LabEnvironmentBuilder.BuildBlackoutFx(env, L, fxVolumes.dark);

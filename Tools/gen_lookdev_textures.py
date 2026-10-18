@@ -47,6 +47,10 @@ def hazard():
 
 # ---------- Emblem: Zahnrad + Ähre ----------
 def emblem(color, name):
+    save(emblem_img(color), name)
+
+
+def emblem_img(color):
     s = 1024
     img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
@@ -75,7 +79,7 @@ def emblem(color, name):
             img.alpha_composite(grain)
     d = ImageDraw.Draw(img)
     d.ellipse([c - 30, c - 300, c + 30, c - 200], fill=color)
-    save(img, name)
+    return img
 
 
 # ---------- Direktor (erfundene Comicfigur, keine echte Person) ----------
@@ -457,6 +461,86 @@ def studio_wall():
     save(img, "StudioWall.png")
 
 
+
+# ---------- Teppich mit Emblem (Art-Pass, Bild 07) ----------
+def carpet():
+    w, h = 512, 768
+    img = Image.new("RGB", (w, h), (128, 22, 24))
+    weave = Image.effect_noise((w, h), 40).point(lambda v: int(max(0, v - 110) * 0.5))
+    img = Image.composite(Image.new("RGB", (w, h), (92, 14, 16)), img, weave)
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, 0, w - 1, h - 1], outline=(70, 10, 12), width=34)
+    d.rectangle([44, 44, w - 45, h - 45], outline=(196, 150, 40), width=8)
+    d.rectangle([62, 62, w - 63, h - 63], outline=(196, 150, 40), width=3)
+    em = emblem_img((214, 168, 52, 255)).resize((300, 300), Image.LANCZOS)
+    img.paste(em, ((w - 300) // 2, (h - 300) // 2), em)
+    # Abgetretene Mitte und Flecken
+    wear = Image.new("L", (w, h), 0)
+    wd = ImageDraw.Draw(wear)
+    wd.ellipse([90, 160, w - 90, h - 160], fill=70)
+    wear = wear.filter(ImageFilter.GaussianBlur(60))
+    img = Image.composite(Image.new("RGB", (w, h), (150, 70, 60)), img, wear)
+    stains = noise_layer((w, h), 24, 0.5)
+    img = Image.composite(Image.new("RGB", (w, h), (60, 20, 16)), img, stains)
+    save(img, "Carpet.png")
+
+
+# ---------- HUD: Industrieschild (9-Slice) und Meter-Symbole ----------
+def hud_plate():
+    s = 128
+    img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, 0, s - 1, s - 1], fill=(26, 25, 24, 236))
+    d.rectangle([0, 0, s - 1, s - 1], outline=(98, 90, 76, 255), width=3)
+    d.rectangle([4, 4, s - 5, s - 5], outline=(14, 13, 12, 255), width=2)
+    d.line([(6, 6), (s - 7, 6)], fill=(132, 120, 98, 160), width=1)
+    for cx, cy in ((12, 12), (s - 13, 12), (12, s - 13), (s - 13, s - 13)):
+        d.ellipse([cx - 4, cy - 4, cx + 4, cy + 4], fill=(150, 128, 82, 255))
+        d.ellipse([cx - 2, cy - 3, cx + 1, cy], fill=(212, 190, 140, 255))
+    grime = noise_layer((s, s), 6, 0.5)
+    dark = Image.new("RGBA", (s, s), (8, 8, 8, 236))
+    inner = Image.new("L", (s, s), 0)
+    ImageDraw.Draw(inner).rectangle([7, 7, s - 8, s - 8], fill=255)
+    mask = Image.composite(grime, Image.new("L", (s, s), 0), inner)
+    img = Image.composite(dark, img, mask)
+    save(img, "HudPlate.png")
+
+
+def hud_icons():
+    s = 128
+    white = (255, 255, 255, 255)
+    bottle = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(bottle)
+    d.rectangle([52, 10, 76, 30], fill=white)
+    d.polygon([(52, 30), (76, 30), (94, 56), (34, 56)], fill=white)
+    d.rounded_rectangle([34, 52, 94, 118], radius=10, fill=white)
+    d.rectangle([42, 72, 86, 94], fill=(0, 0, 0, 0))
+    save(bottle, "IconBottle.png")
+    star = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(star)
+    pts = []
+    for i in range(10):
+        a = -math.pi / 2 + i * math.pi / 5
+        r = 58 if i % 2 == 0 else 24
+        pts.append((64 + math.cos(a) * r, 68 + math.sin(a) * r))
+    d.polygon(pts, fill=white)
+    save(star, "IconStar.png")
+    glass = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(glass)
+    d.rectangle([26, 8, 102, 20], fill=white)
+    d.rectangle([26, 108, 102, 120], fill=white)
+    d.polygon([(34, 20), (94, 20), (68, 64), (94, 108), (34, 108), (60, 64)], fill=white)
+    d.polygon([(44, 28), (84, 28), (64, 56)], fill=(0, 0, 0, 0))
+    d.polygon([(64, 80), (84, 100), (44, 100)], fill=(0, 0, 0, 0))
+    save(glass, "IconHourglass.png")
+
+
+# Einzelne Texturen neu erzeugen: python Tools/gen_lookdev_textures.py <Ziel> carpet hud_plate …
+if len(sys.argv) > 2:
+    for name in sys.argv[2:]:
+        globals()[name]()
+    sys.exit(0)
+
 hazard()
 emblem(CREAM + (255,), "EmblemCream.png")
 emblem(GOLD + (255,), "EmblemGold.png")
@@ -472,3 +556,6 @@ build_icons()
 sketches()
 window_view()
 studio_wall()
+carpet()
+hud_plate()
+hud_icons()

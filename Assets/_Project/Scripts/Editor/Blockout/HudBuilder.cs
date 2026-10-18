@@ -110,6 +110,9 @@ namespace PlanErfuellt.EditorTools
             // Bestellterminal, Start- und Endbildschirm (Phase 6)
             HudDayBuilder.BuildOverlays(root.transform);
 
+            // Industrie-Stil für dunkle HUD- und Panel-Flächen (Art-Pass)
+            HudStyle.Apply(root.transform);
+
             // Pause-Overlay
             var pause = Img("PauseOverlay", root.transform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero, new Color(0.08f, 0.016f, 0.024f, 0.6f));
             var title = Text("Title", pause.rectTransform, "", 72, Gold, new Vector2(0f, 20f), new Vector2(900f, 100f));

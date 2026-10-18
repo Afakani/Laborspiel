@@ -314,7 +314,18 @@ CLASSES = [
         F("float", "pulseBase"), F("float", "pulseAmp"), F("float", "pulseFreq"), F("float", "pulseHeatFreq"), F("float", "pulseUnstableFreq"),
         F("string", "glowColor"), F("string", "heatColor"), F("string", "goldColor"), F("string", "spotColor"), F("string", "spotGlowColor"),
         F("float", "spotGlowFactor"), F("float", "unstableHeatColorMix"), F("float", "lightOffsetY"), F("float", "lightOffsetZ"),
-        F("string", "funLabelColor"), F("float", "gasFlashAlpha"), F("float", "gasIdleAlpha")]),
+        F("string", "funLabelColor"), F("float", "gasFlashAlpha"), F("float", "gasIdleAlpha"),
+        F("float", "growSmoothing", "Weiches Wachsen: Annäherung pro s"),
+        F("float", "extraGrowSpeed", "Zusatz-Euter/Wucherungen: Ein-/Ausblenden pro s"),
+        F("float", "breatheFreq", "Atmen: Kreisfrequenz"), F("float", "breatheAmp", "Atmen: Stärke 0..1 (Blendshape)"),
+        F("float", "breatheUnstableMult", "Atmen schneller bei INSTABIL"),
+        F("float", "headLookDeg", "Kopf: Umschauen in Grad"), F("float", "headLookFreq", "Kopf: Umschau-Frequenz"),
+        F("float", "headNodDeg", "Kopf: Nicken in Grad"), F("float", "headWalkBobDeg", "Kopf: Nicken beim Laufen"),
+        F("float", "henHeadBob", "Huhn: Kopf vor/zurück beim Laufen in m"),
+        F("float", "earFlickDeg", "Ohrenzucken in Grad"), F("float", "earFlickEverySec", "Ohrenzucken alle n s"), F("float", "earFlickSec", "Dauer eines Zuckens"),
+        F("float", "tailSwingDeg", "Schwanz: Pendeln in Grad"), F("float", "tailFreq", "Schwanz: Frequenz"),
+        F("float", "kneeBendDeg", "Knie beim Laufen in Grad"),
+        F("float", "shiverDeg", "Zittern des Rumpfs bei INSTABIL in Grad"), F("float", "shiverFreq", "Zittern: Frequenz")]),
 ]
 
 CS_KEYWORDS = {"base", "float", "string", "int"}
