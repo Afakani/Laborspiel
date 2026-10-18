@@ -104,3 +104,13 @@ Abweichungen von den Übergabedokumenten und eigene Festlegungen. Neueste unten.
 | D44 | Stromausfall-Licht | Abdunkeln über ein eigenes Post-Processing-Volume (Belichtung log2(0,2)), weil die Hallenlampen gebacken sind und sich nicht dimmen lassen. |
 | D45 | Infektions-Bild | Grün und Unschärfe über zwei globale Volumes (Farbfilter bzw. Gauß-Tiefenunschärfe), der Schleier als HUD-Bild. Schnell, bleischwer, invertiert und schwankend wirken auf den Spieler-Controller. |
 | D46 | Zusammenbruch | Die Frist-Prüfung ist fertig (`InfectionLogic.TryCollapse`), wird aber erst vom Tagesablauf in Phase 6 aufgerufen. |
+
+## Phase 6 (2026-10-18)
+
+| Nr. | Thema | Entscheidung |
+|---|---|---|
+| D47 | Neue Werte | `ui.subtitleMinSec` 3,4 und `ui.subtitlePerChar` 0,08 (Anzeigedauer der Sprüche), `ui.boardRefreshSec` 10 (träge Plantafel), `ui.dayEndDelaySec` 1,4 und `ui.contractAnnounceDelaySec` 2,5; `anger.shoutJitterSec` 5, `anger.stopShoutChance` 0,4, `anger.startShoutDelaySec` 16 (alle Werte aus dem Prototyp-Code: `shoutT: 16`, `+ Math.random() * 5`, `Math.random() < 0.4` beim Not-Stopp; Untertitel `max(3.4, Länge × 0.08)`). |
+| D48 | Spieluhr | Neuer Zustand `GameClock.Held`: Während Start-, Bestell- und Endbildschirm steht die Spielzeit, ohne die Pause (P) zu belegen. |
+| D49 | Fernseher | Der Direktor-Spruch erscheint auf dem Parolenfeld neben dem Direktor-Bild statt über eine Render-Textur mit animiertem Gesicht. Billiger; ein animiertes Gesicht kann im Art-Pass (Phase 11) folgen. |
+| D50 | Plantafel | Die Plantafel zeigt Ist/Soll als echte 3D-Balken und Zahlen unter den gemalten Diagrammen. |
+| D51 | Endbildschirm | Feste gemeinsame Zeilenhöhe für Beschriftung und Werte (`lineHeightFactor` 1,45 × Schriftgröße), weil Oswald und die Mono-Schrift unterschiedliche Zeilenabstände haben. |

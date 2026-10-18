@@ -1,8 +1,8 @@
 namespace PlanErfuellt
 {
     /// <summary>
-    /// Lieferung von Waren (Prototyp deliver): Bezahlung pro Tonne, Gesamtmengen, Durchschnittsqualität.
-    /// Quote, Übererfüllung, Sonderaufträge und Sonderwünsche hängen sich in Phase 6 hier ein.
+    /// Lieferung von Waren (Prototyp deliver): Bezahlung pro Tonne mit Quote, Übererfüllung, Sonderauftrag und
+    /// Sonderwunsch (DayLogic.Pay), Gesamtmengen, Durchschnittsqualität.
     /// </summary>
     public static class Production
     {
@@ -10,13 +10,14 @@ namespace PlanErfuellt
         public static void Deliver(GameState s, GameConfig cfg, char good, float tons, float quality)
         {
             if (tons <= 0f) return;
-            float pay = tons * PayPerTon(cfg, good);
+            float pay = DayLogic.Pay(s, cfg, good, tons, quality, out bool newlyOver);
             Add(s.totals, good, tons);
             s.qualityTons += tons * quality;
             s.deliveredTons += tons;
             s.earned += pay;
             s.AddMoney(pay);
             EventBus.RaiseDelivered(good, tons);
+            if (newlyOver) EventBus.RaiseOverfulfilled(good);
         }
 
         public static float PayPerTon(GameConfig cfg, char good) =>

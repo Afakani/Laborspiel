@@ -29,6 +29,8 @@ namespace PlanErfuellt
         public static event Action<bool> ClothChanged;
         public static event Action<RiskEvent> Risk;
         public static event Action<bool> InfectionChanged;
+        public static event Action<char> Overfulfilled;
+        public static event Action<GameOverKind> GameOver;
 
         public static void RaiseMoneyChanged(float money) => MoneyChanged?.Invoke(money);
         public static void RaiseInventoryChanged() => InventoryChanged?.Invoke();
@@ -58,6 +60,10 @@ namespace PlanErfuellt
         public static void RaiseRisk(RiskEvent e) => Risk?.Invoke(e);
         /// <summary>Spieler ist jetzt infiziert (true) oder geheilt (false).</summary>
         public static void RaiseInfectionChanged(bool infected) => InfectionChanged?.Invoke(infected);
+        /// <summary>Ware hat das Tagessoll gerade überschritten (ab jetzt +50 %).</summary>
+        public static void RaiseOverfulfilled(char good) => Overfulfilled?.Invoke(good);
+        /// <summary>Spielende (Endbildschirm).</summary>
+        public static void RaiseGameOver(GameOverKind kind) => GameOver?.Invoke(kind);
 
         /// <summary>Alle Abonnenten entfernen (bei Play-Start ohne Domain-Reload).</summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -84,6 +90,8 @@ namespace PlanErfuellt
             ClothChanged = null;
             Risk = null;
             InfectionChanged = null;
+            Overfulfilled = null;
+            GameOver = null;
         }
     }
 }

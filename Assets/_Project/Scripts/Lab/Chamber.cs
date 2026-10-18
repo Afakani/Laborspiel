@@ -399,7 +399,9 @@ namespace PlanErfuellt
                 return;
             }
             float meat = stats.Meat(Cfg);
-            Production.Deliver(S, Cfg, 'f', meat, stats.Quality(Cfg));
+            float quality = stats.Quality(Cfg);
+            Production.Deliver(S, Cfg, 'f', meat, quality);
+            DayLogic.OnProcessed(S, quality);
             GM.Toast("ui.toasts.processed", ToastKind.Good, ("n", meat.ToString("0.0", German)));
             if (stats.brave)
             {
@@ -488,6 +490,9 @@ namespace PlanErfuellt
             GM.Toast("ui.toasts.flyAway", ToastKind.Bad, ("money", GM.Texts.Format("ui.common.money", ("n", Cfg.risks.escapeCost))));
             SetState(AnimalState.Flying);
         }
+
+        /// <summary>Neues Spiel: Kammer sofort leeren.</summary>
+        public void Clear() => Empty();
 
         void Empty()
         {

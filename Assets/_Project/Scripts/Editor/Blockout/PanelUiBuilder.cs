@@ -11,21 +11,21 @@ namespace PlanErfuellt.EditorTools
     /// </summary>
     public static class PanelUiBuilder
     {
-        static readonly Color Bg = new Color(0.078f, 0.063f, 0.047f, 0.95f);
-        static readonly Color Border = new Color(0.416f, 0.353f, 0.25f);
-        static readonly Color Cream = new Color(0.96f, 0.93f, 0.82f);
-        static readonly Color Muted = new Color(0.88f, 0.74f, 0.56f);
-        static readonly Color Head = new Color(0.84f, 0.71f, 0.42f);
-        static readonly Color ButtonBg = new Color(0.18f, 0.15f, 0.11f);
+        internal static readonly Color Bg = new Color(0.078f, 0.063f, 0.047f, 0.95f);
+        internal static readonly Color Border = new Color(0.416f, 0.353f, 0.25f);
+        internal static readonly Color Cream = new Color(0.96f, 0.93f, 0.82f);
+        internal static readonly Color Muted = new Color(0.88f, 0.74f, 0.56f);
+        internal static readonly Color Head = new Color(0.84f, 0.71f, 0.42f);
+        internal static readonly Color ButtonBg = new Color(0.18f, 0.15f, 0.11f);
         static readonly Color LeverBorder = new Color(0.43f, 1f, 0.29f);
         static readonly Color StopBg = new Color(0.62f, 0.06f, 0.09f);
         static readonly Color StopBorder = new Color(0.95f, 0.72f, 0.02f);
         static readonly Color MixBg = new Color(0.16f, 0.23f, 0.13f);
 
-        static TMP_FontAsset font, mono;
+        internal static TMP_FontAsset font, mono;
         static Sprite uiSprite, knob;
 
-        static void Init()
+        internal static void Init()
         {
             font = FontAssetCreator.Ensure($"{BlockoutKit.FontDir}/Oswald/Oswald-Bold.ttf", $"{BlockoutKit.FontDir}/Oswald/Oswald-Bold SDF.asset");
             mono = FontAssetCreator.Ensure($"{BlockoutKit.FontDir}/JetBrainsMono/JetBrainsMono-Regular.ttf", $"{BlockoutKit.FontDir}/JetBrainsMono/JetBrainsMono-Regular SDF.asset");
@@ -180,7 +180,7 @@ namespace PlanErfuellt.EditorTools
 
         // ---------- Bausteine ----------
 
-        static RectTransform Frame(Transform parent, string name, Vector2 size)
+        internal static RectTransform Frame(Transform parent, string name, Vector2 size)
         {
             var border = new GameObject(name, typeof(RectTransform), typeof(Image));
             var rt = (RectTransform)border.transform;
@@ -200,7 +200,7 @@ namespace PlanErfuellt.EditorTools
             return rt;
         }
 
-        static void Stretch(RectTransform rt)
+        internal static void Stretch(RectTransform rt)
         {
             rt.anchorMin = Vector2.zero;
             rt.anchorMax = Vector2.one;
@@ -209,7 +209,7 @@ namespace PlanErfuellt.EditorTools
         }
 
         /// <summary>Rechteck oben links verankert (pos = Abstand von oben links; negative x = von rechts).</summary>
-        static RectTransform Rect(Transform parent, string name, Vector2 pos, Vector2 size)
+        internal static RectTransform Rect(Transform parent, string name, Vector2 pos, Vector2 size)
         {
             var go = new GameObject(name, typeof(RectTransform));
             var rt = (RectTransform)go.transform;
@@ -222,7 +222,7 @@ namespace PlanErfuellt.EditorTools
             return rt;
         }
 
-        static TextMeshProUGUI Text(Transform parent, string name, float size, Color color, Vector2 pos, Vector2 box, TextAlignmentOptions align, TMP_FontAsset f = null)
+        internal static TextMeshProUGUI Text(Transform parent, string name, float size, Color color, Vector2 pos, Vector2 box, TextAlignmentOptions align, TMP_FontAsset f = null)
         {
             var rt = Rect(parent, name, pos, box);
             var t = rt.gameObject.AddComponent<TextMeshProUGUI>();
@@ -235,7 +235,7 @@ namespace PlanErfuellt.EditorTools
             return t;
         }
 
-        static Image Img(Transform parent, string name, Vector2 pos, Vector2 size, Color color, Sprite sprite, bool raycast)
+        internal static Image Img(Transform parent, string name, Vector2 pos, Vector2 size, Color color, Sprite sprite, bool raycast)
         {
             var rt = Rect(parent, name, pos, size);
             var img = rt.gameObject.AddComponent<Image>();
@@ -245,7 +245,7 @@ namespace PlanErfuellt.EditorTools
             return img;
         }
 
-        static Button MakeButton(Transform parent, string name, Vector2 pos, Vector2 size, Color bg, Color border, float textSize, bool small)
+        internal static Button MakeButton(Transform parent, string name, Vector2 pos, Vector2 size, Color bg, Color border, float textSize, bool small)
         {
             var rt = Rect(parent, name, pos, size);
             var frame = rt.gameObject.AddComponent<Image>();

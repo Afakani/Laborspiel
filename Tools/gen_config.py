@@ -90,7 +90,10 @@ CLASSES = [
         F("float", "planFailed"), F("float", "planMet"), F("float", "inspectionPassed"), F("float", "caviar"),
         F("float", "wishDone"), F("float", "wishFailed"),
         F("float[]", "tiers", "Grenzen der Wut-Stufen"),
-        F("float[]", "shoutIntervalSec", "Abstand zufälliger Rufe [min, max]")]),
+        F("float[]", "shoutIntervalSec", "Abstand zufälliger Rufe [min, max]"),
+        F("float", "shoutJitterSec", "Zufälliger Zuschlag auf den Rufabstand"),
+        F("float", "stopShoutChance", "Wahrscheinlichkeit eines Spruchs beim NOT-STOPP"),
+        F("float", "startShoutDelaySec", "Erster zufälliger Ruf nach Spielstart")]),
     ("AuthorityConfig", "Parteikontrolle (GDD 9).", [
         F("float", "max"), F("float", "base"), F("float", "lowStab"), F("float", "floating"), F("float", "glowFactor"),
         F("float", "omega"), F("float", "koloss"), F("float", "clothFactor"), F("float", "musicFactor"),
@@ -212,7 +215,11 @@ CLASSES = [
         F("AreaLayout", "mixingZone", "Bereich vor der Mischstation (Prototyp-Koordinaten)"), F("HoldTimesConfig", "hold")]),
     ("UiConfig", "Allgemeine Anzeige-Werte (GDD 7.6).", [
         F("int", "toastMax", "Gleichzeitige Kurzmeldungen"), F("float", "toastSec", "Anzeigedauer"),
-        F("float", "toastFadeFrom", "Ab diesem Anteil der Dauer ausblenden")]),
+        F("float", "toastFadeFrom", "Ab diesem Anteil der Dauer ausblenden"),
+        F("float", "subtitleMinSec", "Untertitel mindestens so lange"), F("float", "subtitlePerChar", "plus pro Zeichen"),
+        F("float", "boardRefreshSec", "Plantafel und TV-Bild auffrischen alle"),
+        F("float", "dayEndDelaySec", "Pause zwischen Schichtende und Bestellterminal"),
+        F("float", "contractAnnounceDelaySec", "Sonderauftrag wird so spät nach Schichtbeginn gemeldet")]),
     ("PultConfig", "Pult: Reinigung, Hebelanimation, Statuslampen (GDD 6.1).", [
         F("float", "cleanSec", "Dauer der Kammerreinigung"), F("float", "leverPullSec"), F("float", "leverPullDeg"),
         F("float", "statusTempWarn", "Hitze, ab der die Temperaturlampe gelb wird"),

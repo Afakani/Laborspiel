@@ -12,5 +12,15 @@ namespace PlanErfuellt
         public float toastSec;
         /// <summary>Ab diesem Anteil der Dauer ausblenden</summary>
         public float toastFadeFrom;
+        /// <summary>Untertitel mindestens so lange</summary>
+        public float subtitleMinSec;
+        /// <summary>plus pro Zeichen</summary>
+        public float subtitlePerChar;
+        /// <summary>Plantafel und TV-Bild auffrischen alle</summary>
+        public float boardRefreshSec;
+        /// <summary>Pause zwischen Schichtende und Bestellterminal</summary>
+        public float dayEndDelaySec;
+        /// <summary>Sonderauftrag wird so spät nach Schichtbeginn gemeldet</summary>
+        public float contractAnnounceDelaySec;
     }
 }

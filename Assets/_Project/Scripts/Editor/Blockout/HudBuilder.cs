@@ -35,7 +35,7 @@ namespace PlanErfuellt.EditorTools
 
             // Infektion: grüner Schleier hinter allem, Anzeige oben links (Phase 5)
             var veil = Img("InfectionVeil", root.transform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero, new Color(0.27f, 1f, 0.35f, 0f));
-            var badge = Img("InfectionBadge", root.transform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(170f, -150f), new Vector2(300f, 64f), new Color(0.12f, 0.3f, 0.1f, 0.92f));
+            var badge = Img("InfectionBadge", root.transform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-170f, -346f), new Vector2(300f, 64f), new Color(0.12f, 0.3f, 0.1f, 0.92f));
             var badgeTitle = Text("Title", badge.rectTransform, "", 26, new Color(0.55f, 1f, 0.45f), new Vector2(0f, 12f), new Vector2(290f, 32f));
             var badgeDeadline = Text("Deadline", badge.rectTransform, "", 20, Cream, new Vector2(0f, -16f), new Vector2(290f, 26f));
             var infHud = root.AddComponent<InfectionHud>();
@@ -76,7 +76,7 @@ namespace PlanErfuellt.EditorTools
             prompt.gameObject.SetActive(false);
 
             // Kurzmeldungen rechts
-            var toastArea = Rect("Toasts", root.transform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-24f, -220f), new Vector2(520f, 400f));
+            var toastArea = Rect("Toasts", root.transform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-24f, -424f), new Vector2(520f, 400f));
             toastArea.pivot = new Vector2(1f, 1f);
             var layout = toastArea.gameObject.AddComponent<VerticalLayoutGroup>();
             layout.childAlignment = TextAnchor.UpperRight;
@@ -92,10 +92,15 @@ namespace PlanErfuellt.EditorTools
 
             // Kasse, Lager-Chips, Tier-Meter (Phase 4b)
             HudStatusBuilder.Build(root.transform, segments);
+            // Quote, Spielwerte, Untertitel, Wutrand (Phase 6)
+            HudDayBuilder.BuildHud(root.transform);
 
             // Panels (Mischstation, Pult) unter dem Pause-Overlay
             PanelUiBuilder.BuildMixing(root.transform);
             PanelUiBuilder.BuildControl(root.transform);
+
+            // Bestellterminal, Start- und Endbildschirm (Phase 6)
+            HudDayBuilder.BuildOverlays(root.transform);
 
             // Pause-Overlay
             var pause = Img("PauseOverlay", root.transform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero, new Color(0.08f, 0.016f, 0.024f, 0.6f));

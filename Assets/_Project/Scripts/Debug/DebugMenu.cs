@@ -84,11 +84,34 @@ namespace PlanErfuellt
             StockRow($"Kaviar: {s.caviar}", () => { s.caviar = Mathf.Max(0, s.caviar - 1); s.NotifyInventoryChanged(); },
                 () => { s.caviar++; s.NotifyInventoryChanged(); });
 
+            DrawDay(gm, s);
             DrawRisks(gm, s);
 
             if (GUILayout.Button("Neues Spiel (Startwerte)")) gm.NewGame();
 
             GUI.DragWindow();
+        }
+
+        /// <summary>Phase 6: Schicht abkürzen, Plan erfüllen, Wut ändern.</summary>
+        void DrawDay(GameManager gm, GameState s)
+        {
+            var dc = DayCycle.Instance;
+            var q = s.quota;
+            GUILayout.Label($"Ablauf: {(dc != null ? dc.Mode.ToString() : "-")} · Rest {(q != null ? q.left : 0f):0} s · erfüllt {s.quotasMet} · verfehlt {s.quotasFailed}");
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Plan erfüllen") && q != null)
+            {
+                q.prod.m = Mathf.Max(q.prod.m, q.target.m);
+                q.prod.e = Mathf.Max(q.prod.e, q.target.e);
+                q.prod.f = Mathf.Max(q.prod.f, q.target.f);
+            }
+            if (GUILayout.Button("Schicht beenden") && q != null) q.left = 0.05f;
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Wut +20")) s.AddAnger(20f, gm.Config);
+            if (GUILayout.Button("Wut −20")) s.AddAnger(-20f, gm.Config);
+            if (GUILayout.Button("Wunsch jetzt") && q != null) s.wishTimer = 0.01f;
+            GUILayout.EndHorizontal();
         }
 
         /// <summary>Phase 5: Risiken, Explosion und Infektion schnell auslösen.</summary>

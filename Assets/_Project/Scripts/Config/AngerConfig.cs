@@ -21,5 +21,11 @@ namespace PlanErfuellt
         public float[] tiers = new float[0];
         /// <summary>Abstand zufälliger Rufe [min, max]</summary>
         public float[] shoutIntervalSec = new float[0];
+        /// <summary>Zufälliger Zuschlag auf den Rufabstand</summary>
+        public float shoutJitterSec;
+        /// <summary>Wahrscheinlichkeit eines Spruchs beim NOT-STOPP</summary>
+        public float stopShoutChance;
+        /// <summary>Erster zufälliger Ruf nach Spielstart</summary>
+        public float startShoutDelaySec;
     }
 }

@@ -228,12 +228,23 @@ namespace PlanErfuellt.EditorTools
             light.range = 8f;
             light.shadows = LightShadows.None;
             light.lightmapBakeType = LightmapBakeType.Realtime;
+
+            // Direktor spricht über das Parolenfeld, flackert bei hoher Wut (Phase 6)
+            var slogan = v.Find("Slogan").GetComponentInChildren<TMPro.TMP_Text>();
+            v.gameObject.AddComponent<TvDirectorFx>().Setup(v.Find("Screen").GetComponent<Renderer>(), slogan, light);
         }
 
         static void AngerScale(Transform v)
         {
             LookDevKit.Box(v, "Back", new Vector3(0f, 0f, 0.03f), new Vector3(0.62f, 2.5f, 0.05f), LookDevMaterials.SteelDark);
-            BlockoutKit.Quad(v, "Scale", new Vector3(0f, 0f, -0.01f), new Vector2(0.5f, 2.3f), M.TermScreen, false);
+            BlockoutKit.Quad(v, "Scale", new Vector3(0f, 0f, -0.01f), new Vector2(0.5f, 2.3f), LookDevMaterials.Rubber, false);
+            // Füllung wächst von unten (Pivot an der Unterkante)
+            var pivot = BlockoutKit.Group(v, "FillPivot", new Vector3(0f, -1.12f, -0.02f));
+            var fill = LookDevKit.Plane(pivot, "Fill", new Vector3(0f, 1.12f, 0f), new Vector2(0.42f, 2.24f), FillMat(), null, false);
+            pivot.localScale = new Vector3(1f, 0.001f, 1f);
+            foreach (float y in new[] { -0.36f, 0.38f })
+                LookDevKit.Box(v, "TierMark", new Vector3(0f, y, -0.025f), new Vector3(0.5f, 0.02f, 0.01f), LookDevMaterials.CreamPlate);
+            v.gameObject.AddComponent<AngerScaleFx>().Setup(pivot, fill.GetComponent<Renderer>());
             LookDevKit.Bolts(v, new Vector3(-0.27f, 1.2f, -0.005f), new Vector3(0.27f, 1.2f, -0.005f), 2, Vector3.back, LookDevMaterials.Brass, 0.015f);
             LookDevKit.Bolts(v, new Vector3(-0.27f, -1.2f, -0.005f), new Vector3(0.27f, -1.2f, -0.005f), 2, Vector3.back, LookDevMaterials.Brass, 0.015f);
         }
@@ -249,7 +260,28 @@ namespace PlanErfuellt.EditorTools
             LookDevKit.Box(v, "SloganBar", new Vector3(0f, -1.0f, -0.04f), new Vector3(5.0f, 0.36f, 0.03f), LookDevMaterials.RedPaint);
             LookDevKit.Label(v, "Slogan", "ui.signs.planSlogan", new Vector3(0f, -1.0f, -0.06f), 1.5f, M.CreamText);
             LookDevKit.Bolts(v, new Vector3(-2.55f, 0.68f, -0.055f), new Vector3(2.55f, 0.68f, -0.055f), 10, Vector3.back, LookDevMaterials.Brass, 0.016f);
+
+            // Live-Anzeige: Ist/Soll und Balken je Ware (Phase 6)
+            var values = new TMPro.TMP_Text[3];
+            var fills = new Transform[3];
+            for (int i = 0; i < 3; i++)
+            {
+                float x = (i - 1) * 1.667f;
+                LookDevKit.Box(v, "BarBg_" + i, new Vector3(x, -0.63f, -0.075f), new Vector3(1.4f, 0.12f, 0.01f), LookDevMaterials.Rubber);
+                var pivot = BlockoutKit.Group(v, "BarPivot_" + i, new Vector3(x - 0.68f, -0.63f, -0.085f));
+                LookDevKit.Plane(pivot, "Fill", new Vector3(0.68f, 0f, 0f), new Vector2(1.36f, 0.09f), FillMat(), null, false);
+                pivot.localScale = new Vector3(0.001f, 1f, 1f);
+                fills[i] = pivot;
+                var label = LookDevKit.Label(v, "Value_" + i, "ui.signs.planBoardMilk", new Vector3(x, -0.47f, -0.08f), 1.1f, M.Hex("#2A2119"));
+                values[i] = label.GetComponentInChildren<TMPro.TMP_Text>();
+                Object.DestroyImmediate(label.GetComponent<StationSign>());
+                values[i].text = "–";
+                values[i].rectTransform.sizeDelta = new Vector2(1.5f, 0.2f);
+            }
+            v.gameObject.AddComponent<PlanBoardFx>().Setup(values, fills);
         }
+
+        static Material FillMat() => BlockoutKit.Emissive("LD_GaugeFill", M.Hex("#FFFFFF"), 1.2f, false);
 
         /// <summary>Klonanlage im Look-Material (Stahl, Messing, roter Lack).</summary>
         static void CloneLook(Transform v)

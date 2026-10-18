@@ -35,8 +35,17 @@ namespace PlanErfuellt
             var s = gm.State;
             Set(cash, ref lastCash, t.Format("ui.common.money", ("n", Mathf.RoundToInt(s.Money).ToString("N0", German))));
             Set(rate, ref lastRate, t.Format("ui.common.ratePerSec", ("n", s.currentRate.ToString("0.0", German))));
-            Set(day, ref lastDay, t.Format("ui.hud.day", ("n", Mathf.Max(1, s.dayNum))));
+            string dayText = s.quota != null
+                ? t.Format("ui.hud.dayTime", ("n", Mathf.Max(1, s.dayNum)), ("time", Clock(s.quota.left)))
+                : t.Format("ui.hud.day", ("n", Mathf.Max(1, s.dayNum)));
+            Set(day, ref lastDay, dayText);
             Set(plan, ref lastPlan, t.Format("ui.hud.plan", ("n", Mathf.Min(gm.Config.day.plans, s.planIdx + 1)), ("max", gm.Config.day.plans)));
+        }
+
+        static string Clock(float sec)
+        {
+            int s = Mathf.Max(0, Mathf.CeilToInt(sec));
+            return $"{s / 60}:{s % 60:00}";
         }
 
         static void Set(TMP_Text field, ref string last, string value)

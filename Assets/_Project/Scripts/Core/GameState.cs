@@ -52,6 +52,19 @@ namespace PlanErfuellt
         /// <summary>Förderband ist gerissen (GDD 5.2).</summary>
         public bool beltBroken;
 
+        // ---------- Tagesablauf (GDD 7) ----------
+        /// <summary>Quote des laufenden Tages, null zwischen den Schichten.</summary>
+        public Quota quota;
+        /// <summary>Erfüllte und verfehlte Tage.</summary>
+        public int quotasMet;
+        public int quotasFailed;
+        public Wish wish;
+        /// <summary>Zeit bis zum nächsten Sonderwunsch.</summary>
+        public float wishTimer;
+        public Contract contract;
+        /// <summary>Schritt der Einführung an Tag 1 (−1 = keine Einführung mehr).</summary>
+        public int tutorialStep;
+
         // ---------- Druck von oben ----------
         public float anger;
         public float authority;

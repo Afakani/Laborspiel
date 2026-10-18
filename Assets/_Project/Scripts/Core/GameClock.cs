@@ -15,6 +15,8 @@ namespace PlanErfuellt
         /// <summary>Spielzeit-Schritt dieses Frames (0 bei Pause).</summary>
         public float DeltaTime { get; private set; }
         public bool Paused { get; private set; }
+        /// <summary>Angehalten durch ein Overlay (Bestellterminal, Intro, Spielende) – unabhängig von der Pause-Taste.</summary>
+        public bool Held { get; private set; }
         /// <summary>Zeitraffer-Faktor (1 = normal).</summary>
         public float TimeScale { get; private set; } = 1f;
 
@@ -27,7 +29,7 @@ namespace PlanErfuellt
         /// <summary>Einmal pro Frame mit der echten Frame-Zeit aufrufen.</summary>
         public void Tick(float unscaledDeltaTime)
         {
-            DeltaTime = Paused ? 0f : Mathf.Min(unscaledDeltaTime, maxStep) * TimeScale;
+            DeltaTime = Paused || Held ? 0f : Mathf.Min(unscaledDeltaTime, maxStep) * TimeScale;
             Time += DeltaTime;
         }
 
@@ -39,6 +41,8 @@ namespace PlanErfuellt
         }
 
         public void TogglePause() => SetPaused(!Paused);
+
+        public void SetHeld(bool held) => Held = held;
 
         public void SetTimeScale(float scale)
         {

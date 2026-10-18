@@ -12,7 +12,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 | 4b | Kernkreislauf: Tier, Produktion, Verarbeitung, HUD | fertig |
 | LD | Look-Development: Kammer B-12, Pult, Halle nach Bild 08 | fertig (Tiermodelle offen) |
 | 5 | Risiken, Warnzeichen, Explosion, Infektion | fertig |
-| 6 | Tagesablauf, Bestellung, Direktor | offen |
+| 6 | Tagesablauf, Bestellung, Direktor | fertig |
 | 7 | Kommissar und Laken | offen |
 | 8 | Zentrifuge, Kryo, Ultimativ-Höhepunkt | offen |
 | 9 | Nebenstationen und Baumodus | offen |
@@ -92,6 +92,27 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - Das Probenmikroskop im Misch-Panel kommt laut Prompt in Phase 9.
 - Hinweis: Wird während des Play Mode neu kompiliert, wirft Unity NullReference-Fehler (Domain-Reload); einfach Play neu starten. Empfehlung: in den Unity-Einstellungen „Script Changes While Playing“ auf „Stop Playing and Recompile“ stellen.
 
+## Phase 6 – Tagesablauf, Bestellung, Direktor
+
+- [x] `DayLogic` (rein, getestet): Schichtbeginn mit Soll aus `day.targets`, Prämie, Sonderauftrag ab Tag 2, Einführung an Tag 1; Tageszeit, Plan erfüllt (Prämie, Wut −20), Zeit um, Tagesende mit Wiederholung bei Verfehlen (Wut +34), Entlassung bei Wut 100, Ende nach dem letzten Plan
+- [x] Bezahlung über `DayLogic.Pay`: Übererfüllung (+Bonus, einmalige Meldung), Sonderauftrag ab Mindestqualität, Sonderwünsche (Fleisch, Eier, Qualität, Ruhe …) mit Frist, Belohnung bzw. Wut
+- [x] Einführung in 4 Schritten (Mischen → Klonen → Sprühen → Verarbeiten), Hinweis im Plan-Panel, Direktor spricht jeden Schritt
+- [x] Leerlauf-Wut wie im Prototyp (nach 6 s ohne Bewegung, Halten oder offenes Panel)
+- [x] `Director`: Sprüche je Wut-Stufe, zufällige Zurufe, Reaktion auf Risiken und Vernichtung; Untertitel unten (`SubtitleUI`), Text auf dem Parolenfeld des Fernsehers (`TvDirectorFx`, cholerisch: Flackern und rotes Licht), roter Bildrand ab Stufe 3 (`RageBorder`)
+- [x] `DayCycle`: Startbildschirm → Bestellterminal → Schicht → Tagesende → nächste Bestellung bzw. Endbildschirm; Spieluhr steht während der Overlays (`GameClock.Held`)
+- [x] Bestellterminal (`OrderTerminalUI`): A/B/C, Gegenmittel, Wodka, Kaviar mit Preis, Lagerstand und Summe; eine Bestellung pro Tag
+- [x] HUD: Plan-Panel (Ist/Soll mit Balken, Restzeit, Wunsch, Hinweis), Spielwerte-Panel (Nahrung, Volk, Umwelt, Wut, Parteikontrolle über `WorldValues`), Uhrzeit in der oberen Leiste
+- [x] Welt: Plantafel mit Balken und Zahlen (träge, alle 10 s), Wut-Skala grün/gelb/rot
+- [x] Endbildschirm mit Endung aus `endings.*`, Statistik und „Neuer Fünfjahresplan“; Infektions-Zusammenbruch am Tagesende eingebunden
+- [x] Tests: 80 EditMode-Tests grün (12 neue für den Tagesablauf)
+- [x] Spieltest Tag 1: Startbildschirm → Bestellung (1× B, Kasse 700 → 640) → Einführung komplett (1× B gemischt, Kuh geklont, gesprüht, verarbeitet: 60 t Milch, 6,6 t Fleisch, Schritt −1) → Zeit abgelaufen → Plan verfehlt, Wut +34, Bestellung Tag 2 mit Sonderauftrag → Wut 100 → „Fristlos entlassen“ → Neustart. Konsole ohne Fehler. Screenshots `Phase6_*.png`
+- [x] Behoben: Statistik-Spalten im Endbildschirm liefen wegen unterschiedlicher Schriften auseinander (feste Zeilenhöhe)
+
+### Offen / für spätere Phasen
+- Staats-TV und Nachrichten zwischen den Tagen: Phase 10
+- Kommissar-Besuch, Wodka anbieten: Phase 7; Kaviar per Rohrpost: Phase 9
+- Direktor-Stimme bzw. Ton: Phase 12
+
 ## Phase 5 – Risiken, Warnzeichen, Explosion, Infektion
 
 - [x] `RiskLogic` (rein, getestet): Hitze, Säure-Milch, Schweben bis Davonfliegen, Bandriss, Kabelriss/Stromausfall, aktuelle Stabilität, Krisen, INSTABIL mit 8-s-Countdown – alle Werte aus `risks` und `warnings`
@@ -108,7 +129,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 
 ### Offen / für spätere Phasen
 - Sirene, Zischen, Blubbern und Explosionsknall als Ton: Phase 12 (jetzt nur sichtbar)
-- Zusammenbruch bei abgelaufener Frist (`InfectionSystem.CheckCollapse`) und Hinweis „LETZTER TAG“ ruft der Tagesablauf in Phase 6 auf
+- ~~Zusammenbruch bei abgelaufener Frist und Hinweis „LETZTER TAG“~~ in Phase 6 erledigt
 - Anstieg der Parteikontrolle pro Sekunde bei mutiertem Tier: Phase 7 (jetzt nur +20 bei Explosion)
 - Kühlaggregat (Phase 9) und Musik (Phase 9) für schnelleres Abkühlen; Nachrichtenmeldungen zu Explosionen: Phase 10
 - Partikel laufen in Echtzeit statt in Spielzeit (Pause hält sie nicht an); im Art-Pass angleichen
