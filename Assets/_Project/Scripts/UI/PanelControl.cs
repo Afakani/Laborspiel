@@ -72,8 +72,6 @@ namespace PlanErfuellt
             statusHeader.text = t.Get("ui.pult.status");
             actionHeader.text = t.Get("ui.pult.actions");
             Label(gas, t.Get("ui.pult.leverGas"));
-            Label(cloneCow, t.Get("ui.pult.leverCloneCow"));
-            Label(cloneHen, t.Get("ui.pult.leverCloneHen"));
             Label(leash, t.Get("ui.pult.leash"));
             Label(stop, t.Get("ui.pult.notStop"));
             string[] lampKeys = { "statusGas", "statusTemp", "statusBelt", "statusVitals" };
@@ -102,8 +100,12 @@ namespace PlanErfuellt
             bool alive = c.HasLivingAnimal;
             gas.interactable = st == AnimalState.Ok && sel != null && !s.chamberCovered && !c.IsUltimate;
             bool canClone = st == AnimalState.Empty && !s.beltBroken && !s.contaminated && s.blackoutTimer <= 0f;
-            cloneCow.interactable = canClone;
-            cloneHen.interactable = canClone;
+            // Klonkosten stehen auf dem Hebel; ohne Geld bleibt er gesperrt
+            float costCow = OrderLogic.CloneCost(cfg, AnimalKind.Cow), costHen = OrderLogic.CloneCost(cfg, AnimalKind.Hen);
+            Label(cloneCow, t.Format("ui.pult.leverCloneCow", ("cost", Mathf.RoundToInt(costCow))));
+            Label(cloneHen, t.Format("ui.pult.leverCloneHen", ("cost", Mathf.RoundToInt(costHen))));
+            cloneCow.interactable = canClone && s.Money >= costCow;
+            cloneHen.interactable = canClone && s.Money >= costHen;
             belt.interactable = alive && !s.beltBroken;
             Label(belt, t.Get(st == AnimalState.Unstable ? "ui.pult.leverBeltBrave" : "ui.pult.leverBelt"));
             antidote.interactable = alive && s.antidote > 0;
