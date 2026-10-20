@@ -7,7 +7,7 @@ namespace PlanErfuellt.EditorTools
     /// <summary>
     /// Hallenhintergrund nach Bild 08 an der Wand hinter der Kammer: Laufstege mit gelbem Geländer,
     /// Rohrbündel mit Flanschen, hohe rote Banner mit Emblem, Wandschild, warme Wandlampen.
-    /// Reine Deko ohne Kollider (der Bereich hinter dem Band ist nicht begehbar).
+    /// Hinter dem Band begehbar: Stützen der Laufstege haben Kollider, der Rest ist Deko ohne Kollider.
     /// </summary>
     public static class LookDevHall
     {
@@ -113,7 +113,8 @@ namespace PlanErfuellt.EditorTools
             for (int i = 0; i < columns; i++)
             {
                 float x = Mathf.Lerp(x0 + 0.3f, x1 - 0.3f, i / (float)(columns - 1));
-                LookDevKit.Box(c, "Column", new Vector3(x, (y - 0.24f) * 0.5f, zEdge + 0.1f), new Vector3(0.16f, y - 0.24f, 0.16f), L.SteelFrame);
+                var column = LookDevKit.Box(c, "Column", new Vector3(x, (y - 0.24f) * 0.5f, zEdge + 0.1f), new Vector3(0.16f, y - 0.24f, 0.16f), L.SteelFrame);
+                column.AddComponent<BoxCollider>().size = new Vector3(0.16f, y - 0.24f, 0.16f);
                 LookDevKit.Box(c, "Brace", new Vector3(x, y - 0.55f, zc + 0.05f), new Vector3(0.08f, 0.08f, 1.25f), L.SteelDark, new Vector3(-28f, 0f, 0f));
                 LookDevKit.Bolts(c, new Vector3(x - 0.05f, y - 0.12f, zEdge - 0.002f), new Vector3(x + 0.05f, y - 0.12f, zEdge - 0.002f), 2, Vector3.back, L.Brass, 0.012f);
             }

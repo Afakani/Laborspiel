@@ -290,7 +290,8 @@ CLASSES = [
         F("float", "fov"), F("float", "fovMax"), F("float", "fovAspectRef", "Unter diesem Seitenverhältnis wird das Sichtfeld weiter"),
         F("BobConfig", "bob"), F("HandsConfig", "hands"),
         F("float", "fastTurnBoost", "Drehfaktor, wenn die Spielfigur beschleunigt ist (Infektion)"),
-        F("float", "sprintMultiplier", "Tempo-Faktor beim Sprinten (Shift)")]),
+        F("float", "sprintMultiplier", "Tempo-Faktor beim Sprinten (Shift)"),
+        F("float", "jumpHeight", "Sprunghöhe in m (Leertaste ohne Ziel)"), F("float", "gravity", "Fallbeschleunigung in m/s²")]),
     ("HoldTimesConfig", "Haltezeiten der Interaktionen in Sekunden.", [
         F("float", "pult"), F("float", "mixing"), F("float", "rackHide"), F("float", "cloth"), F("float", "vodka"),
         F("float", "tasting"), F("float", "rohrpost"), F("float", "beltRepair"), F("float", "centrifugeLoad"),

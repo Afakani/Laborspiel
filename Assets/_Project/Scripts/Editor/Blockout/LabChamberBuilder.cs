@@ -48,6 +48,10 @@ namespace PlanErfuellt.EditorTools
             foreach (float side in new[] { -1f, 1f })
                 LookDevKit.Box(root.transform, "BeltRail", new Vector3((b.xMin + b.xMax) * 0.5f, b.height * 0.5f + 0.05f, side * (b.halfWidth + 0.06f)),
                     new Vector3(b.xMax - b.xMin, b.height + 0.1f, 0.12f), LookDevMaterials.SteelFrame);
+            // Kollider über Band und Schienen: man kann hinter das Band laufen und darüberspringen
+            var beltCol = belt.AddComponent<BoxCollider>();
+            beltCol.center = new Vector3(0f, 0.05f, 0f);
+            beltCol.size = new Vector3(b.xMax - b.xMin, b.height + 0.1f, b.halfWidth * 2f + 0.24f);
             for (float x = b.xMin + 0.5f; x < b.xMax; x += 1f)
                 BlockoutKit.Box(belt.transform.parent, "BeltChevron", new Vector3(x, b.height + 0.005f, 0f), new Vector3(0.12f, 0.01f, b.halfWidth * 1.4f), M.Hazard, true, new Vector3(0f, 30f, 0f));
 

@@ -94,7 +94,8 @@ namespace PlanErfuellt.EditorTools
             var sub = Text(g, "Sub", new Vector3(0f, -size.y * 0.2f, -0.013f), new Vector2(size.x - 0.12f, size.y * 0.38f), 0.9f, LabMaterials.Hex("#111111"));
             int last = BlockoutKit.Texts.Count(PosterKey) - 1;
             g.gameObject.AddComponent<PosterText>().Setup($"{PosterKey}[{last}]", head, sub, BlockoutKit.Texts.Get($"{PosterKey}[{last}]"), true);
-            LookDevKit.Cyl(parent, "SignPost", new Vector3(pos.x, (pos.y - size.y * 0.5f) * 0.5f, pos.z + 0.04f), 0.03f, pos.y - size.y * 0.5f, L.SteelDark, null, true, 10);
+            var post = LookDevKit.Cyl(parent, "SignPost", new Vector3(pos.x, (pos.y - size.y * 0.5f) * 0.5f, pos.z + 0.04f), 0.03f, pos.y - size.y * 0.5f, L.SteelDark, null, true, 10);
+            post.AddComponent<BoxCollider>().size = new Vector3(0.08f, pos.y - size.y * 0.5f, 0.08f);
             LookDevKit.Bolts(g, new Vector3(-size.x * 0.5f + 0.04f, 0f, -0.012f), new Vector3(size.x * 0.5f - 0.04f, 0f, -0.012f), 2, Vector3.back, L.SteelDark, 0.012f);
         }
 

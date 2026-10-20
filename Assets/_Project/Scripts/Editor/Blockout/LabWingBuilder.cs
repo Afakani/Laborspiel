@@ -72,7 +72,10 @@ namespace PlanErfuellt.EditorTools
                 float xl = room.xMin + (room.xMin > -x + 0.01f ? w.partition * 0.5f : 0f);
                 float xr = room.xMax - (room.xMax < x - 0.01f ? w.partition * 0.5f : 0f);
                 var sm = SockelFor(room.id);
-                Sockel(rg, new Vector3((xl + xr) * 0.5f, 0f, z0 - 0.015f), new Vector3(xr - xl, 1.2f, 0.03f), sm);
+                // Hallenseitige Wand: Sockel links und rechts der Tür (nicht durch die Öffnung)
+                float dl = room.doorX - w.doorWidth * 0.5f - 0.22f, dr = room.doorX + w.doorWidth * 0.5f + 0.22f;
+                if (dl > xl) Sockel(rg, new Vector3((xl + dl) * 0.5f, 0f, z0 - 0.015f), new Vector3(dl - xl, 1.2f, 0.03f), sm);
+                if (xr > dr) Sockel(rg, new Vector3((dr + xr) * 0.5f, 0f, z0 - 0.015f), new Vector3(xr - dr, 1.2f, 0.03f), sm);
                 Sockel(rg, new Vector3((xl + xr) * 0.5f, 0f, z1 + 0.015f), new Vector3(xr - xl, 1.2f, 0.03f), sm);
                 Sockel(rg, new Vector3(xl + 0.015f, 0f, zMid), new Vector3(0.03f, 1.2f, depth - 0.06f), sm);
                 Sockel(rg, new Vector3(xr - 0.015f, 0f, zMid), new Vector3(0.03f, 1.2f, depth - 0.06f), sm);
@@ -110,10 +113,12 @@ namespace PlanErfuellt.EditorTools
             float t = L.room.wallThickness, dw = L.wing.doorWidth, dh = L.wing.doorHeight;
             float zHall = -L.room.backWallZ, zRoom = zHall - t;
             var g = BlockoutKit.Group(parent, "Door", new Vector3(room.doorX, 0f, zHall - t * 0.5f));
-            LookDevKit.Box(g, "Header", new Vector3(0f, dh + 0.12f, 0f), new Vector3(dw + 0.5f, 0.24f, t + 0.14f), D.SteelFrame);
-            LookDevKit.Box(g, "HeaderStripe", new Vector3(0f, dh + 0.12f, t * 0.5f + 0.075f), new Vector3(dw + 0.5f, 0.2f, 0.01f), D.Hazard);
+            // Rahmen ragt 3 cm in die Öffnung, damit keine Fläche mit der Wand zusammenfällt (kein Flackern)
+            const float lip = 0.03f;
+            LookDevKit.Box(g, "Header", new Vector3(0f, dh + 0.12f - lip, 0f), new Vector3(dw + 0.5f, 0.24f, t + 0.14f), D.SteelFrame);
+            LookDevKit.Box(g, "HeaderStripe", new Vector3(0f, dh + 0.12f - lip, t * 0.5f + 0.075f), new Vector3(dw + 0.5f, 0.2f, 0.01f), D.Hazard);
             foreach (float s in new[] { -1f, 1f })
-                LookDevKit.Box(g, "Post", new Vector3(s * (dw * 0.5f + 0.11f), dh * 0.5f, 0f), new Vector3(0.22f, dh, t + 0.14f), D.SteelFrame);
+                LookDevKit.Box(g, "Post", new Vector3(s * (dw * 0.5f + 0.11f - lip), (dh - lip) * 0.5f, 0f), new Vector3(0.22f, dh - lip, t + 0.14f), D.SteelFrame);
             var threshold = LookDevKit.Box(g, "Threshold", new Vector3(0f, 0.01f, 0f), new Vector3(dw, 0.02f, t + 0.1f), D.FloorPlate);
             BlockoutKit.CastShadows(threshold, false);
 

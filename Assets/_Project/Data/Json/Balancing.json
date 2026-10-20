@@ -112,16 +112,16 @@
   "formulas": {
     "_doc": {
       "dampening": "e = 1/(1+0.15*C)",
-      "stability": "clamp(100-14A-18B-6AB+20C-10*max(0,A+B+C-5),0,100)",
-      "quality": "clamp(80-8A-12B+8C,0,100)",
-      "rate": "base*(1+0.8*B*e+0.15*A*e)",
-      "meat": "base*(1+0.7*A*e+0.1*B*e)",
+      "stability": "clamp(100-11A-18B-6AB+20C-10*max(0,A+B+C-5),0,100)",
+      "quality": "clamp(80-6A-12B+8C,0,100)",
+      "rate": "base*(1+0.8*B*e+0.35*A*e)",
+      "meat": "base*(1+1.2*A*e+0.1*B*e)",
       "concentrated": "base+(formula-base)*conc"
     },
     "dampPerC": 0.15,
     "stability": {
       "base": 100,
-      "perA": 14,
+      "perA": 11,
       "perB": 18,
       "perAB": 6,
       "perC": 20,
@@ -130,16 +130,16 @@
     },
     "quality": {
       "base": 80,
-      "perA": 8,
+      "perA": 6,
       "perB": 12,
       "perC": 8
     },
     "rate": {
-      "perA": 0.15,
+      "perA": 0.35,
       "perB": 0.8
     },
     "meat": {
-      "perA": 0.7,
+      "perA": 1.2,
       "perB": 0.1
     },
     "statMax": 100,
@@ -721,7 +721,7 @@
     "playerArea": {
       "xMin": -16,
       "xMax": 16,
-      "zMin": 2.3,
+      "zMin": -2.2,
       "zMax": 15.4
     },
     "playerStart": {
@@ -1047,9 +1047,11 @@
     ]
   },
   "player": {
-    "_doc": "Werte aus dem Prototyp (updatePlay, Kamera): Winkel in Grad, Strecken in m. sprintMultiplier eigener Wert (Prototyp ohne Sprint).",
+    "_doc": "Werte aus dem Prototyp (updatePlay, Kamera): Winkel in Grad, Strecken in m. sprintMultiplier, jumpHeight, gravity eigene Werte (Prototyp ohne Sprint und Sprung).",
     "walkSpeed": 5.2,
     "sprintMultiplier": 1.6,
+    "jumpHeight": 0.9,
+    "gravity": 22,
     "turnSpeedDeg": 114.6,
     "mouseSensitivityDeg": 0.1375,
     "lookUpMaxDeg": 65.9,

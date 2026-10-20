@@ -25,5 +25,9 @@ namespace PlanErfuellt
         public float fastTurnBoost;
         /// <summary>Tempo-Faktor beim Sprinten (Shift)</summary>
         public float sprintMultiplier;
+        /// <summary>Sprunghöhe in m (Leertaste ohne Ziel)</summary>
+        public float jumpHeight;
+        /// <summary>Fallbeschleunigung in m/s²</summary>
+        public float gravity;
     }
 }

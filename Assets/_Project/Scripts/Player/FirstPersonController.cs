@@ -4,7 +4,7 @@ namespace PlanErfuellt
 {
     /// <summary>
     /// Ego-Steuerung wie im Prototyp (updatePlay): WASD laufen, Maus (gefangen) oder Q/E/Pfeile drehen,
-    /// Kopfwippen und leichtes Neigen. Kollision über CharacterController (Kammer, Stationen),
+    /// Kopfwippen und leichtes Neigen. Springen mit der Leertaste, wenn keine Station im Ziel ist (sonst Benutzen). Kollision über CharacterController (Kammer, Stationen),
     /// zusätzlich auf die begehbare Fläche (WalkArea: Halle, Türen, Nebenzimmer) begrenzt.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
@@ -21,6 +21,10 @@ namespace PlanErfuellt
         float yaw, pitch;
         float bobPhase, bobAmp, roll, sideSpeed;
         float lastAspect = -1f;
+        float vy;
+        bool grounded = true;
+        int blockedFrame;
+        InteractionSystem interaction;
 
         /// <summary>Faktor auf die Laufgeschwindigkeit (Infektion: schnell/bleischwer).</summary>
         public float SpeedMultiplier { get; set; } = 1f;
@@ -36,7 +40,11 @@ namespace PlanErfuellt
         public float BobPhase => bobPhase;
         public Camera Camera => cam;
 
-        void Awake() => cc = GetComponent<CharacterController>();
+        void Awake()
+        {
+            cc = GetComponent<CharacterController>();
+            interaction = GetComponent<InteractionSystem>();
+        }
 
         void Start()
         {
@@ -56,6 +64,7 @@ namespace PlanErfuellt
             cc.enabled = false;
             transform.position = pos;
             cc.enabled = true;
+            vy = 0f;
             yaw = yawDeg;
             pitch = pitchDeg;
             transform.rotation = Quaternion.Euler(0f, yaw, 0f);
@@ -74,6 +83,8 @@ namespace PlanErfuellt
             UpdateCursor(control && !menu);
             if (!control || dt <= 0f)
             {
+                if (!control) vy = 0f;
+                blockedFrame = Time.frameCount;
                 IsMoving = false;
                 sideSpeed = 0f;
                 return;
@@ -98,7 +109,27 @@ namespace PlanErfuellt
             m.x *= inv;
             if (m.sqrMagnitude > 1f) m.Normalize();
             var vel = (transform.forward * m.y + transform.right * m.x) * (P.walkSpeed * mf);
-            cc.Move(vel * dt);
+
+            // Springen und Fallen: Boden ist y = 0 (ohne Kollider), Möbel und Maschinen tragen über ihre Kollider
+            bool onFloor = transform.position.y <= 0.001f;
+            if (onFloor && vy <= 0f)
+            {
+                vy = 0f;
+                grounded = true;
+            }
+            bool targetInReach = interaction != null && interaction.Current != null;
+            // Leertaste, die gerade ein Panel geschlossen hat, löst keinen Sprung aus
+            if (grounded && !targetInReach && Time.frameCount > blockedFrame + 1 && InputReader.JumpPressed)
+            {
+                vy = Mathf.Sqrt(2f * P.gravity * P.jumpHeight);
+                grounded = false;
+            }
+            if (!onFloor || vy > 0f) vy -= P.gravity * dt;
+            var flags = cc.Move((vel + Vector3.up * vy) * dt);
+            bool below = (flags & CollisionFlags.Below) != 0;
+            if (below && vy < 0f) vy = -1f;
+            if ((flags & CollisionFlags.Above) != 0 && vy > 0f) vy = 0f;
+            grounded = below || transform.position.y <= 0.001f;
             ClampToArea();
             IsMoving = vel.sqrMagnitude > 0.01f;
             sideSpeed = m.x * P.walkSpeed * mf;
@@ -149,12 +180,15 @@ namespace PlanErfuellt
                 x = center.x + off.x;
                 z = center.z + off.y;
             }
-            if (!Mathf.Approximately(x, p.x) || !Mathf.Approximately(z, p.z) || Mathf.Abs(p.y) > 0.001f)
+            // nicht unter den Boden (y = 0) fallen
+            float y = Mathf.Max(0f, p.y);
+            if (!Mathf.Approximately(x, p.x) || !Mathf.Approximately(z, p.z) || p.y < 0f)
             {
                 cc.enabled = false;
-                transform.position = new Vector3(x, 0f, z);
+                transform.position = new Vector3(x, y, z);
                 cc.enabled = true;
             }
+            if (p.y <= 0f && vy < 0f) vy = 0f;
         }
 
         /// <summary>Hat das Spiel die Maus selbst freigegeben (Panel, Pause, Menü)? Dann wird sie danach automatisch wieder gefangen.</summary>

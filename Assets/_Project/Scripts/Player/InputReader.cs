@@ -9,7 +9,7 @@ namespace PlanErfuellt
     /// </summary>
     public static class InputReader
     {
-        static InputAction move, turn, look, interact, pause, antidote, logbook, build, mute, confirm, capture, sprint;
+        static InputAction move, turn, look, interact, pause, antidote, logbook, build, mute, confirm, capture, sprint, jump;
         static InputAction point, place, deselect, sell;
         static readonly InputAction[] tools = new InputAction[4];
         static bool ready;
@@ -35,6 +35,7 @@ namespace PlanErfuellt
             confirm = a.FindAction("Player/Confirm", true);
             capture = a.FindAction("Player/CaptureMouse", true);
             sprint = a.FindAction("Player/Sprint", true);
+            jump = a.FindAction("Player/Jump", true);
             a.FindActionMap("Player", true).Enable();
             point = a.FindAction("Build/Point", true);
             place = a.FindAction("Build/Place", true);
@@ -71,6 +72,8 @@ namespace PlanErfuellt
         public static bool InteractHeld { get { if (TestInteract.HasValue) return TestInteract.Value; Init(); return ready && interact.IsPressed(); } }
         /// <summary>Sprinten (Shift gehalten).</summary>
         public static bool SprintHeld { get { if (TestSprint.HasValue) return TestSprint.Value; Init(); return ready && sprint.IsPressed(); } }
+        /// <summary>Springen (Leertaste; nur wenn keine Station im Ziel ist, siehe FirstPersonController).</summary>
+        public static bool JumpPressed { get { Init(); return ready && jump.WasPressedThisFrame(); } }
         public static bool InteractPressed { get { Init(); return ready && interact.WasPressedThisFrame(); } }
         public static bool PausePressed { get { Init(); return ready && pause.WasPressedThisFrame(); } }
         public static bool AntidotePressed { get { Init(); return ready && antidote.WasPressedThisFrame(); } }
