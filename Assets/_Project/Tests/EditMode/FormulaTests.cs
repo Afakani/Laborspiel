@@ -8,7 +8,7 @@ namespace PlanErfuellt.Tests
         GameConfig cfg;
 
         [OneTimeSetUp]
-        public void Setup() => cfg = TestData.Config();
+        public void Setup() => cfg = TestData.PrototypeConfig();
 
         // Dosis A-B-C, Stabilität, Qualität, Rate Kuh, Fleisch Kuh
         [TestCase(0, 0, 0, 100f, 80f, 2.00f, 6.00f)]

@@ -68,6 +68,17 @@ namespace PlanErfuellt.Tests
         }
 
         [Test]
+        public void GrowthHormoneIsWorthIt()
+        {
+            // Eine Dosis A mehr als verdoppelt das Fleisch (ohne C) und kostet weniger Stabilität als B
+            var none = new Dose(0, 0, 0);
+            var oneA = new Dose(1, 0, 0);
+            Assert.GreaterOrEqual(Formula.Meat(AnimalKind.Cow, oneA, cfg) / Formula.Meat(AnimalKind.Cow, none, cfg), 2f);
+            Assert.Greater(Formula.Rate(AnimalKind.Cow, oneA, cfg), Formula.Rate(AnimalKind.Cow, none, cfg) * 1.3f);
+            Assert.Less(cfg.formulas.stability.perA, cfg.formulas.stability.perB);
+        }
+
+        [Test]
         public void BalancingDirections()
         {
             Assert.Greater(cfg.prices.cloneCow, cfg.prices.cloneHen);

@@ -10,7 +10,7 @@ namespace PlanErfuellt.Tests
         readonly List<RiskEvent> events = new List<RiskEvent>();
 
         [OneTimeSetUp]
-        public void Setup() => cfg = TestData.Config();
+        public void Setup() => cfg = TestData.PrototypeConfig();
 
         AnimalStats Animal(int a, int b, int c)
         {

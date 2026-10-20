@@ -15,6 +15,22 @@ namespace PlanErfuellt.Tests
             return cfg != null ? cfg : BalancingImporter.Import();
         }
 
+        /// <summary>
+        /// Kopie der Config mit den Formelwerten des Prototyps für Wachstum A (Stabilität −14, Qualität −8, Ertrag +0,15,
+        /// Fleisch +0,7 je Dosis). Die Referenztests (Prompt 4, GDD) prüfen damit die Umsetzung der Formeln; das
+        /// Spiel nutzt das stärkere Balancing aus der JSON (D116).
+        /// </summary>
+        public static GameConfig PrototypeConfig()
+        {
+            var c = Object.Instantiate(Config());
+            var f = c.formulas;
+            f.stability.perA = 14f;
+            f.quality.perA = 8f;
+            f.rate.perA = 0.15f;
+            f.meat.perA = 0.7f;
+            return c;
+        }
+
         public static TextDatabase Texts(int seed = 1)
         {
             var asset = AssetDatabase.LoadAssetAtPath<TextAsset>(TextsPath);

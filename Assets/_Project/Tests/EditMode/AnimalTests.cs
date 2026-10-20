@@ -8,7 +8,7 @@ namespace PlanErfuellt.Tests
         GameConfig cfg;
 
         [OneTimeSetUp]
-        public void Setup() => cfg = TestData.Config();
+        public void Setup() => cfg = TestData.PrototypeConfig();
 
         AnimalStats Animal(AnimalKind kind, Dose d)
         {

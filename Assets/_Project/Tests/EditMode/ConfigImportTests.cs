@@ -34,7 +34,7 @@ namespace PlanErfuellt.Tests
         [Test]
         public void NestedSections()
         {
-            Assert.AreEqual(14f, cfg.formulas.stability.perA);
+            Assert.AreEqual(11f, cfg.formulas.stability.perA);
             Assert.AreEqual(0.4f, cfg.formulas.acid.quality, 0.0001f);
             Assert.AreEqual(2.4f, cfg.warnings.@float[1], 0.0001f);
             Assert.AreEqual(1.6f, cfg.inspection.mult.boss, 0.0001f);

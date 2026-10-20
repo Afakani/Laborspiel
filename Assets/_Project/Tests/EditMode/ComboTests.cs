@@ -12,7 +12,7 @@ namespace PlanErfuellt.Tests
         [OneTimeSetUp]
         public void Setup()
         {
-            cfg = TestData.Config();
+            cfg = TestData.PrototypeConfig();
             texts = TestData.Texts();
         }
 
