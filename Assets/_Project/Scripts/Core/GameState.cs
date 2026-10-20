@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace PlanErfuellt
@@ -10,7 +11,8 @@ namespace PlanErfuellt
     public class GameState
     {
         // ---------- Kasse und Lager ----------
-        public float Money { get; private set; }
+        // [JsonProperty]: privater Setter, damit der Spielstand (SaveGame) die Kasse wiederherstellen kann
+        [JsonProperty] public float Money { get; private set; }
         /// <summary>Grundstoffe im Lager: Index 0 = A, 1 = B, 2 = C.</summary>
         public readonly int[] substances = new int[3];
         public int antidote;

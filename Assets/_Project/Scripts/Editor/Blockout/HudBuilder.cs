@@ -113,10 +113,10 @@ namespace PlanErfuellt.EditorTools
             // Industrie-Stil für dunkle HUD- und Panel-Flächen (Art-Pass)
             HudStyle.Apply(root.transform);
 
-            // Pause-Overlay
+            // Pause-Overlay (Knöpfe oberhalb der Untertitelleiste des Direktors)
             var pause = Img("PauseOverlay", root.transform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero, new Color(0.08f, 0.016f, 0.024f, 0.6f));
-            var title = Text("Title", pause.rectTransform, "", 72, Gold, new Vector2(0f, 20f), new Vector2(900f, 100f));
-            var sub = Text("Hint", pause.rectTransform, "", 26, Cream, new Vector2(0f, -50f), new Vector2(900f, 40f));
+            var title = Text("Title", pause.rectTransform, "", 72, Gold, new Vector2(0f, 150f), new Vector2(900f, 100f));
+            var sub = Text("Hint", pause.rectTransform, "", 26, Cream, new Vector2(0f, 80f), new Vector2(900f, 40f));
             var pm = root.AddComponent<PauseMenu>();
             PlayerBuilder.Set(pm, "overlay", pause.gameObject);
             PlayerBuilder.Set(pm, "title", title);
@@ -125,7 +125,11 @@ namespace PlanErfuellt.EditorTools
             var newsBtn = PanelUiBuilder.MakeButton(pause.rectTransform, "News", Vector2.zero, new Vector2(300f, 60f), PanelUiBuilder.ButtonBg, Gold, 24, false);
             var soundBtn = PanelUiBuilder.MakeButton(pause.rectTransform, "Sound", Vector2.zero, new Vector2(300f, 60f), PanelUiBuilder.ButtonBg, Gold, 24, false);
             var settingsBtn = PanelUiBuilder.MakeButton(pause.rectTransform, "Settings", Vector2.zero, new Vector2(300f, 60f), PanelUiBuilder.ButtonBg, Gold, 24, false);
-            foreach (var (b, x, y) in new[] { (logBtn, -170f, -140f), (newsBtn, 170f, -140f), (soundBtn, -170f, -220f), (settingsBtn, 170f, -220f) })
+            var menuBtn = PanelUiBuilder.MakeButton(pause.rectTransform, "MainMenu", Vector2.zero, new Vector2(300f, 60f), PanelUiBuilder.ButtonBg, Gold, 24, false);
+            var quitBtn = PanelUiBuilder.MakeButton(pause.rectTransform, "Quit", Vector2.zero, new Vector2(300f, 60f), PanelUiBuilder.ButtonBg, Gold, 24, false);
+            var saveHint = Text("SaveHint", pause.rectTransform, "", 20, new Color(0.79f, 0.66f, 0.54f), new Vector2(0f, -230f), new Vector2(1000f, 32f));
+            foreach (var (b, x, y) in new[] { (logBtn, -170f, 0f), (newsBtn, 170f, 0f), (soundBtn, -170f, -80f), (settingsBtn, 170f, -80f),
+                         (menuBtn, -170f, -160f), (quitBtn, 170f, -160f) })
             {
                 var rt = (RectTransform)b.transform;
                 rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
@@ -135,6 +139,9 @@ namespace PlanErfuellt.EditorTools
             PlayerBuilder.Set(pm, "news", newsBtn);
             PlayerBuilder.Set(pm, "sound", soundBtn);
             PlayerBuilder.Set(pm, "settings", settingsBtn);
+            PlayerBuilder.Set(pm, "mainMenu", menuBtn);
+            PlayerBuilder.Set(pm, "quit", quitBtn);
+            PlayerBuilder.Set(pm, "saveHint", saveHint);
             pause.gameObject.SetActive(false);
 
             // Einstellungen über allem (Hauptmenü und Pause)

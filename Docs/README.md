@@ -6,9 +6,10 @@ Unity-Umsetzung des Prototyps „Plan erfüllt“ (Satire auf Planwirtschaft: K�
 
 1. Ordner `Builds/Windows/` öffnen (wird beim Build erzeugt, liegt nicht im Git).
 2. `PlanErfuellt.exe` starten. Das Spiel startet im randlosen Vollbild in Bildschirmauflösung (umstellbar in den Einstellungen).
-3. Im Hauptmenü „Für den Plan!“ wählen; vor jeder Schicht am Bestellterminal Grundstoffe kaufen.
+3. Im Hauptmenü „Neues Spiel“ → Einsatzbesprechung → „Für den Plan!“; vor jeder Schicht am Bestellterminal Grundstoffe kaufen.
+4. Gespeichert wird automatisch zu Beginn jeder Schicht (am Bestellterminal). „Weiterspielen“ im Hauptmenü setzt dort fort. Der Spielstand liegt unter `%USERPROFILE%\AppData\LocalLow\DefaultCompany\Plan erfüllt\spielstand.json`.
 
-Beenden: Hauptmenü „Beenden“ oder Alt+F4.
+Beenden: Hauptmenü „Beenden“, im Spiel Esc → „Spiel beenden“, oder Alt+F4. Esc → „Hauptmenü“ führt zurück ins Hauptmenü (Fortschritt seit Schichtbeginn verfällt).
 
 ## Steuerung
 
@@ -22,8 +23,8 @@ Beenden: Hauptmenü „Beenden“ oder Alt+F4.
 | L | Forschungslogbuch |
 | B | Baumodus (Maschinen, ab Plan 2) |
 | M | Ton an/aus |
-| P oder Esc | Pause (dort: Logbuch, Staats-TV, Ton, Einstellungen) |
-| Mausklick ins Bild | Maus fangen |
+| P oder Esc | Pause (dort: Logbuch, Staats-TV, Ton, Einstellungen, Hauptmenü, Spiel beenden) |
+| Mausklick ins Bild | Maus fangen (nur nach Alt+Tab nötig) |
 
 Einstellungen (Hauptmenü oder Pause → „Einstellungen“): Lautstärke gesamt, Musik, Effekte, Mausempfindlichkeit, Kamerawackeln, Grafik Hoch/Niedrig, Anzeige Vollbild/Fenster (Fenster 1600 × 900), Ton an/aus. Sie werden gespeichert. Alt+Enter schaltet ebenfalls zwischen Vollbild und Fenster um.
 

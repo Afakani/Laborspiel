@@ -67,7 +67,11 @@ namespace PlanErfuellt
             float dt = gm.Clock.DeltaTime;
             bool control = gm.PlayerControlEnabled;
 
-            UpdateCursor(control);
+            // Maus frei, solange ein Panel, die Pause oder ein Bildschirm außerhalb der Schicht (Menü, Bestellung,
+            // Sendung) offen ist
+            var dc = DayCycle.Instance;
+            bool menu = (dc != null && dc.Mode != DayMode.Play) || (SettingsUI.Instance != null && SettingsUI.Instance.IsOpen);
+            UpdateCursor(control && !menu);
             if (!control || dt <= 0f)
             {
                 IsMoving = false;
@@ -152,6 +156,12 @@ namespace PlanErfuellt
             }
         }
 
+        /// <summary>Hat das Spiel die Maus selbst freigegeben (Panel, Pause, Menü)? Dann wird sie danach automatisch wieder gefangen.</summary>
+        static bool releasedByGame;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetStatic() => releasedByGame = false;
+
         static void UpdateCursor(bool control)
         {
             if (!control)
@@ -161,13 +171,16 @@ namespace PlanErfuellt
                     Cursor.lockState = CursorLockMode.None;
                     Cursor.visible = true;
                 }
+                releasedByGame = true;
                 return;
             }
-            if (Cursor.lockState != CursorLockMode.Locked && InputReader.CapturePressed)
+            // Zurück aus Panel/Pause/Menü: sofort wieder fangen (kein Extra-Klick). Nach Alt+Tab fängt ein Klick ins Bild.
+            if (Cursor.lockState != CursorLockMode.Locked && (releasedByGame || InputReader.CapturePressed))
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
+            releasedByGame = false;
         }
     }
 }

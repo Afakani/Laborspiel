@@ -77,7 +77,23 @@ namespace PlanErfuellt
         /// <summary>Intro bestätigt → erstes Bestellterminal.</summary>
         public void StartFromIntro() => OpenOrder();
 
-        public void OpenOrder() => SetMode(DayMode.Order);
+        /// <summary>Bestellterminal vor der Schicht; hier wird automatisch gespeichert (ruhiger Zustand).</summary>
+        public void OpenOrder()
+        {
+            SaveGame.Save(GM.State);
+            SetMode(DayMode.Order);
+        }
+
+        /// <summary>Weiterspielen: gespeicherten Stand laden und am Bestellterminal fortsetzen.</summary>
+        public bool ContinueSaved()
+        {
+            var d = SaveGame.Load();
+            if (d == null) return false;
+            GM.LoadState(d.state);
+            if (chamber != null) chamber.Clear();
+            OpenOrder();
+            return true;
+        }
 
         /// <summary>Preise der sechs Artikel (A, B, C, Gegenmittel, Wodka, Kaviar).</summary>
         public float Price(int i)

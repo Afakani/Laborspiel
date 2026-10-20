@@ -109,6 +109,11 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - [x] Einstellung „Anzeige“: Vollbild/Fenster, im Build geprüft (Start mit Fenster-Parametern wird auf Vollbild 1920 × 1080 umgestellt)
 - [x] Tests: 130 grün (3 neue), Build neu erstellt, Player.log ohne Fehler
 
+- [x] Klick-Bug behoben: nach Terminal, Panel, Pause oder Menü ist die Maus sofort wieder gefangen (geprüft: Schichtbeginn, Mischpanel auf/zu)
+- [x] Speichern/Laden: automatisch zu Beginn jeder Schicht; geprüft mit einem gespielten Tag → Pause → Hauptmenü → Weiterspielen (Tag 2, Plan 2, Kasse 966, Rezepte wieder da), Schicht startet danach normal
+- [x] Vollbild-Hauptmenü (Weiterspielen, Neues Spiel → Einsatzbesprechung, Einstellungen, Beenden); Pause mit „Hauptmenü“ und „Spiel beenden“, oberhalb der Untertitelleiste
+- [x] Tests: 132 grün (2 neue: Spielstand übersteht Speichern/Laden, kaputte Datei wird ignoriert); Build neu, Probestart zeigt das Hauptmenü, Player.log ohne Fehler
+
 ### Befunde aus dem Durchlauf
 - Kein Programmfehler. Der einfache Autopilot (immer 1-1-1, viele Hühner) schafft die 42 t Fleisch von Plan 2 nicht; nach mehreren verfehlten Tagen wird er entlassen (Wut 100). Das ist Spielregel, kein Fehler; ob Plan 2 für Menschen zu schwer ist, bitte selbst prüfen
 - Ohne Bewegung steigt die Wut (Leerlauf, GDD 7.2); der Autopilot setzt den Leerlauf daher zurück wie der Prototyp-Testschritt

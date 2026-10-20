@@ -7,7 +7,7 @@ namespace PlanErfuellt
     /// <summary>
     /// Pause mit P oder Esc (GDD 2). Ist ein Panel offen, schließt Esc/P zuerst das Panel (ab Phase 4a über PanelCloseRequested).
     /// Knöpfe Logbuch und Staats-TV (GDD 11: nur nach der ersten Mutation) führen aus der Pause dorthin;
-    /// dazu Ton an/aus (M) und Einstellungen.
+    /// dazu Ton an/aus (M), Einstellungen, Hauptmenü (lädt die Szene neu; gespeichert wird zu Schichtbeginn) und Spiel beenden.
     /// </summary>
     public class PauseMenu : MonoBehaviour
     {
@@ -18,6 +18,9 @@ namespace PlanErfuellt
         [SerializeField] Button news;
         [SerializeField] Button sound;
         [SerializeField] Button settings;
+        [SerializeField] Button mainMenu;
+        [SerializeField] Button quit;
+        [SerializeField] TMP_Text saveHint;
 
         void Start()
         {
@@ -39,6 +42,10 @@ namespace PlanErfuellt
             settings.GetComponentInChildren<TMP_Text>().text = gm.Texts.Get("ui.hud.btnSettings");
             settings.onClick.AddListener(() => SettingsUI.Instance.Open());
             sound.onClick.AddListener(() => GameSettings.Muted = !GameSettings.Muted);
+            mainMenu.GetComponentInChildren<TMP_Text>().text = gm.Texts.Get("ui.hud.btnMainMenu");
+            quit.GetComponentInChildren<TMP_Text>().text = gm.Texts.Get("ui.hud.btnQuit");
+            mainMenu.onClick.AddListener(ToMainMenu);
+            quit.onClick.AddListener(Quit);
             SoundLabel();
             overlay.SetActive(gm.Clock.Paused);
             EventBus.PauseChanged += OnPauseChanged;
@@ -68,11 +75,31 @@ namespace PlanErfuellt
             gm.Clock.TogglePause();
         }
 
+        /// <summary>Zurück ins Hauptmenü: Labor neu laden (Fortschritt seit Schichtbeginn verfällt).</summary>
+        static void ToMainMenu()
+        {
+            var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(scene.buildIndex);
+        }
+
+        static void Quit()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
+
         void OnPauseChanged(bool paused)
         {
             overlay.SetActive(paused);
             if (!paused) return;
             var gm = GameManager.Instance;
+            var save = SaveGame.Load();
+            saveHint.text = save != null
+                ? gm.Texts.Format("ui.hud.saveHint", ("day", save.state.dayNum + 1))
+                : gm.Texts.Get("ui.hud.saveHintNone");
             var dc = DayCycle.Instance;
             bool inShift = dc != null && dc.Mode == DayMode.Play;
             logbook.gameObject.SetActive(inShift);

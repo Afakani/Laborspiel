@@ -68,6 +68,15 @@ namespace PlanErfuellt
             EventBus.RaiseInventoryChanged();
         }
 
+        /// <summary>Gespeicherten Stand übernehmen (Weiterspielen) und die Anzeigen auffrischen.</summary>
+        public void LoadState(GameState s)
+        {
+            State = s;
+            EventBus.RaiseMoneyChanged(State.Money);
+            EventBus.RaiseInventoryChanged();
+            EventBus.RaiseSerumRackChanged();
+        }
+
         /// <summary>Kurzmeldung aus einem Textpfad anzeigen.</summary>
         public void Toast(string path, ToastKind kind, params (string key, object value)[] values)
         {

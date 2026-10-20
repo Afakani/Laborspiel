@@ -242,7 +242,65 @@ namespace PlanErfuellt.EditorTools
         static void BuildIntro(Transform canvas)
         {
             var holder = Holder(canvas, "IntroOverlay");
-            var root = FullScreen(holder, "Screen", new Color(0.07f, 0.035f, 0.025f, 0.97f));
+
+            // ---------- Hauptmenü (eigener Vollbild-Bildschirm) ----------
+            var menu = FullScreen(holder, "Screen", new Color(0.07f, 0.03f, 0.025f, 1f));
+            var mrt = (RectTransform)menu.transform;
+            // rotes Band links mit Emblem, Titel und Knöpfen
+            var band = new GameObject("Band", typeof(RectTransform), typeof(Image));
+            var brt = (RectTransform)band.transform;
+            brt.SetParent(mrt, false);
+            brt.anchorMin = new Vector2(0f, 0f);
+            brt.anchorMax = new Vector2(0f, 1f);
+            brt.pivot = new Vector2(0f, 0.5f);
+            brt.anchoredPosition = new Vector2(90f, 0f);
+            brt.sizeDelta = new Vector2(640f, 0f);
+            band.GetComponent<Image>().color = new Color(0.56f, 0.11f, 0.11f);
+            var edge = Raw(brt, "Hazard", "Hazard.png", new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0f, 34f), Color.white);
+            edge.uvRect = new Rect(0f, 0f, 10f, 0.55f);
+            Raw(brt, "Emblem", "EmblemGold.png", new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(230f, 230f), new Color(1f, 1f, 1f, 0.95f))
+                .rectTransform.anchoredPosition = new Vector2(0f, -50f);
+            var mTitle = P.Text(brt, "Title", 92, P.Cream, new Vector2(20f, -300f), new Vector2(600f, 120f), TextAlignmentOptions.Center);
+            mTitle.fontStyle = FontStyles.UpperCase;
+            var mSub = P.Text(brt, "Subtitle", 28, Gold, new Vector2(20f, -410f), new Vector2(600f, 40f), TextAlignmentOptions.Center);
+            mSub.characterSpacing = 10f;
+            var col = P.Rect(brt, "Buttons", new Vector2(80f, -490f), new Vector2(480f, 420f));
+            var vl = col.gameObject.AddComponent<VerticalLayoutGroup>();
+            vl.spacing = 18f;
+            vl.childAlignment = TextAnchor.UpperCenter;
+            vl.childControlWidth = vl.childControlHeight = false;
+            vl.childForceExpandWidth = vl.childForceExpandHeight = false;
+            var dark = new Color(0.2f, 0.06f, 0.05f);
+            var cont = P.MakeButton(col, "Continue", Vector2.zero, new Vector2(480f, 76f), ConfirmBg, ConfirmBorder, 26, false);
+            var newGame = P.MakeButton(col, "NewGame", Vector2.zero, new Vector2(480f, 76f), dark, Gold, 30, false);
+            var settings = P.MakeButton(col, "Settings", Vector2.zero, new Vector2(480f, 76f), dark, Gold, 30, false);
+            var quit = P.MakeButton(col, "Quit", Vector2.zero, new Vector2(480f, 76f), dark, Gold, 30, false);
+
+            // rechts: Parole und Direktor-Plakat
+            var slogan = P.Text(mrt, "Slogan", 50, P.Cream, new Vector2(-90f, -90f), new Vector2(1000f, 80f), TextAlignmentOptions.Center);
+            slogan.characterSpacing = 4f;
+            var poster = new GameObject("Poster", typeof(RectTransform), typeof(Image));
+            var prt = (RectTransform)poster.transform;
+            prt.SetParent(mrt, false);
+            prt.anchorMin = prt.anchorMax = prt.pivot = new Vector2(1f, 0.5f);
+            prt.anchoredPosition = new Vector2(-180f, 10f);
+            prt.sizeDelta = new Vector2(840f, 560f);
+            poster.GetComponent<Image>().color = new Color(0.88f, 0.82f, 0.66f);
+            Raw(prt, "Director", "Director.png", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(800f, 500f), Color.white)
+                .rectTransform.anchoredPosition = new Vector2(0f, 10f);
+            var plate = new GameObject("CaptionPlate", typeof(RectTransform), typeof(Image));
+            var crt = (RectTransform)plate.transform;
+            crt.SetParent(prt, false);
+            crt.anchorMin = crt.anchorMax = crt.pivot = new Vector2(0.5f, 0f);
+            crt.anchoredPosition = new Vector2(0f, -36f);
+            crt.sizeDelta = new Vector2(620f, 64f);
+            plate.GetComponent<Image>().color = new Color(0.56f, 0.11f, 0.11f);
+            var caption = P.Text(crt, "Caption", 30, P.Cream, new Vector2(0f, -10f), new Vector2(620f, 44f), TextAlignmentOptions.Center);
+            caption.characterSpacing = 6f;
+            var footer = P.Text(mrt, "Footer", 18, P.Muted, new Vector2(-90f, -1030f), new Vector2(1000f, 30f), TextAlignmentOptions.Right);
+
+            // ---------- Einsatzbesprechung nach „Neues Spiel“ ----------
+            var root = FullScreen(holder, "Screen", new Color(0.07f, 0.035f, 0.025f, 1f));
             var frame = CenterFrame(root, "Frame", new Vector2(1400f, 900f));
             var title = P.Text(frame, "Title", 72, Gold, new Vector2(40f, -24f), new Vector2(1320f, 90f), TextAlignmentOptions.Center);
             var sub = P.Text(frame, "Subtitle", 26, P.Head, new Vector2(40f, -112f), new Vector2(1320f, 36f), TextAlignmentOptions.Center);
@@ -252,20 +310,52 @@ namespace PlanErfuellt.EditorTools
             body.enableAutoSizing = true;
             body.fontSizeMin = 14f;
             body.fontSizeMax = 21f;
-            var start = P.MakeButton(frame, "Start", new Vector2(250f, -800f), new Vector2(380f, 70f), ConfirmBg, ConfirmBorder, 30, false);
-            var settings = P.MakeButton(frame, "Settings", new Vector2(660f, -800f), new Vector2(260f, 70f), P.ButtonBg, Gold, 26, false);
-            var quit = P.MakeButton(frame, "Quit", new Vector2(950f, -800f), new Vector2(200f, 70f), P.ButtonBg, Gold, 26, false);
+            var row = P.Rect(frame, "Buttons", new Vector2(10f, -800f), new Vector2(1380f, 70f));
+            var hl = row.gameObject.AddComponent<HorizontalLayoutGroup>();
+            hl.spacing = 24f;
+            hl.childAlignment = TextAnchor.MiddleCenter;
+            hl.childControlWidth = hl.childControlHeight = false;
+            hl.childForceExpandWidth = hl.childForceExpandHeight = false;
+            var back = P.MakeButton(row, "Back", Vector2.zero, new Vector2(240f, 70f), P.ButtonBg, Gold, 26, false);
+            var start = P.MakeButton(row, "Start", Vector2.zero, new Vector2(380f, 70f), ConfirmBg, ConfirmBorder, 30, false);
+
             var ui = holder.gameObject.AddComponent<IntroUI>();
             var so = new SerializedObject(ui);
+            so.FindProperty("menuRoot").objectReferenceValue = menu;
+            so.FindProperty("menuTitle").objectReferenceValue = mTitle;
+            so.FindProperty("menuSubtitle").objectReferenceValue = mSub;
+            so.FindProperty("slogan").objectReferenceValue = slogan;
+            so.FindProperty("caption").objectReferenceValue = caption;
+            so.FindProperty("footer").objectReferenceValue = footer;
+            so.FindProperty("cont").objectReferenceValue = cont;
+            so.FindProperty("newGame").objectReferenceValue = newGame;
+            so.FindProperty("settings").objectReferenceValue = settings;
+            so.FindProperty("quit").objectReferenceValue = quit;
             so.FindProperty("root").objectReferenceValue = root;
             so.FindProperty("title").objectReferenceValue = title;
             so.FindProperty("subtitle").objectReferenceValue = sub;
             so.FindProperty("body").objectReferenceValue = body;
             so.FindProperty("start").objectReferenceValue = start;
             so.FindProperty("startLabel").objectReferenceValue = start.GetComponentInChildren<TMP_Text>();
-            so.FindProperty("settings").objectReferenceValue = settings;
-            so.FindProperty("quit").objectReferenceValue = quit;
+            so.FindProperty("back").objectReferenceValue = back;
             so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>Bild aus einer eigenen Textur (RawImage, ändert die Import-Einstellung der 3D-Textur nicht).</summary>
+        static RawImage Raw(RectTransform parent, string name, string file, Vector2 anchorMin, Vector2 anchorMax, Vector2 size, Color color)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(RawImage));
+            var rt = (RectTransform)go.transform;
+            rt.SetParent(parent, false);
+            rt.anchorMin = anchorMin;
+            rt.anchorMax = anchorMax;
+            rt.pivot = new Vector2(0.5f, anchorMin.y == anchorMax.y ? anchorMin.y : 0.5f);
+            rt.sizeDelta = size;
+            var img = go.GetComponent<RawImage>();
+            img.texture = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/_Project/Art/Textures/LookDev/" + file);
+            img.color = color;
+            img.raycastTarget = false;
+            return img;
         }
 
         static void BuildEnd(Transform canvas)
