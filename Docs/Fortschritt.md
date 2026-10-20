@@ -19,6 +19,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 | 10 | Staats-TV, Logbuch, Rekorde, Fenster | fertig |
 | 11 | Grafik und Animation (Art-Pass) | fertig |
 | 12 | Ton, Feinschliff, Performance, Build | fertig |
+| E1 | Erweiterung: Balancing, Bestellen für morgen, Einführung, Nebenzimmer, Direktor, Sendung, UI | fertig |
 
 ## Phase 1 – Setup und Grundgerüst
 
@@ -91,6 +92,17 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - Mischstation: Regler ziehen, MISCHEN, Fläschchen erscheinen im 3D-Regal. Pult: Fläschchen wählen, KLON (Hebel klappt). Leertaste/Esc schließen.
 - Das Probenmikroskop im Misch-Panel kommt laut Prompt in Phase 9.
 - Hinweis: Wird während des Play Mode neu kompiliert, wirft Unity NullReference-Fehler (Domain-Reload); einfach Play neu starten. Empfehlung: in den Unity-Einstellungen „Script Changes While Playing“ auf „Stop Playing and Recompile“ stellen.
+
+## Erweiterung E1 – Balancing, Nebenzimmer, Direktor, Sendung, UI
+
+- [x] Balancing neu (D106): Schicht 5 Minuten, Überschuss zahlt doppelt, Wodka/Kaviar/Gegenmittel teurer, Klonen kostet (D109)
+- [x] Bestellterminal als Panel, Bestellung für morgen, Standardlieferung (D107); Laken als Verbrauchsartikel (D108)
+- [x] Geführte Einführung an Tag 1 mit Zielkasten und Pfeil (D110)
+- [x] Halle tiefer, Anbau mit Lager, Umkleide, Schlafraum, Kantine, Direktorbüro (D111); begehbare Fläche `WalkArea`; Maschinen leicht verteilt (D112)
+- [x] Direktor als animierter dicker Funktionär im Fernseher (D113)
+- [x] Staats-TV: Sprecher jubelt, schwitzt oder weint je nach Tagesergebnis, wechselnde Kamerafahrten (D114)
+- [x] UI-Stil: Knöpfe mit Fase, eingelassene Felder, Messingregler, Zierstreifen (D115)
+- [x] EditMode-Tests 146 grün (neu: `EconomyTests`, `WalkAreaTests`, `NewsMoodTests`); Play-Test mit Screenshots (Zimmer, TV bei Wut, Sendung Jubel/Weinen, Panels)
 
 ## Phase 12 – Ton, Feinschliff, Performance, Build
 

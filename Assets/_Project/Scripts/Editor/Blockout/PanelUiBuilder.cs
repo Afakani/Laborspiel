@@ -353,7 +353,10 @@ namespace PlanErfuellt.EditorTools
         {
             var rt = Rect(parent, "InfoBox", pos, size);
             var img = rt.gameObject.AddComponent<Image>();
-            img.color = new Color(1f, 1f, 1f, 0.04f);
+            // eingelassenes dunkles Feld (HudStyle)
+            img.sprite = HudStyle.Sprite("HudInset.png", new Vector4(6f, 6f, 6f, 6f));
+            img.type = Image.Type.Sliced;
+            img.color = new Color(1f, 1f, 1f, 0.95f);
             img.raycastTarget = false;
             var title = Text(rt, "Title", 22, new Color(1f, 0.82f, 0.29f), new Vector2(12f, -8f), new Vector2(size.x - 24f, 32f), TextAlignmentOptions.Left);
             var body = Text(rt, "Body", 17, Cream, new Vector2(12f, -44f), new Vector2(size.x - 24f, size.y - 52f), TextAlignmentOptions.TopLeft);

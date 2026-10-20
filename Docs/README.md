@@ -6,8 +6,9 @@ Unity-Umsetzung des Prototyps „Plan erfüllt“ (Satire auf Planwirtschaft: K�
 
 1. Ordner `Builds/Windows/` öffnen (wird beim Build erzeugt, liegt nicht im Git).
 2. `PlanErfuellt.exe` starten. Das Spiel startet im randlosen Vollbild in Bildschirmauflösung (umstellbar in den Einstellungen).
-3. Im Hauptmenü „Neues Spiel“ → Einsatzbesprechung → „Für den Plan!“; vor jeder Schicht am Bestellterminal Grundstoffe kaufen.
-4. Gespeichert wird automatisch zu Beginn jeder Schicht (am Bestellterminal). „Weiterspielen“ im Hauptmenü setzt dort fort. Der Spielstand liegt unter `%USERPROFILE%\AppData\LocalLow\DefaultCompany\Plan erfüllt\spielstand.json`.
+3. Im Hauptmenü „Neues Spiel“ → Einsatzbesprechung → „Für den Plan!“ (mit Einführung) oder „Ohne Einführung“.
+   Bestellt wird jederzeit am Bestellterminal im Lager (Tür ganz links in der Rückwand) – für den nächsten Morgen. Wer nichts bestellt, bekommt die Standardlieferung.
+4. Gespeichert wird automatisch zu Beginn jeder Schicht. „Weiterspielen“ im Hauptmenü setzt dort fort. Der Spielstand liegt unter `%USERPROFILE%\AppData\LocalLow\DefaultCompany\Plan erfüllt\spielstand.json`.
 
 Beenden: Hauptmenü „Beenden“, im Spiel Esc → „Spiel beenden“, oder Alt+F4. Esc → „Hauptmenü“ führt zurück ins Hauptmenü (Fortschritt seit Schichtbeginn verfällt).
 

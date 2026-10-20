@@ -145,6 +145,7 @@ namespace PlanErfuellt.EditorTools
             PlayerBuilder.Set(pm, "saveHint", saveHint);
             PlayerBuilder.Set(pm, "skipTutorial", skipBtn);
             pause.gameObject.SetActive(false);
+            HudStyle.StyleButtons(pause.transform);
 
             // Einstellungen über allem (Hauptmenü und Pause)
             SettingsUiBuilder.Build(root.transform);

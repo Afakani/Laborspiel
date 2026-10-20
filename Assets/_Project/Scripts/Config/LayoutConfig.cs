@@ -18,6 +18,13 @@ namespace PlanErfuellt
         public ZoneLayout clothZone = new ZoneLayout();
         public WindowLayout window = new WindowLayout();
         public StationLayout[] stations = new StationLayout[0];
+        /// <summary>Anbau hinter der Rückwand und seine Nebenzimmer (Lager, Umkleide, Schlafraum, Kantine, Direktorbüro).</summary>
+        public WingLayout wing = new WingLayout();
+        public SideRoomLayout[] rooms = new SideRoomLayout[0];
+
+        /// <summary>Innenseite des Anbaus (Proto-z): von der Rückwand bis zur hinteren Anbauwand.</summary>
+        public float WingZMin => room.backWallZ + room.wallThickness;
+        public float WingZMax => WingZMin + wing.depth;
 
         /// <summary>Prototyp-Koordinate nach Unity umrechnen.</summary>
         public static Vector3 ToUnity(float x, float y, float zProto) => new Vector3(x, y, -zProto);

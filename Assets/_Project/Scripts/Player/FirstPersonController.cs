@@ -5,7 +5,7 @@ namespace PlanErfuellt
     /// <summary>
     /// Ego-Steuerung wie im Prototyp (updatePlay): WASD laufen, Maus (gefangen) oder Q/E/Pfeile drehen,
     /// Kopfwippen und leichtes Neigen. Kollision über CharacterController (Kammer, Stationen),
-    /// zusätzlich auf den Spielerbereich aus layout.playerArea begrenzt.
+    /// zusätzlich auf die begehbare Fläche (WalkArea: Halle, Türen, Nebenzimmer) begrenzt.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
     public class FirstPersonController : MonoBehaviour
@@ -15,7 +15,7 @@ namespace PlanErfuellt
 
         CharacterController cc;
         PlayerConfig P;
-        AreaLayout area;
+        System.Collections.Generic.List<Vector4> walkRects;
         ChamberLayout chamber;
         float eyeHeight;
         float yaw, pitch;
@@ -43,7 +43,7 @@ namespace PlanErfuellt
             var gm = GameManager.Instance;
             if (gm == null) { enabled = false; return; }
             P = gm.Config.player;
-            area = gm.Config.layout.playerArea;
+            walkRects = WalkArea.Rects(gm.Config.layout);
             chamber = gm.Config.layout.chamber;
             var start = gm.Config.layout.playerStart;
             eyeHeight = start.eyeHeight;
@@ -133,9 +133,10 @@ namespace PlanErfuellt
         void ClampToArea()
         {
             var p = transform.position;
-            // Spielerbereich in Prototyp-Koordinaten: z_unity = -z_proto
-            float x = Mathf.Clamp(p.x, area.xMin, area.xMax);
-            float z = Mathf.Clamp(p.z, -area.zMax, -area.zMin);
+            // Spielerbereich (Halle, Türen, Nebenzimmer) in Prototyp-Koordinaten: z_unity = -z_proto
+            var q = WalkArea.Clamp(walkRects, new Vector2(p.x, -p.z));
+            float x = q.x;
+            float z = -q.y;
 
             // Kammer: Mindestabstand zur Mitte wie im Prototyp (collide), genauer als der Kapsel-Kollider allein
             var c = chamber;

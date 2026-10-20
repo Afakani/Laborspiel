@@ -261,7 +261,9 @@ namespace PlanErfuellt.EditorTools
         {
             LookDevKit.Box(v, "Frame", new Vector3(0f, 0f, 0.1f), new Vector3(5.7f, 3.6f, 0.4f), LookDevMaterials.SteelDark);
             LookDevKit.Box(v, "Bezel", new Vector3(0f, 0f, -0.11f), new Vector3(5.4f, 3.3f, 0.04f), LookDevMaterials.Rubber);
-            LookDevKit.Plane(v, "Screen", new Vector3(-0.85f, 0f, -0.14f), new Vector2(3.4f, 3.1f), LookDevMaterials.DirectorCrop);
+            // Direktor aus animierten Ebenen (LookDevDirector); die Körperebene ist die Bildschirmfläche
+            var rig = LookDevDirector.Build(v, new Vector3(-0.85f, 0f, -0.14f), new Vector2(3.4f, 3.1f));
+            rig.transform.Find("Body").name = "Screen";
             LookDevKit.Plane(v, "SloganPanel", new Vector3(1.7f, 0f, -0.14f), new Vector2(1.7f, 3.1f), LookDevMaterials.ScreenBlue);
             LookDevKit.Label(v, "Slogan", "ui.signs.tvSlogan", new Vector3(1.7f, 0f, -0.16f), 2.5f, M.Hex("#DDE8FF"));
             LookDevKit.Bolts(v, new Vector3(-2.7f, 1.68f, -0.11f), new Vector3(2.7f, 1.68f, -0.11f), 12, Vector3.back, LookDevMaterials.Brass, 0.02f);
@@ -282,7 +284,7 @@ namespace PlanErfuellt.EditorTools
 
             // Direktor spricht über das Parolenfeld, flackert bei hoher Wut (Phase 6)
             var slogan = v.Find("Slogan").GetComponentInChildren<TMPro.TMP_Text>();
-            v.gameObject.AddComponent<TvDirectorFx>().Setup(v.Find("Screen").GetComponent<Renderer>(), slogan, light);
+            v.gameObject.AddComponent<TvDirectorFx>().Setup(rig.transform.Find("Screen").GetComponent<Renderer>(), slogan, light, rig);
         }
 
         static void AngerScale(Transform v)

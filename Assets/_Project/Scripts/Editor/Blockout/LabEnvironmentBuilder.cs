@@ -25,17 +25,16 @@ namespace PlanErfuellt.EditorTools
 
             // Frontwand und Rückwand
             Wall(shell, "Wall_Front", new Vector3(0f, h * 0.5f, zFront + t * 0.5f), new Vector3(2f * x, h, t), new Vector3(0f, 0f, -1f));
-            Wall(shell, "Wall_Back", new Vector3(0f, h * 0.5f, zBack - t * 0.5f), new Vector3(2f * x, h, t), new Vector3(0f, 0f, 1f));
+            // Rückwand mit Türen zu den Nebenzimmern; der Anbau dahinter kommt aus LabWingBuilder
+            LabWingBuilder.BuildHallBackWall(shell, L);
             // Linke Wand
             Wall(shell, "Wall_Left", new Vector3(-x - t * 0.5f, h * 0.5f, zMid), new Vector3(t, h, depth), new Vector3(1f, 0f, 0f));
             // Rechte Wand mit Fensteröffnung
             BuildRightWallWithWindow(shell, L, x, t, h, zFront, zBack);
 
-            // Tür in der Rückwand
-            BlockoutKit.Box(shell, "Door", new Vector3(0f, 1.8f, zBack + 0.1f), new Vector3(2.4f, 3.6f, 0.2f), M.SteelDark);
-
             BuildCeilingStructure(root, x, h, zFront, zBack);
             BuildDecor(root, zFront, zBack);
+            LabWingBuilder.Build(root, L);
         }
 
         /// <summary>
@@ -142,7 +141,7 @@ namespace PlanErfuellt.EditorTools
                 var beam = BlockoutKit.Box(c, "Beam", new Vector3(bx, h - 0.3f, zMid), new Vector3(0.3f, 0.45f, depth), M.SteelDark);
                 BlockoutKit.CastShadows(beam, false);
             }
-            foreach (var bz in new[] { -3f, -9f })
+            foreach (var bz in new[] { -3f, -9f, zBack + 2.5f })
             {
                 var beam = BlockoutKit.Box(c, "CrossBeam", new Vector3(0f, h - 0.25f, bz), new Vector3(2f * x, 0.4f, 0.3f), M.SteelDark);
                 BlockoutKit.CastShadows(beam, false);
@@ -159,8 +158,14 @@ namespace PlanErfuellt.EditorTools
                 HangingLamp(c, new Vector3(lx, 0f, -1.4f), h);
             }
             foreach (var lx in new[] { -6f, 6f })
+            {
                 HangingLamp(c, new Vector3(lx, 0f, -8.5f), h);
+                HangingLamp(c, new Vector3(lx, 0f, BackLampZ(zBack)), h);
+            }
         }
+
+        /// <summary>Hintere Reihe Hängelampen (vor der Rückwand mit den Türen).</summary>
+        public static float BackLampZ(float zBack) => zBack + 2.6f;
 
         static void HangingLamp(Transform parent, Vector3 pos, float h)
         {
@@ -178,33 +183,10 @@ namespace PlanErfuellt.EditorTools
 
             // Rückwand: Banner, Parole und Lampen kommen aus LookDevHall
 
-            // Kisten und Fässer (Prototyp-Positionen, z gespiegelt; rechte Fässer an die Rückwand gerückt,
-            // weil dort die Büroecke steht). Holzkisten mit Leisten, Fässer mit Sicken, abgenutzte Texturen.
-            foreach (var c in new[] { new Vector3(-12f, 1.3f, -10.6f), new Vector3(-10.4f, 1.0f, -10.9f), new Vector3(-11.4f, 0.8f, -10.6f),
-                         new Vector3(12f, 1.4f, -10.4f), new Vector3(10.2f, 1.0f, -10.8f) })
-            {
-                var crate = BlockoutKit.Group(d, "Crate", new Vector3(c.x, 0f, c.z), c.x * 0.3f * Mathf.Rad2Deg);
-                LookDevKit.Box(crate, "Box", new Vector3(0f, c.y * 0.5f, 0f), Vector3.one * c.y, LookDevMaterials.CratePlanks);
-                foreach (var s in new[] { -1f, 1f })
-                {
-                    LookDevKit.Box(crate, "Slat", new Vector3(0f, c.y * 0.5f, s * (c.y * 0.5f + 0.012f)), new Vector3(c.y + 0.02f, 0.1f, 0.025f), LookDevMaterials.Wood);
-                    LookDevKit.Box(crate, "Slat", new Vector3(s * (c.y * 0.5f + 0.012f), c.y * 0.5f, 0f), new Vector3(0.025f, 0.1f, c.y + 0.02f), LookDevMaterials.Wood);
-                }
-                var col = crate.gameObject.AddComponent<BoxCollider>();
-                col.center = new Vector3(0f, c.y * 0.5f, 0f);
-                col.size = Vector3.one * c.y;
-            }
-            var barrel = LookDevKit.Lathe("Barrel", new[] { new Vector2(0f, 0f), new Vector2(0.43f, 0f), new Vector2(0.45f, 0.04f), new Vector2(0.45f, 0.3f),
-                new Vector2(0.47f, 0.32f), new Vector2(0.45f, 0.34f), new Vector2(0.45f, 0.76f), new Vector2(0.47f, 0.78f), new Vector2(0.45f, 0.8f),
-                new Vector2(0.45f, 1.06f), new Vector2(0.43f, 1.1f), new Vector2(0f, 1.1f) }, 24);
-            foreach (var b in new[] { new Vector2(-14.5f, -9.8f), new Vector2(13.6f, -11.3f), new Vector2(14.6f, -11.25f) })
-            {
-                var go = LookDevKit.Obj(d, "Barrel", barrel, new Vector3(b.x, 0f, b.y), LookDevMaterials.RedPaint, new Vector3(0f, b.x * 40f, 0f));
-                var cc = go.AddComponent<CapsuleCollider>();
-                cc.center = new Vector3(0f, 0.55f, 0f);
-                cc.radius = 0.45f;
-                cc.height = 1.1f;
-            }
+            // Kisten stehen jetzt im Lager (LookDevRooms); in der Halle bleiben Fässer und eine Kiste in den hinteren Ecken
+            LookDevRooms.Crate(d, new Vector3(-16.1f, 0f, zBack + 2.2f), 1.0f, 14f);
+            foreach (var b in new[] { new Vector2(-16.2f, zBack + 0.65f), new Vector2(-15.2f, zBack + 0.6f), new Vector2(9.4f, zBack + 0.6f), new Vector2(10.3f, zBack + 0.8f) })
+                LookDevRooms.Barrel(d, new Vector3(b.x, 0f, b.y), LookDevMaterials.RedPaint);
         }
 
     }

@@ -361,7 +361,7 @@ namespace PlanErfuellt.EditorTools
             var brt = (RectTransform)box.transform;
             brt.SetParent(holder, false);
             brt.anchorMin = brt.anchorMax = brt.pivot = new Vector2(0.5f, 1f);
-            brt.anchoredPosition = new Vector2(0f, -76f);
+            brt.anchoredPosition = new Vector2(0f, -140f);
             brt.sizeDelta = new Vector2(860f, 104f);
             box.GetComponent<Image>().color = new Color(0.05f, 0.04f, 0.03f, 0.94f);
             var stripe = new GameObject("Stripe", typeof(RectTransform), typeof(Image));

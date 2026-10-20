@@ -556,7 +556,7 @@ if len(sys.argv) > 2:
 hazard()
 emblem(CREAM + (255,), "EmblemCream.png")
 emblem(GOLD + (255,), "EmblemGold.png")
-director()
+# director(): ersetzt durch Tools/gen_director.py (Ebenen fuer die Animation und Director.png)
 plan_board()
 paper()
 checklist()
@@ -572,3 +572,75 @@ carpet()
 hud_plate()
 hud_icons()
 arrow()
+
+
+# ---------- Konfetti (weißes Papierstück, Farbe kommt aus dem Partikelsystem) ----------
+def confetti():
+    img = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
+    ImageDraw.Draw(img).rounded_rectangle([8, 18, 56, 46], radius=4, fill=(255, 255, 255, 255))
+    save(img, "Confetti.png")
+
+
+def hud_button():
+    # Knopf mit Fase: helle Oberkante, dunkle Unterkante, dünne dunkle Kontur; Farbe kommt aus dem Image (Tint)
+    w, h = 96, 64
+    img = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle([0, 0, w - 1, h - 1], radius=7, fill=(40, 36, 32, 255))
+    for y in range(2, h - 2):
+        t = (y - 2) / (h - 5)
+        v = int(235 - 55 * t)
+        d.line([(2, y), (w - 3, y)], fill=(v, v, v, 255))
+    d.line([(4, 2), (w - 5, 2)], fill=(255, 255, 255, 255), width=2)
+    d.line([(4, h - 3), (w - 5, h - 3)], fill=(120, 116, 110, 255), width=2)
+    mask = Image.new("L", (w, h), 0)
+    ImageDraw.Draw(mask).rounded_rectangle([0, 0, w - 1, h - 1], radius=7, fill=255)
+    img.putalpha(mask)
+    return img
+
+
+def hud_inset():
+    # Eingelassenes Feld: dunkel mit innerem Schatten oben links und Lichtkante unten rechts
+    s = 64
+    img = Image.new("RGBA", (s, s), (18, 16, 14, 235))
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, 0, s - 1, s - 1], outline=(8, 7, 6, 255), width=2)
+    d.line([(2, 2), (s - 3, 2)], fill=(0, 0, 0, 255), width=3)
+    d.line([(2, 2), (2, s - 3)], fill=(0, 0, 0, 255), width=3)
+    d.line([(3, s - 3), (s - 3, s - 3)], fill=(90, 80, 66, 255), width=1)
+    d.line([(s - 3, 3), (s - 3, s - 3)], fill=(90, 80, 66, 255), width=1)
+    return img
+
+
+def hud_knob():
+    # Messing-Drehknopf für Schieberegler
+    s = 64
+    img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.ellipse([2, 4, s - 3, s - 1], fill=(30, 22, 12, 160))
+    d.ellipse([2, 2, s - 3, s - 5], fill=(150, 108, 40, 255), outline=(50, 36, 16, 255), width=2)
+    hl = Image.new("L", (s, s), 0)
+    ImageDraw.Draw(hl).ellipse([12, 8, s - 22, s - 30], fill=150)
+    hl = hl.filter(ImageFilter.GaussianBlur(5))
+    img = Image.composite(Image.new("RGBA", (s, s), (255, 226, 150, 255)), img, hl)
+    d = ImageDraw.Draw(img)
+    d.ellipse([s // 2 - 5, s // 2 - 7, s // 2 + 5, s // 2 + 3], fill=(70, 50, 20, 255))
+    return img
+
+
+def hud_accent():
+    # Roter Zierstreifen mit Goldkante für Panel-Köpfe
+    w, h = 64, 12
+    img = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, 2, w - 1, 9], fill=(176, 26, 30, 255))
+    d.line([(0, 1), (w - 1, 1)], fill=(212, 160, 40, 255), width=2)
+    d.line([(0, 10), (w - 1, 10)], fill=(212, 160, 40, 255), width=2)
+    return img
+
+
+confetti()
+save(hud_button(), "HudButton.png")
+save(hud_inset(), "HudInset.png")
+save(hud_knob(), "HudKnob.png")
+save(hud_accent(), "HudAccent.png")

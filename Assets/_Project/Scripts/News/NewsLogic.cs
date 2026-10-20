@@ -31,6 +31,19 @@ namespace PlanErfuellt
         /// <summary>Sprecher verschwunden (Automatikbetrieb)?</summary>
         public static bool AnchorGone(float famine, GameConfig cfg) => famine >= cfg.news.anchorGoneFrom;
 
+        /// <summary>
+        /// Stimmung des Sprechers aus dem letzten Tagesergebnis (lastDayResult: 1 erfüllt, −1 verfehlt, 0 noch keins)
+        /// und der Lage: erfüllt → Jubel (in der Krise nur gefasst); verfehlt → Schwitzen, ab zwei verfehlten Tagen
+        /// oder in der Krise Weinen; ohne Ergebnis nach Lage.
+        /// </summary>
+        public static NewsMood Mood(GameState s, NewsLevel level)
+        {
+            bool crisis = level == NewsLevel.Crisis || level == NewsLevel.Dead;
+            if (s.lastDayResult > 0) return crisis ? NewsMood.Calm : NewsMood.Joy;
+            if (s.lastDayResult < 0) return crisis || s.failedDays >= 2 ? NewsMood.Cry : NewsMood.Sweat;
+            return level == NewsLevel.Boom ? NewsMood.Calm : crisis ? NewsMood.Cry : NewsMood.Sweat;
+        }
+
         /// <summary>Zahl mit Vorzeichen wie im Prototyp (fmtS): +12 bzw. −5.</summary>
         public static string Signed(float v) => (v < 0f ? "−" : "+") + Mathf.Abs(Mathf.Round(v)).ToString("0", German);
 
@@ -43,6 +56,7 @@ namespace PlanErfuellt
                 level = Level(w.famine, cfg),
                 anchorGone = AnchorGone(w.famine, cfg),
                 world = w,
+                mood = Mood(s, Level(w.famine, cfg)),
                 year = t.Format("ui.news.time", ("n", Mathf.Max(1, s.dayNum)),
                     ("year", Mathf.RoundToInt(Mathf.Max(1, s.planIdx) * cfg.news.prognosisYearsPerPlan)))
             };

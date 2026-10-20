@@ -165,6 +165,7 @@ namespace PlanErfuellt
                 s.newsFacts.Add(gm.Texts.Format("newsFacts.contract", ("who", s.contract.data.who), ("what", s.contract.data.what)));
             bool collapse = infection != null && infection.CheckCollapse();
             var r = DayLogic.EndDay(s, gm.Config, collapse);
+            s.lastDayResult = r.met ? 1 : -1;
             s.lastPlanLine = r.met
                 ? gm.Texts.Format("ui.news.planMetLine", ("n", s.dayNum), ("plan", s.planIdx), ("max", gm.Config.day.plans))
                 : gm.Texts.Format("ui.news.planFailedLine", ("n", s.dayNum));

@@ -11,6 +11,8 @@ namespace PlanErfuellt
         public readonly List<string> ticker = new List<string>();
         public NewsLevel level;
         public bool anchorGone;
+        /// <summary>Stimmung des Sprechers (NewsLogic.Mood).</summary>
+        public NewsMood mood;
         public bool special;
         public WorldValues world;
     }

@@ -46,23 +46,21 @@ namespace PlanErfuellt.EditorTools
             BuildBackWall(hall, -r.backWallZ, h);
         }
 
-        /// <summary>Rückwand hinter dem Spieler: hohe Banner, Parolentafel über der Tür, Wandlampen, Rohre.</summary>
+        /// <summary>Rückwand hinter dem Spieler: hohe Banner zwischen den Türen, Parolentafel über der Mitteltür, Wandlampen, Rohre.
+        /// Türrahmen und Zimmerschilder kommen aus LabWingBuilder.</summary>
         static void BuildBackWall(Transform parent, float zBack, float h)
         {
             var g = BlockoutKit.Group(parent, "BackWall", Vector3.zero);
             float z = zBack + 0.12f;
-            TallBanner(g, new Vector3(-8.0f, 4.6f, z), "ui.signs.bannerGenetics", 180f);
-            TallBanner(g, new Vector3(8.0f, 4.6f, z), "ui.signs.bannerScienceTall", 180f);
+            TallBanner(g, new Vector3(-9.0f, 4.6f, z), "ui.signs.bannerGenetics", 180f);
+            TallBanner(g, new Vector3(10.75f, 4.6f, z), "ui.signs.bannerScienceTall", 180f);
             var plate = BlockoutKit.Group(g, "Slogan", new Vector3(0f, 5.3f, zBack + 0.04f), 180f);
             LookDevKit.Box(plate, "Plate", new Vector3(0f, 0f, 0.01f), new Vector3(7.4f, 0.9f, 0.04f), L.RedPaint);
             LookDevKit.Label(plate, "Text", "ui.signs.wallSlogan", new Vector3(0f, 0f, -0.02f), 5f, LabMaterials.CreamText);
             LookDevKit.Bolts(plate, new Vector3(-3.6f, 0.36f, -0.01f), new Vector3(3.6f, 0.36f, -0.01f), 10, Vector3.back, L.Brass, 0.02f);
             LookDevKit.Bolts(plate, new Vector3(-3.6f, -0.36f, -0.01f), new Vector3(3.6f, -0.36f, -0.01f), 10, Vector3.back, L.Brass, 0.02f);
-            LookDevKit.Box(g, "DoorFrame", new Vector3(0f, 3.75f, zBack + 0.08f), new Vector3(2.9f, 0.25f, 0.16f), L.Hazard);
-            foreach (float x in new[] { -1.4f, 1.4f })
-                LookDevKit.Box(g, "DoorPost", new Vector3(x, 1.85f, zBack + 0.08f), new Vector3(0.22f, 3.7f, 0.16f), L.SteelFrame);
             LookDevKit.Cyl(g, "Pipe", new Vector3(0f, h - 1.3f, zBack + 0.35f), 0.18f, 34f, L.SteelDark, new Vector3(0f, 0f, 90f), true, 16);
-            foreach (var x in new[] { -11.5f, -4.8f, 4.8f, 11.5f })
+            foreach (var x in new[] { -15.4f, -2.9f, 2.9f, 16.1f })
                 WallLamp(g, new Vector3(x, 3.4f, zBack), true, 180f);
         }
 

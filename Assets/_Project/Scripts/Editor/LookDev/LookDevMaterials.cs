@@ -8,7 +8,7 @@ namespace PlanErfuellt.EditorTools
         public static Material SteelPanel, SteelDark, SteelFrame, Brass, GreenPaint, RedPaint, WhitePaint, FloorConcrete, FloorPlate,
             Grate, WallConcrete, WallPanel, Hazard, Paper, Checklist, Director, PlanBoard, EmblemCream, EmblemGold, IconLeaf, IconDrop,
             IconMolecule, GlassClear, GlassTank, CoverRed, HoseGreen, HoseBlue, HoseYellow, BarGreen, BarBlue, BarYellow, LightConeGreen,
-            FogGreen, HazeWarm, FireAdd, SmokeDark, Steam, Slime, SplatSlime, Scorch, DirectorCrop, PlanBoardCrop, RailYellow, Rubber, LampBulb, Wood, CratePlanks, Chrome, Frost, CryoGlow, GlassBlue, DialFace, EnamelCream, BlackPaint, ScreenBlue, CreamPlate, BannerRed;
+            FogGreen, HazeWarm, FireAdd, SmokeDark, Steam, Slime, SplatSlime, Scorch, DirectorCrop, PlanBoardCrop, RailYellow, Rubber, LampBulb, Wood, CratePlanks, Chrome, Frost, CryoGlow, GlassBlue, DialFace, EnamelCream, BlackPaint, ScreenBlue, CreamPlate, BannerRed, Plaster;
 
         public static void Init()
         {
@@ -69,6 +69,8 @@ namespace PlanErfuellt.EditorTools
             LampBulb = BlockoutKit.Emissive("LD_LampBulb", LabMaterials.Hex("#FFC870"), 6f, true);
             ScreenBlue = BlockoutKit.Emissive("LD_ScreenBlue", LabMaterials.Hex("#1F3E8A"), 1.2f, false);
             CreamPlate = BlockoutKit.Mat("LD_CreamPlate", LabMaterials.Hex("#E9DCBC"), 0f, 0.2f);
+            // heller Putz für die Nebenzimmer (gleiche Betontextur, hell getönt)
+            Plaster = LookDevKit.Pbr("LD_Plaster", "concrete_wall_006", new Color(1f, 0.93f, 0.8f), 3.5f, 0.5f);
             BannerRed = LookDevKit.Pbr("LD_BannerRed", "rusty_painted_metal", new Color(0.85f, 0.25f, 0.22f), 3f, 0.3f, 0.3f);
         }
 

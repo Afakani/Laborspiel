@@ -32,6 +32,8 @@ namespace PlanErfuellt
         /// <summary>Index des aktuellen Plans (0 = Plan 1).</summary>
         public int planIdx;
         public int failedDays;
+        /// <summary>Ergebnis des letzten Tages: 1 Plan erfüllt, −1 verfehlt, 0 noch keins (Stimmung in der Sendung).</summary>
+        public int lastDayResult;
         public float playTime;
 
         // ---------- Mischstation ----------

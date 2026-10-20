@@ -7,7 +7,9 @@ namespace PlanErfuellt
     /// Staats-TV-Studio (GDD 11, Prototyp studio): liegt in der additiv geladenen Szene NewsStudio. Während der
     /// Sendung zeigt die Studiokamera statt der Spielerkamera; sie fährt von der Totalen zum Sprecher. Im
     /// Automatikbetrieb sackt der Sprecher zusammen, die Pflanze welkt, Fliegen kreisen, das Licht flackert grünlich.
-    /// Diagramm und Senderschild zeigen je nach Stufe Planerfüllung bzw. „Bevölkerung (offiziell)“.
+    /// Diagramm und Senderschild zeigen je nach Stufe Planerfüllung bzw. „Bevölkerung (offiziell)“. Der Sprecher
+    /// zeigt seine Stimmung (NewsAnchorMood); die Kamerafahrt wechselt jede Sendung (Zufahrt, Schwenk, Kran),
+    /// bei schlechten Nachrichten wackelt die Handkamera.
     /// </summary>
     public class NewsStudio : MonoBehaviour
     {
@@ -19,7 +21,14 @@ namespace PlanErfuellt
         [Header("Kamera")]
         [SerializeField] Camera cam;
 
+        [Header("Kamerafahrten")]
+        [SerializeField] Vector3[] wideOffsets = { Vector3.zero, new Vector3(3.5f, -0.3f, -1.5f), new Vector3(0f, 2.6f, 1f) };
+        [SerializeField] Vector3[] closeOffsets = { Vector3.zero, new Vector3(-0.5f, 0f, 0.2f), new Vector3(0.3f, 0.25f, 0f) };
+        [SerializeField] float shakeBad = 0.035f;
+        [SerializeField] float shakeFreq = 2.2f;
+
         [Header("Sprecher")]
+        [SerializeField] NewsAnchorMood anchorMood;
         [SerializeField] Transform pivot;
         [SerializeField] Transform head;
         [SerializeField] Transform armL, armR;
@@ -62,6 +71,8 @@ namespace PlanErfuellt
         Camera playerCam;
         Vector3[] leafBase;
         bool playing, dead;
+        int style;
+        float shake;
         float d, keyBase = 1f;
 
         void Awake()
@@ -89,6 +100,9 @@ namespace PlanErfuellt
             dead = copy.anchorGone;
             d = 0f;
             playing = true;
+            style = Random.Range(0, Mathf.Min(wideOffsets.Length, closeOffsets.Length));
+            shake = !dead && (copy.mood == NewsMood.Sweat || copy.mood == NewsMood.Cry) ? shakeBad : 0f;
+            anchorMood.Begin(copy.mood);
 
             Tint(wall, dead ? wallDead : wallAlive, false);
             signLogo.text = t.Get("ui.news.logo");
@@ -134,6 +148,7 @@ namespace PlanErfuellt
         public void Stop()
         {
             playing = false;
+            anchorMood.End();
             cam.enabled = false;
             if (playerCam != null) playerCam.enabled = true;
         }
@@ -151,8 +166,15 @@ namespace PlanErfuellt
 
             // Kamerafahrt von der Totalen zum Sprecher (weich ein- und auslaufend)
             float k = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(time / gm.Config.news.durationSec));
-            var pos = Vector3.Lerp(V(c.widePos), V(dead ? c.closeDeadPos : c.closePos), k);
+            var pos = Vector3.Lerp(V(c.widePos) + wideOffsets[style], V(dead ? c.closeDeadPos : c.closePos) + closeOffsets[style], k);
             var tgt = Vector3.Lerp(V(c.wideTarget), V(dead ? c.closeDeadTarget : c.closeTarget), k);
+            if (shake > 0f)
+            {
+                float u = Time.unscaledTime * shakeFreq;
+                var n = new Vector3(Mathf.PerlinNoise(u, 0.1f) - 0.5f, Mathf.PerlinNoise(0.4f, u) - 0.5f, 0f) * 2f * shake;
+                pos += n;
+                tgt += n * 0.5f;
+            }
             cam.transform.position = transform.TransformPoint(pos);
             cam.transform.LookAt(transform.TransformPoint(tgt));
         }
@@ -162,16 +184,19 @@ namespace PlanErfuellt
         {
             float calm = 1f - dd;
             pivot.localRotation = Quaternion.Euler((dd * 1.3f + calm * Mathf.Sin(t * 1.3f) * 0.012f) * Mathf.Rad2Deg, 0f, 0f);
-            head.localRotation = Quaternion.Euler((-1.05f * dd + calm * Mathf.Sin(t * 0.9f) * 0.04f) * Mathf.Rad2Deg,
-                (calm * Mathf.Sin(t * 0.5f) * 0.18f + dd * 0.25f) * Mathf.Rad2Deg, dd * 0.4f * Mathf.Rad2Deg);
-            armL.localRotation = Quaternion.Euler(-1.3f * dd * Mathf.Rad2Deg, 0f, 0f);
-            armR.localRotation = Quaternion.Euler(-1.3f * dd * Mathf.Rad2Deg, 0f, 0f);
+            if (anchorMood != null) anchorMood.Tick(t, calm);
+            var moodHead = anchorMood != null ? anchorMood.HeadEuler * calm : Vector3.zero;
+            head.localRotation = Quaternion.Euler((-1.05f * dd + calm * Mathf.Sin(t * 0.9f) * 0.04f) * Mathf.Rad2Deg + moodHead.x,
+                (calm * Mathf.Sin(t * 0.5f) * 0.18f + dd * 0.25f) * Mathf.Rad2Deg + moodHead.y, dd * 0.4f * Mathf.Rad2Deg + moodHead.z);
+            var slump = Quaternion.Euler(-1.3f * dd * Mathf.Rad2Deg, 0f, 0f);
+            armL.localRotation = slump * Quaternion.Slerp(Quaternion.identity, anchorMood != null ? anchorMood.ArmL : Quaternion.identity, calm);
+            armR.localRotation = slump * Quaternion.Slerp(Quaternion.identity, anchorMood != null ? anchorMood.ArmR : Quaternion.identity, calm);
             foreach (var r in skin) Tint(r, Color.Lerp(skinAlive, skinDead, dd), false);
             eyesAlive.SetActive(dd < 0.5f);
             mouthAlive.SetActive(dd < 0.5f);
             eyesDead.SetActive(dd >= 0.5f);
             mouthDead.SetActive(dd >= 0.5f);
-            sweat.gameObject.SetActive(dd < 0.3f);
+            sweat.gameObject.SetActive(dd < 0.3f && (anchorMood == null || anchorMood.Mood != NewsMood.Joy));
             var sp = sweat.localPosition;
             sweat.localPosition = new Vector3(sp.x, 0.3f - (t * 0.7f % 1f) * 0.3f, sp.z);
 

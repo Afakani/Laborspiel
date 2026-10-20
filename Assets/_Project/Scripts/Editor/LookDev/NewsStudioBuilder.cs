@@ -106,9 +106,9 @@ namespace PlanErfuellt.EditorTools
             foreach (float sx in new[] { -1f, 1f })
                 skinR.Add(BlockoutKit.Sphere(head, "Ear", new Vector3(sx * 0.4f, 0f, 0f), 0.07f, skin, false).GetComponent<Renderer>());
             skinR.Add(BlockoutKit.Sphere(head, "Nose", new Vector3(0f, -0.01f, 0.4f), 0.06f, skin, false).GetComponent<Renderer>());
-            var eyesA = BlockoutKit.Group(head, "EyesAlive", Vector3.zero);
+            var eyesA = BlockoutKit.Group(head, "EyesAlive", new Vector3(0f, 0.07f, 0f));
             foreach (float sx in new[] { -1f, 1f })
-                BlockoutKit.Sphere(eyesA, "Eye", new Vector3(sx * 0.15f, 0.07f, 0.35f), 0.05f, black, false);
+                BlockoutKit.Sphere(eyesA, "Eye", new Vector3(sx * 0.15f, 0f, 0.35f), 0.05f, black, false);
             var mouthA = BlockoutKit.Group(head, "MouthAlive", new Vector3(0f, -0.13f, 0.36f));
             BlockoutKit.MeshObj(mouthA, "Smile", MeshFactory.Torus(0.1f, 0.016f), Vector3.zero, black, false, new Vector3(90f, 0f, 0f));
             mouthA.localScale = new Vector3(1f, 0.45f, 0.4f);
@@ -119,6 +119,40 @@ namespace PlanErfuellt.EditorTools
             var mouthD = BlockoutKit.Sphere(head, "MouthDead", new Vector3(0f, -0.15f, 0.37f), 0.07f, black, false);
             mouthD.transform.localScale = new Vector3(0.18f, 0.11f, 0.07f);
             var sweat = BlockoutKit.Sphere(head, "Sweat", new Vector3(-0.34f, 0.22f, 0.2f), 0.035f, sweatMat, false);
+
+            // Stimmungen: Brauen, weitere Mundformen, Wangen, Schweiß, Tränen, Taschentuch (NewsAnchorMood)
+            var pink = BlockoutKit.Mat("LD_StudioBlush", LabMaterials.Hex("#F08A8A"), 0f, 0.2f);
+            Transform Brow(float sx)
+            {
+                var g = BlockoutKit.Group(head, sx < 0 ? "BrowL" : "BrowR", new Vector3(sx * 0.15f, 0.17f, 0.33f));
+                BlockoutKit.Box(g, "Brow", Vector3.zero, new Vector3(0.14f, 0.03f, 0.03f), hairMat, false);
+                return g;
+            }
+            var browL = Brow(-1f);
+            var browR = Brow(1f);
+            var bigSmile = BlockoutKit.Group(head, "MouthJoy", new Vector3(0f, -0.14f, 0.34f));
+            BlockoutKit.Sphere(bigSmile, "Open", Vector3.zero, 0.1f, black, false).transform.localScale = new Vector3(0.22f, 0.12f, 0.08f);
+            BlockoutKit.Box(bigSmile, "Teeth", new Vector3(0f, 0.025f, 0.035f), new Vector3(0.16f, 0.03f, 0.02f), white, false);
+            var frown = BlockoutKit.Group(head, "MouthFrown", new Vector3(0f, -0.15f, 0.36f));
+            foreach (float sx in new[] { -1f, 1f })
+                BlockoutKit.Box(frown, "Arc", new Vector3(sx * 0.045f, 0f, 0f), new Vector3(0.1f, 0.022f, 0.02f), black, false, new Vector3(0f, 0f, -sx * 22f));
+            var wavy = BlockoutKit.Group(head, "MouthWavy", new Vector3(0f, -0.14f, 0.36f));
+            for (int k = 0; k < 4; k++)
+                BlockoutKit.Box(wavy, "Zig", new Vector3(-0.075f + k * 0.05f, 0f, 0f), new Vector3(0.058f, 0.018f, 0.02f), black, false, new Vector3(0f, 0f, k % 2 == 0 ? 28f : -28f));
+            var cheeks = BlockoutKit.Group(head, "Cheeks", Vector3.zero);
+            foreach (float sx in new[] { -1f, 1f })
+                BlockoutKit.Sphere(cheeks, "Cheek", new Vector3(sx * 0.2f, -0.05f, 0.29f), 0.06f, pink, false).transform.localScale = new Vector3(0.12f, 0.07f, 0.04f);
+            var drops = new List<Transform>();
+            foreach (var p in new[] { new Vector3(-0.25f, 0.25f, 0.25f), new Vector3(0.27f, 0.2f, 0.24f), new Vector3(0.05f, 0.3f, 0.28f) })
+                drops.Add(BlockoutKit.Sphere(head, "SweatDrop", p, 0.03f, sweatMat, false).transform);
+            var tears = new List<Transform>();
+            var streaks = BlockoutKit.Group(head, "TearStreaks", Vector3.zero);
+            foreach (float sx in new[] { -1f, 1f })
+            {
+                tears.Add(BlockoutKit.Sphere(head, "Tear", new Vector3(sx * 0.15f, 0.02f, 0.37f), 0.028f, sweatMat, false).transform);
+                BlockoutKit.Box(streaks, "Streak", new Vector3(sx * 0.15f, -0.07f, 0.355f), new Vector3(0.025f, 0.18f, 0.01f), sweatMat, false);
+            }
+            var hanky = BlockoutKit.Box(armR, "Hanky", new Vector3(0f, -1.0f, 0.08f), new Vector3(0.2f, 0.16f, 0.03f), white, false, new Vector3(0f, 0f, 15f));
 
             // Pflanze, Tasse, Papier
             var plant = BlockoutKit.Group(t, "Plant", new Vector3(2.3f, 1.1f, 1.0f));
@@ -136,7 +170,8 @@ namespace PlanErfuellt.EditorTools
                 leafR.Add(leaf.GetComponent<Renderer>());
             }
             BlockoutKit.Cyl(t, "Cup", new Vector3(-2.3f, 1.2f, 1.0f), 0.09f, 0.2f, white, false);
-            BlockoutKit.Box(t, "Paper", new Vector3(-0.95f, 1.106f, 1.05f), new Vector3(0.7f, 0.012f, 0.5f), white, false, new Vector3(0f, -14f, 0f));
+            var paper = BlockoutKit.Box(t, "Paper", new Vector3(-0.95f, 1.106f, 1.05f), new Vector3(0.7f, 0.012f, 0.5f), white, false, new Vector3(0f, -14f, 0f));
+            var confetti = Confetti(t);
             var flies = new List<Transform>();
             for (int i = 0; i < 4; i++)
             {
@@ -180,6 +215,9 @@ namespace PlanErfuellt.EditorTools
             foreach (var c in root.GetComponentsInChildren<Collider>(true)) Object.DestroyImmediate(c);
             foreach (var tr in root.GetComponentsInChildren<Transform>(true)) tr.gameObject.isStatic = false;
 
+            var mood = root.AddComponent<NewsAnchorMood>();
+            mood.Setup(browL, browR, mouthA.gameObject, bigSmile.gameObject, frown.gameObject, wavy.gameObject, eyesA, cheeks.gameObject,
+                drops.ToArray(), tears.ToArray(), streaks.gameObject, hanky, confetti, paper.transform);
             var studio = root.AddComponent<NewsStudio>();
             var so = new SerializedObject(studio);
             void Set(string f, Object v) => so.FindProperty(f).objectReferenceValue = v;
@@ -190,6 +228,7 @@ namespace PlanErfuellt.EditorTools
                 for (int i = 0; i < items.Count; i++) p.GetArrayElementAtIndex(i).objectReferenceValue = items[i];
             }
             Set("cam", cam);
+            Set("anchorMood", mood);
             Set("pivot", pivot);
             Set("head", head);
             Set("armL", armL);
@@ -228,6 +267,48 @@ namespace PlanErfuellt.EditorTools
             // Beide Szenen in die Build-Einstellungen
             var list = new List<EditorBuildSettingsScene> { new EditorBuildSettingsScene(lab.path, true), new EditorBuildSettingsScene(ScenePath, true) };
             EditorBuildSettings.scenes = list.ToArray();
+        }
+
+        /// <summary>Konfetti über dem Pult (Jubel-Sendung): bunte Papierstücke, die langsam trudelnd fallen.</summary>
+        static ParticleSystem Confetti(Transform t)
+        {
+            var go = new GameObject("Confetti");
+            go.transform.SetParent(t, false);
+            go.transform.localPosition = new Vector3(0f, 5.5f, 1.2f);
+            var ps = go.AddComponent<ParticleSystem>();
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var main = ps.main;
+            main.playOnAwake = false;
+            main.loop = true;
+            main.duration = 5f;
+            main.useUnscaledTime = true;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(4f, 6f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.1f, 0.5f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.06f, 0.11f);
+            main.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
+            main.gravityModifier = 0.12f;
+            main.maxParticles = 400;
+            var grad = new Gradient();
+            grad.SetKeys(new[] { new GradientColorKey(LabMaterials.Hex("#D01A1A"), 0f), new GradientColorKey(LabMaterials.Hex("#FFD24A"), 0.35f),
+                    new GradientColorKey(LabMaterials.Hex("#F4EFE3"), 0.65f), new GradientColorKey(LabMaterials.Hex("#3AA0FF"), 1f) },
+                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(1f, 1f) });
+            main.startColor = new ParticleSystem.MinMaxGradient(grad) { mode = ParticleSystemGradientMode.RandomColor };
+            var em = ps.emission;
+            em.rateOverTime = 70f;
+            var shape = ps.shape;
+            shape.shapeType = ParticleSystemShapeType.Box;
+            shape.scale = new Vector3(7f, 0.1f, 3f);
+            var rot = ps.rotationOverLifetime;
+            rot.enabled = true;
+            rot.z = new ParticleSystem.MinMaxCurve(-4f, 4f);
+            var noise = ps.noise;
+            noise.enabled = true;
+            noise.strength = 0.4f;
+            noise.frequency = 0.6f;
+            var r = go.GetComponent<ParticleSystemRenderer>();
+            r.sharedMaterial = LookDevKit.Additive("LD_Confetti", "Confetti.png", Color.white, false);
+            r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            return ps;
         }
 
         /// <summary>Weltraum-Text ohne Billboard; key = fester Text aus der JSON, sonst leer (setzt NewsStudio).</summary>

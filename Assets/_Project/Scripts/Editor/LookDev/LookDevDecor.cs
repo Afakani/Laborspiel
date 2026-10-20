@@ -21,12 +21,13 @@ namespace PlanErfuellt.EditorTools
             float xWall = r.sideWallX, zBack = -r.backWallZ, zFront = -r.frontWallZ;
             var d = BlockoutKit.Group(root, "LookDevDecor", Vector3.zero);
 
-            // Plakate: linke Wand (Blick nach +x) und Rückwand (Blick nach +z)
+            // Plakate: linke Wand (Blick nach +x) und rechte Wand hinter dem Fenster (Blick nach -x);
+            // die Rückwand ist wegen der Türen zu den Nebenzimmern frei
             Poster(d, 0, new Vector3(-xWall + 0.02f, 4.5f, -2.6f), -90f, "#D01A1A", "#F4EFE3");
             Poster(d, 1, new Vector3(-xWall + 0.02f, 4.5f, -5.6f), -90f, "#2A2622", "#FFD24A");
             Poster(d, 2, new Vector3(-xWall + 0.02f, 4.5f, -8.4f), -90f, "#B3121B", "#F4EFE3");
-            Poster(d, 3, new Vector3(-5.9f, 4.5f, zBack + 0.02f), 180f, "#1D3A8A", "#F4EFE3");
-            Poster(d, 4, new Vector3(5.9f, 4.5f, zBack + 0.02f), 180f, "#E9E1CC", "#2A2622");
+            Poster(d, 3, new Vector3(-xWall + 0.02f, 4.5f, -11.6f), -90f, "#1D3A8A", "#F4EFE3");
+            Poster(d, 4, new Vector3(xWall - 0.02f, 4.5f, -13.2f), 90f, "#E9E1CC", "#2A2622");
 
             // Warnschilder neben der Mischstation und hinter der Zentrifuge (Prototyp warnSign; neben statt hinter den Tanks, sonst verdeckt)
             WarnSign(d, new Vector3(-3.55f, 2.2f, -3.4f), new Vector2(1.0f, 0.5f));
@@ -36,10 +37,7 @@ namespace PlanErfuellt.EditorTools
             foreach (var z in new[] { -3.4f, -7.0f })
                 JarShelf(d, new Vector3(-xWall + 0.4f, 0f, z), z < -5f ? 7 : 3);
 
-            // Spinde hinten links
-            for (int i = 0; i < 4; i++)
-                Locker(d, new Vector3(-15.5f + i * 0.78f, 0f, zBack + 0.32f), i);
-            Solid(d, "LockerBlock", new Vector3(-14.33f, 1.05f, zBack + 0.32f), new Vector3(3.1f, 2.1f, 0.6f));
+            // Spinde stehen jetzt in der Umkleide (LookDevRooms)
 
             // Büroecke unter dem Fenster mit Teppich und Aktenschränken
             Desk(d, new Vector3(xWall - 0.52f, 0f, -9.6f));
@@ -156,9 +154,9 @@ namespace PlanErfuellt.EditorTools
         }
 
         /// <summary>Grüner Stahlspind mit Lüftungsschlitzen, Griff und Nummernschild.</summary>
-        static void Locker(Transform parent, Vector3 pos, int i)
+        internal static void Locker(Transform parent, Vector3 pos, int i, float yaw = 180f)
         {
-            var g = BlockoutKit.Group(parent, "Locker", pos, 180f);
+            var g = BlockoutKit.Group(parent, "Locker", pos, yaw);
             LookDevKit.Box(g, "Body", new Vector3(0f, 1.05f, 0f), new Vector3(0.74f, 2.1f, 0.6f), L.GreenPaint);
             LookDevKit.Box(g, "Door", new Vector3(0f, 1.05f, -0.305f), new Vector3(0.66f, 2.0f, 0.01f), L.GreenPaint);
             for (int s = 0; s < 4; s++)
@@ -268,7 +266,7 @@ namespace PlanErfuellt.EditorTools
         }
 
         /// <summary>Roter Teppich mit Emblem (Bild 07), flach auf dem Boden.</summary>
-        static void Carpet(Transform parent, Vector3 pos, Vector2 size)
+        internal static void Carpet(Transform parent, Vector3 pos, Vector2 size)
         {
             var m = LookDevKit.Textured("LD_Carpet", "Carpet.png", Color.white, 0f, 0.05f);
             var c = LookDevKit.Plane(parent, "Carpet", pos + new Vector3(0f, 0.012f, 0f), size, m, new Vector3(90f, 0f, 0f));
@@ -336,7 +334,7 @@ namespace PlanErfuellt.EditorTools
         }
 
         /// <summary>Unsichtbarer Kollider (Spieler läuft nicht durch Möbel).</summary>
-        static void Solid(Transform g, string name, Vector3 center, Vector3 size)
+        internal static void Solid(Transform g, string name, Vector3 center, Vector3 size)
         {
             var go = new GameObject(name);
             go.transform.SetParent(g, false);

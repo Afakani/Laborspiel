@@ -269,6 +269,13 @@ CLASSES = [
         F("float", "absXMin"), F("float", "absXMax"), F("float", "zMin"), F("float", "zMax")]),
     ("WindowLayout", "Fenster in der rechten Seitenwand.", [
         F("float", "x"), F("float", "y"), F("float", "z"), F("float", "width"), F("float", "height")]),
+    ("WingLayout", "Anbau mit Nebenzimmern hinter der Rückwand (Proto-z wächst nach hinten).", [
+        F("float", "depth", "Tiefe der Zimmer in m"), F("float", "height", "Deckenhöhe der Zimmer"),
+        F("float", "partition", "Dicke der Trennwände"), F("float", "doorWidth"), F("float", "doorHeight"),
+        F("float", "margin", "Abstand des Spielers zu den Wänden")]),
+    ("SideRoomLayout", "Nebenzimmer im Anbau: x-Bereich und Türmitte in der Rückwand der Halle.", [
+        F("string", "id", "storage, locker, bedroom, canteen, director (Schild: ui.rooms.<id>)"),
+        F("float", "xMin"), F("float", "xMax"), F("float", "doorX", "Türmitte")]),
     ("BobConfig", "Kopfwippen und Neigen der Kamera beim Laufen.", [
         F("float", "phaseSpeed", "Schrittphase pro s beim Laufen"), F("float", "ampY"), F("float", "ampX"),
         F("float", "breatheAmp"), F("float", "breatheFreq"), F("float", "rollPerSpeedDeg", "Neigung pro m/s Seitwärtslaufen"),

@@ -5,7 +5,8 @@ namespace PlanErfuellt
 {
     /// <summary>
     /// Fernseher mit dem Direktor (GDD 7.2): Beim Sprechen erscheint der Spruch auf dem Parolenfeld und das Bild
-    /// pulsiert; ist der Direktor cholerisch (dritte Wut-Stufe), flackert das Bild und das TV-Licht wird rot.
+    /// pulsiert und der Direktor (DirectorRig) bewegt den Mund; ist er cholerisch (dritte Wut-Stufe), flackert das Bild
+    /// und das TV-Licht wird rot.
     /// </summary>
     public class TvDirectorFx : MonoBehaviour
     {
@@ -14,6 +15,7 @@ namespace PlanErfuellt
         [SerializeField] Renderer screen;
         [SerializeField] TMP_Text slogan;
         [SerializeField] Light tvLight;
+        [SerializeField] DirectorRig rig;
         [SerializeField] float screenEmission = 1.6f;
         [SerializeField] Color calmLight = new Color(1f, 0.42f, 0.31f);
         [SerializeField] Color rageLight = new Color(1f, 0.08f, 0.05f);
@@ -25,8 +27,9 @@ namespace PlanErfuellt
         string idleText;
         float sloganSize;
 
-        public void Setup(Renderer screenRenderer, TMP_Text sloganText, Light light)
+        public void Setup(Renderer screenRenderer, TMP_Text sloganText, Light light, DirectorRig directorRig)
         {
+            rig = directorRig;
             screen = screenRenderer;
             slogan = sloganText;
             tvLight = light;
@@ -53,6 +56,7 @@ namespace PlanErfuellt
             slogan.rectTransform.sizeDelta = new Vector2(1.5f, 2.8f);
             slogan.textWrappingMode = TMPro.TextWrappingModes.Normal;
             slogan.text = line;
+            if (rig != null) rig.Speak(speakLeft);
         }
 
         void Update()
@@ -74,9 +78,13 @@ namespace PlanErfuellt
             float e = screenEmission;
             if (speakLeft > 0f) e *= 0.85f + 0.25f * Mathf.Abs(Mathf.Sin(t * 9f));
             if (rage && Mathf.PerlinNoise(t * 6f, 0.5f) < 0.3f) e *= 0.15f;
-            screen.GetPropertyBlock(mpb);
-            mpb.SetColor(EmissionId, Color.white * e);
-            screen.SetPropertyBlock(mpb);
+            if (rig != null) rig.SetEmission(e);
+            else
+            {
+                screen.GetPropertyBlock(mpb);
+                mpb.SetColor(EmissionId, Color.white * e);
+                screen.SetPropertyBlock(mpb);
+            }
             tvLight.color = rage ? rageLight : calmLight;
             tvLight.intensity = rage ? rageIntensity * (0.6f + 0.4f * Mathf.Sin(t * 5f)) : calmIntensity;
         }
