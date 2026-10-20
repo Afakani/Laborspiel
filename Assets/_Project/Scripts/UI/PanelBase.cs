@@ -68,8 +68,8 @@ namespace PlanErfuellt
         protected virtual void Update()
         {
             if (!IsOpen) return;
-            // Leertaste schließt (nicht im selben Frame, in dem das Panel aufging)
-            if (Time.frameCount > openedFrame && InputReader.InteractPressed)
+            // F oder Leertaste schließt (nicht im selben Frame, in dem das Panel aufging)
+            if (Time.frameCount > openedFrame && (InputReader.InteractPressed || InputReader.JumpPressed))
             {
                 Close();
                 return;

@@ -72,7 +72,7 @@ namespace PlanErfuellt
         public static bool InteractHeld { get { if (TestInteract.HasValue) return TestInteract.Value; Init(); return ready && interact.IsPressed(); } }
         /// <summary>Sprinten (Shift gehalten).</summary>
         public static bool SprintHeld { get { if (TestSprint.HasValue) return TestSprint.Value; Init(); return ready && sprint.IsPressed(); } }
-        /// <summary>Springen (Leertaste; nur wenn keine Station im Ziel ist, siehe FirstPersonController).</summary>
+        /// <summary>Springen (Leertaste).</summary>
         public static bool JumpPressed { get { Init(); return ready && jump.WasPressedThisFrame(); } }
         public static bool InteractPressed { get { Init(); return ready && interact.WasPressedThisFrame(); } }
         public static bool PausePressed { get { Init(); return ready && pause.WasPressedThisFrame(); } }

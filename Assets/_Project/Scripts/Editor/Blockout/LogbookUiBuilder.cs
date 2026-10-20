@@ -30,7 +30,7 @@ namespace PlanErfuellt.EditorTools
             var rootRt = (RectTransform)root.transform;
             rootRt.SetParent(host.transform, false);
             rootRt.anchorMin = rootRt.anchorMax = rootRt.pivot = new Vector2(0.5f, 0.5f);
-            rootRt.sizeDelta = new Vector2(1380f, 920f);
+            rootRt.sizeDelta = new Vector2(1720f, 960f);
             root.GetComponent<Image>().color = Leather;
             var paper = Img(rootRt, "Paper", PaperC);
             P.Stretch(paper.rectTransform);
@@ -39,8 +39,11 @@ namespace PlanErfuellt.EditorTools
             var pr = paper.rectTransform;
 
             var title = P.Text(pr, "Title", 40, Ink, new Vector2(40f, -22f), new Vector2(900f, 52f), TextAlignmentOptions.Left);
-            var intro = P.Text(pr, "Intro", 19, InkSoft, new Vector2(40f, -78f), new Vector2(1100f, 52f), TextAlignmentOptions.TopLeft);
+            var intro = P.Text(pr, "Intro", 19, InkSoft, new Vector2(40f, -78f), new Vector2(1400f, 56f), TextAlignmentOptions.TopLeft);
             intro.textWrappingMode = TextWrappingModes.Normal;
+            intro.enableAutoSizing = true;
+            intro.fontSizeMin = 13f;
+            intro.fontSizeMax = 19f;
             var close = P.MakeButton(pr, "Close", new Vector2(-30f, -22f), new Vector2(240f, 48f), new Color(0.82f, 0.76f, 0.62f), Leather, 20, true);
             close.GetComponentInChildren<TMP_Text>().color = Ink;
             // rote Randlinie wie im Schulheft
@@ -134,9 +137,10 @@ namespace PlanErfuellt.EditorTools
             var animal = SpriteImg(sk, "Animal", "SketchCow.png", Vector2.zero, new Vector2(150f, 150f));
             var udder = SpriteImg(animal.rectTransform, "Udder", "SketchUdder.png", new Vector2(4f, -24f), new Vector2(46f, 46f));
 
-            var title = P.Text(rt, "Title", 26, Ink, new Vector2(184f, -12f), new Vector2(1000f, 34f), TextAlignmentOptions.Left);
-            var sub = P.Text(rt, "Sub", 17, InkSoft, new Vector2(184f, -46f), new Vector2(1000f, 26f), TextAlignmentOptions.Left, P.mono);
-            var body = P.Text(rt, "Body", 18, Ink, new Vector2(184f, -76f), new Vector2(1000f, 120f), TextAlignmentOptions.TopLeft);
+            var title = P.Text(rt, "Title", 26, Ink, new Vector2(184f, -12f), new Vector2(1300f, 34f), TextAlignmentOptions.Left);
+            var sub = P.Text(rt, "Sub", 17, InkSoft, new Vector2(184f, -46f), new Vector2(1300f, 26f), TextAlignmentOptions.Left, P.mono);
+            sub.overflowMode = TextOverflowModes.Ellipsis;
+            var body = P.Text(rt, "Body", 18, Ink, new Vector2(184f, -76f), new Vector2(1300f, 120f), TextAlignmentOptions.TopLeft);
             body.textWrappingMode = TextWrappingModes.Normal;
 
             var card = go.AddComponent<LogbookCard>();

@@ -243,7 +243,7 @@ namespace PlanErfuellt
             if (Mode == DayMode.News)
             {
                 newsTime += Time.unscaledDeltaTime;
-                if (InputReader.InteractPressed) SkipNews();
+                if (InputReader.InteractPressed || InputReader.JumpPressed) SkipNews();
                 if (Mode == DayMode.News && newsTime >= gm.Config.news.durationSec) EndNews();
                 return;
             }

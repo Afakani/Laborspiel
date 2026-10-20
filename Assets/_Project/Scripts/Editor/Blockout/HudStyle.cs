@@ -71,6 +71,7 @@ namespace PlanErfuellt.EditorTools
             int n = 0;
             foreach (var b in root.GetComponentsInChildren<Button>(true))
             {
+                AddHoverFx(b, sprite);
                 if (InPaper(b.transform, root) || !(b.targetGraphic is Image img) || img.sprite != null) continue;
                 img.sprite = sprite;
                 img.type = Image.Type.Sliced;
@@ -96,6 +97,27 @@ namespace PlanErfuellt.EditorTools
                 n++;
             }
             return n;
+        }
+
+        /// <summary>Hover-/Klick-Rückmeldung (ButtonHoverFx) mit eigener Leuchtfläche über dem Hintergrund, unter dem Text.</summary>
+        static void AddHoverFx(Button b, Sprite sprite)
+        {
+            if (b.GetComponent<ButtonHoverFx>() != null) return;
+            var go = new GameObject("HoverGlow", typeof(RectTransform), typeof(Image));
+            var rt = (RectTransform)go.transform;
+            rt.SetParent(b.transform, false);
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.offsetMin = rt.offsetMax = Vector2.zero;
+            var bg = b.transform.Find("Bg");
+            rt.SetSiblingIndex(bg != null ? bg.GetSiblingIndex() + 1 : 0);
+            var img = go.GetComponent<Image>();
+            img.sprite = sprite;
+            img.type = Image.Type.Sliced;
+            img.pixelsPerUnitMultiplier = 2f;
+            img.color = Color.clear;
+            img.raycastTarget = false;
+            b.gameObject.AddComponent<ButtonHoverFx>().Setup(img);
         }
 
         /// <summary>Schieberegler: Messingknopf, eingelassene Spur.</summary>

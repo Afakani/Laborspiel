@@ -24,6 +24,15 @@ namespace PlanErfuellt
         [SerializeField] Color paperSecret = new Color(1f, 0.88f, 0.55f);
         [SerializeField] Color paperFun = new Color(1f, 0.85f, 0.93f);
         [SerializeField] Color paperRecords = new Color(0.9f, 0.93f, 0.85f);
+        [Header("Layout (Texte wachsen mit, nichts überlappt)")]
+        [SerializeField] float textLeftSketch = 184f;
+        [SerializeField] float textLeftPlain = 24f;
+        [SerializeField] float textRight = 24f;
+        [SerializeField] float bodyTop = 76f;
+        [SerializeField] float bottomPad = 18f;
+        [SerializeField] float minHeightSketch = 190f;
+        [SerializeField] float minHeightPlain = 90f;
+        [SerializeField] float fallbackWidth = 1500f;
 
         public void Setup(Image paperImg, TMP_Text titleText, TMP_Text subText, TMP_Text bodyText, RectTransform sketch,
             Image animalImg, Image udderImg, Image frameImg, Sprite cow, Sprite hen)
@@ -54,6 +63,7 @@ namespace PlanErfuellt
             };
             bool sketch = e.section != LogbookSection.Records;
             sketchRoot.gameObject.SetActive(sketch);
+            LayoutText(sketch);
             if (!sketch) return;
             LogbookLogic.SketchShape(e.sketch, cfg, out float scale, out int udders, out bool dashed);
             animal.sprite = e.kind == AnimalKind.Hen ? henSprite : cowSprite;
@@ -61,6 +71,25 @@ namespace PlanErfuellt
             udder.gameObject.SetActive(e.kind == AnimalKind.Cow && udders > 0);
             udder.rectTransform.localScale = Vector3.one * (0.6f + 0.25f * udders);
             frame.gameObject.SetActive(dashed);
+        }
+
+        /// <summary>Texte auf die volle Kartenbreite legen und die Kartenhöhe nach dem Text richten.</summary>
+        void LayoutText(bool sketch)
+        {
+            var parent = transform.parent as RectTransform;
+            float cardW = parent != null && parent.rect.width > 100f ? parent.rect.width - 20f : fallbackWidth;
+            float left = sketch ? textLeftSketch : textLeftPlain;
+            float w = Mathf.Max(200f, cardW - left - textRight);
+            foreach (var t in new[] { title, sub, body })
+            {
+                var r = t.rectTransform;
+                r.anchoredPosition = new Vector2(left, r.anchoredPosition.y);
+                r.sizeDelta = new Vector2(w, r.sizeDelta.y);
+            }
+            float h = body.GetPreferredValues(body.text, w, 0f).y;
+            body.rectTransform.sizeDelta = new Vector2(w, h + 4f);
+            var le = GetComponent<LayoutElement>();
+            if (le != null) le.minHeight = Mathf.Max(sketch ? minHeightSketch : minHeightPlain, bodyTop + h + bottomPad);
         }
     }
 }

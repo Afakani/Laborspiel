@@ -30,7 +30,9 @@ namespace PlanErfuellt.EditorTools
             var scaler = root.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920f, 1080f);
-            scaler.matchWidthOrHeight = 0.5f;
+            scaler.matchWidthOrHeight = 1f;
+            // Bildformat (Laptop 16:10, 4:3, 21:9): Skalierung nach Breite oder Höhe
+            root.AddComponent<CanvasAspectFit>();
             root.AddComponent<GraphicRaycaster>();
 
             // Infektion: grüner Schleier hinter allem, Anzeige oben links (Phase 5)
@@ -109,6 +111,9 @@ namespace PlanErfuellt.EditorTools
 
             // Bestellterminal, Start- und Endbildschirm (Phase 6)
             HudDayBuilder.BuildOverlays(root.transform);
+
+            // Einführung vor die Panels (bleibt beim Mischen und am Pult sichtbar), aber unter Pause und Einstellungen
+            root.transform.Find("Tutorial").SetAsLastSibling();
 
             // Industrie-Stil für dunkle HUD- und Panel-Flächen (Art-Pass)
             HudStyle.Apply(root.transform);

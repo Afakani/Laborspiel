@@ -18,9 +18,9 @@ Beenden: Hauptmenü „Beenden“, im Spiel Esc → „Spiel beenden“, oder Al
 |---|---|
 | W A S D | laufen |
 | Shift halten | sprinten |
-| Leertaste (ohne Station im Ziel) | springen |
+| Leertaste | springen (schließt auch Panels) |
 | Maus oder Q / E | umsehen bzw. drehen |
-| Leertaste halten | Station benutzen (Mischstation, Pult, Laken, Zentrifuge …) |
+| F halten | Station benutzen (Mischstation, Pult, Laken, Zentrifuge …) |
 | G | Gegenmittel selbst spritzen (nach Infektion) |
 | L | Forschungslogbuch |
 | B | Baumodus (Maschinen, ab Plan 2) |

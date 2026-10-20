@@ -56,6 +56,8 @@ namespace PlanErfuellt.EditorTools
             Set(go.AddComponent<RageBorder>(), "border", img);
         }
 
+        const float QuotaScale = 0.8f;
+
         static void BuildQuota(Transform canvas)
         {
             var holder = Holder(canvas, "Quota");
@@ -100,6 +102,8 @@ namespace PlanErfuellt.EditorTools
             so.FindProperty("contract").objectReferenceValue = contract;
             so.FindProperty("hint").objectReferenceValue = hint;
             so.ApplyModifiedPropertiesWithoutUndo();
+            // kompakter: ganzes Planfenster auf 80 % (Drehpunkt oben links bleibt)
+            root.localScale = new Vector3(QuotaScale, QuotaScale, 1f);
             root.gameObject.SetActive(false);
         }
 
@@ -361,35 +365,45 @@ namespace PlanErfuellt.EditorTools
             var brt = (RectTransform)box.transform;
             brt.SetParent(holder, false);
             brt.anchorMin = brt.anchorMax = brt.pivot = new Vector2(0.5f, 1f);
-            brt.anchoredPosition = new Vector2(0f, -140f);
-            brt.sizeDelta = new Vector2(860f, 104f);
-            box.GetComponent<Image>().color = new Color(0.05f, 0.04f, 0.03f, 0.94f);
+            brt.anchoredPosition = new Vector2(0f, -138f);
+            brt.sizeDelta = new Vector2(1040f, 134f);
+            // grüner Rahmen, dunkle Innenfläche (bekommt das Metallschild aus HudStyle)
+            var boxFrame = box.GetComponent<Image>();
+            boxFrame.color = Green;
+            var inner = new GameObject("Inner", typeof(RectTransform), typeof(Image));
+            var irt = (RectTransform)inner.transform;
+            irt.SetParent(brt, false);
+            irt.anchorMin = Vector2.zero;
+            irt.anchorMax = Vector2.one;
+            irt.offsetMin = new Vector2(3f, 3f);
+            irt.offsetMax = new Vector2(-3f, -3f);
+            inner.GetComponent<Image>().color = new Color(0.05f, 0.04f, 0.03f, 0.97f);
             var stripe = new GameObject("Stripe", typeof(RectTransform), typeof(Image));
             var srt = (RectTransform)stripe.transform;
             srt.SetParent(brt, false);
             srt.anchorMin = new Vector2(0f, 0f);
             srt.anchorMax = new Vector2(0f, 1f);
             srt.pivot = new Vector2(0f, 0.5f);
-            srt.sizeDelta = new Vector2(8f, 0f);
+            srt.sizeDelta = new Vector2(12f, 0f);
             stripe.GetComponent<Image>().color = Green;
-            var title = P.Text(brt, "Title", 18, Green, new Vector2(26f, -10f), new Vector2(800f, 26f), TextAlignmentOptions.Left);
+            var title = P.Text(brt, "Title", 22, Green, new Vector2(30f, -10f), new Vector2(980f, 30f), TextAlignmentOptions.Left);
             title.characterSpacing = 6f;
-            var text = P.Text(brt, "Text", 23, P.Cream, new Vector2(26f, -38f), new Vector2(814f, 60f), TextAlignmentOptions.TopLeft);
+            var text = P.Text(brt, "Text", 30, Color.white, new Vector2(30f, -44f), new Vector2(990f, 82f), TextAlignmentOptions.TopLeft);
             text.textWrappingMode = TMPro.TextWrappingModes.Normal;
             text.enableAutoSizing = true;
-            text.fontSizeMin = 16f;
-            text.fontSizeMax = 23f;
+            text.fontSizeMin = 20f;
+            text.fontSizeMax = 30f;
 
             var marker = new GameObject("Marker", typeof(RectTransform));
             var mrt = (RectTransform)marker.transform;
             mrt.SetParent(holder, false);
             mrt.anchorMin = mrt.anchorMax = mrt.pivot = new Vector2(0.5f, 0.5f);
-            mrt.sizeDelta = new Vector2(64f, 64f);
-            var arrow = Raw(mrt, "Arrow", "Arrow.png", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(56f, 56f), Green);
+            mrt.sizeDelta = new Vector2(84f, 84f);
+            var arrow = Raw(mrt, "Arrow", "Arrow.png", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(76f, 76f), Green);
             arrow.rectTransform.pivot = new Vector2(0.5f, 0.5f);
-            var dist = P.Text(mrt, "Distance", 20, Green, new Vector2(-40f, -62f), new Vector2(144f, 28f), TextAlignmentOptions.Center, P.mono);
+            var dist = P.Text(mrt, "Distance", 24, Green, new Vector2(-40f, -62f), new Vector2(144f, 28f), TextAlignmentOptions.Center, P.mono);
             dist.rectTransform.anchorMin = dist.rectTransform.anchorMax = dist.rectTransform.pivot = new Vector2(0.5f, 0.5f);
-            dist.rectTransform.anchoredPosition = new Vector2(0f, -46f);
+            dist.rectTransform.anchoredPosition = new Vector2(0f, -58f);
 
             var ui = holder.gameObject.AddComponent<TutorialUI>();
             var so = new SerializedObject(ui);
@@ -399,7 +413,14 @@ namespace PlanErfuellt.EditorTools
             so.FindProperty("marker").objectReferenceValue = mrt;
             so.FindProperty("arrow").objectReferenceValue = arrow.rectTransform;
             so.FindProperty("distance").objectReferenceValue = dist;
+            so.FindProperty("frame").objectReferenceValue = boxFrame;
             so.ApplyModifiedPropertiesWithoutUndo();
+
+            // Leuchtpfeile am Boden zum Ziel (TutorialPath)
+            var path = holder.gameObject.AddComponent<TutorialPath>();
+            var pso = new SerializedObject(path);
+            pso.FindProperty("material").objectReferenceValue = LookDevKit.Additive("LD_TutorialArrow", "Arrow.png", new Color(0.35f, 1f, 0.4f, 0.9f), true);
+            pso.ApplyModifiedPropertiesWithoutUndo();
         }
 
         /// <summary>Bild aus einer eigenen Textur (RawImage, ändert die Import-Einstellung der 3D-Textur nicht).</summary>

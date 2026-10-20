@@ -6,7 +6,8 @@ namespace PlanErfuellt
 {
     /// <summary>
     /// Anzeige der Einführung: Zielkasten oben („EINFÜHRUNG 3/9“ und Aufgabe) und ein Pfeil, der auf die Zielstation
-    /// zeigt (über der Station mit Entfernung, außerhalb des Bildes am Rand in Blickrichtung).
+    /// zeigt (über der Station mit Entfernung, außerhalb des Bildes am Rand in Blickrichtung). Ein neuer Schritt
+    /// blinkt kurz auf. Vor großen Panels (Bestellung, Logbuch) tritt der Kasten zurück.
     /// </summary>
     public class TutorialUI : MonoBehaviour
     {
@@ -18,17 +19,31 @@ namespace PlanErfuellt
         [SerializeField] TMP_Text distance;
         [SerializeField] float markerHeight = 2.6f;
         [SerializeField] float edgeMargin = 70f;
+        [Tooltip("Oberer Bereich (Canvas-Einheiten) bleibt für Leiste, Chips und Einführungskasten frei")]
+        [SerializeField] float topReserve = 300f;
         [SerializeField] float bobAmp = 8f;
         [SerializeField] float bobFreq = 4f;
+        [SerializeField] Image frame;
+        [SerializeField] Color flashColor = new Color(1f, 0.85f, 0.3f, 1f);
+        [SerializeField] float flashSec = 1.2f;
+        [SerializeField] float flashScale = 0.06f;
 
         int shownStep = -2;
         Transform target;
         Camera cam;
         RectTransform canvasRect;
+        Color frameColor;
+        float flash;
+
+        /// <summary>Ziel des aktuellen Schritts (für die Bodenpfeile), sonst null.</summary>
+        public Transform Target => target;
+        /// <summary>Sollen Hinweise im Raum gezeigt werden (Einführung aktiv, Spiel läuft, kein Panel offen)?</summary>
+        public bool Guiding { get; private set; }
 
         void Start()
         {
             canvasRect = (RectTransform)GetComponentInParent<Canvas>().transform;
+            if (frame != null) frameColor = frame.color;
             box.SetActive(false);
             marker.gameObject.SetActive(false);
         }
@@ -44,10 +59,29 @@ namespace PlanErfuellt
             if (step != shownStep)
             {
                 shownStep = step;
-                box.SetActive(active);
-                if (active) Fill(gm, step);
+                if (active)
+                {
+                    Fill(gm, step);
+                    flash = 1f;
+                }
             }
+            // große Panels überdecken den Kasten nicht
+            string open = PanelBase.OpenId;
+            bool covered = open == "order" || open == "logbook";
+            if (box.activeSelf != (active && !covered)) box.SetActive(active && !covered);
+            Flash();
+            Guiding = active && !gm.Clock.Paused && !gm.PanelOpen && target != null;
             UpdateMarker(active && !gm.Clock.Paused && !gm.PanelOpen);
+        }
+
+        /// <summary>Neuer Schritt: Rahmen leuchtet golden auf, Kasten federt kurz.</summary>
+        void Flash()
+        {
+            if (flash <= 0f || frame == null) return;
+            flash = Mathf.Max(0f, flash - Time.unscaledDeltaTime / flashSec);
+            float pulse = flash * (0.6f + 0.4f * Mathf.Sin(Time.unscaledTime * 14f));
+            frame.color = Color.Lerp(frameColor, flashColor, pulse);
+            box.transform.localScale = Vector3.one * (1f + flashScale * flash * flash);
         }
 
         void Fill(GameManager gm, int step)
@@ -85,7 +119,8 @@ namespace PlanErfuellt
             var sp = cam.WorldToScreenPoint(world);
             bool behind = sp.z < 0f;
             if (behind) sp = new Vector3(Screen.width - sp.x, Screen.height - sp.y, 0f);
-            bool inside = !behind && sp.x > edgeMargin && sp.x < Screen.width - edgeMargin && sp.y > edgeMargin && sp.y < Screen.height - edgeMargin;
+            float topM = Mathf.Max(edgeMargin, topReserve * canvasRect.localScale.y);
+            bool inside = !behind && sp.x > edgeMargin && sp.x < Screen.width - edgeMargin && sp.y > edgeMargin && sp.y < Screen.height - topM;
 
             var center = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
             Vector2 pos = sp;
@@ -102,7 +137,7 @@ namespace PlanErfuellt
                 var dir = ((Vector2)sp - center).normalized;
                 if (dir.sqrMagnitude < 0.01f) dir = Vector2.down;
                 float kx = (Screen.width * 0.5f - edgeMargin) / Mathf.Max(0.001f, Mathf.Abs(dir.x));
-                float ky = (Screen.height * 0.5f - edgeMargin) / Mathf.Max(0.001f, Mathf.Abs(dir.y));
+                float ky = (Screen.height * 0.5f - (dir.y > 0f ? topM : edgeMargin)) / Mathf.Max(0.001f, Mathf.Abs(dir.y));
                 pos = center + dir * Mathf.Min(kx, ky);
                 angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
             }

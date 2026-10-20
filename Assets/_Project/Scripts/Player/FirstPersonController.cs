@@ -4,7 +4,7 @@ namespace PlanErfuellt
 {
     /// <summary>
     /// Ego-Steuerung wie im Prototyp (updatePlay): WASD laufen, Maus (gefangen) oder Q/E/Pfeile drehen,
-    /// Kopfwippen und leichtes Neigen. Springen mit der Leertaste, wenn keine Station im Ziel ist (sonst Benutzen). Kollision über CharacterController (Kammer, Stationen),
+    /// Kopfwippen und leichtes Neigen. Springen mit der Leertaste (Benutzen liegt auf F). Kollision über CharacterController (Kammer, Stationen),
     /// zusätzlich auf die begehbare Fläche (WalkArea: Halle, Türen, Nebenzimmer) begrenzt.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
@@ -24,7 +24,6 @@ namespace PlanErfuellt
         float vy;
         bool grounded = true;
         int blockedFrame;
-        InteractionSystem interaction;
 
         /// <summary>Faktor auf die Laufgeschwindigkeit (Infektion: schnell/bleischwer).</summary>
         public float SpeedMultiplier { get; set; } = 1f;
@@ -43,7 +42,6 @@ namespace PlanErfuellt
         void Awake()
         {
             cc = GetComponent<CharacterController>();
-            interaction = GetComponent<InteractionSystem>();
         }
 
         void Start()
@@ -117,9 +115,8 @@ namespace PlanErfuellt
                 vy = 0f;
                 grounded = true;
             }
-            bool targetInReach = interaction != null && interaction.Current != null;
             // Leertaste, die gerade ein Panel geschlossen hat, löst keinen Sprung aus
-            if (grounded && !targetInReach && Time.frameCount > blockedFrame + 1 && InputReader.JumpPressed)
+            if (grounded && Time.frameCount > blockedFrame + 1 && InputReader.JumpPressed)
             {
                 vy = Mathf.Sqrt(2f * P.gravity * P.jumpHeight);
                 grounded = false;
