@@ -24,18 +24,28 @@ namespace PlanErfuellt
             public bool coat;
             /// <summary>Kaviar am Schreibtisch abgeben, sobald die Wut darüber liegt (≤ 0 = nie).</summary>
             public float caviarAtAnger;
+            /// <summary>Starke Mischungen aus mehreren Chemikalien, Zentrifuge, Kryo (statt je 1 Dosis A, B, C).</summary>
+            public bool smart = true;
+            /// <summary>Ab Plan 3 goldene Seren bauen (Ω, Fleischkoloss).</summary>
+            public bool ultimates = true;
+            /// <summary>Mindest-Stabilität der gemischten Dosis.</summary>
+            public float minStability = 50f;
+            /// <summary>Schwächere Mischungen werden nicht gemacht.</summary>
+            public float minFactor = 1.4f;
+            /// <summary>Höchstdosis A bzw. B (viel A reißt das Band, viel B macht Säure und Schweben).</summary>
+            public int maxA = 2, maxB = 2;
             /// <summary>Höchstzahl an Schichten (Abbruch bei Endlosschleifen).</summary>
             public int maxDays = 14;
         }
 
         [SerializeField] float timeScale = 10f;
         [SerializeField] int stopAtPlan = 1;
-        [SerializeField] int[] order = { 6, 3, 3, 1, 0, 1, 3 };
+        [SerializeField] int[] order = { 8, 6, 8, 1, 0, 1, 3 };
         [SerializeField] float processAfterSec = 35f;
-        [SerializeField] float orderBudget = 0.6f;
+        [SerializeField] float orderBudget = 0.75f;
         [SerializeField] int clothTarget = 3;
-        /// <summary>Reihenfolge beim Kürzen der Bestellung: erst Kaviar, Wodka, Gegenmittel, dann A, C, B, Laken zuletzt.</summary>
-        static readonly int[] TrimOrder = { 5, 4, 3, 0, 2, 1, 6 };
+        /// <summary>Reihenfolge beim Kürzen der Bestellung: erst Kaviar, Wodka, Gegenmittel, dann B, C, A (Fleisch), Laken zuletzt.</summary>
+        static readonly int[] TrimOrder = { 5, 4, 3, 1, 2, 0, 6 };
         [SerializeField] string logPath = "Temp/autoplay_log.txt";
         [SerializeField] string csvPath = "Temp/balance_runs.csv";
 
@@ -53,7 +63,10 @@ namespace PlanErfuellt
         MixingStation mixing;
         DayMode lastMode = (DayMode)(-1);
         float animalAge;
-        bool sprayed, ateToday;
+        bool sprayed, ateToday, sprayedOmega;
+        Centrifuge centrifuge;
+        CryoChamber cryoStation;
+        BeltMotor beltMotor;
         int errors;
 
         // Kennzahlen der laufenden Schicht und des Durchlaufs
@@ -286,6 +299,16 @@ namespace PlanErfuellt
             if (chamber == null) return;
             float dt = gm.Clock.DeltaTime;
             if (s.contaminated && chamber.State == AnimalState.Empty) Report("Reinigen", chamber.Clean());
+            // gerissenes Förderband am Bandmotor reparieren (sonst kein Klonen und keine Verarbeitung)
+            if (s.beltBroken)
+            {
+                if (beltMotor == null) beltMotor = FindAnyObjectByType<BeltMotor>();
+                if (beltMotor != null)
+                {
+                    beltMotor.Execute();
+                    if (!s.beltBroken) Write("Förderband repariert");
+                }
+            }
 
             // Kontrolle: mutiertes Tier mit dem Laken verdecken, verdächtiges Regal abdecken; danach wieder aufdecken
             bool inspect = s.inspection != null;
@@ -305,6 +328,7 @@ namespace PlanErfuellt
                 s.rackHidden = false;
                 Write("Regal offen");
             }
+            if (opt.smart) PrepareSerums(gm, s);
             if (s.chamberCovered) return;
 
             if (chamber.State == AnimalState.Unstable)
@@ -317,8 +341,9 @@ namespace PlanErfuellt
             {
                 animalAge = 0f;
                 sprayed = false;
+                sprayedOmega = false;
                 var q = s.quota;
-                bool needEggs = q != null && q.target.e > 0f && q.prod.e / q.target.e < q.prod.m / Mathf.Max(1f, q.target.m);
+                bool needEggs = q != null && q.target.e > 0f && q.prod.e / q.target.e < q.prod.m / Mathf.Max(1f, q.target.m) && !(opt.smart && MeatBehind(s));
                 var fb = chamber.Clone(needEggs ? AnimalKind.Hen : AnimalKind.Cow);
                 if (fb.IsOk) Write("Klonen " + (needEggs ? "Huhn" : "Kuh"));
                 return;
@@ -327,18 +352,23 @@ namespace PlanErfuellt
             if (!chamber.HasLivingAnimal) return;
             animalAge += dt;
 
-            // Serum mischen (A für Fleisch, B für Ertrag, C für Stabilität) und einmal sprühen
             if (!sprayed)
             {
-                if (s.serums.Count == 0 && !MixingLogic.IsMixing(s))
+                if (opt.smart)
                 {
-                    // Fleisch hinten: Wachstum A betonen (für die nächste Verarbeitung), sonst ausgewogen
-                    var q = s.quota;
-                    float fm = q != null ? q.prod.m / Mathf.Max(1f, q.target.m) : 1f, ff = q != null ? q.prod.f / Mathf.Max(1f, q.target.f) : 1f;
-                    bool meatBehind = ff < fm && s.substances[0] > 0;
-                    s.mix = meatBehind
-                        ? new Dose(Mathf.Min(2, s.substances[0]), 0, s.substances[2] > 0 ? 1 : 0)
-                        : new Dose(s.substances[0] > 0 ? 1 : 0, s.substances[1] > 0 ? 1 : 0, s.substances[2] > 0 ? 1 : 0);
+                    int i = BestSerum(gm, s);
+                    if (i >= 0 && chamber.State == AnimalState.Ok)
+                    {
+                        var serum = s.serums[i];
+                        string what = "Sprühen " + serum.dose.Key + (serum.IsUltimate ? " (" + serum.ultimateId + ")" : serum.IsConcentrated ? " ×" + serum.conc.ToString("0.00") : "");
+                        sprayed = Report(what, chamber.Spray(i));
+                        sprayedOmega = sprayed && serum.IsUltimate && serum.ultimateId != "koloss";
+                    }
+                }
+                // einfache Strategie: je 1 Dosis A, B, C
+                else if (s.serums.Count == 0 && !MixingLogic.IsMixing(s))
+                {
+                    s.mix = new Dose(s.substances[0] > 0 ? 1 : 0, s.substances[1] > 0 ? 1 : 0, s.substances[2] > 0 ? 1 : 0);
                     if (s.mix.Total > 0 && MixingSystem.StartMix()) Write("Mischen " + s.mixPending);
                 }
                 else if (s.serums.Count > 0 && chamber.State == AnimalState.Ok)
@@ -347,9 +377,126 @@ namespace PlanErfuellt
                 }
             }
 
-            // Nach einer Weile verarbeiten (Fleisch), sonst gibt es keins
-            if (animalAge >= processAfterSec || s.quota != null && s.quota.left < processAfterSec * 0.3f && animalAge > 5f)
+            // Nach einer Weile verarbeiten (Fleisch); Tiere mit Ω länger melken
+            float keep = sprayedOmega ? processAfterSec * 2f : processAfterSec;
+            if (animalAge >= keep || s.quota != null && s.quota.left < processAfterSec * 0.3f && animalAge > 5f)
                 Report("Verarbeiten", chamber.SendToProcessing());
+        }
+
+        // ---------- Seren-Strategie (smart) ----------
+
+        /// <summary>Was fehlt am meisten? true = Fleisch, sonst Milch/Eier.</summary>
+        static bool MeatBehind(GameState s)
+        {
+            var q = s.quota;
+            if (q == null) return false;
+            float fm = q.prod.m / Mathf.Max(1f, q.target.m), fe = q.prod.e / Mathf.Max(1f, q.target.e), ff = q.prod.f / Mathf.Max(1f, q.target.f);
+            return ff < Mathf.Min(fm, fe);
+        }
+
+        /// <summary>
+        /// Stärkste Mischung aus dem Lagerbestand, die noch stabil genug ist (ohne die Rezepte der goldenen Seren).
+        /// Ziel Fleisch: Fleischfaktor, sonst Ertragsfaktor; bei Gleichstand die kleinere Dosis.
+        /// </summary>
+        Dose BestDose(GameConfig cfg, GameState s, bool meat)
+        {
+            var best = new Dose(0, 0, 0);
+            float bestScore = 0f;
+            for (int a = 0; a <= Mathf.Min(opt.maxA, s.substances[0]); a++)
+            for (int b = 0; b <= Mathf.Min(opt.maxB, s.substances[1]); b++)
+            for (int c = 0; c <= Mathf.Min(4, s.substances[2]); c++)
+            {
+                var d = new Dose(a, b, c);
+                if (d.Total == 0 || d.Total > cfg.mixing.sliderMax || cfg.UltimateForRecipe(d) != null) continue;
+                if (Formula.Stability(d, cfg) < opt.minStability) continue;
+                float score = meat ? Formula.MeatFactor(d, cfg) : Formula.RateFactor(d, cfg);
+                if (score > bestScore + 0.001f || (Mathf.Abs(score - bestScore) <= 0.001f && d.Total < best.Total))
+                {
+                    best = d;
+                    bestScore = score;
+                }
+            }
+            return best;
+        }
+
+        static bool HasStock(GameState s, int[] r) => s.substances[0] >= r[0] && s.substances[1] >= r[1] && s.substances[2] >= r[2];
+
+        /// <summary>
+        /// Seren vorbereiten: Kryo leeren, in der Zentrifuge im Grünen bremsen, Rohserum einfrieren, Normalserum
+        /// konzentrieren, nachmischen. Ab Plan 3 goldene Seren (Ω für Milch/Eier, Koloss für Fleisch).
+        /// </summary>
+        void PrepareSerums(GameManager gm, GameState s)
+        {
+            var cfg = gm.Config;
+            if (centrifuge == null) centrifuge = FindAnyObjectByType<Centrifuge>();
+            if (cryoStation == null) cryoStation = FindAnyObjectByType<CryoChamber>();
+
+            // Kryo: fertiges Serum herausnehmen
+            if (s.cryo != null && s.cryo.Ready && s.serums.Count < cfg.mixing.rackSize && cryoStation != null)
+                cryoStation.Execute();
+
+            // Zentrifuge: im Grünen bremsen bzw. laden
+            var job = s.centrifuge;
+            if (job != null && job.spinning && MachineLogic.InGreen(job.rpm, cfg) && centrifuge != null)
+            {
+                centrifuge.Execute();
+                Write("Zentrifuge gebremst bei " + (job.rpm * 100f).ToString("0") + " %");
+            }
+            else if (job == null && centrifuge != null && MachineLogic.FindForCentrifuge(s) >= 0)
+                centrifuge.Execute();
+
+            // Kryo: zentrifugiertes Rohserum einfrieren (wird ab Plan 3 golden)
+            if (s.cryo == null && cryoStation != null && s.planIdx >= cfg.machinesFixed.cryo.unlockPlanIdx)
+            {
+                int i = s.serums.FindIndex(x => x.stage == SerumStage.Centrifuged);
+                int first = s.serums.FindIndex(MachineLogic.CanFreeze);
+                if (i >= 0 && i == first) cryoStation.Execute();
+            }
+
+            // Nachmischen, solange das Regal nicht voll ist
+            if (MixingLogic.IsMixing(s) || s.serums.Count >= 3) return;
+            bool meat = MeatBehind(s);
+            bool ultOpen = s.planIdx >= cfg.machinesFixed.ultimate.unlockPlanIdx && s.planIdx >= cfg.machinesFixed.cryo.unlockPlanIdx;
+            bool ultInWork = s.serums.Exists(x => x.stage != SerumStage.Ready || x.IsUltimate) || s.cryo != null
+                             || (s.centrifuge != null && s.centrifuge.serum.stage == SerumStage.Raw);
+            if (opt.ultimates && ultOpen && !ultInWork)
+            {
+                var ult = cfg.UltimateById(meat ? "koloss" : "omega");
+                if (ult != null && HasStock(s, ult.recipe))
+                {
+                    s.mix = new Dose(ult.recipe[0], ult.recipe[1], ult.recipe[2]);
+                    if (MixingSystem.StartMix()) Write("Mischen golden " + ult.id);
+                    return;
+                }
+            }
+            var d = BestDose(cfg, s, meat);
+            // schwache Reste (z. B. nur C) lohnen nicht
+            if (d.Total == 0 || (meat ? Formula.MeatFactor(d, cfg) : Formula.RateFactor(d, cfg)) < opt.minFactor) return;
+            s.mix = d;
+            if (MixingSystem.StartMix()) Write("Mischen " + d.Key + (meat ? " (Fleisch)" : " (Ertrag)"));
+        }
+
+        /// <summary>Bestes sprühbares Serum: golden passend zum Bedarf, sonst das stärkste fertige (Konzentration zählt mit).</summary>
+        int BestSerum(GameManager gm, GameState s)
+        {
+            var cfg = gm.Config;
+            bool meat = MeatBehind(s);
+            int best = -1;
+            float bestScore = -1f;
+            for (int i = 0; i < s.serums.Count; i++)
+            {
+                var x = s.serums[i];
+                if (x.stage != SerumStage.Ready) continue;
+                float score;
+                if (x.IsUltimate) score = (x.ultimateId == "koloss") == meat ? 100f : 50f;
+                else score = (meat ? Formula.MeatFactor(x.dose, cfg) : Formula.RateFactor(x.dose, cfg)) * (x.IsConcentrated ? x.conc : 1f);
+                if (score > bestScore)
+                {
+                    best = i;
+                    bestScore = score;
+                }
+            }
+            return best;
         }
 
         bool Report(string what, Feedback fb)
