@@ -324,6 +324,8 @@ namespace PlanErfuellt
                     gm.Toast("ui.toasts.wishFailed", ToastKind.Bad);
                     break;
                 case DayEvent.TutorialStep:
+                    // Schritt geschafft: heller Klingelton, der Kasten blinkt (TutorialUI)
+                    if (AudioService.Instance != null) AudioService.Instance.Play("coin", 1.5f);
                     director.Say(gm.Texts.Get($"ui.tutorial.steps[{s.tutorialStep}].say"));
                     break;
                 case DayEvent.TutorialDone:

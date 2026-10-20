@@ -155,7 +155,17 @@
       "announce": "SONDERWUNSCH: {wish}! Sie haben {sec} Sekunden.",
       "done": "Hervorragend! Das Bankett ist gerettet.",
       "failed": "Kein Bankett?! Das vergesse ich Ihnen nicht."
-    }
+    },
+    "deskThanks": [
+      "Kaviar! Persönlich! Sie verstehen etwas von Hierarchie, Genosse.",
+      "Mmh. Das Volk soll Kohl essen. Der Plan isst Kaviar.",
+      "Gut. Gehen Sie wieder arbeiten. Leise."
+    ],
+    "deskShout": [
+      "WER STÖRT? Ich plane gerade! RAUS!",
+      "Kaviar? JETZT? Ich bin in einer Sitzung mit mir selbst!",
+      "Klopfen Sie nie wieder ungefragt, Genosse!"
+    ]
   },
   "tasting": {
     "hi": [
@@ -453,7 +463,17 @@
       "cryoNone": "Kryokammer: kein passendes Serum im Regal",
       "clickToLook": "Klicken, um die Maus zu fangen",
       "terminalOrdered": "Bestellen für morgen (schon etwas bestellt)",
-      "clothNone": "Kein Laken im Lager – am Terminal kaufen"
+      "clothNone": "Kein Laken im Lager – am Terminal kaufen",
+      "canteen": "Essen holen (Seren stärker bis Schichtende)",
+      "canteenFed": "Essen holen (gerade ×{x})",
+      "coat": "Schutzkittel anziehen (hält {pct} % der Ansteckungen ab)",
+      "coatOn": "Schutzkittel ist an",
+      "bed": "Hinlegen – Schicht jetzt beenden",
+      "bedNotMet": "Erst den Plan erfüllen, dann schlafen",
+      "desk": "Kaviar persönlich abgeben ({n}): Wut −{anger}, {pct} % Brüll-Gefahr",
+      "deskNone": "Ohne Kaviar lieber nicht stören",
+      "keyHint": "[{key}] {text}",
+      "key": "F"
     },
     "toasts": {
       "dayStart": "Tag {day} · Plan {plan}/{max}: {text}",
@@ -551,7 +571,13 @@
       "placeholder": "{name}: Funktion folgt in Phase {phase}.",
       "orderPlaced": "Bestellt für Tag {n}: {list}",
       "standardOrder": "Nichts bestellt – Standardlieferung: {list}",
-      "clothGone": "Laken abgenommen – von den Mutagenen zerfressen"
+      "clothGone": "Laken abgenommen – von den Mutagenen zerfressen",
+      "meal": "{name} gegessen – Seren wirken ×{x} bis Schichtende",
+      "coatOn": "Schutzkittel an – hält {pct} % der Ansteckungen ab",
+      "coatSaved": "Der Schutzkittel hat die Ansteckung abgehalten!",
+      "bedEarly": "Feierabend! Die Schicht endet.",
+      "deskCaviar": "Der Direktor nimmt den Kaviar persönlich: Wut −{n}",
+      "deskShout": "Schlechter Moment! Der Direktor brüllt: Wut +{n}"
     },
     "errors": {
       "chamberBusy": "Die Kammer ist belegt.",
@@ -586,7 +612,12 @@
       "noCentrifugeSerum": "Kein Serum, das zentrifugiert werden kann.",
       "noCryoSerum": "Kein Serum, das eingefroren werden kann.",
       "noMoneyClone": "Kein Geld fürs Klonen ({money} SM)",
-      "noCloth": "Kein Laken mehr – am Terminal im Lager kaufen"
+      "noCloth": "Kein Laken mehr – am Terminal im Lager kaufen",
+      "mealUnknown": "Dieses Gericht gibt es heute nicht",
+      "mealFull": "Schon satt – nur ein besseres Gericht hilft noch",
+      "noMoneyMeal": "Zu wenig Geld für dieses Essen",
+      "coatAlready": "Der Kittel ist schon an",
+      "bedNotMet": "Erst den Plan erfüllen, dann schlafen"
     },
     "pult": {
       "title": "PULT · KAMMER B-12",
@@ -712,7 +743,9 @@
       "pendingNone": "Für morgen ist noch nichts bestellt – sonst kommt die Standardlieferung.",
       "nothing": "nichts (Kasse leer)",
       "itemCloth": "Laken",
-      "descCloth": "deckt die Kammer bei einer Kontrolle ab – zerfällt nach einem Einsatz"
+      "descCloth": "deckt die Kammer bei einer Kontrolle ab – zerfällt nach einem Einsatz",
+      "repeat": "Wie gestern",
+      "repeatNone": "Noch keine eigene Bestellung"
     },
     "build": {
       "title": "BAUEN (B beendet)",
@@ -948,6 +981,19 @@
         "PLAN ERFÜLLT: Kohlsuppe mit Wurst"
       ],
       "directorPlaque": "Bitte nicht klopfen – der Direktor plant"
+    },
+    "canteen": {
+      "title": "Kantine · Speisekarte",
+      "info": "Ein satter Genosse arbeitet besser: Bis Schichtende wirken die Seren stärker (mehr Ertrag und Fleisch). Ein besseres Gericht ersetzt ein schlechteres.",
+      "mealDesc": "{money} · Seren ×{x} bis Schichtende",
+      "meals": [
+        "Kohlsuppe mit Brot",
+        "Bockwurst mit Senf",
+        "Festtagsbraten des Direktors"
+      ],
+      "current": "Gegessen: Seren wirken ×{x} bis Schichtende",
+      "hungry": "Noch nichts gegessen.",
+      "close": "Schließen"
     }
   }
 }

@@ -73,7 +73,7 @@ namespace PlanErfuellt.Tests
         {
             var L = cfg.layout;
             Assert.AreEqual(3.1f, L.chamber.playerCollisionRadius, 0.0001f);
-            Assert.AreEqual(16, L.stations.Length);
+            Assert.AreEqual(20, L.stations.Length, "16 Hallen-Stationen + Kantine, Kittel, Bett, Schreibtisch");
             var pult = L.Station("pult");
             Assert.NotNull(pult);
             Assert.AreEqual(new UnityEngine.Vector3(0f, 0f, -6.2f), pult.UnityPosition, "z wird gespiegelt");

@@ -36,6 +36,7 @@ namespace PlanErfuellt.EditorTools
         {
             P.Init();
             BuildOrder(canvas);
+            BuildCanteen(canvas);
             BuildIntro(canvas);
             BuildEnd(canvas);
             BuildNews(canvas);
@@ -165,7 +166,8 @@ namespace PlanErfuellt.EditorTools
             var title = P.Text(frame, "Title", 34, Gold, new Vector2(30f, -20f), new Vector2(1000f, 46f), TextAlignmentOptions.Left);
             var info = P.Text(frame, "Info", 18, P.Cream, new Vector2(30f, -70f), new Vector2(1000f, 60f), TextAlignmentOptions.TopLeft);
             info.textWrappingMode = TMPro.TextWrappingModes.Normal;
-            var pending = P.Text(frame, "Pending", 18, Green, new Vector2(30f, -134f), new Vector2(1000f, 30f), TextAlignmentOptions.Left);
+            var pending = P.Text(frame, "Pending", 18, Green, new Vector2(30f, -134f), new Vector2(760f, 30f), TextAlignmentOptions.Left);
+            var repeat = P.MakeButton(frame, "Repeat", new Vector2(-30f, -124f), new Vector2(220f, 42f), P.ButtonBg, Gold, 18, true);
             pending.enableAutoSizing = true;
             pending.fontSizeMin = 12f;
             pending.fontSizeMax = 18f;
@@ -208,9 +210,49 @@ namespace PlanErfuellt.EditorTools
             var confirm = P.MakeButton(frame, "Confirm", new Vector2(-30f, -740f), new Vector2(370f, 62f), ConfirmBg, ConfirmBorder, 24, false);
             so.FindProperty("closeButton").objectReferenceValue = close;
             so.FindProperty("closeLabel").objectReferenceValue = close.GetComponentInChildren<TMP_Text>();
+            so.FindProperty("repeat").objectReferenceValue = repeat;
+            so.FindProperty("repeatLabel").objectReferenceValue = repeat.GetComponentInChildren<TMP_Text>();
             so.FindProperty("sum").objectReferenceValue = sum;
             so.FindProperty("confirm").objectReferenceValue = confirm;
             so.FindProperty("confirmLabel").objectReferenceValue = confirm.GetComponentInChildren<TMP_Text>();
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>Speisekarte der Kantine (CanteenUI): drei Gerichte als große Knöpfe, aktueller Schub, Schließen.</summary>
+        static void BuildCanteen(Transform canvas)
+        {
+            var holder = Holder(canvas, "CanteenOverlay");
+            var root = FullScreen(holder, "Screen", Dim);
+            var frame = CenterFrame(root, "Frame", new Vector2(820f, 640f));
+            var title = P.Text(frame, "Title", 34, Gold, new Vector2(30f, -20f), new Vector2(760f, 46f), TextAlignmentOptions.Left);
+            var info = P.Text(frame, "Info", 18, P.Cream, new Vector2(30f, -72f), new Vector2(760f, 56f), TextAlignmentOptions.TopLeft);
+            info.textWrappingMode = TMPro.TextWrappingModes.Normal;
+            var current = P.Text(frame, "Current", 20, Green, new Vector2(30f, -132f), new Vector2(760f, 30f), TextAlignmentOptions.Left);
+            var ui = holder.gameObject.AddComponent<CanteenUI>();
+            var so = new SerializedObject(ui);
+            so.FindProperty("panelId").stringValue = "canteen";
+            so.FindProperty("root").objectReferenceValue = root;
+            so.FindProperty("title").objectReferenceValue = title;
+            so.FindProperty("info").objectReferenceValue = info;
+            so.FindProperty("current").objectReferenceValue = current;
+            const int count = 3;
+            var meals = so.FindProperty("meals");
+            var names = so.FindProperty("mealNames");
+            var descs = so.FindProperty("mealDescs");
+            meals.arraySize = names.arraySize = descs.arraySize = count;
+            for (int i = 0; i < count; i++)
+            {
+                var b = P.MakeButton(frame, "Meal_" + i, new Vector2(30f, -178f - i * 118f), new Vector2(760f, 106f), P.ButtonBg, Gold, 18, false);
+                b.GetComponentInChildren<TMP_Text>().text = "";
+                var name = P.Text(b.transform, "Name", 30, P.Cream, new Vector2(22f, -12f), new Vector2(716f, 40f), TextAlignmentOptions.Left);
+                var desc = P.Text(b.transform, "Desc", 20, Gold, new Vector2(22f, -58f), new Vector2(716f, 32f), TextAlignmentOptions.Left, P.mono);
+                meals.GetArrayElementAtIndex(i).objectReferenceValue = b;
+                names.GetArrayElementAtIndex(i).objectReferenceValue = name;
+                descs.GetArrayElementAtIndex(i).objectReferenceValue = desc;
+            }
+            var close = P.MakeButton(frame, "Close", new Vector2(-30f, -560f), new Vector2(220f, 58f), P.ButtonBg, Gold, 22, false);
+            so.FindProperty("closeButton").objectReferenceValue = close;
+            so.FindProperty("closeLabel").objectReferenceValue = close.GetComponentInChildren<TMP_Text>();
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 

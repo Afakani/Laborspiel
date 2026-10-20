@@ -53,6 +53,7 @@ namespace PlanErfuellt
         public AudioConfig audio = new AudioConfig();
         public SettingsConfig settings = new SettingsConfig();
         public TutorialConfig tutorial = new TutorialConfig();
+        public SideRoomsConfig sideRooms = new SideRoomsConfig();
 
         // Diese Teile sind in der JSON als Objekte mit Schlüsseln abgelegt und werden vom Importer gesondert übertragen.
         [JsonIgnore] public List<UltimateSerum> ultimates = new List<UltimateSerum>();

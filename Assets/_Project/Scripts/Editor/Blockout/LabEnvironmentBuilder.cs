@@ -158,14 +158,15 @@ namespace PlanErfuellt.EditorTools
                 HangingLamp(c, new Vector3(lx, 0f, -1.4f), h);
             }
             foreach (var lx in new[] { -6f, 6f })
-            {
                 HangingLamp(c, new Vector3(lx, 0f, -8.5f), h);
+            foreach (var lx in BackLampXs)
                 HangingLamp(c, new Vector3(lx, 0f, BackLampZ(zBack)), h);
-            }
         }
 
         /// <summary>Hintere Reihe Hängelampen (vor der Rückwand mit den Türen).</summary>
         public static float BackLampZ(float zBack) => zBack + 2.6f;
+        /// <summary>x der hinteren Lampenreihe (vor den Türen der Nebenzimmer).</summary>
+        public static readonly float[] BackLampXs = { -12f, -6f, 0f, 6f, 12f };
 
         static void HangingLamp(Transform parent, Vector3 pos, float h)
         {

@@ -27,6 +27,12 @@ namespace PlanErfuellt
             var center = LayoutConfig.ToUnity(c.x, 0f, c.z);
             var p = transform.position;
             float dist = new Vector2(p.x - center.x, p.z - center.z).magnitude;
+            // Schutzkittel aus der Umkleide hält einen Teil der Ansteckungen ab
+            if (gm.State.dayNum >= gm.Config.risks.infectionFromDay && RoomLogic.CoatBlocks(gm.State, gm.Config, Random.value))
+            {
+                gm.Toast("ui.toasts.coatSaved", ToastKind.Good);
+                return;
+            }
             switch (InfectionLogic.OnExplosion(gm.State, gm.Config, dist, Random.value, symptoms))
             {
                 case InfectionLogic.InfectResult.Infected:

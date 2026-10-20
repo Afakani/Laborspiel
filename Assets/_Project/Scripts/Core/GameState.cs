@@ -22,6 +22,12 @@ namespace PlanErfuellt
         public int cloths;
         /// <summary>Bestellung für den nächsten Morgen (schon bezahlt), Reihenfolge wie OrderLogic.Items; null = keine.</summary>
         public int[] pendingOrder;
+        /// <summary>Zuletzt gelieferte eigene Bestellung („wie gestern“), sonst null.</summary>
+        public int[] lastOrder;
+        /// <summary>Serumstärke aus der Kantine für diese Schicht (1 = kein Essen).</summary>
+        public float mealBoost = 1f;
+        /// <summary>Schutzkittel aus der Umkleide für diese Schicht angezogen?</summary>
+        public bool coatOn;
 
         /// <summary>Seren im Regal (max. mixing.rackSize).</summary>
         public readonly List<Serum> serums = new List<Serum>();

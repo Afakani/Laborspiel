@@ -8,7 +8,8 @@ namespace PlanErfuellt
     /// <summary>
     /// Bestellterminal im Lager (GDD 6.9, auf Wunsch umgebaut): während der Schicht jederzeit; sieben Artikel mit −/+,
     /// Lagerbestand, Preis, Summe und Kasse. Bestellt wird für den nächsten Morgen (sofort bezahlt), ohne Bestellung
-    /// kommt die Standardbestellung. Zeigt, was für morgen schon bestellt ist.
+    /// kommt die Standardbestellung. Zeigt, was für morgen schon bestellt ist. „Wie gestern“ übernimmt die zuletzt
+    /// gelieferte eigene Bestellung (so weit die Kasse reicht).
     /// </summary>
     public class OrderTerminalUI : PanelBase
     {
@@ -36,6 +37,8 @@ namespace PlanErfuellt
         [SerializeField] TMP_Text confirmLabel;
         [SerializeField] Button closeButton;
         [SerializeField] TMP_Text closeLabel;
+        [SerializeField] Button repeat;
+        [SerializeField] TMP_Text repeatLabel;
         [SerializeField] Row[] rows = new Row[OrderLogic.Items];
 
         readonly int[] amounts = new int[OrderLogic.Items];
@@ -51,6 +54,7 @@ namespace PlanErfuellt
             }
             confirm.onClick.AddListener(OnConfirm);
             closeButton.onClick.AddListener(Close);
+            repeat.onClick.AddListener(Repeat);
         }
 
         protected override void OnOpened()
@@ -69,6 +73,7 @@ namespace PlanErfuellt
             info.text = text;
             confirmLabel.text = t.Get("ui.order.confirm");
             closeLabel.text = t.Get("ui.order.close");
+            repeatLabel.text = t.Get(s.lastOrder != null ? "ui.order.repeat" : "ui.order.repeatNone");
             for (int i = 0; i < rows.Length; i++)
             {
                 rows[i].name.text = t.Get("ui.order.item" + ItemKeys[i]);
@@ -98,9 +103,25 @@ namespace PlanErfuellt
             float total = OrderLogic.Sum(gm.Config, amounts);
             sum.text = t.Format("ui.order.sum", ("sum", Money(total)), ("cash", Money(s.Money)));
             confirm.interactable = total > 0f && total <= s.Money;
+            repeat.interactable = s.lastOrder != null;
             pending.text = s.pendingOrder != null
                 ? t.Format("ui.order.pending", ("list", OrderLogic.List(s.pendingOrder, DayCycle.Instance.ItemNames())))
                 : t.Get("ui.order.pendingNone");
+        }
+
+        /// <summary>Letzte eigene Bestellung übernehmen, von hinten gekürzt, bis sie in die Kasse passt.</summary>
+        void Repeat()
+        {
+            var s = GM.State;
+            if (s.lastOrder == null) return;
+            for (int i = 0; i < amounts.Length; i++) amounts[i] = i < s.lastOrder.Length ? s.lastOrder[i] : 0;
+            while (OrderLogic.Sum(GM.Config, amounts) > s.Money)
+            {
+                int last = System.Array.FindLastIndex(amounts, a => a > 0);
+                if (last < 0) break;
+                amounts[last]--;
+            }
+            Refresh(false);
         }
 
         void OnConfirm()

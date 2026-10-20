@@ -67,7 +67,7 @@ namespace PlanErfuellt
             }
             // große Panels überdecken den Kasten nicht
             string open = PanelBase.OpenId;
-            bool covered = open == "order" || open == "logbook";
+            bool covered = open == "order" || open == "logbook" || open == "canteen";
             if (box.activeSelf != (active && !covered)) box.SetActive(active && !covered);
             Flash();
             Guiding = active && !gm.Clock.Paused && !gm.PanelOpen && target != null;

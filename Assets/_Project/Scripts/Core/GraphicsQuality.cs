@@ -41,12 +41,20 @@ namespace PlanErfuellt
             ApplyDisplay();
         }
 
+        bool startChecked;
+
         void ApplyDisplay()
         {
             bool full = GameSettings.Fullscreen;
             if (appliedFullscreen == full) return;
             appliedFullscreen = full;
             if (Application.isEditor) return; // im Editor bestimmt die Game View die Größe
+            // Startoption -screen-width/-screen-height (z. B. zum Testen von 4:3 oder 16:10) gilt beim Start vor der Einstellung
+            if (!startChecked)
+            {
+                startChecked = true;
+                if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "-screen-width") >= 0) return;
+            }
             if (full)
             {
                 var r = Screen.currentResolution;

@@ -19,5 +19,9 @@ namespace PlanErfuellt
         public float cryoLoad;
         public float cryoTake;
         public float terminal;
+        public float canteen;
+        public float coat;
+        public float bed;
+        public float desk;
     }
 }

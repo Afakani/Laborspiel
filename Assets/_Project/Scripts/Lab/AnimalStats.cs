@@ -14,6 +14,8 @@ namespace PlanErfuellt
         public UltimateSerum ultimate;
         /// <summary>Höchste Konzentration der gesprühten Seren (0 = keine).</summary>
         public float conc;
+        /// <summary>Serumstärke aus der Kantine (RoomLogic), setzt die Kammer jedes Bild.</summary>
+        public float boost = 1f;
         /// <summary>Stabilitätsbonus aus tiefgekühlten Seren.</summary>
         public float stabBonus;
         public FunRecipe fun;
@@ -68,7 +70,7 @@ namespace PlanErfuellt
         /// <summary>Ertrag in t/s inklusive Säure, Stromausfall und Milchhuhn.</summary>
         public float Rate(bool blackout, GameConfig cfg)
         {
-            float r = Formula.AnimalRate(kind, dose, ultimate, conc, cfg);
+            float r = Formula.AnimalRate(kind, dose, ultimate, RoomLogic.BoostedConc(conc, boost), cfg);
             if (acid) r *= cfg.formulas.acid.rate;
             if (blackout) r *= cfg.risks.blackoutProductionFactor;
             if (fun != null) r *= fun.rateMult;
@@ -78,7 +80,7 @@ namespace PlanErfuellt
         /// <summary>Fleisch bei Verarbeitung inklusive Säure.</summary>
         public float Meat(GameConfig cfg)
         {
-            float m = Formula.AnimalMeat(kind, dose, ultimate, conc, fun, cfg);
+            float m = Formula.AnimalMeat(kind, dose, ultimate, RoomLogic.BoostedConc(conc, boost), fun, cfg);
             return acid ? m * cfg.formulas.acid.meat : m;
         }
 

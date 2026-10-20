@@ -181,6 +181,7 @@ namespace PlanErfuellt
                 return;
             }
 
+            stats.boost = S.mealBoost;
             float rate = stats.Rate(S.blackoutTimer > 0f, Cfg);
             stats.currentRate = rate;
             stats.maxRate = Mathf.Max(stats.maxRate, rate);
@@ -443,6 +444,7 @@ namespace PlanErfuellt
                 Empty();
                 return;
             }
+            stats.boost = S.mealBoost;
             float meat = stats.Meat(Cfg);
             float quality = stats.Quality(Cfg);
             Production.Deliver(S, Cfg, 'f', meat, quality);

@@ -39,6 +39,9 @@ namespace PlanErfuellt
             };
             s.wish = null;
             s.contract = null;
+            // Kantinen-Schub und Schutzkittel gelten nur eine Schicht
+            s.mealBoost = 1f;
+            s.coatOn = false;
             if (s.dayNum >= cfg.wishes.fromDay)
             {
                 s.tutorialStep = -1;

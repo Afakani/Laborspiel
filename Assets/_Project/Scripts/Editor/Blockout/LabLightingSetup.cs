@@ -28,8 +28,8 @@ namespace PlanErfuellt.EditorTools
             // Gebackene Lampen unter den Hängelampen
             float zBackLamps = LabEnvironmentBuilder.BackLampZ(-L.room.backWallZ);
             foreach (var p in new[] { new Vector3(-9f, 6.9f, -1.4f), new Vector3(-3f, 6.9f, -1.4f), new Vector3(3f, 6.9f, -1.4f),
-                         new Vector3(9f, 6.9f, -1.4f), new Vector3(-6f, 6.9f, -8.5f), new Vector3(6f, 6.9f, -8.5f),
-                         new Vector3(-6f, 6.9f, zBackLamps), new Vector3(6f, 6.9f, zBackLamps) })
+                         new Vector3(9f, 6.9f, -1.4f), new Vector3(-6f, 6.9f, -8.5f), new Vector3(6f, 6.9f, -8.5f) }
+                     .Concat(LabEnvironmentBuilder.BackLampXs.Select(x => new Vector3(x, 6.9f, zBackLamps))))
             {
                 var l = NewLight(lights, "Lamp_Baked", LightType.Point, LightmapBakeType.Baked, LabMaterials.Hex("#FFD08A"), 22f, 16f);
                 l.transform.position = p;

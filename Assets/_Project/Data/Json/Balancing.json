@@ -855,9 +855,9 @@
       },
       {
         "id": "centrifuge",
-        "x": 5.6,
+        "x": 12.2,
         "y": 0,
-        "z": 2.0,
+        "z": 1.6,
         "facing": 0,
         "size": [
           1.7,
@@ -870,9 +870,9 @@
       },
       {
         "id": "cryo",
-        "x": 8.2,
+        "x": 15.1,
         "y": 0,
-        "z": 2.4,
+        "z": 2.6,
         "facing": 0,
         "size": [
           1.3,
@@ -880,15 +880,15 @@
           1.1
         ],
         "signKey": "ui.signs.cryo",
-        "signHeight": 2.6,
+        "signHeight": 3.2,
         "reach": 2.3
       },
       {
         "id": "tasting",
-        "x": 11.4,
+        "x": 6.0,
         "y": 0,
-        "z": 3.7,
-        "facing": 28.6,
+        "z": 2.8,
+        "facing": 0,
         "size": [
           0.9,
           1.7,
@@ -1002,6 +1002,66 @@
         "signKey": "",
         "signHeight": 7.1,
         "reach": 0
+      },
+      {
+        "id": "canteen",
+        "x": 7.5,
+        "y": 0,
+        "z": 22.6,
+        "facing": 0,
+        "size": [
+          0.1,
+          0.1,
+          0.1
+        ],
+        "signKey": "",
+        "signHeight": 0,
+        "reach": 2.8
+      },
+      {
+        "id": "coat",
+        "x": -5.5,
+        "y": 0,
+        "z": 22.8,
+        "facing": 0,
+        "size": [
+          0.1,
+          0.1,
+          0.1
+        ],
+        "signKey": "",
+        "signHeight": 0,
+        "reach": 2.6
+      },
+      {
+        "id": "bed",
+        "x": 0.5,
+        "y": 0,
+        "z": 20.4,
+        "facing": 0,
+        "size": [
+          0.1,
+          0.1,
+          0.1
+        ],
+        "signKey": "",
+        "signHeight": 0,
+        "reach": 3.4
+      },
+      {
+        "id": "desk",
+        "x": 14.075,
+        "y": 0,
+        "z": 21.2,
+        "facing": 0,
+        "size": [
+          0.1,
+          0.1,
+          0.1
+        ],
+        "signKey": "",
+        "signHeight": 0,
+        "reach": 2.4
       }
     ],
     "_docWing": "Anbau hinter der Rückwand (D107): Zimmer von backWallZ+wallThickness bis +depth, Türen in der Rückwand der Halle. Begehbar sind Halle, Durchgänge und Zimmer (WalkArea).",
@@ -1109,7 +1169,11 @@
       "centrifugeBrake": 0.01,
       "cryoLoad": 0.6,
       "cryoTake": 0.3,
-      "terminal": 0.12
+      "terminal": 0.12,
+      "canteen": 0.12,
+      "coat": 1.0,
+      "bed": 1.2,
+      "desk": 0.8
     }
   },
   "ui": {
@@ -1426,5 +1490,23 @@
       { "id": "cloth", "target": "chamber" },
       { "id": "finish", "target": "" }
     ]
+  },
+  "sideRooms": {
+    "_doc": "Eigene Werte (D126-D129): Kantine 200/350/500 SM für Serumstärke ×1,1/×1,3/×1,5 bis Schichtende; Kittel hält 60 % der Ansteckungen ab; Kaviar persönlich: Wut −40, aber 30 % Chance auf Brüllen (+12).",
+    "canteen": {
+      "meals": [
+        { "id": "soup", "price": 200, "boost": 1.1 },
+        { "id": "sausage", "price": 350, "boost": 1.3 },
+        { "id": "roast", "price": 500, "boost": 1.5 }
+      ]
+    },
+    "locker": {
+      "protectChance": 0.6
+    },
+    "desk": {
+      "angerReduce": 40,
+      "shoutChance": 0.3,
+      "shoutAnger": 12
+    }
   }
 }

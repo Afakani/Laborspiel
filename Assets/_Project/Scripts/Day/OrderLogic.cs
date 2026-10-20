@@ -71,6 +71,7 @@ namespace PlanErfuellt
             {
                 for (int i = 0; i < Items; i++) amounts[i] = s.pendingOrder[i];
                 s.pendingOrder = null;
+                s.lastOrder = (int[])amounts.Clone();
             }
             for (int i = 0; i < Items; i++) AddStock(s, i, amounts[i]);
             return (amounts, standard);

@@ -292,10 +292,21 @@ CLASSES = [
         F("float", "fastTurnBoost", "Drehfaktor, wenn die Spielfigur beschleunigt ist (Infektion)"),
         F("float", "sprintMultiplier", "Tempo-Faktor beim Sprinten (Shift)"),
         F("float", "jumpHeight", "Sprunghöhe in m (Leertaste ohne Ziel)"), F("float", "gravity", "Fallbeschleunigung in m/s²")]),
+    ("MealConfig", "Essen in der Kantine: Preis und Serumstärke für den Rest der Schicht.", [
+        F("string", "id", "Text: ui.canteen.meals[i]"), F("float", "price"), F("float", "boost", "Faktor auf die Serumwirkung (Ertrag, Fleisch)")]),
+    ("CanteenConfig", "Kantine: Essen als Produktions-Schub.", [F("MealConfig[]", "meals")]),
+    ("LockerRoomConfig", "Umkleide: Schutzkittel für eine Schicht.", [
+        F("float", "protectChance", "Anteil der Explosionen, deren Ansteckung der Kittel abhält")]),
+    ("DirectorDeskConfig", "Direktorbüro: Kaviar persönlich abgeben.", [
+        F("float", "angerReduce", "Wut −x bei guter Laune"), F("float", "shoutChance", "Chance, dass er stattdessen brüllt"),
+        F("float", "shoutAnger", "Wut +x beim Brüllen")]),
+    ("SideRoomsConfig", "Funktionen der Nebenzimmer (Kantine, Umkleide, Schlafraum, Direktorbüro).", [
+        F("CanteenConfig", "canteen"), F("LockerRoomConfig", "locker"), F("DirectorDeskConfig", "desk")]),
     ("HoldTimesConfig", "Haltezeiten der Interaktionen in Sekunden.", [
         F("float", "pult"), F("float", "mixing"), F("float", "rackHide"), F("float", "cloth"), F("float", "vodka"),
         F("float", "tasting"), F("float", "rohrpost"), F("float", "beltRepair"), F("float", "centrifugeLoad"),
-        F("float", "centrifugeBrake"), F("float", "cryoLoad"), F("float", "cryoTake"), F("float", "terminal")]),
+        F("float", "centrifugeBrake"), F("float", "cryoLoad"), F("float", "cryoTake"), F("float", "terminal"),
+        F("float", "canteen"), F("float", "coat"), F("float", "bed"), F("float", "desk")]),
     ("InteractionConfig", "Zielwahl und Haltezeiten (GDD 2, Prototyp pickTarget).", [
         F("float", "pultScore", "Wertung, wenn der Spieler in der Pult-Zone steht"), F("float", "clothScore"),
         F("float", "disabledHoldSec", "Haltezeit bei nicht möglichen Aktionen (nur Anzeige)"),

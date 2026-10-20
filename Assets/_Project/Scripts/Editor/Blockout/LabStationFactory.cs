@@ -41,6 +41,11 @@ namespace PlanErfuellt.EditorTools
                 case "tv": Tv(v); break;
                 case "angerScale": AngerScale(v); break;
                 case "planBoard": PlanBoard(v); break;
+                // Nebenzimmer: Möbel baut LookDevRooms, hier nur die Interaktion
+                case "canteen":
+                case "coat":
+                case "bed":
+                case "desk": break;
                 default: BlockoutKit.Box(v, "Placeholder", new Vector3(0f, s.Size.y * 0.5f, 0f), s.Size, M.SteelDark); break;
             }
 
@@ -72,6 +77,10 @@ namespace PlanErfuellt.EditorTools
                 case "cryo": c = root.AddComponent<CryoChamber>(); break;
                 case "terminal": c = root.AddComponent<OrderTerminal>(); break;
                 case "storage": c = root.AddComponent<Storage>(); break;
+                case "canteen": c = root.AddComponent<CanteenCounter>(); break;
+                case "coat": c = root.AddComponent<CoatRack>(); break;
+                case "bed": c = root.AddComponent<Bunk>(); break;
+                case "desk": c = root.AddComponent<DirectorDesk>(); break;
                 default: return;
             }
             c.SetStationId(id);

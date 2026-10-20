@@ -31,7 +31,7 @@ namespace PlanErfuellt.EditorTools
 
             // Warnschilder neben der Mischstation und hinter der Zentrifuge (Prototyp warnSign; neben statt hinter den Tanks, sonst verdeckt)
             WarnSign(d, new Vector3(-3.55f, 2.2f, -3.4f), new Vector2(1.0f, 0.5f));
-            WarnSign(d, new Vector3(6.6f, 3.3f, -1.4f), new Vector2(1.0f, 0.5f));
+            WarnSign(d, new Vector3(12.6f, 3.3f, -0.2f), new Vector2(1.0f, 0.5f));
 
             // Regale mit Gläsern an der linken Wand
             foreach (var z in new[] { -3.4f, -7.0f })
