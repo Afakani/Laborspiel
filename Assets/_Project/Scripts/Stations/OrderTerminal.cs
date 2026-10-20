@@ -1,15 +1,16 @@
 namespace PlanErfuellt
 {
-    /// <summary>Bestellterminal (GDD 6.9). Während der Schicht nur Hinweis; Bestell-Overlay folgt in Phase 6.</summary>
+    /// <summary>Bestellterminal im Lager: öffnet das Bestell-Panel (Bestellung für den nächsten Morgen).</summary>
     public class OrderTerminal : Interactable
     {
         public override void GetPrompt(out string text, out bool canUse, out float holdTime)
         {
-            text = Texts.Get("ui.prompts.terminal");
-            canUse = false;
-            holdTime = DisabledHold;
+            var s = State;
+            text = s.pendingOrder != null ? Texts.Get("ui.prompts.terminalOrdered") : Texts.Get("ui.prompts.terminal");
+            canUse = true;
+            holdTime = Cfg.interaction.hold.terminal;
         }
 
-        public override void Execute() { }
+        public override void Execute() => EventBus.RaisePanelRequested("order");
     }
 }

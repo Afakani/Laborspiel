@@ -20,5 +20,7 @@ namespace PlanErfuellt
         public float overfulfilPayBonus;
         /// <summary>Restzeit, ab der der Bildschirmrand pulsiert</summary>
         public float lateWarningSec;
+        /// <summary>Lieferung ohne Bestellung (A, B, C, Gegenmittel, Wodka, Kaviar, Laken)</summary>
+        public int[] standardOrder = new int[0];
     }
 }

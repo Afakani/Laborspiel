@@ -17,6 +17,8 @@ namespace PlanErfuellt
         int openedFrame;
 
         public bool IsOpen => open == this;
+        /// <summary>Id des gerade offenen Panels oder null (z. B. für die Einführung).</summary>
+        public static string OpenId => open != null ? open.panelId : null;
         protected GameManager GM => GameManager.Instance;
 
         protected virtual void Awake() => root.SetActive(false);

@@ -96,9 +96,8 @@ namespace PlanErfuellt
             var t = gm.Texts;
             if (chamber != null && chamber.State == AnimalState.Unstable) return t.Get("ui.hints.unstable");
             if (s.infected) return t.Get(s.antidote > 0 ? "ui.hints.infectedHasAntidote" : "ui.hints.infectedNoAntidote");
-            if (s.tutorialStep >= 0 && s.tutorialStep < DayLogic.TutorialSteps)
-                return t.Format("ui.quota.tutorial", ("n", s.tutorialStep + 1), ("max", DayLogic.TutorialSteps),
-                    ("text", t.Get($"director.tutorial[{s.tutorialStep}].step")));
+            // Einführung: eigener Zielkasten (TutorialUI)
+            if (TutorialLogic.Active(s, gm.Config)) return "";
             if (s.cryo != null && s.cryo.Ready) return t.Get("ui.hints.cryoReady");
             if (s.centrifuge != null && s.centrifuge.spinning) return t.Get("ui.hints.centrifugeSpin");
             if (s.inspection != null && !s.rackHidden && InspectionLogic.RackSuspicious(s, gm.Config)) return t.Get("ui.hints.inspectRack");

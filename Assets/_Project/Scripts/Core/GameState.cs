@@ -18,6 +18,10 @@ namespace PlanErfuellt
         public int antidote;
         public int vodka;
         public int caviar;
+        /// <summary>Laken im Lager (Verbrauchsartikel: jedes Überwerfen verbraucht eines).</summary>
+        public int cloths;
+        /// <summary>Bestellung für den nächsten Morgen (schon bezahlt), Reihenfolge wie OrderLogic.Items; null = keine.</summary>
+        public int[] pendingOrder;
 
         /// <summary>Seren im Regal (max. mixing.rackSize).</summary>
         public readonly List<Serum> serums = new List<Serum>();
@@ -83,6 +87,8 @@ namespace PlanErfuellt
         public Contract contract;
         /// <summary>Schritt der Einführung an Tag 1 (−1 = keine Einführung mehr).</summary>
         public int tutorialStep;
+        /// <summary>Zeit im aktuellen Einführungsschritt (für Lese-Schritte).</summary>
+        public float tutorialTime;
 
         // ---------- Druck von oben ----------
         public float anger;
@@ -150,6 +156,7 @@ namespace PlanErfuellt
             s.antidote = cfg.start.antidote;
             s.vodka = cfg.start.vodka;
             s.caviar = cfg.start.caviar;
+            s.cloths = cfg.start.cloths;
             return s;
         }
 

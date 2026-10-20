@@ -7,7 +7,7 @@ namespace PlanErfuellt
     /// <summary>
     /// Hauptmenü als eigener Vollbild-Bildschirm (rotes Band mit Titel und Knöpfen, Direktor-Plakat mit Parole):
     /// Weiterspielen (nur mit Spielstand), Neues Spiel, Einstellungen, Beenden. „Neues Spiel“ öffnet die
-    /// Einsatzbesprechung (Texte ui.intro: Auftrag, Steuerung) mit „Für den Plan!“ und „Zurück“.
+    /// Einsatzbesprechung (Texte ui.intro: Auftrag, Steuerung) mit „Für den Plan!“ (mit Einführung), „Ohne Einführung“ und „Zurück“.
     /// </summary>
     public class IntroUI : MonoBehaviour
     {
@@ -31,12 +31,14 @@ namespace PlanErfuellt
         [SerializeField] Button start;
         [SerializeField] TMP_Text startLabel;
         [SerializeField] Button back;
+        [SerializeField] Button startNoTutorial;
 
         bool shown, briefing;
 
         void Awake()
         {
-            start.onClick.AddListener(() => DayCycle.Instance.StartFromIntro());
+            start.onClick.AddListener(() => DayCycle.Instance.StartFromIntro(true));
+            startNoTutorial.onClick.AddListener(() => DayCycle.Instance.StartFromIntro(false));
             back.onClick.AddListener(() => ShowBriefing(false));
             newGame.onClick.AddListener(() => ShowBriefing(true));
             cont.onClick.AddListener(() =>
@@ -106,6 +108,7 @@ namespace PlanErfuellt
             body.text = sb.ToString();
             startLabel.text = t.Get("ui.intro.start");
             Label(back, t.Get("ui.menu.back"));
+            Label(startNoTutorial, t.Get("ui.intro.startNoTutorial"));
         }
 
         static void Label(Button b, string text) => b.GetComponentInChildren<TMP_Text>().text = text;

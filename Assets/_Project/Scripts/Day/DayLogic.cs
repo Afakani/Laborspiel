@@ -195,33 +195,7 @@ namespace PlanErfuellt
             }
         }
 
-        // ---------- Einführung (Tag 1) ----------
-
-        /// <summary>Anzahl der Einführungsschritte mit Bedingung (der letzte Text-Eintrag ist der Abschluss).</summary>
-        public const int TutorialSteps = 4;
-
-        /// <summary>
-        /// Prüft den aktuellen Schritt: 0 Serum gemischt, 1 Tier geklont, 2 gesprüht, 3 verarbeitet (Fleisch geliefert).
-        /// </summary>
-        public static void TickTutorial(GameState s, bool hasAnimal, bool animalDosed, List<DayEvent> events)
-        {
-            if (s.tutorialStep < 0 || s.tutorialStep >= TutorialSteps) return;
-            bool done = s.tutorialStep switch
-            {
-                0 => s.serums.Count > 0 || animalDosed,
-                1 => hasAnimal,
-                2 => animalDosed,
-                _ => s.totals.f > 0f
-            };
-            if (!done) return;
-            s.tutorialStep++;
-            if (s.tutorialStep >= TutorialSteps)
-            {
-                s.tutorialStep = -1;
-                events.Add(DayEvent.TutorialDone);
-            }
-            else events.Add(DayEvent.TutorialStep);
-        }
+        // Einführung (Tag 1): siehe TutorialLogic
 
         // ---------- Leerlauf ----------
 

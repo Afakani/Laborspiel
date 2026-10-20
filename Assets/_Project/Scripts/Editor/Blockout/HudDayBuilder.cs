@@ -28,6 +28,7 @@ namespace PlanErfuellt.EditorTools
             BuildWorld(canvas);
             BuildSubtitle(canvas);
             BuildBuildBar(canvas);
+            BuildTutorial(canvas);
         }
 
         /// <summary>Vollbild-Overlays über allem außer der Pause.</summary>
@@ -156,20 +157,26 @@ namespace PlanErfuellt.EditorTools
         {
             var holder = Holder(canvas, "OrderOverlay");
             var root = FullScreen(holder, "Screen", Dim);
-            var frame = CenterFrame(root, "Frame", new Vector2(1060f, 760f));
+            var frame = CenterFrame(root, "Frame", new Vector2(1060f, 830f));
             var title = P.Text(frame, "Title", 34, Gold, new Vector2(30f, -20f), new Vector2(1000f, 46f), TextAlignmentOptions.Left);
-            var info = P.Text(frame, "Info", 18, P.Cream, new Vector2(30f, -72f), new Vector2(1000f, 84f), TextAlignmentOptions.TopLeft);
+            var info = P.Text(frame, "Info", 18, P.Cream, new Vector2(30f, -70f), new Vector2(1000f, 60f), TextAlignmentOptions.TopLeft);
             info.textWrappingMode = TMPro.TextWrappingModes.Normal;
+            var pending = P.Text(frame, "Pending", 18, Green, new Vector2(30f, -134f), new Vector2(1000f, 30f), TextAlignmentOptions.Left);
+            pending.enableAutoSizing = true;
+            pending.fontSizeMin = 12f;
+            pending.fontSizeMax = 18f;
             var ui = holder.gameObject.AddComponent<OrderTerminalUI>();
             var so = new SerializedObject(ui);
+            so.FindProperty("panelId").stringValue = "order";
             so.FindProperty("root").objectReferenceValue = root;
             so.FindProperty("title").objectReferenceValue = title;
             so.FindProperty("info").objectReferenceValue = info;
+            so.FindProperty("pending").objectReferenceValue = pending;
             var rows = so.FindProperty("rows");
-            rows.arraySize = 6;
-            for (int i = 0; i < 6; i++)
+            rows.arraySize = OrderLogic.Items;
+            for (int i = 0; i < OrderLogic.Items; i++)
             {
-                float y = -168f - i * 82f;
+                float y = -174f - i * 80f;
                 var rowBg = P.Img(frame, "Row_" + i, new Vector2(24f, y), new Vector2(1012f, 74f), new Color(0.12f, 0.1f, 0.07f, 0.9f), null, false);
                 var name = P.Text(rowBg.rectTransform, "Name", 24, P.Cream, new Vector2(16f, -6f), new Vector2(420f, 32f), TextAlignmentOptions.Left);
                 var desc = P.Text(rowBg.rectTransform, "Desc", 15, P.Muted, new Vector2(16f, -40f), new Vector2(560f, 26f), TextAlignmentOptions.Left);
@@ -192,8 +199,11 @@ namespace PlanErfuellt.EditorTools
                 r.FindPropertyRelative("minus").objectReferenceValue = minus;
                 r.FindPropertyRelative("plus").objectReferenceValue = plus;
             }
-            var sum = P.Text(frame, "Sum", 22, P.Cream, new Vector2(30f, -680f), new Vector2(620f, 40f), TextAlignmentOptions.Left, P.mono);
-            var confirm = P.MakeButton(frame, "Confirm", new Vector2(-30f, -670f), new Vector2(380f, 62f), ConfirmBg, ConfirmBorder, 24, false);
+            var sum = P.Text(frame, "Sum", 22, P.Cream, new Vector2(30f, -750f), new Vector2(520f, 40f), TextAlignmentOptions.Left, P.mono);
+            var close = P.MakeButton(frame, "Close", new Vector2(-420f, -740f), new Vector2(170f, 62f), P.ButtonBg, Gold, 22, false);
+            var confirm = P.MakeButton(frame, "Confirm", new Vector2(-30f, -740f), new Vector2(370f, 62f), ConfirmBg, ConfirmBorder, 24, false);
+            so.FindProperty("closeButton").objectReferenceValue = close;
+            so.FindProperty("closeLabel").objectReferenceValue = close.GetComponentInChildren<TMP_Text>();
             so.FindProperty("sum").objectReferenceValue = sum;
             so.FindProperty("confirm").objectReferenceValue = confirm;
             so.FindProperty("confirmLabel").objectReferenceValue = confirm.GetComponentInChildren<TMP_Text>();
@@ -317,6 +327,7 @@ namespace PlanErfuellt.EditorTools
             hl.childControlWidth = hl.childControlHeight = false;
             hl.childForceExpandWidth = hl.childForceExpandHeight = false;
             var back = P.MakeButton(row, "Back", Vector2.zero, new Vector2(240f, 70f), P.ButtonBg, Gold, 26, false);
+            var noTut = P.MakeButton(row, "StartNoTutorial", Vector2.zero, new Vector2(300f, 70f), P.ButtonBg, Gold, 24, false);
             var start = P.MakeButton(row, "Start", Vector2.zero, new Vector2(380f, 70f), ConfirmBg, ConfirmBorder, 30, false);
 
             var ui = holder.gameObject.AddComponent<IntroUI>();
@@ -338,6 +349,56 @@ namespace PlanErfuellt.EditorTools
             so.FindProperty("start").objectReferenceValue = start;
             so.FindProperty("startLabel").objectReferenceValue = start.GetComponentInChildren<TMP_Text>();
             so.FindProperty("back").objectReferenceValue = back;
+            so.FindProperty("startNoTutorial").objectReferenceValue = noTut;
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>Einführung: Zielkasten oben in der Mitte und Pfeil zur Station (TutorialUI).</summary>
+        static void BuildTutorial(Transform canvas)
+        {
+            var holder = Holder(canvas, "Tutorial");
+            var box = new GameObject("Box", typeof(RectTransform), typeof(Image));
+            var brt = (RectTransform)box.transform;
+            brt.SetParent(holder, false);
+            brt.anchorMin = brt.anchorMax = brt.pivot = new Vector2(0.5f, 1f);
+            brt.anchoredPosition = new Vector2(0f, -76f);
+            brt.sizeDelta = new Vector2(860f, 104f);
+            box.GetComponent<Image>().color = new Color(0.05f, 0.04f, 0.03f, 0.94f);
+            var stripe = new GameObject("Stripe", typeof(RectTransform), typeof(Image));
+            var srt = (RectTransform)stripe.transform;
+            srt.SetParent(brt, false);
+            srt.anchorMin = new Vector2(0f, 0f);
+            srt.anchorMax = new Vector2(0f, 1f);
+            srt.pivot = new Vector2(0f, 0.5f);
+            srt.sizeDelta = new Vector2(8f, 0f);
+            stripe.GetComponent<Image>().color = Green;
+            var title = P.Text(brt, "Title", 18, Green, new Vector2(26f, -10f), new Vector2(800f, 26f), TextAlignmentOptions.Left);
+            title.characterSpacing = 6f;
+            var text = P.Text(brt, "Text", 23, P.Cream, new Vector2(26f, -38f), new Vector2(814f, 60f), TextAlignmentOptions.TopLeft);
+            text.textWrappingMode = TMPro.TextWrappingModes.Normal;
+            text.enableAutoSizing = true;
+            text.fontSizeMin = 16f;
+            text.fontSizeMax = 23f;
+
+            var marker = new GameObject("Marker", typeof(RectTransform));
+            var mrt = (RectTransform)marker.transform;
+            mrt.SetParent(holder, false);
+            mrt.anchorMin = mrt.anchorMax = mrt.pivot = new Vector2(0.5f, 0.5f);
+            mrt.sizeDelta = new Vector2(64f, 64f);
+            var arrow = Raw(mrt, "Arrow", "Arrow.png", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(56f, 56f), Green);
+            arrow.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            var dist = P.Text(mrt, "Distance", 20, Green, new Vector2(-40f, -62f), new Vector2(144f, 28f), TextAlignmentOptions.Center, P.mono);
+            dist.rectTransform.anchorMin = dist.rectTransform.anchorMax = dist.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            dist.rectTransform.anchoredPosition = new Vector2(0f, -46f);
+
+            var ui = holder.gameObject.AddComponent<TutorialUI>();
+            var so = new SerializedObject(ui);
+            so.FindProperty("box").objectReferenceValue = box;
+            so.FindProperty("title").objectReferenceValue = title;
+            so.FindProperty("text").objectReferenceValue = text;
+            so.FindProperty("marker").objectReferenceValue = mrt;
+            so.FindProperty("arrow").objectReferenceValue = arrow.rectTransform;
+            so.FindProperty("distance").objectReferenceValue = dist;
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 

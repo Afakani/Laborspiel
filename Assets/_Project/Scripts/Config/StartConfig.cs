@@ -16,5 +16,7 @@ namespace PlanErfuellt
         public int vodka;
         /// <summary>Kaviar</summary>
         public int caviar;
+        /// <summary>Laken</summary>
+        public int cloths;
     }
 }

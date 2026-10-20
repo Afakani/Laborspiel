@@ -13,7 +13,7 @@ namespace PlanErfuellt.Tests
         [Test]
         public void StartValues()
         {
-            Assert.AreEqual(700f, cfg.start.money);
+            Assert.AreEqual(900f, cfg.start.money);
             Assert.AreEqual(3, cfg.start.inventory.A);
             Assert.AreEqual(3, cfg.start.inventory.B);
             Assert.AreEqual(2, cfg.start.inventory.C);
@@ -24,10 +24,10 @@ namespace PlanErfuellt.Tests
         public void DayTargets()
         {
             Assert.AreEqual(5, cfg.day.plans);
-            Assert.AreEqual(180f, cfg.day.dayLengthSec);
+            Assert.AreEqual(300f, cfg.day.dayLengthSec);
             Assert.AreEqual(5, cfg.day.targets.Length);
-            Assert.AreEqual(600f, cfg.day.targets[4].m);
-            Assert.AreEqual(92f, cfg.day.targets[4].f);
+            Assert.AreEqual(900f, cfg.day.targets[4].m);
+            Assert.AreEqual(140f, cfg.day.targets[4].f);
             Assert.AreEqual(2.2f, cfg.day.payPerTon.f, 0.0001f);
         }
 
@@ -85,7 +85,7 @@ namespace PlanErfuellt.Tests
         public void NewGameStateUsesConfig()
         {
             var s = GameState.Create(cfg);
-            Assert.AreEqual(700f, s.Money);
+            Assert.AreEqual(900f, s.Money);
             CollectionAssert.AreEqual(new[] { 3, 3, 2 }, s.substances);
             Assert.AreEqual(1, s.antidote);
         }

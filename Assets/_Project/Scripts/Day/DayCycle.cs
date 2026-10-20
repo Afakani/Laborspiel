@@ -74,60 +74,59 @@ namespace PlanErfuellt
         /// <summary>Nur für den Autopiloten (wie Prototyp-Testschritt G.idleT = 0): Leerlauf zurücksetzen.</summary>
         internal void DebugResetIdle() => idleTimer = 0f;
 
-        /// <summary>Intro bestätigt → erstes Bestellterminal.</summary>
-        public void StartFromIntro() => OpenOrder();
-
-        /// <summary>Bestellterminal vor der Schicht; hier wird automatisch gespeichert (ruhiger Zustand).</summary>
-        public void OpenOrder()
+        /// <summary>Einsatzbesprechung bestätigt → Tag 1 (mit oder ohne geführte Einführung).</summary>
+        public void StartFromIntro(bool tutorial = true)
         {
-            SaveGame.Save(GM.State);
-            SetMode(DayMode.Order);
+            if (!tutorial) GM.State.tutorialStep = -1;
+            BeginDay();
         }
 
-        /// <summary>Weiterspielen: gespeicherten Stand laden und am Bestellterminal fortsetzen.</summary>
+        /// <summary>
+        /// Schichtbeginn: Lieferung der Bestellung vom Vortag (sonst Standardbestellung, nicht an Tag 1), automatisch
+        /// speichern (ruhiger Zustand), dann die Schicht starten.
+        /// </summary>
+        void BeginDay()
+        {
+            var s = GM.State;
+            if (s.dayNum > 0)
+            {
+                var (amounts, standard) = OrderLogic.Deliver(s, GM.Config);
+                s.NotifyInventoryChanged();
+                string list = OrderLogic.List(amounts, ItemNames());
+                if (standard) GM.Toast("ui.toasts.standardOrder", ToastKind.Warn, ("list", list.Length > 0 ? list : GM.Texts.Get("ui.order.nothing")));
+                else if (list.Length > 0) GM.Toast("ui.toasts.delivery", ToastKind.Good, ("list", list));
+            }
+            SaveGame.Save(s);
+            StartDay();
+        }
+
+        /// <summary>Weiterspielen: gespeicherten Stand (Schichtbeginn, Lieferung schon erfolgt) laden und die Schicht starten.</summary>
         public bool ContinueSaved()
         {
             var d = SaveGame.Load();
             if (d == null) return false;
             GM.LoadState(d.state);
             if (chamber != null) chamber.Clear();
-            OpenOrder();
+            StartDay();
             return true;
         }
 
-        /// <summary>Preise der sechs Artikel (A, B, C, Gegenmittel, Wodka, Kaviar).</summary>
-        public float Price(int i)
+        /// <summary>Namen der Artikel in Bestellreihenfolge (OrderLogic.Items).</summary>
+        public string[] ItemNames()
         {
-            var p = GM.Config.prices;
-            return i switch { 0 => p.A, 1 => p.B, 2 => p.C, 3 => p.antidote, 4 => p.vodka, _ => p.caviar };
+            var keys = OrderTerminalUI.ItemKeys;
+            var names = new string[keys.Length];
+            for (int i = 0; i < keys.Length; i++) names[i] = GM.Texts.Get("ui.order.item" + keys[i]);
+            return names;
         }
 
-        public float OrderSum(int[] amounts)
-        {
-            float sum = 0f;
-            for (int i = 0; i < amounts.Length; i++) sum += amounts[i] * Price(i);
-            return sum;
-        }
-
-        /// <summary>Bestellung bezahlen, liefern und die Schicht beginnen. false = nicht genug Geld.</summary>
-        public bool ConfirmOrder(int[] amounts, string[] itemNames)
+        /// <summary>Bestellung am Terminal im Lager: sofort bezahlen, Lieferung morgen früh. false = zu wenig Geld.</summary>
+        public bool PlaceOrder(int[] amounts)
         {
             var s = GM.State;
-            float sum = OrderSum(amounts);
-            if (!s.TrySpend(sum)) return false;
-            var parts = new List<string>();
-            for (int i = 0; i < amounts.Length; i++)
-            {
-                if (amounts[i] <= 0) continue;
-                if (i < 3) s.substances[i] += amounts[i];
-                else if (i == 3) s.antidote += amounts[i];
-                else if (i == 4) s.vodka += amounts[i];
-                else s.caviar += amounts[i];
-                parts.Add($"{amounts[i]}× {itemNames[i]}");
-            }
-            s.NotifyInventoryChanged();
-            if (parts.Count > 0) GM.Toast("ui.toasts.delivery", ToastKind.Good, ("list", string.Join(", ", parts)));
-            StartDay();
+            if (!OrderLogic.Place(s, GM.Config, amounts)) return false;
+            GM.Toast("ui.toasts.orderPlaced", ToastKind.Good, ("list", OrderLogic.List(amounts, ItemNames())), ("n", s.dayNum + 1));
+            EventBus.RaiseStation("order");
             return true;
         }
 
@@ -143,7 +142,7 @@ namespace PlanErfuellt
             SetMode(DayMode.Play);
 
             string plan = PlanText(s.quota.target);
-            if (s.dayNum == 1 && s.tutorialStep == 0) director.Say(gm.Texts.Get("director.tutorial[0].say"));
+            if (s.dayNum == 1 && s.tutorialStep == 0) director.Say(gm.Texts.Get("ui.tutorial.steps[0].say"));
             else director.SayTier("director.start", ("plan", plan));
             gm.Toast("ui.toasts.dayStart", ToastKind.Warn, ("day", s.dayNum), ("plan", s.planIdx + 1), ("max", gm.Config.day.plans), ("text", plan));
             if (s.infected)
@@ -216,7 +215,7 @@ namespace PlanErfuellt
             CurrentNews = null;
             if (!newsAfterDay) SetMode(DayMode.Play);
             else if (finalAfterDay) GameOver(GameOverKind.Final);
-            else OpenOrder();
+            else BeginDay();
         }
 
         public void GameOver(GameOverKind kind)
@@ -266,7 +265,12 @@ namespace PlanErfuellt
             bool crisis = chamber != null && (chamber.InCrisis || chamber.State == AnimalState.Unstable);
             DayLogic.TickWish(s, cfg, dt, crisis, () => Random.value, events);
             if (chamber != null)
-                DayLogic.TickTutorial(s, chamber.State != AnimalState.Empty, chamber.Stats.dose.Total > 0 || chamber.IsUltimate, events);
+                TutorialLogic.Tick(s, cfg, new TutorialLogic.Context
+                {
+                    mixingOpen = PanelBase.OpenId == "mixing",
+                    hasAnimal = chamber.State != AnimalState.Empty,
+                    animalDosed = chamber.Stats.dose.Total > 0 || chamber.IsUltimate
+                }, dt, events);
 
             bool busy = gm.PanelOpen || (player != null && player.IsMoving) || (interaction != null && interaction.IsHoldingActive);
             if (DayLogic.TickIdle(ref idleTimer, busy, s, cfg, dt)) director.SayTier("director.idle");
@@ -319,10 +323,9 @@ namespace PlanErfuellt
                     gm.Toast("ui.toasts.wishFailed", ToastKind.Bad);
                     break;
                 case DayEvent.TutorialStep:
-                    director.Say(gm.Texts.Get($"director.tutorial[{s.tutorialStep}].say"));
+                    director.Say(gm.Texts.Get($"ui.tutorial.steps[{s.tutorialStep}].say"));
                     break;
                 case DayEvent.TutorialDone:
-                    director.Say(gm.Texts.Get($"director.tutorial[{DayLogic.TutorialSteps}].say"));
                     gm.Toast("ui.toasts.tutorialDone", ToastKind.Good);
                     break;
             }

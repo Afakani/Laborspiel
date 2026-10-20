@@ -14,23 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: PlanErfuellt::PlanErfuellt.GameConfig
   day:
     plans: 5
-    dayLengthSec: 180
+    dayLengthSec: 300
     targets:
-    - m: 200
-      e: 60
-      f: 30
-    - m: 270
-      e: 80
-      f: 42
-    - m: 360
-      e: 105
-      f: 56
-    - m: 470
-      e: 135
-      f: 72
-    - m: 600
-      e: 170
-      f: 92
+    - m: 300
+      e: 90
+      f: 45
+    - m: 405
+      e: 120
+      f: 65
+    - m: 540
+      e: 160
+      f: 85
+    - m: 705
+      e: 205
+      f: 110
+    - m: 900
+      e: 255
+      f: 140
     prizes:
     - 300
     - 350
@@ -41,10 +41,11 @@ MonoBehaviour:
       m: 1
       e: 1.6
       f: 2.2
-    overfulfilPayBonus: 0.5
+    overfulfilPayBonus: 1
     lateWarningSec: 12
+    standardOrder: 02000000030000000200000000000000000000000000000000000000i
   start:
-    money: 700
+    money: 900
     inventory:
       A: 3
       B: 3
@@ -52,13 +53,17 @@ MonoBehaviour:
     antidote: 1
     vodka: 0
     caviar: 0
+    cloths: 1
   prices:
-    A: 40
-    B: 60
-    C: 50
+    A: 45
+    B: 65
+    C: 55
     antidote: 150
-    vodka: 60
-    caviar: 150
+    vodka: 120
+    caviar: 220
+    cloth: 90
+    cloneCow: 40
+    cloneHen: 20
   substances:
   - id: A
     code: A-17
@@ -739,6 +744,7 @@ MonoBehaviour:
       centrifugeBrake: 0.01
       cryoLoad: 0.6
       cryoTake: 0.3
+      terminal: 0.12
   ui:
     toastMax: 4
     toastSec: 3.6
@@ -1078,6 +1084,27 @@ MonoBehaviour:
     lowShadowCascades: 2
     windowedWidth: 1600
     windowedHeight: 900
+  tutorial:
+    readSec: 7
+    steps:
+    - id: walkMixing
+      target: mixing
+    - id: mix
+      target: mixing
+    - id: clone
+      target: pult
+    - id: spray
+      target: pult
+    - id: watch
+      target: chamber
+    - id: process
+      target: pult
+    - id: order
+      target: terminal
+    - id: cloth
+      target: chamber
+    - id: finish
+      target: 
   ultimates:
   - {fileID: 11400000, guid: 5dc976084a4515f499639506535e6f29, type: 2}
   - {fileID: 11400000, guid: 4e589e637b093764ebf22431455450b9, type: 2}

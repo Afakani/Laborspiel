@@ -6,13 +6,15 @@ using UnityEngine.UI;
 namespace PlanErfuellt
 {
     /// <summary>
-    /// Bestellterminal zu Schichtbeginn (GDD 6.9, Prototyp openOrder/renderOrder/confirmOrder): sechs Artikel mit −/+,
-    /// Lagerbestand, Preis, Summe und Kasse; Info mit Soll und Infektionsfrist. Bestätigen startet die Schicht.
+    /// Bestellterminal im Lager (GDD 6.9, auf Wunsch umgebaut): während der Schicht jederzeit; sieben Artikel mit −/+,
+    /// Lagerbestand, Preis, Summe und Kasse. Bestellt wird für den nächsten Morgen (sofort bezahlt), ohne Bestellung
+    /// kommt die Standardbestellung. Zeigt, was für morgen schon bestellt ist.
     /// </summary>
-    public class OrderTerminalUI : MonoBehaviour
+    public class OrderTerminalUI : PanelBase
     {
         static readonly CultureInfo German = CultureInfo.GetCultureInfo("de-DE");
-        static readonly string[] ItemKeys = { "A", "B", "C", "Antidote", "Vodka", "Caviar" };
+        /// <summary>Text-Schlüssel der Artikel in Bestellreihenfolge (OrderLogic.Items).</summary>
+        public static readonly string[] ItemKeys = { "A", "B", "C", "Antidote", "Vodka", "Caviar", "Cloth" };
 
         [System.Serializable]
         public class Row
@@ -26,20 +28,21 @@ namespace PlanErfuellt
             public Button plus;
         }
 
-        [SerializeField] GameObject root;
         [SerializeField] TMP_Text title;
         [SerializeField] TMP_Text info;
+        [SerializeField] TMP_Text pending;
         [SerializeField] TMP_Text sum;
         [SerializeField] Button confirm;
         [SerializeField] TMP_Text confirmLabel;
-        [SerializeField] Row[] rows = new Row[6];
+        [SerializeField] Button closeButton;
+        [SerializeField] TMP_Text closeLabel;
+        [SerializeField] Row[] rows = new Row[OrderLogic.Items];
 
-        readonly int[] amounts = new int[6];
-        readonly string[] names = new string[6];
-        bool shown;
+        readonly int[] amounts = new int[OrderLogic.Items];
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             for (int i = 0; i < rows.Length; i++)
             {
                 int idx = i;
@@ -47,24 +50,12 @@ namespace PlanErfuellt
                 rows[i].plus.onClick.AddListener(() => Change(idx, 1));
             }
             confirm.onClick.AddListener(OnConfirm);
-            root.SetActive(false);
+            closeButton.onClick.AddListener(Close);
         }
 
-        void Update()
+        protected override void OnOpened()
         {
-            var dc = DayCycle.Instance;
-            bool want = dc != null && dc.Mode == DayMode.Order;
-            if (want != shown)
-            {
-                shown = want;
-                root.SetActive(want);
-                if (want) Open();
-            }
-        }
-
-        void Open()
-        {
-            var gm = GameManager.Instance;
+            var gm = GM;
             var t = gm.Texts;
             var s = gm.State;
             var cfg = gm.Config;
@@ -77,46 +68,48 @@ namespace PlanErfuellt
             if (s.infected) text += t.Format("ui.order.infoInfected", ("n", s.infectedUntilDay));
             info.text = text;
             confirmLabel.text = t.Get("ui.order.confirm");
+            closeLabel.text = t.Get("ui.order.close");
             for (int i = 0; i < rows.Length; i++)
             {
-                names[i] = t.Get("ui.order.item" + ItemKeys[i]);
-                rows[i].name.text = names[i];
+                rows[i].name.text = t.Get("ui.order.item" + ItemKeys[i]);
                 rows[i].desc.text = t.Get("ui.order.desc" + ItemKeys[i]);
-                rows[i].price.text = Money(DayCycle.Instance.Price(i));
+                rows[i].price.text = Money(OrderLogic.Price(cfg, i));
             }
-            Refresh();
         }
 
         void Change(int i, int delta)
         {
             amounts[i] = Mathf.Max(0, amounts[i] + delta);
-            if (DayCycle.Instance.OrderSum(amounts) > GameManager.Instance.State.Money) amounts[i] = Mathf.Max(0, amounts[i] - delta);
-            Refresh();
+            if (OrderLogic.Sum(GM.Config, amounts) > GM.State.Money) amounts[i] = Mathf.Max(0, amounts[i] - delta);
+            Refresh(false);
         }
 
-        void Refresh()
+        public override void Refresh(bool force)
         {
-            var gm = GameManager.Instance;
+            var gm = GM;
             var t = gm.Texts;
             var s = gm.State;
             for (int i = 0; i < rows.Length; i++)
             {
-                rows[i].stock.text = t.Format("ui.order.stock", ("n", Stock(s, i)));
+                rows[i].stock.text = t.Format("ui.order.stock", ("n", OrderLogic.Stock(s, i)));
                 rows[i].count.text = amounts[i].ToString();
                 rows[i].minus.interactable = amounts[i] > 0;
             }
-            float total = DayCycle.Instance.OrderSum(amounts);
+            float total = OrderLogic.Sum(gm.Config, amounts);
             sum.text = t.Format("ui.order.sum", ("sum", Money(total)), ("cash", Money(s.Money)));
-            confirm.interactable = total <= s.Money;
+            confirm.interactable = total > 0f && total <= s.Money;
+            pending.text = s.pendingOrder != null
+                ? t.Format("ui.order.pending", ("list", OrderLogic.List(s.pendingOrder, DayCycle.Instance.ItemNames())))
+                : t.Get("ui.order.pendingNone");
         }
-
-        static int Stock(GameState s, int i) => i < 3 ? s.substances[i] : i == 3 ? s.antidote : i == 4 ? s.vodka : s.caviar;
 
         void OnConfirm()
         {
-            if (DayCycle.Instance.ConfirmOrder(amounts, names)) root.SetActive(false);
+            if (!DayCycle.Instance.PlaceOrder(amounts)) return;
+            for (int i = 0; i < amounts.Length; i++) amounts[i] = 0;
+            Refresh(true);
         }
 
-        string Money(float v) => GameManager.Instance.Texts.Format("ui.common.money", ("n", Mathf.RoundToInt(v).ToString("N0", German)));
+        string Money(float v) => GM.Texts.Format("ui.common.money", ("n", Mathf.RoundToInt(v).ToString("N0", German)));
     }
 }

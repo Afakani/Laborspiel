@@ -2,32 +2,32 @@
   "_info": "Arbeitskopie von Docs/02_Balancing.json. Formel-Strings wurden in Zahlen-Felder ueberfuehrt (siehe Docs/Entscheidungen.md). Aenderungen hier werden automatisch in GameConfig.asset importiert.",
   "day": {
     "plans": 5,
-    "dayLengthSec": 180,
+    "dayLengthSec": 300,
     "targets": [
       {
-        "m": 200,
-        "e": 60,
-        "f": 30
+        "m": 300,
+        "e": 90,
+        "f": 45
       },
       {
-        "m": 270,
-        "e": 80,
-        "f": 42
+        "m": 405,
+        "e": 120,
+        "f": 65
       },
       {
-        "m": 360,
-        "e": 105,
-        "f": 56
+        "m": 540,
+        "e": 160,
+        "f": 85
       },
       {
-        "m": 470,
-        "e": 135,
-        "f": 72
+        "m": 705,
+        "e": 205,
+        "f": 110
       },
       {
-        "m": 600,
-        "e": 170,
-        "f": 92
+        "m": 900,
+        "e": 255,
+        "f": 140
       }
     ],
     "prizes": [
@@ -42,11 +42,12 @@
       "e": 1.6,
       "f": 2.2
     },
-    "overfulfilPayBonus": 0.5,
-    "lateWarningSec": 12
+    "overfulfilPayBonus": 1.0,
+    "lateWarningSec": 12,
+    "standardOrder": [2, 3, 2, 0, 0, 0, 0]
   },
   "start": {
-    "money": 700,
+    "money": 900,
     "inventory": {
       "A": 3,
       "B": 3,
@@ -54,15 +55,20 @@
     },
     "antidote": 1,
     "vodka": 0,
-    "caviar": 0
+    "caviar": 0,
+    "cloths": 1
   },
   "prices": {
-    "A": 40,
-    "B": 60,
-    "C": 50,
+    "_doc": "Neues Balancing (eigene Werte, auf Wunsch): Stoffe leicht teurer, Wodka/Kaviar deutlich, Laken als Verbrauchsartikel, Klonen kostet.",
+    "A": 45,
+    "B": 65,
+    "C": 55,
     "antidote": 150,
-    "vodka": 60,
-    "caviar": 150
+    "vodka": 120,
+    "caviar": 220,
+    "cloth": 90,
+    "cloneCow": 40,
+    "cloneHen": 20
   },
   "substances": [
     {
@@ -1059,7 +1065,8 @@
       "centrifugeLoad": 0.5,
       "centrifugeBrake": 0.01,
       "cryoLoad": 0.6,
-      "cryoTake": 0.3
+      "cryoTake": 0.3,
+      "terminal": 0.12
     }
   },
   "ui": {
@@ -1361,5 +1368,20 @@
     "lowShadowCascades": 2,
     "windowedWidth": 1600,
     "windowedHeight": 900
+  },
+  "tutorial": {
+    "_doc": "Geführte Einführung an Tag 1 (eigener Wert).",
+    "readSec": 7,
+    "steps": [
+      { "id": "walkMixing", "target": "mixing" },
+      { "id": "mix", "target": "mixing" },
+      { "id": "clone", "target": "pult" },
+      { "id": "spray", "target": "pult" },
+      { "id": "watch", "target": "chamber" },
+      { "id": "process", "target": "pult" },
+      { "id": "order", "target": "terminal" },
+      { "id": "cloth", "target": "chamber" },
+      { "id": "finish", "target": "" }
+    ]
   }
 }

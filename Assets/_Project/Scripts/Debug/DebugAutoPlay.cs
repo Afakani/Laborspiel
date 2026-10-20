@@ -13,7 +13,7 @@ namespace PlanErfuellt
     {
         [SerializeField] float timeScale = 10f;
         [SerializeField] int stopAtPlan = 1;
-        [SerializeField] int[] order = { 2, 4, 3, 1, 0, 0 };
+        [SerializeField] int[] order = { 2, 4, 3, 1, 0, 0, 1 };
         [SerializeField] float processAfterSec = 35f;
         [SerializeField] string logPath = "Temp/autoplay_log.txt";
 
@@ -108,15 +108,13 @@ namespace PlanErfuellt
                 case DayMode.Intro:
                     dc.StartFromIntro();
                     break;
-                case DayMode.Order:
-                    PlaceOrder(dc, s);
-                    break;
                 case DayMode.News:
                     if (dc.CanSkipNews) dc.SkipNews();
                     break;
                 case DayMode.Play:
                     // der Autopilot „arbeitet“ ständig; keine Leerlauf-Wut (Prototyp-Testschritt setzt idleT = 0)
                     dc.DebugResetIdle();
+                    if (s.pendingOrder == null) PlaceOrder(dc, s);
                     PlayShift(gm, s);
                     break;
             }
@@ -124,18 +122,18 @@ namespace PlanErfuellt
 
         void PlaceOrder(DayCycle dc, GameState s)
         {
+            var cfg = GameManager.Instance.Config;
             var amounts = (int[])order.Clone();
-            // so viel bestellen, wie die Kasse hergibt
-            while (dc.OrderSum(amounts) > s.Money)
+            // für morgen bestellen, so viel die Kasse hergibt (Rest bleibt fürs Klonen)
+            while (OrderLogic.Sum(cfg, amounts) > s.Money * 0.6f)
             {
                 int i = System.Array.FindLastIndex(amounts, a => a > 0);
                 if (i < 0) break;
                 amounts[i]--;
             }
-            var names = new string[amounts.Length];
-            for (int i = 0; i < names.Length; i++) names[i] = "#" + i;
-            Write("Bestellung " + string.Join(",", amounts) + " für " + dc.OrderSum(amounts).ToString("0"));
-            dc.ConfirmOrder(amounts, names);
+            if (OrderLogic.Sum(cfg, amounts) <= 0f) return;
+            Write("Bestellung für morgen " + string.Join(",", amounts) + " für " + OrderLogic.Sum(cfg, amounts).ToString("0"));
+            dc.PlaceOrder(amounts);
         }
 
         void PlayShift(GameManager gm, GameState s)

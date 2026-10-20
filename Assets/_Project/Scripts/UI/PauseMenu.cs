@@ -21,6 +21,7 @@ namespace PlanErfuellt
         [SerializeField] Button mainMenu;
         [SerializeField] Button quit;
         [SerializeField] TMP_Text saveHint;
+        [SerializeField] Button skipTutorial;
 
         void Start()
         {
@@ -45,6 +46,12 @@ namespace PlanErfuellt
             mainMenu.GetComponentInChildren<TMP_Text>().text = gm.Texts.Get("ui.hud.btnMainMenu");
             quit.GetComponentInChildren<TMP_Text>().text = gm.Texts.Get("ui.hud.btnQuit");
             mainMenu.onClick.AddListener(ToMainMenu);
+            skipTutorial.GetComponentInChildren<TMP_Text>().text = gm.Texts.Get("ui.hud.btnSkipTutorial");
+            skipTutorial.onClick.AddListener(() =>
+            {
+                TutorialLogic.Skip(GameManager.Instance.State);
+                skipTutorial.gameObject.SetActive(false);
+            });
             quit.onClick.AddListener(Quit);
             SoundLabel();
             overlay.SetActive(gm.Clock.Paused);
@@ -96,6 +103,7 @@ namespace PlanErfuellt
             overlay.SetActive(paused);
             if (!paused) return;
             var gm = GameManager.Instance;
+            skipTutorial.gameObject.SetActive(TutorialLogic.Active(gm.State, gm.Config));
             var save = SaveGame.Load();
             saveHint.text = save != null
                 ? gm.Texts.Format("ui.hud.saveHint", ("day", save.state.dayNum + 1))

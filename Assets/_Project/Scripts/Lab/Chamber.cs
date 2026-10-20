@@ -326,6 +326,9 @@ namespace PlanErfuellt
             if (S.beltBroken) return Feedback.Error("ui.errors.beltBrokenRepair");
             if (S.contaminated) return Feedback.Error("ui.errors.contaminated");
             if (S.blackoutTimer > 0f) return Feedback.Error("ui.errors.blackoutClone");
+            // Klonen kostet (auf Wunsch, eigener Wert prices.cloneCow/cloneHen)
+            float cost = OrderLogic.CloneCost(Cfg, kind);
+            if (!S.TrySpend(cost)) return Feedback.Error("ui.errors.noMoneyClone", ("money", Mathf.RoundToInt(cost)));
 
             stats.Reset(Cfg.animal.eggInterval);
             stats.kind = kind;

@@ -535,6 +535,18 @@ def hud_icons():
     save(glass, "IconHourglass.png")
 
 
+# ---------- Zielpfeil der Einführung (zeigt nach oben, weiß mit dunklem Rand) ----------
+def arrow():
+    s = 128
+    img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    pts = [(64, 8), (118, 78), (84, 78), (84, 120), (44, 120), (44, 78), (10, 78)]
+    d.polygon(pts, fill=(30, 20, 10, 255))
+    inner = [(64, 22), (104, 72), (76, 72), (76, 112), (52, 112), (52, 72), (24, 72)]
+    d.polygon(inner, fill=(255, 255, 255, 255))
+    save(img, "Arrow.png")
+
+
 # Einzelne Texturen neu erzeugen: python Tools/gen_lookdev_textures.py <Ziel> carpet hud_plate …
 if len(sys.argv) > 2:
     for name in sys.argv[2:]:
@@ -559,3 +571,4 @@ studio_wall()
 carpet()
 hud_plate()
 hud_icons()
+arrow()

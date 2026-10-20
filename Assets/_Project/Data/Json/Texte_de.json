@@ -390,7 +390,8 @@
       "chipAntidoteSym": "+",
       "chipSerumSym": "S",
       "chipCount": "×{n}",
-      "chipRack": "{n}/{max}"
+      "chipRack": "{n}/{max}",
+      "btnSkipTutorial": "Einführung überspringen"
     },
     "quota": {
       "title": "PLAN {n}/{max}",
@@ -423,7 +424,7 @@
       "mix": "Mischstation benutzen",
       "rackHide": "Serum-Regal abdecken!",
       "rackShow": "Serum-Regal wieder aufdecken",
-      "clothOn": "Laken über die Kammer werfen",
+      "clothOn": "Laken über die Kammer werfen ({n} im Lager)",
       "clothOff": "Laken abnehmen",
       "vodkaOffer": "Kommissar Wodka anbieten ({n})",
       "vodkaDrinking": "Der Kommissar trinkt …",
@@ -437,8 +438,8 @@
       "rohrpostNone": "Rohrpost: kein Kaviar im Lager",
       "beltRepair": "Förderband reparieren",
       "beltOk": "Bandmotor läuft",
-      "terminal": "Bestellungen nur zu Schichtbeginn",
-      "storage": "Lager: A-17 ×{a} · B-08 ×{b} · C-04 ×{c} · Gegenmittel ×{ant}",
+      "terminal": "Bestellen für morgen",
+      "storage": "Lager: A-17 ×{a} · B-08 ×{b} · C-04 ×{c} · Gegenmittel ×{ant} · Laken ×{cl}",
       "centrifugeLoad": "Serum zentrifugieren (bei GRÜN bremsen)",
       "centrifugeNone": "Zentrifuge: kein passendes Serum im Regal",
       "centrifugeBrake": "BREMSEN bei GRÜN! Drehzahl {n} %",
@@ -450,7 +451,9 @@
       "cryoRackFull": "Regal voll – Platz schaffen! ({sec} s)",
       "cryoLoad": "Serum einfrieren (danach rechtzeitig herausnehmen)",
       "cryoNone": "Kryokammer: kein passendes Serum im Regal",
-      "clickToLook": "Klicken, um die Maus zu fangen"
+      "clickToLook": "Klicken, um die Maus zu fangen",
+      "terminalOrdered": "Bestellen für morgen (schon etwas bestellt)",
+      "clothNone": "Kein Laken im Lager – am Terminal kaufen"
     },
     "toasts": {
       "dayStart": "Tag {day} · Plan {plan}/{max}: {text}",
@@ -506,7 +509,7 @@
       "infectionMissed": "Glück gehabt – der Schleim hat dich verfehlt.",
       "cured": "Gegenmittel gespritzt. Die Symptome klingen ab.",
       "symptom": "Symptom: {text}",
-      "clothOn": "Laken über die Kammer geworfen",
+      "clothOn": "Laken übergeworfen · noch {n} im Lager",
       "clothOff": "Laken abgenommen",
       "rackHidden": "Serum-Regal abgedeckt",
       "rackOpen": "Serum-Regal wieder offen",
@@ -545,7 +548,10 @@
       "buildLocked": "{name} ist noch gesperrt",
       "buildNoMoney": "Zu wenig Stalinmünzen für {name}",
       "buildCellTaken": "Feld ist belegt",
-      "placeholder": "{name}: Funktion folgt in Phase {phase}."
+      "placeholder": "{name}: Funktion folgt in Phase {phase}.",
+      "orderPlaced": "Bestellt für Tag {n}: {list}",
+      "standardOrder": "Nichts bestellt – Standardlieferung: {list}",
+      "clothGone": "Laken abgenommen – von den Mutagenen zerfressen"
     },
     "errors": {
       "chamberBusy": "Die Kammer ist belegt.",
@@ -578,7 +584,9 @@
       "noCaviar": "Kein Kaviar im Lager – am Bestellterminal kaufen.",
       "noVodka": "Kein Wodka im Lager.",
       "noCentrifugeSerum": "Kein Serum, das zentrifugiert werden kann.",
-      "noCryoSerum": "Kein Serum, das eingefroren werden kann."
+      "noCryoSerum": "Kein Serum, das eingefroren werden kann.",
+      "noMoneyClone": "Kein Geld fürs Klonen ({money} SM)",
+      "noCloth": "Kein Laken mehr – am Terminal im Lager kaufen"
     },
     "pult": {
       "title": "PULT · KAMMER B-12",
@@ -681,12 +689,12 @@
       "dose": "<color=#{color}>{id}{n}</color>"
     },
     "order": {
-      "title": "Bestellterminal · Tag {n}",
-      "info": "Soll für Plan {plan}/{max}: {text} in {min} Minuten. Eine Bestellung pro Tag, keine Nachlieferung. Bezahlt wird in Stalinmünzen.",
+      "title": "Bestellterminal · Lieferung für Tag {n}",
+      "info": "Soll für Plan {plan}/{max}: {text} in {min} Minuten. Bestellt wird für morgen früh und sofort bezahlt. Wer nichts bestellt, bekommt die Standardlieferung.",
       "infoInfected": " ACHTUNG: Du bist infiziert – Frist bis Ende Tag {n}. Ohne Gegenmittel brichst du zusammen.",
       "stock": "im Lager: {n}",
       "sum": "Summe {sum} · Kasse {cash}",
-      "confirm": "Bestellen & Schicht beginnen",
+      "confirm": "Für morgen bestellen",
       "itemA": "Wachstum A-17",
       "itemB": "Laktation B-08",
       "itemC": "Stabilität C-04",
@@ -698,7 +706,13 @@
       "descC": "hebt die Stabilität, dämpft aber die Wirkung",
       "descAntidote": "heilt eine Infektion oder setzt ein Tier zurück",
       "descVodka": "dem Kommissar anbieten: kurze Pause, weniger Verdacht",
-      "descCaviar": "per Rohrpost an den Direktor: Wut −25"
+      "descCaviar": "per Rohrpost an den Direktor: Wut −25",
+      "close": "Schließen",
+      "pending": "Für morgen bestellt: {list}",
+      "pendingNone": "Für morgen ist noch nichts bestellt – sonst kommt die Standardlieferung.",
+      "nothing": "nichts (Kasse leer)",
+      "itemCloth": "Laken",
+      "descCloth": "deckt die Kammer bei einer Kontrolle ab – zerfällt nach einem Einsatz"
     },
     "build": {
       "title": "BAUEN (B beendet)",
@@ -787,7 +801,8 @@
       "start": "Für den Plan!",
       "settings": "Einstellungen",
       "quit": "Beenden",
-      "continue": "Weiterspielen · Tag {day} · Plan {plan}/{max}"
+      "continue": "Weiterspielen · Tag {day} · Plan {plan}/{max}",
+      "startNoTutorial": "Ohne Einführung"
     },
     "menu": {
       "newGame": "Neues Spiel",
@@ -856,7 +871,12 @@
       "crateB": "B-08",
       "crateC": "C-04",
       "crateAntidote": "GEGEN-\nMITTEL",
-      "books": ["GENETIK", "NÄHRSTOFFE", "WACHSTUM", "NEBENWIRKUNGEN?"]
+      "books": [
+        "GENETIK",
+        "NÄHRSTOFFE",
+        "WACHSTUM",
+        "NEBENWIRKUNGEN?"
+      ]
     },
     "names": {
       "pult": "Pult",
@@ -869,6 +889,48 @@
       "centrifuge": "Zentrifuge",
       "cryo": "Kryokammer",
       "chamber": "Kammer B-12"
+    },
+    "tutorial": {
+      "title": "EINFÜHRUNG {n}/{max}",
+      "distance": "{m} m",
+      "steps": [
+        {
+          "text": "Lauf zur MISCHSTATION. W A S D laufen, Shift sprinten, Leertaste halten zum Benutzen.",
+          "say": "Genosse, dort steht die Mischstation. Laufen Sie! Die Partei sieht zu."
+        },
+        {
+          "text": "Mische ein Serum: z. B. 1× Laktation B-08 einstellen und MISCHEN drücken.",
+          "say": "Genosse, das da ist ein Regler. Regler gut. Explosion schlecht. Verstanden?"
+        },
+        {
+          "text": "Geh zum PULT in der Mitte und klone eine Kuh. Klonen kostet Stalinmünzen.",
+          "say": "Jetzt eine Kuh. Kühe geben Milch. Das ist Wissenschaft."
+        },
+        {
+          "text": "Am Pult das Serum im Regal wählen und GAS ziehen.",
+          "say": "Sprühen Sie, Genosse! Für das Volk!"
+        },
+        {
+          "text": "Milch fließt. Unten links: MENGE, QUALITÄT, STABILITÄT. Fällt die Stabilität auf 0: NOT-STOPP drücken!",
+          "say": "Beobachten Sie das Tier. Wenn es glüht, ist das … vermutlich normal."
+        },
+        {
+          "text": "Fleisch gibt es nur aus der Verarbeitung: am Pult FÖRDERBAND ziehen.",
+          "say": "Fleisch gibt es nur aus der Verarbeitung. Das Volk fragt nicht, woher."
+        },
+        {
+          "text": "Geh ins LAGER und bestelle am Terminal für morgen. Ohne Bestellung kommt die Standardlieferung.",
+          "say": "Denken Sie an morgen, Genosse. Wer nicht bestellt, bekommt Standardware."
+        },
+        {
+          "text": "Kommt der Kommissar, seitlich an der Kammer ein LAKEN überwerfen. Jedes Laken wird dabei verbraucht.",
+          "say": "Der Kommissar darf nichts sehen. Laken kosten Geld. Sparen Sie nicht am falschen Ende."
+        },
+        {
+          "text": "Erfülle den Plan bis Schichtende: Milch, Eier und Fleisch. Überschuss zahlt doppelt!",
+          "say": "Gut, Genosse. Ab morgen kommt die Partei zu Besuch."
+        }
+      ]
     }
   }
 }

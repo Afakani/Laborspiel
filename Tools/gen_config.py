@@ -20,14 +20,24 @@ CLASSES = [
         F("float[]", "prizes", "Prämie je Plan"),
         F("GoodsValues", "payPerTon", "SM pro Tonne"),
         F("float", "overfulfilPayBonus", "Aufschlag über Soll (0.5 = +50 %)"),
-        F("float", "lateWarningSec", "Restzeit, ab der der Bildschirmrand pulsiert")]),
+        F("float", "lateWarningSec", "Restzeit, ab der der Bildschirmrand pulsiert"),
+        F("int[]", "standardOrder", "Lieferung ohne Bestellung (A, B, C, Gegenmittel, Wodka, Kaviar, Laken)")]),
     ("StartConfig", "Startwerte eines neuen Spiels (GDD 4.1).", [
         F("float", "money", "Start-Kasse"),
         F("SubstanceAmounts", "inventory", "Startlager A/B/C"),
-        F("int", "antidote", "Gegenmittel"), F("int", "vodka", "Wodka"), F("int", "caviar", "Kaviar")]),
-    ("PricesConfig", "Einkaufspreise am Bestellterminal.", [
+        F("int", "antidote", "Gegenmittel"), F("int", "vodka", "Wodka"), F("int", "caviar", "Kaviar"),
+        F("int", "cloths", "Laken")]),
+    ("PricesConfig", "Einkaufspreise am Bestellterminal und Kosten fürs Klonen.", [
         F("float", "A"), F("float", "B"), F("float", "C"),
-        F("float", "antidote"), F("float", "vodka"), F("float", "caviar")]),
+        F("float", "antidote"), F("float", "vodka"), F("float", "caviar"),
+        F("float", "cloth", "Laken (wird bei jedem Einsatz verbraucht)"),
+        F("float", "cloneCow", "Klonen einer Kuh"), F("float", "cloneHen", "Klonen eines Huhns")]),
+    ("TutorialStepConfig", "Schritt der Einführung: Bedingung (id) und Ziel, auf das der Pfeil zeigt.", [
+        F("string", "id", "walkMixing, mix, clone, spray, watch, process, order, cloth, finish"),
+        F("string", "target", "Station-Id (mixing, pult, terminal …), chamber oder leer")]),
+    ("TutorialConfig", "Geführte Einführung an Tag 1.", [
+        F("float", "readSec", "Lese-Schritte gehen nach dieser Zeit weiter"),
+        F("TutorialStepConfig[]", "steps", "Reihenfolge der Schritte (Texte in ui.tutorial.steps)")]),
     ("SubstanceConfig", "Ein Grundstoff (A/B/C) mit Anzeige-Daten.", [
         F("string", "id", "A, B oder C"), F("string", "code", "z. B. A-17"),
         F("string", "displayName", "Anzeigename", None, "name"), F("string", "color", "Farbe als Hex")]),
@@ -277,7 +287,7 @@ CLASSES = [
     ("HoldTimesConfig", "Haltezeiten der Interaktionen in Sekunden.", [
         F("float", "pult"), F("float", "mixing"), F("float", "rackHide"), F("float", "cloth"), F("float", "vodka"),
         F("float", "tasting"), F("float", "rohrpost"), F("float", "beltRepair"), F("float", "centrifugeLoad"),
-        F("float", "centrifugeBrake"), F("float", "cryoLoad"), F("float", "cryoTake")]),
+        F("float", "centrifugeBrake"), F("float", "cryoLoad"), F("float", "cryoTake"), F("float", "terminal")]),
     ("InteractionConfig", "Zielwahl und Haltezeiten (GDD 2, Prototyp pickTarget).", [
         F("float", "pultScore", "Wertung, wenn der Spieler in der Pult-Zone steht"), F("float", "clothScore"),
         F("float", "disabledHoldSec", "Haltezeit bei nicht möglichen Aktionen (nur Anzeige)"),

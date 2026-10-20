@@ -157,15 +157,27 @@ namespace PlanErfuellt.Tests
         {
             var s = Started();
             events.Clear();
-            DayLogic.TickTutorial(s, false, false, events);
-            Assert.AreEqual(0, s.tutorialStep);
+            var none = new TutorialLogic.Context();
+            TutorialLogic.Tick(s, cfg, none, 0.1f, events);
+            Assert.AreEqual(0, s.tutorialStep, "erst zur Mischstation");
+            TutorialLogic.Tick(s, cfg, new TutorialLogic.Context { mixingOpen = true }, 0.1f, events);
+            Assert.AreEqual(1, s.tutorialStep);
             s.serums.Add(new Serum(new Dose(0, 1, 0), SerumStage.Raw));
-            DayLogic.TickTutorial(s, false, false, events);
-            DayLogic.TickTutorial(s, true, false, events);
-            DayLogic.TickTutorial(s, true, true, events);
-            Assert.AreEqual(3, s.tutorialStep);
+            TutorialLogic.Tick(s, cfg, none, 0.1f, events);
+            TutorialLogic.Tick(s, cfg, new TutorialLogic.Context { hasAnimal = true }, 0.1f, events);
+            TutorialLogic.Tick(s, cfg, new TutorialLogic.Context { hasAnimal = true, animalDosed = true }, 0.1f, events);
+            Assert.AreEqual("watch", TutorialLogic.Current(s, cfg).id);
+            TutorialLogic.Tick(s, cfg, none, cfg.tutorial.readSec, events);
+            Assert.AreEqual("process", TutorialLogic.Current(s, cfg).id, "Lese-Schritt nach readSec weiter");
             s.totals.f = 1f;
-            DayLogic.TickTutorial(s, false, false, events);
+            TutorialLogic.Tick(s, cfg, none, 0.1f, events);
+            Assert.AreEqual("order", TutorialLogic.Current(s, cfg).id);
+            TutorialLogic.Tick(s, cfg, none, 100f, events);
+            Assert.AreEqual("order", TutorialLogic.Current(s, cfg).id, "Bestellen ist kein Lese-Schritt");
+            s.pendingOrder = new int[OrderLogic.Items];
+            TutorialLogic.Tick(s, cfg, none, 0.1f, events);
+            TutorialLogic.Tick(s, cfg, none, cfg.tutorial.readSec, events);
+            TutorialLogic.Tick(s, cfg, none, cfg.tutorial.readSec, events);
             Assert.AreEqual(-1, s.tutorialStep);
             CollectionAssert.Contains(events, DayEvent.TutorialDone);
         }
