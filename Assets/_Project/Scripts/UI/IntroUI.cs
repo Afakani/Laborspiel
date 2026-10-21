@@ -7,7 +7,8 @@ namespace PlanErfuellt
     /// <summary>
     /// Hauptmenü als eigener Vollbild-Bildschirm (rotes Band mit Titel und Knöpfen, Direktor-Plakat mit Parole):
     /// Weiterspielen (nur mit Spielstand), Neues Spiel, Einstellungen, Beenden. „Neues Spiel“ öffnet die
-    /// Einsatzbesprechung (Texte ui.intro: Auftrag, Steuerung) mit „Für den Plan!“ (mit Einführung), „Ohne Einführung“ und „Zurück“.
+    /// Einsatzbesprechung in Seiten (ui.intro.pages: Auftrag, Ablauf, Kontrolle, Gefahren, Steuerung) mit „Weiter“
+    /// bzw. auf der letzten Seite „Für den Plan!“ (mit Einführung), „Ohne Einführung“ und „Zurück“.
     /// </summary>
     public class IntroUI : MonoBehaviour
     {
@@ -34,12 +35,21 @@ namespace PlanErfuellt
         [SerializeField] Button startNoTutorial;
 
         bool shown, briefing;
+        int page;
 
         void Awake()
         {
-            start.onClick.AddListener(() => DayCycle.Instance.StartFromIntro(true));
+            start.onClick.AddListener(() =>
+            {
+                if (page < PageCount - 1) ShowPage(page + 1);
+                else DayCycle.Instance.StartFromIntro(true);
+            });
             startNoTutorial.onClick.AddListener(() => DayCycle.Instance.StartFromIntro(false));
-            back.onClick.AddListener(() => ShowBriefing(false));
+            back.onClick.AddListener(() =>
+            {
+                if (page > 0) ShowPage(page - 1);
+                else ShowBriefing(false);
+            });
             newGame.onClick.AddListener(() => ShowBriefing(true));
             cont.onClick.AddListener(() =>
             {
@@ -79,6 +89,20 @@ namespace PlanErfuellt
             briefing = on;
             menuRoot.SetActive(!on);
             root.SetActive(on);
+            if (on) ShowPage(0);
+        }
+
+        static int PageCount => GameManager.Instance.Texts.Count("ui.intro.pages");
+
+        /// <summary>Eine Seite der Einsatzbesprechung: Überschrift, Text, „Weiter“ bzw. „Für den Plan!“.</summary>
+        void ShowPage(int p)
+        {
+            var t = GameManager.Instance.Texts;
+            int n = PageCount;
+            page = Mathf.Clamp(p, 0, n - 1);
+            subtitle.text = t.Format("ui.intro.pageOf", ("n", page + 1), ("max", n), ("title", t.Get($"ui.intro.pages[{page}].title")));
+            body.text = t.Get($"ui.intro.pages[{page}].text");
+            startLabel.text = t.Get(page < n - 1 ? "ui.intro.next" : "ui.intro.start");
         }
 
         void Fill()
@@ -100,13 +124,6 @@ namespace PlanErfuellt
                 Label(cont, t.Format("ui.intro.continue", ("day", save.state.dayNum + 1), ("plan", save.state.planIdx + 1), ("max", gm.Config.day.plans)));
 
             title.text = t.Get("ui.intro.title");
-            subtitle.text = t.Get("ui.intro.subtitle");
-            var sb = new System.Text.StringBuilder();
-            sb.AppendLine(t.Get("ui.intro.text1")).AppendLine();
-            sb.AppendLine(t.Get("ui.intro.text2")).AppendLine();
-            foreach (var b in t.GetList("ui.intro.bullets")) sb.Append("• ").AppendLine(b);
-            body.text = sb.ToString();
-            startLabel.text = t.Get("ui.intro.start");
             Label(back, t.Get("ui.menu.back"));
             Label(startNoTutorial, t.Get("ui.intro.startNoTutorial"));
         }

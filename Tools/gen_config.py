@@ -35,9 +35,16 @@ CLASSES = [
     ("TutorialStepConfig", "Schritt der Einführung: Bedingung (id) und Ziel, auf das der Pfeil zeigt.", [
         F("string", "id", "walkMixing, mix, clone, spray, watch, process, order, cloth, finish"),
         F("string", "target", "Station-Id (mixing, pult, terminal …), chamber oder leer")]),
-    ("TutorialConfig", "Geführte Einführung an Tag 1.", [
+    ("TutorialHintConfig", "Hinweis beim ersten Auftreten einer Lage (Texte ui.tutorial.hints.<id>).", [
+        F("string", "id", "inspection, unstable, belt, contaminated, infected, noCloth, anger, centrifuge, cryo, ultimate, rooms"),
+        F("string", "target", "Station-Id, chamber oder leer"),
+        F("bool", "info", "Reiner Info-Hinweis: verschwindet nach hintInfoSec")]),
+    ("TutorialConfig", "Geführte Einführung an Tag 1 und Hinweise bei erstem Auftreten.", [
         F("float", "readSec", "Lese-Schritte gehen nach dieser Zeit weiter"),
-        F("TutorialStepConfig[]", "steps", "Reihenfolge der Schritte (Texte in ui.tutorial.steps)")]),
+        F("TutorialStepConfig[]", "steps", "Reihenfolge der Schritte (Texte in ui.tutorial.steps)"),
+        F("TutorialHintConfig[]", "hints", "Hinweise, Reihenfolge = Vorrang"),
+        F("float", "hintInfoSec", "Anzeigedauer von Info-Hinweisen"),
+        F("float", "hintMaxSec", "Höchstdauer eines Hinweises, auch wenn die Lage bleibt")]),
     ("SubstanceConfig", "Ein Grundstoff (A/B/C) mit Anzeige-Daten.", [
         F("string", "id", "A, B oder C"), F("string", "code", "z. B. A-17"),
         F("string", "displayName", "Anzeigename", None, "name"), F("string", "color", "Farbe als Hex")]),

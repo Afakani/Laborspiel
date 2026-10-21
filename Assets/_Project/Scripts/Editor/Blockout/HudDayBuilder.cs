@@ -37,6 +37,7 @@ namespace PlanErfuellt.EditorTools
             P.Init();
             BuildOrder(canvas);
             BuildCanteen(canvas);
+            BuildDayStart(canvas);
             BuildIntro(canvas);
             BuildEnd(canvas);
             BuildNews(canvas);
@@ -218,6 +219,53 @@ namespace PlanErfuellt.EditorTools
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
+        /// <summary>Auftragskarte zu Schichtbeginn (DayStartUI): Tagessoll groß, Ablauf, Hinweise, Start-Knopf.</summary>
+        static void BuildDayStart(Transform canvas)
+        {
+            var holder = Holder(canvas, "DayStartOverlay");
+            var root = FullScreen(holder, "Screen", Dim);
+            var frame = CenterFrame(root, "Frame", new Vector2(1040f, 800f));
+            var title = P.Text(frame, "Title", 40, Gold, new Vector2(40f, -26f), new Vector2(960f, 56f), TextAlignmentOptions.Center);
+            var sub = P.Text(frame, "GoalHead", 20, P.Head, new Vector2(40f, -88f), new Vector2(960f, 30f), TextAlignmentOptions.Center);
+            sub.characterSpacing = 6f;
+            var ui = holder.gameObject.AddComponent<DayStartUI>();
+            var so = new SerializedObject(ui);
+            so.FindProperty("panelId").stringValue = "dayStart";
+            so.FindProperty("root").objectReferenceValue = root;
+            so.FindProperty("title").objectReferenceValue = title;
+            var goods = so.FindProperty("goods");
+            goods.arraySize = 3;
+            var cols = new[] { new Color(0.93f, 0.95f, 1f), new Color(1f, 0.86f, 0.45f), new Color(1f, 0.55f, 0.5f) };
+            for (int i = 0; i < 3; i++)
+            {
+                var box = P.Img(frame, "Goal_" + i, new Vector2(60f + i * 310f, -128f), new Vector2(290f, 110f), new Color(0.12f, 0.1f, 0.07f, 0.95f), null, false);
+                var g = P.Text(box.rectTransform, "Text", 40, cols[i], new Vector2(0f, -24f), new Vector2(290f, 60f), TextAlignmentOptions.Center, P.mono);
+                g.enableAutoSizing = true;
+                g.fontSizeMin = 22f;
+                g.fontSizeMax = 40f;
+                goods.GetArrayElementAtIndex(i).objectReferenceValue = g;
+            }
+            var time = P.Text(frame, "Time", 22, P.Cream, new Vector2(40f, -250f), new Vector2(960f, 32f), TextAlignmentOptions.Center);
+            var steps = P.Text(frame, "Steps", 22, P.Cream, new Vector2(70f, -300f), new Vector2(900f, 200f), TextAlignmentOptions.TopLeft);
+            steps.textWrappingMode = TMPro.TextWrappingModes.Normal;
+            steps.enableAutoSizing = true;
+            steps.fontSizeMin = 15f;
+            steps.fontSizeMax = 22f;
+            var notes = P.Text(frame, "Notes", 20, Gold, new Vector2(70f, -510f), new Vector2(900f, 170f), TextAlignmentOptions.TopLeft);
+            notes.textWrappingMode = TMPro.TextWrappingModes.Normal;
+            notes.enableAutoSizing = true;
+            notes.fontSizeMin = 14f;
+            notes.fontSizeMax = 20f;
+            var start = P.MakeButton(frame, "Start", new Vector2(-310f, -704f), new Vector2(420f, 72f), ConfirmBg, ConfirmBorder, 28, false);
+            so.FindProperty("time").objectReferenceValue = time;
+            so.FindProperty("steps").objectReferenceValue = steps;
+            so.FindProperty("notes").objectReferenceValue = notes;
+            so.FindProperty("startButton").objectReferenceValue = start;
+            so.FindProperty("startLabel").objectReferenceValue = start.GetComponentInChildren<TMP_Text>();
+            so.FindProperty("goalHead").objectReferenceValue = sub;
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
         /// <summary>Speisekarte der Kantine (CanteenUI): drei Gerichte als große Knöpfe, aktueller Schub, Schließen.</summary>
         static void BuildCanteen(Transform canvas)
         {
@@ -361,11 +409,12 @@ namespace PlanErfuellt.EditorTools
             var title = P.Text(frame, "Title", 72, Gold, new Vector2(40f, -24f), new Vector2(1320f, 90f), TextAlignmentOptions.Center);
             var sub = P.Text(frame, "Subtitle", 26, P.Head, new Vector2(40f, -112f), new Vector2(1320f, 36f), TextAlignmentOptions.Center);
             sub.characterSpacing = 8f;
-            var body = P.Text(frame, "Body", 20, P.Cream, new Vector2(60f, -170f), new Vector2(1280f, 600f), TextAlignmentOptions.TopLeft);
+            // eine Seite der Einsatzbesprechung: wenig Text, groß
+            var body = P.Text(frame, "Body", 28, P.Cream, new Vector2(100f, -190f), new Vector2(1200f, 580f), TextAlignmentOptions.TopLeft);
             body.textWrappingMode = TMPro.TextWrappingModes.Normal;
             body.enableAutoSizing = true;
-            body.fontSizeMin = 14f;
-            body.fontSizeMax = 21f;
+            body.fontSizeMin = 18f;
+            body.fontSizeMax = 30f;
             var row = P.Rect(frame, "Buttons", new Vector2(10f, -800f), new Vector2(1380f, 70f));
             var hl = row.gameObject.AddComponent<HorizontalLayoutGroup>();
             hl.spacing = 24f;

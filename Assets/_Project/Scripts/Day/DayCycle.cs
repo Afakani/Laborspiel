@@ -78,6 +78,7 @@ namespace PlanErfuellt
         public void StartFromIntro(bool tutorial = true)
         {
             if (!tutorial) GM.State.tutorialStep = -1;
+            GM.State.hintsOn = tutorial;
             BeginDay();
         }
 
@@ -147,6 +148,8 @@ namespace PlanErfuellt
             gm.Toast("ui.toasts.dayStart", ToastKind.Warn, ("day", s.dayNum), ("plan", s.planIdx + 1), ("max", gm.Config.day.plans), ("text", plan));
             if (s.infected)
                 gm.Toast(s.infectedUntilDay <= s.dayNum ? "ui.toasts.infectedLastDay" : "ui.toasts.infectedDeadline", ToastKind.Bad, ("n", s.infectedUntilDay));
+            // Auftragskarte: Zeit steht, bis der Spieler die Schicht beginnt
+            EventBus.RaisePanelRequested("dayStart");
         }
 
         void EndDay()
@@ -272,6 +275,9 @@ namespace PlanErfuellt
                     hasAnimal = chamber.State != AnimalState.Empty,
                     animalDosed = chamber.Stats.dose.Total > 0 || chamber.IsUltimate
                 }, dt, events);
+            // Hinweise bei erstem Auftreten (Kontrolle, Band, Not-Stopp …); neuer Hinweis klingt kurz an
+            string newHint = HintLogic.Tick(s, cfg, new HintLogic.Context { unstable = chamber != null && chamber.State == AnimalState.Unstable }, dt);
+            if (newHint != null && AudioService.Instance != null) AudioService.Instance.Play("coin", 0.8f);
 
             bool busy = gm.PanelOpen || (player != null && player.IsMoving) || (interaction != null && interaction.IsHoldingActive);
             if (DayLogic.TickIdle(ref idleTimer, busy, s, cfg, dt)) director.SayTier("director.idle");

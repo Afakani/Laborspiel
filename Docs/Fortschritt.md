@@ -106,6 +106,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - [x] Nachbesserung: Türrahmen ohne Flackern, Sockel nicht mehr quer durch die Türöffnung; Springen (D117); Bereich hinter dem Band begehbar (D118); Wachstumshormon stärker (D116). Tests 147 grün
 - [x] UI-Runde: Knopf-Rückmeldung (D121), Planfenster kleiner, sanfterer Rand (D122), Taste F (D120), Einführung mit Bodenpfeilen (D123), Logbuch (D124), Bildformate (D125). Tests 151 grün
 - [x] Nebenzimmer mit Funktion: Kantine-Schub (D126), Schutzkittel (D127), früher Feierabend (D128), Kaviar persönlich (D129); Platzierung rechts, Schilder, Lampen (D130); Taste am Prompt, „Wie gestern“, Klingelton, Formattest (D131). Tests 158 grün
+- [x] Einarbeitung nach Spieltest: Einsatzbesprechung in sechs Seiten (D135), Auftragskarte mit Tagessoll zu Schichtbeginn, Zeit steht (D134), Hinweise bei erstem Auftreten für Kontrolle, Bandriss, Not-Stopp usw. (D133). Tests 164 grün; Play-Test mit Screenshots
 
 ## Phase 12 – Ton, Feinschliff, Performance, Build
 

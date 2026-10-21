@@ -835,7 +835,35 @@
       "settings": "Einstellungen",
       "quit": "Beenden",
       "continue": "Weiterspielen · Tag {day} · Plan {plan}/{max}",
-      "startNoTutorial": "Ohne Einführung"
+      "startNoTutorial": "Ohne Einführung",
+      "next": "Weiter →",
+      "pageOf": "Seite {n}/{max} · {title}",
+      "pages": [
+        {
+          "title": "Ihr Auftrag",
+          "text": "Genosse Biochemiker, Sie leiten Labor B-12.\n\nDie Partei verlangt jeden Tag MILCH, EIER und FLEISCH. Wie viel genau, steht zu Schichtbeginn auf der Auftragskarte und danach oben links im Planfenster.\n\nErfüllen Sie 5 Pläne. Eine Schicht dauert 5 Minuten. Verfehlt? Der Tag wird wiederholt – aber der Direktor vergisst nichts."
+        },
+        {
+          "title": "So entsteht die Ware",
+          "text": "1.  MISCHSTATION: Serum mischen.\n     A-17 Wachstum → mehr Fleisch · B-08 Laktation → mehr Milch und Eier · C-04 Stabilität → sicherer\n\n2.  PULT: eine Kuh (Milch) oder ein Huhn (Eier) klonen. Klonen kostet Geld.\n\n3.  PULT: Serum im Regal wählen und GAS ziehen. Das Tier produziert, solange es in der Kammer steht.\n\n4.  PULT: FÖRDERBAND ziehen. Die Verarbeitung gibt FLEISCH – nur so. Danach das nächste Tier klonen."
+        },
+        {
+          "title": "Gefahren",
+          "text": "Viel Serum = viel Ertrag, aber die STABILITÄT sinkt.\nZittert das Tier oder steht INSTABIL: am Pult NOT-STOPP drücken, sonst explodiert es.\n\nNach einer Explosion: Kammer am Pult REINIGEN. Wer getroffen wird, ist infiziert – mit G ein Gegenmittel spritzen.\n\nZu viel A-17 macht das Tier schwer: das FÖRDERBAND reißt. Dann zum BANDMOTOR links an der Kammer und F halten."
+        },
+        {
+          "title": "Der Kommissar",
+          "text": "Ab Tag 2 kommt der Kommissar der Partei. Er darf keine Mutationen sehen.\n\nSobald er kommt: sofort zur KAMMER und mit F ein LAKEN überwerfen. Ist er weg, das Laken abnehmen – es ist danach zerfressen.\n\nLaken gibt es nur im LAGER am Bestellterminal. Immer welche vorrätig halten! Sieht er eine Mutation, ist das ein Skandal – Spielende."
+        },
+        {
+          "title": "Geld und Direktor",
+          "text": "Bezahlt wird mit Stalinmünzen (SM): Bestellungen im Lager (für den nächsten Morgen), Klonen, Essen. Geld gibt es für jede gelieferte Tonne – Überschuss zahlt mehr.\n\nDer Direktor im Fernseher wird wütend, wenn Sie trödeln oder Pläne verfehlen. Bei 100 % sind Sie entlassen. Kaviar beruhigt ihn: per Rohrpost oder persönlich im Büro."
+        },
+        {
+          "title": "Steuerung",
+          "text": "W A S D laufen · Shift sprinten · Leertaste springen · Maus drehen\nF halten: Station benutzen · G: Gegenmittel · L: Logbuch · B: Baumodus · P / Esc: Pause\n\nMit Einführung zeigt ein grüner Kasten oben jeden Schritt, Pfeile am Boden führen zum Ziel. Neue Gefahren werden beim ersten Mal erklärt."
+        }
+      ]
     },
     "menu": {
       "newGame": "Neues Spiel",
@@ -963,7 +991,21 @@
           "text": "Erfülle den Plan bis Schichtende: Milch, Eier und Fleisch. Überschuss zahlt doppelt!",
           "say": "Gut, Genosse. Ab morgen kommt die Partei zu Besuch."
         }
-      ]
+      ],
+      "hintTitle": "HINWEIS",
+      "hints": {
+        "inspection": "KONTROLLE! Der Kommissar kommt. Sofort zur KAMMER, seitlich hinstellen und mit F ein LAKEN überwerfen. Ist er weg, das Laken wieder abnehmen.",
+        "unstable": "Das Tier ist INSTABIL! Schnell zum PULT und NOT-STOPP drücken – sonst explodiert es.",
+        "belt": "Das FÖRDERBAND ist gerissen – das Tier war zu schwer (viel A-17). Zum BANDMOTOR links an der Kammer und F halten.",
+        "contaminated": "Die Kammer ist VERSEUCHT. Am PULT „Kammer reinigen“ drücken, erst dann kann wieder geklont werden.",
+        "infected": "Sie sind INFIZIERT! Mit G ein Gegenmittel spritzen (eins im Lager nötig). Sonst ist nach der Frist Schluss.",
+        "noCloth": "Keine LAKEN mehr! Ohne Laken sieht der Kommissar jede Mutation. Im LAGER am Terminal für morgen bestellen.",
+        "anger": "Der Direktor kocht! Bei 100 % sind Sie entlassen. Kaviar per ROHRPOST schicken oder persönlich im Büro abgeben.",
+        "centrifuge": "Tipp: Die ZENTRIFUGE verstärkt Seren. Serum laden und bei GRÜN mit F bremsen: Wirkung +50 %.",
+        "cryo": "Tipp: Die KRYOKAMMER ist frei. Eingefrorene Seren bringen +20 Stabilität – im Zeitfenster herausnehmen!",
+        "ultimate": "Goldene Seren: 2-3-5 oder 4-1-4 mischen, in der Zentrifuge bei GRÜN bremsen, dann in der Kryokammer einfrieren.",
+        "rooms": "Tipp: Hinten liegen Nebenzimmer – Kantine (Seren stärker), Umkleide (Schutzkittel), Schlafraum (früher Feierabend), Büro (Kaviar)."
+      }
     },
     "rooms": {
       "storage": "LAGER",
@@ -994,6 +1036,24 @@
       "current": "Gegessen: Seren wirken ×{x} bis Schichtende",
       "hungry": "Noch nichts gegessen.",
       "close": "Schließen"
+    },
+    "dayStart": {
+      "title": "Tag {day} · Plan {plan}/{max}",
+      "goalHead": "TAGESSOLL BIS SCHICHTENDE",
+      "milk": "{n} t Milch",
+      "eggs": "{n} t Eier",
+      "meat": "{n} t Fleisch",
+      "time": "Zeit: {min} Minuten. Überschuss zahlt extra.",
+      "steps": "1.  Mischstation: Serum mischen (A-17 Fleisch · B-08 Milch/Eier · C-04 Stabilität)\n2.  Pult: Kuh (Milch) oder Huhn (Eier) klonen\n3.  Pult: Serum sprühen – das Tier produziert\n4.  Pult: Förderband ziehen – die Verarbeitung gibt Fleisch, dann neues Tier",
+      "inspectionLater": "Der Kommissar kommt ab Tag {n}.",
+      "inspection": "Kommissar möglich: sofort zur Kammer und mit F ein Laken überwerfen. Laken im Lager: {n}.",
+      "inspectionNoCloth": "KEIN LAKEN im Lager! Kommt der Kommissar, droht der Skandal. Im Lager für morgen Laken bestellen.",
+      "centrifuge": "Neu: Zentrifuge – Serum laden, bei GRÜN bremsen: Wirkung +50 %.",
+      "cryo": "Neu: Kryokammer – Serum einfrieren: Stabilität +20.",
+      "ultimate": "Neu: goldene Seren – 2-3-5 (Planerfüller Ω) oder 4-1-4 (Fleischkoloss) mischen, zentrifugieren, einfrieren.",
+      "repeat": "Gestern verfehlt – heute gilt derselbe Plan.",
+      "order": "Für morgen im LAGER (Tür ganz links) bestellen, sonst kommt nur die Standardlieferung.",
+      "start": "Schicht beginnen  [F]"
     }
   }
 }

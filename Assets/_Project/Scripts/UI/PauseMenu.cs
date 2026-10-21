@@ -100,10 +100,11 @@ namespace PlanErfuellt
 
         void OnPauseChanged(bool paused)
         {
-            overlay.SetActive(paused);
+            // Die Auftragskarte zu Schichtbeginn hält die Zeit an, ohne das Pausenmenü zu zeigen
+            overlay.SetActive(paused && PanelBase.OpenId != "dayStart");
             if (!paused) return;
             var gm = GameManager.Instance;
-            skipTutorial.gameObject.SetActive(TutorialLogic.Active(gm.State, gm.Config));
+            skipTutorial.gameObject.SetActive(TutorialLogic.Active(gm.State, gm.Config) || gm.State.hintsOn);
             var save = SaveGame.Load();
             saveHint.text = save != null
                 ? gm.Texts.Format("ui.hud.saveHint", ("day", save.state.dayNum + 1))

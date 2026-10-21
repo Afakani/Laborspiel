@@ -46,11 +46,13 @@ namespace PlanErfuellt
             else events.Add(DayEvent.TutorialStep);
         }
 
-        /// <summary>Einführung abbrechen (Pause-Knopf).</summary>
+        /// <summary>Einführung abbrechen (Pause-Knopf), samt Hinweisen.</summary>
         public static void Skip(GameState s)
         {
             s.tutorialStep = -1;
             s.tutorialTime = 0f;
+            s.hintsOn = false;
+            s.hint = null;
         }
     }
 }

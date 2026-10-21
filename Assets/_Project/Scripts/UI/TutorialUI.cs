@@ -28,7 +28,7 @@ namespace PlanErfuellt
         [SerializeField] float flashSec = 1.2f;
         [SerializeField] float flashScale = 0.06f;
 
-        int shownStep = -2;
+        string shownKey = "";
         Transform target;
         Camera cam;
         RectTransform canvasRect;
@@ -54,20 +54,21 @@ namespace PlanErfuellt
             var dc = DayCycle.Instance;
             if (gm == null || dc == null) return;
             var s = gm.State;
-            bool active = dc.Mode == DayMode.Play && TutorialLogic.Active(s, gm.Config);
-            int step = active ? s.tutorialStep : -1;
-            if (step != shownStep)
+            bool tutorial = dc.Mode == DayMode.Play && TutorialLogic.Active(s, gm.Config);
+            bool hint = !tutorial && dc.Mode == DayMode.Play && s.hint != null;
+            bool active = tutorial || hint;
+            // Schlüssel des Inhalts: Schritt der Einführung oder Id des Hinweises
+            string key = tutorial ? "step" + s.tutorialStep : hint ? "hint" + s.hint : "";
+            if (key != shownKey)
             {
-                shownStep = step;
-                if (active)
-                {
-                    Fill(gm, step);
-                    flash = 1f;
-                }
+                shownKey = key;
+                if (tutorial) Fill(gm, s.tutorialStep);
+                else if (hint) FillHint(gm, s.hint);
+                if (active) flash = 1f;
             }
             // große Panels überdecken den Kasten nicht
             string open = PanelBase.OpenId;
-            bool covered = open == "order" || open == "logbook" || open == "canteen";
+            bool covered = open == "order" || open == "logbook" || open == "canteen" || open == "dayStart";
             if (box.activeSelf != (active && !covered)) box.SetActive(active && !covered);
             Flash();
             Guiding = active && !gm.Clock.Paused && !gm.PanelOpen && target != null;
@@ -90,6 +91,16 @@ namespace PlanErfuellt
             title.text = t.Format("ui.tutorial.title", ("n", step + 1), ("max", gm.Config.tutorial.steps.Length));
             text.text = t.Get($"ui.tutorial.steps[{step}].text");
             target = FindTarget(gm.Config.tutorial.steps[step].target);
+        }
+
+        /// <summary>Hinweis bei erstem Auftreten: Titel „HINWEIS“, Text und Ziel aus tutorial.hints.</summary>
+        void FillHint(GameManager gm, string id)
+        {
+            var t = gm.Texts;
+            title.text = t.Get("ui.tutorial.hintTitle");
+            text.text = t.Get($"ui.tutorial.hints.{id}");
+            var h = HintLogic.Find(id, gm.Config);
+            target = h != null ? FindTarget(h.target) : null;
         }
 
         /// <summary>Ziel einmal pro Schritt suchen (nicht jedes Bild): Station_&lt;id&gt; oder die Kammer.</summary>

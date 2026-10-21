@@ -63,6 +63,7 @@ namespace PlanErfuellt
             open = null;
             root.SetActive(false);
             if (GM != null) GM.PanelOpen = false;
+            OnClosed();
         }
 
         protected virtual void Update()
@@ -84,6 +85,8 @@ namespace PlanErfuellt
 
         /// <summary>Wird beim Öffnen einmal aufgerufen (statische Texte setzen).</summary>
         protected virtual void OnOpened() { }
+        /// <summary>Nach dem Schließen (z. B. Zeit wieder laufen lassen).</summary>
+        protected virtual void OnClosed() { }
 
         /// <summary>Inhalt auffrischen; force = alles neu aufbauen.</summary>
         public abstract void Refresh(bool force);

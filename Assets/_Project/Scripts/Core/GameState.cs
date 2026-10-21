@@ -97,6 +97,13 @@ namespace PlanErfuellt
         public int tutorialStep;
         /// <summary>Zeit im aktuellen Einführungsschritt (für Lese-Schritte).</summary>
         public float tutorialTime;
+        /// <summary>Hinweise bei erstem Auftreten aktiv (mit Einführung gestartet)?</summary>
+        public bool hintsOn;
+        /// <summary>Gerade angezeigter Hinweis (Id) oder null, und wie lange er schon steht.</summary>
+        public string hint;
+        public float hintTime;
+        /// <summary>Schon gezeigte Hinweise (jeder nur einmal pro Spiel).</summary>
+        public readonly HashSet<string> hintsSeen = new HashSet<string>();
 
         // ---------- Druck von oben ----------
         public float anger;

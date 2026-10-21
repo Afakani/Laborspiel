@@ -2,7 +2,7 @@ using System;
 
 namespace PlanErfuellt
 {
-    /// <summary>Geführte Einführung an Tag 1.</summary>
+    /// <summary>Geführte Einführung an Tag 1 und Hinweise bei erstem Auftreten.</summary>
     [Serializable]
     public class TutorialConfig
     {
@@ -10,5 +10,11 @@ namespace PlanErfuellt
         public float readSec;
         /// <summary>Reihenfolge der Schritte (Texte in ui.tutorial.steps)</summary>
         public TutorialStepConfig[] steps = new TutorialStepConfig[0];
+        /// <summary>Hinweise, Reihenfolge = Vorrang</summary>
+        public TutorialHintConfig[] hints = new TutorialHintConfig[0];
+        /// <summary>Anzeigedauer von Info-Hinweisen</summary>
+        public float hintInfoSec;
+        /// <summary>Höchstdauer eines Hinweises, auch wenn die Lage bleibt</summary>
+        public float hintMaxSec;
     }
 }
