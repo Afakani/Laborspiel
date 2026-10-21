@@ -57,6 +57,14 @@ namespace PlanErfuellt
                 s.currentRate += pump;
             }
 
+            // Legebatterien: Eier mit fester Qualität
+            float layer = BuildLogic.LayerRate(s, cfg, ok && chamber.Kind == AnimalKind.Hen);
+            if (layer > 0f)
+            {
+                Production.Deliver(s, cfg, cfg.animals.hen.produces[0], layer * dt, BuildLogic.Type(cfg, BuildLogic.Layer).quality);
+                s.currentRate += layer;
+            }
+
             // Kühlaggregate
             if (living)
             {

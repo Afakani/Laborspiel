@@ -12,6 +12,7 @@ namespace PlanErfuellt
             {
                 case ComboEffectType.Meat: return t.Format("ui.combo.proMeat", ("n", e.value));
                 case ComboEffectType.Rate: return t.Format("ui.combo.proRate", ("n", e.value));
+                case ComboEffectType.Eggs: return t.Format("ui.combo.proEggs", ("n", e.value));
                 case ComboEffectType.QualityUp: return t.Format("ui.combo.proQuality", ("n", e.value));
                 case ComboEffectType.QualityDown: return t.Format("ui.combo.conQuality", ("n", e.value));
                 case ComboEffectType.Stabilized: return t.Format("ui.combo.proStabilized", ("n", e.value));

@@ -28,6 +28,8 @@ namespace PlanErfuellt.Tests
             f.quality.perA = 8f;
             f.rate.perA = 0.15f;
             f.meat.perA = 0.7f;
+            // im Prototyp wirkt B bei Kuh und Huhn gleich
+            f.ratePerBHen = f.rate.perB;
             return c;
         }
 

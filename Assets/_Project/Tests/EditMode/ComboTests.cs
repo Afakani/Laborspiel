@@ -36,7 +36,7 @@ namespace PlanErfuellt.Tests
             var info = Formula.GetComboInfo(new Dose(1, 1, 0), cfg);
             var pros = ComboTexts.Effects(info.pros, texts);
             var cons = ComboTexts.Effects(info.cons, texts);
-            CollectionAssert.AreEqual(new[] { "Fleisch +80 %", "Milch/Eier +95 %" }, pros);
+            CollectionAssert.AreEqual(new[] { "Fleisch +80 %", "Milch +95 %", "Eier +95 %" }, pros);
             CollectionAssert.AreEqual(new[] { "Geschmack/Qualität −20" }, cons);
         }
 

@@ -60,8 +60,9 @@ namespace PlanErfuellt.Tests
             Assert.AreEqual(1.6f, milkhen.rateMult, 0.0001f);
             Assert.AreEqual(1f, milkhen.meatMult, 0.0001f, "Standardwert bleibt 1, wenn die JSON nichts angibt");
 
-            Assert.AreEqual(4, cfg.buildMachineTypes.Count);
-            Assert.AreEqual(1.4f, cfg.buildMachineTypes[0].milkPerSec, 0.0001f);
+            Assert.AreEqual(5, cfg.buildMachineTypes.Count);
+            Assert.AreEqual(0.7f, cfg.buildMachineTypes[0].milkPerSec, 0.0001f);
+            Assert.AreEqual(0.4f, BuildLogic.Type(cfg, BuildLogic.Layer).eggsPerSec, 0.0001f);
             Assert.AreEqual("Melkpumpe", cfg.buildMachineTypes[0].displayName);
 
             Assert.AreEqual(21, cfg.comboNames.Count);

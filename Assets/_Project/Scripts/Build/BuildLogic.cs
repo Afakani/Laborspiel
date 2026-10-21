@@ -10,6 +10,7 @@ namespace PlanErfuellt
     public static class BuildLogic
     {
         public const string Pump = "pump";
+        public const string Layer = "layer";
         public const string Spray = "spray";
         public const string Cool = "cool";
         public const string Doc = "doc";
@@ -98,6 +99,16 @@ namespace PlanErfuellt
             float r = 0f;
             foreach (var m in s.machines)
                 if (m.typeId == Pump) r += Type(cfg, Pump).milkPerSec;
+            return r * (s.blackoutTimer > 0f ? cfg.risks.blackoutProductionFactor : 1f);
+        }
+
+        /// <summary>Legebatterien: zusätzliche Eier in t/s bei stehendem Huhn (Stromausfall: halbe Leistung).</summary>
+        public static float LayerRate(GameState s, GameConfig cfg, bool henOk)
+        {
+            if (!henOk) return 0f;
+            float r = 0f;
+            foreach (var m in s.machines)
+                if (m.typeId == Layer) r += Type(cfg, Layer).eggsPerSec;
             return r * (s.blackoutTimer > 0f ? cfg.risks.blackoutProductionFactor : 1f);
         }
 

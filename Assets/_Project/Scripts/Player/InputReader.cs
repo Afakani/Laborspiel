@@ -11,7 +11,7 @@ namespace PlanErfuellt
     {
         static InputAction move, turn, look, interact, pause, antidote, logbook, build, mute, confirm, capture, sprint, jump;
         static InputAction point, place, deselect, sell;
-        static readonly InputAction[] tools = new InputAction[4];
+        static readonly InputAction[] tools = new InputAction[5];
         static bool ready;
 
         static void Init()

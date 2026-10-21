@@ -25,7 +25,7 @@ namespace PlanErfuellt
 
         [SerializeField] GameObject root;
         [SerializeField] TMP_Text title;
-        [SerializeField] ToolButton[] tools = new ToolButton[4];
+        [SerializeField] ToolButton[] tools = new ToolButton[5];
         [SerializeField] ToolButton sell;
         [SerializeField] Color selectedFrame = new Color(1f, 0.82f, 0.29f);
         [SerializeField] Color normalFrame = new Color(0.35f, 0.3f, 0.24f);
@@ -103,6 +103,7 @@ namespace PlanErfuellt
             switch (type.id)
             {
                 case BuildLogic.Pump: return t.Format("ui.build.descPump", ("n", type.milkPerSec.ToString("0.#", German)));
+                case BuildLogic.Layer: return t.Format("ui.build.descLayer", ("n", type.eggsPerSec.ToString("0.#", German)));
                 case BuildLogic.Spray: return t.Format("ui.build.descSpray", ("n", Mathf.RoundToInt(type.intervalSec)));
                 case BuildLogic.Cool: return t.Get("ui.build.descCool");
                 default: return t.Get("ui.build.descDoc");

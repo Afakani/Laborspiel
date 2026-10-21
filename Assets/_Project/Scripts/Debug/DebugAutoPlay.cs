@@ -38,8 +38,10 @@ namespace PlanErfuellt
             public int maxDays = 14;
             /// <summary>Feste Dosis A, B, C für jedes Tier (Kombinationstest; ersetzt smart), null = Strategie oben.</summary>
             public int[] dose;
-            /// <summary>So viele Melkpumpen bauen, sobald Geld da ist.</summary>
-            public int pumps;
+            /// <summary>Eigene feste Dosis für Hühner (null = wie dose).</summary>
+            public int[] henDose;
+            /// <summary>So viele Melkpumpen bzw. Legebatterien bauen, sobald Geld da ist.</summary>
+            public int pumps, layers;
             /// <summary>Tier nach so vielen Sekunden verarbeiten (≤ 0 = Standard; kurz = Kühe für Fleisch durchschleusen).</summary>
             public float processAfter;
         }
@@ -288,7 +290,7 @@ namespace PlanErfuellt
             var amounts = (int[])order.Clone();
             // feste Dosis: Chemikalien für rund neun Tiere pro Schicht
             if (opt.dose != null)
-                for (int k = 0; k < 3; k++) amounts[k] = opt.dose[k] * 9;
+                for (int k = 0; k < 3; k++) amounts[k] = opt.henDose != null ? opt.dose[k] * 6 + opt.henDose[k] * 4 : opt.dose[k] * 9;
             // für morgen bestellen, so viel die Kasse hergibt (Rest bleibt fürs Klonen)
             // Laken auf den Bedarf auffüllen (rund zwei Kontrollen pro Schicht)
             amounts[6] = Mathf.Max(amounts[6], clothTarget - s.cloths);
@@ -337,7 +339,8 @@ namespace PlanErfuellt
                 s.rackHidden = false;
                 Write("Regal offen");
             }
-            BuildPumps(gm, s);
+            BuildMachines(gm, s, BuildLogic.Pump, opt.pumps);
+            BuildMachines(gm, s, BuildLogic.Layer, opt.layers);
             if (opt.dose != null) MixFixed(s);
             else if (opt.smart) PrepareSerums(gm, s);
             if (s.chamberCovered) return;
@@ -368,8 +371,10 @@ namespace PlanErfuellt
                 if (opt.dose != null)
                 {
                     // ohne Dosis (0-0-0) wird nicht gesprüht
-                    if (opt.dose[0] + opt.dose[1] + opt.dose[2] == 0) sprayed = true;
-                    else if (s.serums.Count > 0 && chamber.State == AnimalState.Ok) sprayed = Report("Sprühen " + s.serums[0].dose.Key, chamber.Spray(0));
+                    var want = DoseFor(chamber.Kind);
+                    int i = s.serums.FindIndex(x => x.stage == SerumStage.Ready && x.dose.Key == want.Key);
+                    if (want.Total == 0) sprayed = true;
+                    else if (i >= 0 && chamber.State == AnimalState.Ok) sprayed = Report("Sprühen " + want.Key, chamber.Spray(i));
                 }
                 else if (opt.smart)
                 {
@@ -401,29 +406,40 @@ namespace PlanErfuellt
                 Report("Verarbeiten", chamber.SendToProcessing());
         }
 
-        /// <summary>Feste Dosis: bis zu zwei Seren vorrätig halten.</summary>
-        void MixFixed(GameState s)
+        Dose DoseFor(AnimalKind kind)
         {
-            var d = new Dose(opt.dose[0], opt.dose[1], opt.dose[2]);
-            if (d.Total == 0 || MixingLogic.IsMixing(s) || s.serums.Count >= 2) return;
-            if (s.substances[0] < d.A || s.substances[1] < d.B || s.substances[2] < d.C) return;
-            s.mix = d;
-            if (MixingSystem.StartMix()) Write("Mischen " + d.Key);
+            var d = kind == AnimalKind.Hen && opt.henDose != null ? opt.henDose : opt.dose;
+            return new Dose(d[0], d[1], d[2]);
         }
 
-        /// <summary>Melkpumpen auf das erste freie Feld bauen, wenn danach noch Geld für Klonen und Bestellung bleibt.</summary>
-        void BuildPumps(GameManager gm, GameState s)
+        /// <summary>Feste Dosis: je Tierart bis zu zwei Seren vorrätig halten.</summary>
+        void MixFixed(GameState s)
+        {
+            if (MixingLogic.IsMixing(s) || s.serums.Count >= 4) return;
+            foreach (var kind in new[] { AnimalKind.Cow, AnimalKind.Hen })
+            {
+                var d = DoseFor(kind);
+                if (d.Total == 0 || s.serums.FindAll(x => x.dose.Key == d.Key).Count >= 2) continue;
+                if (s.substances[0] < d.A || s.substances[1] < d.B || s.substances[2] < d.C) continue;
+                s.mix = d;
+                if (MixingSystem.StartMix()) Write("Mischen " + d.Key);
+                return;
+            }
+        }
+
+        /// <summary>Maschinen auf das erste freie Feld bauen, wenn danach noch Geld für Klonen und Bestellung bleibt.</summary>
+        void BuildMachines(GameManager gm, GameState s, string id, int want)
         {
             var cfg = gm.Config;
-            if (BuildLogic.Count(s, BuildLogic.Pump) >= opt.pumps) return;
-            var t = BuildLogic.Type(cfg, BuildLogic.Pump);
+            if (BuildLogic.Count(s, id) >= want) return;
+            var t = BuildLogic.Type(cfg, id);
             if (t == null || !BuildLogic.Unlocked(s, t) || s.Money < BuildLogic.Price(s, cfg, t) + 300f) return;
             var g = cfg.buildMachines.grid;
             for (int gz = 0; gz < g.rows; gz++)
             for (int gx = 0; gx < g.cols; gx++)
                 if (BuildLogic.Free(s, cfg, gx, gz))
                 {
-                    if (Report("Melkpumpe gebaut", BuildLogic.Place(s, cfg, t, gx, gz))) EventBus.RaiseStation("buildPlaced");
+                    if (Report(t.displayName + " gebaut", BuildLogic.Place(s, cfg, t, gx, gz))) EventBus.RaiseStation("buildPlaced");
                     return;
                 }
         }

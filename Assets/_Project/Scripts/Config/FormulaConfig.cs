@@ -14,6 +14,8 @@ namespace PlanErfuellt
         public YieldCoeffs rate = new YieldCoeffs();
         /// <summary>Fleisch</summary>
         public YieldCoeffs meat = new YieldCoeffs();
+        /// <summary>Eier: Wirkung von B beim Huhn (statt rate.perB)</summary>
+        public float ratePerBHen;
         /// <summary>Obergrenze für Stabilität und Qualität</summary>
         public float statMax;
         /// <summary>+Stabilität pro tiefgekühltem Serum</summary>

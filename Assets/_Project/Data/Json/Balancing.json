@@ -42,7 +42,7 @@
       "e": 1.6,
       "f": 2.2
     },
-    "overfulfilPayBonus": 1.0,
+    "overfulfilPayBonus": 0.5,
     "lateWarningSec": 12,
     "standardOrder": [2, 3, 2, 0, 0, 0, 0]
   },
@@ -115,7 +115,7 @@
       "stability": "clamp(100-11A-18B-6AB+20C-10*max(0,A+B+C-5),0,100)",
       "quality": "clamp(80-6A-12B+8C,0,100)",
       "rate": "base*(1+0.8*B*e+0.35*A*e)",
-      "meat": "base*(1+1.2*A*e+0.1*B*e)",
+      "meat": "base*(1+1.8*A*e+0.1*B*e)", "rateHen": "Huhn: base*(1+1.3*B*e+0.35*A*e)",
       "concentrated": "base+(formula-base)*conc"
     },
     "dampPerC": 0.15,
@@ -139,9 +139,10 @@
       "perB": 0.8
     },
     "meat": {
-      "perA": 1.2,
+      "perA": 1.8,
       "perB": 0.1
     },
+    "ratePerBHen": 1.3,
     "statMax": 100,
     "frozenStabBonus": 20,
     "musicStabBonus": 15,
@@ -400,8 +401,17 @@
         "name": "Melkpumpe",
         "price": 400,
         "unlockPlanIdx": 0,
-        "effect": "+1.4 t Milch/s bei Kuh, Qualität 85",
-        "milkPerSec": 1.4,
+        "effect": "+0.7 t Milch/s bei Kuh, Qualität 85",
+        "milkPerSec": 0.7,
+        "quality": 85
+      },
+      {
+        "id": "layer",
+        "name": "Legebatterie",
+        "price": 400,
+        "unlockPlanIdx": 1,
+        "effect": "+0.4 t Eier/s bei Huhn, Qualität 85",
+        "eggsPerSec": 0.4,
         "quality": 85
       },
       {

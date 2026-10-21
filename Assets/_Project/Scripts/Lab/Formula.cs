@@ -28,12 +28,16 @@ namespace PlanErfuellt
             return Mathf.Clamp(k.@base - k.perA * d.A - k.perB * d.B + k.perC * d.C, 0f, cfg.formulas.statMax);
         }
 
-        /// <summary>Ertragsfaktor Milch/Eier: 1 + perB·B·e + perA·A·e.</summary>
-        public static float RateFactor(Dose d, GameConfig cfg)
+        /// <summary>Ertragsfaktor Milch (Kuh): 1 + perB·B·e + perA·A·e.</summary>
+        public static float RateFactor(Dose d, GameConfig cfg) => RateFactor(d, cfg, AnimalKind.Cow);
+
+        /// <summary>Ertragsfaktor je Tierart: beim Huhn wirkt B mit ratePerBHen (Laktation treibt die Eier stärker).</summary>
+        public static float RateFactor(Dose d, GameConfig cfg, AnimalKind kind)
         {
             float e = Dampening(d, cfg);
             var k = cfg.formulas.rate;
-            return 1f + k.perB * d.B * e + k.perA * d.A * e;
+            float perB = kind == AnimalKind.Hen ? cfg.formulas.ratePerBHen : k.perB;
+            return 1f + perB * d.B * e + k.perA * d.A * e;
         }
 
         /// <summary>Fleischfaktor: 1 + perA·A·e + perB·B·e.</summary>
@@ -45,7 +49,7 @@ namespace PlanErfuellt
         }
 
         /// <summary>Ertrag in t/s nach Formel.</summary>
-        public static float Rate(AnimalKind kind, Dose d, GameConfig cfg) => cfg.Animal(kind).baseRate * RateFactor(d, cfg);
+        public static float Rate(AnimalKind kind, Dose d, GameConfig cfg) => cfg.Animal(kind).baseRate * RateFactor(d, cfg, kind);
 
         /// <summary>Fleisch in t nach Formel.</summary>
         public static float Meat(AnimalKind kind, Dose d, GameConfig cfg) => cfg.Animal(kind).baseMeat * MeatFactor(d, cfg);
@@ -131,6 +135,8 @@ namespace PlanErfuellt
 
             if (mf > c.showEffectAboveFactor) info.pros.Add(new ComboEffect(ComboEffectType.Meat, true, RoundHalfUp((mf - 1f) * 100f)));
             if (rf > c.showEffectAboveFactor) info.pros.Add(new ComboEffect(ComboEffectType.Rate, true, RoundHalfUp((rf - 1f) * 100f)));
+            float ef = RateFactor(d, cfg, AnimalKind.Hen);
+            if (ef > c.showEffectAboveFactor) info.pros.Add(new ComboEffect(ComboEffectType.Eggs, true, RoundHalfUp((ef - 1f) * 100f)));
             if (info.quality > qBase) info.pros.Add(new ComboEffect(ComboEffectType.QualityUp, true, RoundHalfUp(info.quality - qBase)));
             else if (info.quality < qBase) info.cons.Add(new ComboEffect(ComboEffectType.QualityDown, false, RoundHalfUp(qBase - info.quality)));
             if (d.C > 0) info.pros.Add(new ComboEffect(ComboEffectType.Stabilized, true, RoundHalfUp(d.C * cfg.formulas.stability.perC)));

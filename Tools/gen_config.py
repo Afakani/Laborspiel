@@ -72,6 +72,7 @@ CLASSES = [
         F("float", "dampPerC", "Dämpfung e = 1/(1+dampPerC*C)"),
         F("StabilityCoeffs", "stability"), F("QualityCoeffs", "quality"),
         F("YieldCoeffs", "rate", "Milch/Eier"), F("YieldCoeffs", "meat", "Fleisch"),
+        F("float", "ratePerBHen", "Eier: Wirkung von B beim Huhn (statt rate.perB)"),
         F("float", "statMax", "Obergrenze für Stabilität und Qualität"),
         F("float", "frozenStabBonus", "+Stabilität pro tiefgekühltem Serum"),
         F("float", "musicStabBonus", "+Stabilität während Musik"),

@@ -16,6 +16,8 @@ namespace PlanErfuellt
         Belt,
         NoGain,
         FallbackPro,
-        FallbackCon
+        FallbackCon,
+        /// <summary>Eier beim Huhn (B wirkt dort stärker als bei der Milch).</summary>
+        Eggs
     }
 }

@@ -144,6 +144,12 @@ namespace PlanErfuellt.Tests
             s.blackoutTimer = 1f;
             Assert.AreEqual(2 * pump.milkPerSec * cfg.risks.blackoutProductionFactor, BuildLogic.PumpRate(s, cfg, true), 0.001f);
             Assert.AreEqual(cool.heatPerSec, BuildLogic.CoolRate(s, cfg), 0.001f);
+            s.blackoutTimer = 0f;
+            var layer = BuildLogic.Type(cfg, BuildLogic.Layer);
+            Assert.AreEqual(0f, BuildLogic.LayerRate(s, cfg, true), "ohne Legebatterie keine Zusatz-Eier");
+            BuildLogic.Place(s, cfg, layer, 3, 1);
+            Assert.AreEqual(layer.eggsPerSec, BuildLogic.LayerRate(s, cfg, true), 0.001f);
+            Assert.AreEqual(0f, BuildLogic.LayerRate(s, cfg, false), "nur bei stehendem Huhn");
 
             s.antidote = 1;
             Assert.IsTrue(BuildLogic.DocNeeded(s, AnimalState.Unstable, CrisisKind.None));

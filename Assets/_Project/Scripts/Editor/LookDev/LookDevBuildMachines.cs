@@ -6,7 +6,7 @@ using M = PlanErfuellt.EditorTools.LabMaterials;
 namespace PlanErfuellt.EditorTools
 {
     /// <summary>
-    /// Maschinen des Baumodus (GDD 6.10, Prototyp buildMachineModel) im Look-Pass: Melkpumpe, Auto-Sprüher,
+    /// Maschinen des Baumodus (GDD 6.10, Prototyp buildMachineModel) im Look-Pass: Melkpumpe, Legebatterie, Auto-Sprüher,
     /// Kühlaggregat, Notfall-Automat als Prefabs, dazu Rohr-Prefab und Materialien. Das Prefab schaut mit +Z zur Kammer;
     /// das Modell darin ist um 180° gedreht, damit Bedienteile, Kreuz und Lüfter zur Kammer und damit zum Spieler zeigen.
     /// </summary>
@@ -21,17 +21,17 @@ namespace PlanErfuellt.EditorTools
         }
 
         public static Material PipeMaterial(string id) =>
-            id == BuildLogic.Pump ? Enamel() : id == BuildLogic.Cool ? L.BarBlue : L.Chrome;
+            id == BuildLogic.Pump || id == BuildLogic.Layer ? Enamel() : id == BuildLogic.Cool ? L.BarBlue : L.Chrome;
 
         /// <summary>Sauberer Emaillelack (die Look-Dev-Emaille ist für neue Maschinen zu rostig).</summary>
         static Material Enamel() => BlockoutKit.Mat("LD_MachineEnamel", LabMaterials.Hex("#E6E0D0"), 0.05f, 0.6f);
         static Material CoolWhite() => BlockoutKit.Mat("LD_MachineWhite", LabMaterials.Hex("#D8E6EF"), 0.2f, 0.55f);
 
-        /// <summary>Alle vier Maschinen als Prefabs bauen bzw. überschreiben.</summary>
+        /// <summary>Alle fünf Maschinen als Prefabs bauen bzw. überschreiben.</summary>
         public static MachinePrefab[] BuildAll()
         {
             BlockoutKit.EnsureFolder(PrefabDir);
-            var ids = new[] { BuildLogic.Pump, BuildLogic.Spray, BuildLogic.Cool, BuildLogic.Doc };
+            var ids = new[] { BuildLogic.Pump, BuildLogic.Layer, BuildLogic.Spray, BuildLogic.Cool, BuildLogic.Doc };
             var list = new MachinePrefab[ids.Length];
             for (int i = 0; i < ids.Length; i++)
                 list[i] = new MachinePrefab { id = ids[i], prefab = Save(ids[i]), pipeMaterial = PipeMaterial(ids[i]) };
@@ -60,6 +60,7 @@ namespace PlanErfuellt.EditorTools
             switch (id)
             {
                 case BuildLogic.Pump: piston = Pump(t); break;
+                case BuildLogic.Layer: glow = Layer(t); break;
                 case BuildLogic.Spray: glow = Spray(t); break;
                 case BuildLogic.Cool: fan = Cool(t); break;
                 default: glow = Doc(t); break;
@@ -92,6 +93,33 @@ namespace PlanErfuellt.EditorTools
             LookDevKit.Obj(t, "MilkLine", LookDevKit.Tube("PumpLine", new Vector3(0.45f, 0.4f, 0.3f), new Vector3(0.7f, 0.5f, 0.5f), new Vector3(0.4f, 1.1f, 0.7f), new Vector3(0f, 1.1f, 0.75f), 0.05f, 16, 10),
                 Vector3.zero, Enamel(), null, false);
             return piston;
+        }
+
+        /// <summary>Legebatterie: Stahlgestell mit drei Käfig-Etagen, schräge Eierrinnen, Sammelkorb, rote Haube, Kontrolllampe.</summary>
+        static Renderer Layer(Transform t)
+        {
+            // Gestell
+            for (int i = 0; i < 4; i++)
+            {
+                float x = i < 2 ? -0.62f : 0.62f, z = i % 2 == 0 ? -0.42f : 0.42f;
+                LookDevKit.Box(t, "Post", new Vector3(x, 1.1f, z), new Vector3(0.08f, 1.8f, 0.08f), L.SteelDark, null, false);
+            }
+            for (int k = 0; k < 3; k++)
+            {
+                float y = 0.55f + k * 0.55f;
+                LookDevKit.Box(t, "Floor", new Vector3(0f, y, 0f), new Vector3(1.28f, 0.04f, 0.88f), L.Grate, null, false);
+                // Käfiggitter vorn
+                for (int j = 0; j < 9; j++)
+                    LookDevKit.Box(t, "Bar", new Vector3(-0.56f + j * 0.14f, y + 0.24f, -0.43f), new Vector3(0.015f, 0.46f, 0.015f), L.Chrome, null, false);
+                // Eierrinne mit Eiern
+                LookDevKit.Box(t, "Gutter", new Vector3(0f, y - 0.05f, -0.52f), new Vector3(1.28f, 0.06f, 0.16f), Enamel(), new Vector3(0f, 0f, 3f), false);
+                for (int j = 0; j < 4; j++)
+                    BlockoutKit.Sphere(t, "Egg", new Vector3(-0.45f + j * 0.3f, y + 0.0f, -0.52f), 0.05f, M.Cream, false);
+            }
+            LookDevKit.Box(t, "Hood", new Vector3(0f, 2.1f, 0f), new Vector3(1.4f, 0.2f, 1.0f), L.RedPaint, null, false);
+            LookDevKit.Cyl(t, "Basket", new Vector3(0.55f, 0.3f, -0.7f), 0.22f, 0.2f, L.Wood, null, false, 16);
+            var led = BlockoutKit.Sphere(t, "Led", new Vector3(-0.5f, 2.26f, -0.4f), 0.08f, M.LampGreen, false);
+            return led.GetComponent<Renderer>();
         }
 
         /// <summary>Auto-Sprüher: Säule, rote Sprühkammer, Düse zur Kammer, Serumflasche, Kontrolllampe.</summary>

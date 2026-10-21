@@ -73,9 +73,19 @@ namespace PlanErfuellt.Tests
             // Eine Dosis A mehr als verdoppelt das Fleisch (ohne C) und kostet weniger Stabilität als B
             var none = new Dose(0, 0, 0);
             var oneA = new Dose(1, 0, 0);
-            Assert.GreaterOrEqual(Formula.Meat(AnimalKind.Cow, oneA, cfg) / Formula.Meat(AnimalKind.Cow, none, cfg), 2f);
+            Assert.GreaterOrEqual(Formula.Meat(AnimalKind.Cow, oneA, cfg) / Formula.Meat(AnimalKind.Cow, none, cfg), 2.5f);
             Assert.Greater(Formula.Rate(AnimalKind.Cow, oneA, cfg), Formula.Rate(AnimalKind.Cow, none, cfg) * 1.3f);
             Assert.Less(cfg.formulas.stability.perA, cfg.formulas.stability.perB);
+        }
+
+        [Test]
+        public void LactationDrivesEggsHarderThanMilk()
+        {
+            // B wirkt beim Huhn stärker als bei der Kuh (Eier über Laktation, Milch bleibt schwer)
+            var oneB = new Dose(0, 1, 0);
+            Assert.Greater(Formula.RateFactor(oneB, cfg, AnimalKind.Hen), Formula.RateFactor(oneB, cfg, AnimalKind.Cow));
+            Assert.AreEqual(cfg.Animal(AnimalKind.Hen).baseRate * Formula.RateFactor(oneB, cfg, AnimalKind.Hen), Formula.Rate(AnimalKind.Hen, oneB, cfg), 0.0001f);
+            Assert.AreEqual(Formula.RateFactor(oneB, cfg), Formula.RateFactor(oneB, cfg, AnimalKind.Cow), 0.0001f, "ohne Tierart gilt die Kuh");
         }
 
         [Test]
@@ -83,7 +93,7 @@ namespace PlanErfuellt.Tests
         {
             Assert.Greater(cfg.prices.cloneCow, cfg.prices.cloneHen);
             Assert.Greater(OrderLogic.CloneCost(cfg, AnimalKind.Cow), 0f);
-            Assert.GreaterOrEqual(cfg.day.overfulfilPayBonus, 1f, "Überschuss zahlt mindestens doppelt");
+            Assert.Greater(cfg.day.overfulfilPayBonus, 0f, "Überschuss zahlt mehr");
             Assert.AreEqual(300f, cfg.day.dayLengthSec, "Schicht 5 Minuten");
             Assert.AreEqual(OrderLogic.Items, cfg.day.standardOrder.Length);
             Assert.Greater(cfg.start.cloths, 0);

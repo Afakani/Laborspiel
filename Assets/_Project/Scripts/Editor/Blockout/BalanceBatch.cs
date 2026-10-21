@@ -6,7 +6,8 @@ namespace PlanErfuellt.EditorTools
 {
     /// <summary>
     /// Balancing-Serie: spielt die Varianten aus Temp/batch_queue.txt nacheinander mit dem Autopilot (je ein Play-Durchgang,
-    /// neues Spiel). Zeile: Name;A;B;C;Pumpen;VerarbeitenNachSek;MaxTage (A = -1: Smart-Strategie statt fester Dosis).
+    /// neues Spiel). Zeile: Name;A;B;C;Pumpen;VerarbeitenNachSek;MaxTage[;Legebatterien[;HuhnA;HuhnB;HuhnC]]
+    /// (A = -1: Smart-Strategie statt fester Dosis).
     /// Fortschritt in Temp/batch_index.txt (übersteht den Domain-Reload), Zusammenfassungen in Temp/batch_summary.txt,
     /// Kennzahlen je Schicht wie gewohnt in Temp/balance_runs.csv. Entwicklerwerkzeug.
     /// </summary>
@@ -105,7 +106,9 @@ namespace PlanErfuellt.EditorTools
                 maxDays = int.Parse(p[6]),
                 ultimates = false
             };
+            if (p.Length > 7) o.layers = int.Parse(p[7]);
             if (a >= 0) o.dose = new[] { a, int.Parse(p[2]), int.Parse(p[3]) };
+            if (p.Length > 10) o.henDose = new[] { int.Parse(p[8]), int.Parse(p[9]), int.Parse(p[10]) };
             return o;
         }
     }
