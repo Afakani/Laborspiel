@@ -36,6 +36,12 @@ namespace PlanErfuellt
             public int maxA = 2, maxB = 2;
             /// <summary>Höchstzahl an Schichten (Abbruch bei Endlosschleifen).</summary>
             public int maxDays = 14;
+            /// <summary>Feste Dosis A, B, C für jedes Tier (Kombinationstest; ersetzt smart), null = Strategie oben.</summary>
+            public int[] dose;
+            /// <summary>So viele Melkpumpen bauen, sobald Geld da ist.</summary>
+            public int pumps;
+            /// <summary>Tier nach so vielen Sekunden verarbeiten (≤ 0 = Standard; kurz = Kühe für Fleisch durchschleusen).</summary>
+            public float processAfter;
         }
 
         [SerializeField] float timeScale = 10f;
@@ -280,6 +286,9 @@ namespace PlanErfuellt
         {
             var cfg = GameManager.Instance.Config;
             var amounts = (int[])order.Clone();
+            // feste Dosis: Chemikalien für rund neun Tiere pro Schicht
+            if (opt.dose != null)
+                for (int k = 0; k < 3; k++) amounts[k] = opt.dose[k] * 9;
             // für morgen bestellen, so viel die Kasse hergibt (Rest bleibt fürs Klonen)
             // Laken auf den Bedarf auffüllen (rund zwei Kontrollen pro Schicht)
             amounts[6] = Mathf.Max(amounts[6], clothTarget - s.cloths);
@@ -328,7 +337,9 @@ namespace PlanErfuellt
                 s.rackHidden = false;
                 Write("Regal offen");
             }
-            if (opt.smart) PrepareSerums(gm, s);
+            BuildPumps(gm, s);
+            if (opt.dose != null) MixFixed(s);
+            else if (opt.smart) PrepareSerums(gm, s);
             if (s.chamberCovered) return;
 
             if (chamber.State == AnimalState.Unstable)
@@ -343,7 +354,7 @@ namespace PlanErfuellt
                 sprayed = false;
                 sprayedOmega = false;
                 var q = s.quota;
-                bool needEggs = q != null && q.target.e > 0f && q.prod.e / q.target.e < q.prod.m / Mathf.Max(1f, q.target.m) && !(opt.smart && MeatBehind(s));
+                bool needEggs = q != null && q.target.e > 0f && q.prod.e / q.target.e < q.prod.m / Mathf.Max(1f, q.target.m) && !((opt.smart || opt.dose != null) && MeatBehind(s));
                 var fb = chamber.Clone(needEggs ? AnimalKind.Hen : AnimalKind.Cow);
                 if (fb.IsOk) Write("Klonen " + (needEggs ? "Huhn" : "Kuh"));
                 return;
@@ -354,7 +365,13 @@ namespace PlanErfuellt
 
             if (!sprayed)
             {
-                if (opt.smart)
+                if (opt.dose != null)
+                {
+                    // ohne Dosis (0-0-0) wird nicht gesprüht
+                    if (opt.dose[0] + opt.dose[1] + opt.dose[2] == 0) sprayed = true;
+                    else if (s.serums.Count > 0 && chamber.State == AnimalState.Ok) sprayed = Report("Sprühen " + s.serums[0].dose.Key, chamber.Spray(0));
+                }
+                else if (opt.smart)
                 {
                     int i = BestSerum(gm, s);
                     if (i >= 0 && chamber.State == AnimalState.Ok)
@@ -378,9 +395,37 @@ namespace PlanErfuellt
             }
 
             // Nach einer Weile verarbeiten (Fleisch); Tiere mit Ω länger melken
-            float keep = sprayedOmega ? processAfterSec * 2f : processAfterSec;
-            if (animalAge >= keep || s.quota != null && s.quota.left < processAfterSec * 0.3f && animalAge > 5f)
+            float after = opt.processAfter > 0f ? opt.processAfter : processAfterSec;
+            float keep = sprayedOmega ? after * 2f : after;
+            if (animalAge >= keep || s.quota != null && s.quota.left < after * 0.3f && animalAge > 5f)
                 Report("Verarbeiten", chamber.SendToProcessing());
+        }
+
+        /// <summary>Feste Dosis: bis zu zwei Seren vorrätig halten.</summary>
+        void MixFixed(GameState s)
+        {
+            var d = new Dose(opt.dose[0], opt.dose[1], opt.dose[2]);
+            if (d.Total == 0 || MixingLogic.IsMixing(s) || s.serums.Count >= 2) return;
+            if (s.substances[0] < d.A || s.substances[1] < d.B || s.substances[2] < d.C) return;
+            s.mix = d;
+            if (MixingSystem.StartMix()) Write("Mischen " + d.Key);
+        }
+
+        /// <summary>Melkpumpen auf das erste freie Feld bauen, wenn danach noch Geld für Klonen und Bestellung bleibt.</summary>
+        void BuildPumps(GameManager gm, GameState s)
+        {
+            var cfg = gm.Config;
+            if (BuildLogic.Count(s, BuildLogic.Pump) >= opt.pumps) return;
+            var t = BuildLogic.Type(cfg, BuildLogic.Pump);
+            if (t == null || !BuildLogic.Unlocked(s, t) || s.Money < BuildLogic.Price(s, cfg, t) + 300f) return;
+            var g = cfg.buildMachines.grid;
+            for (int gz = 0; gz < g.rows; gz++)
+            for (int gx = 0; gx < g.cols; gx++)
+                if (BuildLogic.Free(s, cfg, gx, gz))
+                {
+                    if (Report("Melkpumpe gebaut", BuildLogic.Place(s, cfg, t, gx, gz))) EventBus.RaiseStation("buildPlaced");
+                    return;
+                }
         }
 
         // ---------- Seren-Strategie (smart) ----------
