@@ -108,6 +108,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - [x] Nebenzimmer mit Funktion: Kantine-Schub (D126), Schutzkittel (D127), früher Feierabend (D128), Kaviar persönlich (D129); Platzierung rechts, Schilder, Lampen (D130); Taste am Prompt, „Wie gestern“, Klingelton, Formattest (D131). Tests 158 grün
 - [x] Einarbeitung nach Spieltest: Einsatzbesprechung in sechs Seiten (D135), Auftragskarte mit Tagessoll zu Schichtbeginn, Zeit steht (D134), Hinweise bei erstem Auftreten für Kontrolle, Bandriss, Not-Stopp usw. (D133). Tests 164 grün; Play-Test mit Screenshots
 - [x] Balancing-Serie über alle 27 Dosen, Melkpumpen, Kühe durchschleusen (Werkzeug `BalanceBatch`); danach jede Ware ihr Serum (D137), Legebatterie (D138), Kryo 8 s (D136). Tests 165 grün
+- [x] Spielerführung nach Spieltest: Pflicht-Mischung und -Bestellung in der Einführung (D139), „Empfohlene Bestellung“ (D140), Hebel am Pult (D141), Warnmeldungen Wut/Zeit/Kommissar (D142), Kommissar erklärt (D143), Wut-Skala rechts am Fernseher (D144). Tests 172 grün
 
 ## Phase 12 – Ton, Feinschliff, Performance, Build
 

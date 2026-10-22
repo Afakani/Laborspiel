@@ -38,6 +38,10 @@ namespace PlanErfuellt
             var m = s.mix;
             if (IsMixing(s)) return Feedback.Error("ui.errors.mixBusy");
             if (m.Total == 0) return Feedback.Error("ui.errors.mixEmpty");
+            // Einführung: nur die vorgegebene Mischung
+            var need = TutorialLogic.RequiredMix(s, cfg);
+            if (need.HasValue && m.Key != need.Value.Key)
+                return Feedback.Error("ui.errors.tutorialMix", ("a", need.Value.A), ("b", need.Value.B), ("c", need.Value.C));
             if (s.serums.Count >= cfg.mixing.rackSize) return Feedback.Error("ui.errors.rackFull", ("n", cfg.mixing.rackSize));
             for (int i = 0; i < 3; i++)
                 if (s.substances[i] < m[i]) return Feedback.Error("ui.errors.notEnough", ("code", cfg.substances[i].code));

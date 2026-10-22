@@ -20,5 +20,7 @@ namespace PlanErfuellt
         public float prize;
         public float bossPrizeMult;
         public float bossAfterUltSec;
+        /// <summary>So lange vorher wird der Kommissar angekündigt</summary>
+        public float announceSec;
     }
 }

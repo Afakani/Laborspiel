@@ -8,7 +8,8 @@ namespace PlanErfuellt
     /// <summary>
     /// Pult (GDD 6.1): Serum-Regal mit Auswahl und Infobox, Hebel GAS / KLON Kuh / KLON Huhn / FÖRDERBAND,
     /// Statuslampen, Aktionen (Gegenmittel, anleinen, reinigen, NOT-STOPP). Knöpfe sind nur aktiv, wenn
-    /// die Aktion möglich ist (wie Prototyp refreshPult).
+    /// die Aktion möglich ist (wie Prototyp refreshPult). Jeder Hebel-Knopf hat links einen kleinen Hebel, der beim
+    /// Ziehen umklappt; in der Einführung wackelt der gesuchte Hebel und sein Knauf leuchtet gelb.
     /// </summary>
     public class PanelControl : PanelBase
     {
@@ -36,6 +37,19 @@ namespace PlanErfuellt
         [SerializeField] Color lampOff = new Color(0.27f, 0.27f, 0.27f);
         [SerializeField] Color vialSelected = new Color(0.2f, 0.33f, 0.16f);
         [SerializeField] Color vialNormal = new Color(0.18f, 0.15f, 0.11f);
+        [Header("Hebel-Symbole (GAS, KLON Kuh, KLON Huhn, FÖRDERBAND)")]
+        [SerializeField] RectTransform[] leverSticks = new RectTransform[4];
+        [SerializeField] Image[] leverKnobs = new Image[4];
+        [SerializeField] Color knobNormal = new Color(0.85f, 0.15f, 0.1f);
+        [SerializeField] Color knobHint = new Color(1f, 0.85f, 0.2f);
+        [SerializeField] float pullDeg = 50f;
+        [SerializeField] float hintWobbleDeg = 14f;
+
+        /// <summary>Hebel-Nummer am 3D-Pult (EventBus.LeverPulled) je Symbol.</summary>
+        static readonly int[] LeverOf = { 0, 1, 1, 2 };
+        /// <summary>Einführungsschritt, in dem das Symbol hervorgehoben wird.</summary>
+        static readonly string[] HintStep = { "spray", "clone", "", "process" };
+        readonly float[] pullTimers = new float[3];
 
         readonly List<GameObject> vials = new List<GameObject>();
         string rackKey;
@@ -54,6 +68,43 @@ namespace PlanErfuellt
             clean.onClick.AddListener(() => Act(chamber.Clean()));
             stop.onClick.AddListener(() => Act(chamber.NotStop()));
             closeButton.onClick.AddListener(Close);
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            EventBus.LeverPulled += OnLever;
+        }
+
+        protected override void OnDisable()
+        {
+            EventBus.LeverPulled -= OnLever;
+            base.OnDisable();
+        }
+
+        void OnLever(int i)
+        {
+            if (i >= 0 && i < pullTimers.Length && GM != null) pullTimers[i] = GM.Config.pult.leverPullSec;
+        }
+
+        /// <summary>Hebel-Symbole: beim Ziehen umklappen, in der Einführung wackeln.</summary>
+        void LateUpdate()
+        {
+            if (!IsOpen || GM == null) return;
+            var cfg = GM.Config;
+            float dt = Time.unscaledDeltaTime;
+            for (int i = 0; i < pullTimers.Length; i++) pullTimers[i] = Mathf.Max(0f, pullTimers[i] - dt);
+            var step = TutorialLogic.Current(GM.State, cfg);
+            for (int i = 0; i < leverSticks.Length; i++)
+            {
+                if (leverSticks[i] == null) continue;
+                float t = pullTimers[LeverOf[i]];
+                bool hint = step != null && step.id == HintStep[i];
+                float a = t > 0f ? -pullDeg * Mathf.Sin(t / cfg.pult.leverPullSec * Mathf.PI)
+                        : hint ? hintWobbleDeg * Mathf.Sin(Time.unscaledTime * 6f) : 0f;
+                leverSticks[i].localRotation = Quaternion.Euler(0f, 0f, a);
+                leverKnobs[i].color = hint ? Color.Lerp(knobNormal, knobHint, 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 6f)) : knobNormal;
+            }
         }
 
         void Act(Feedback fb)

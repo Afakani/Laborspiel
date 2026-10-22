@@ -206,6 +206,8 @@ namespace PlanErfuellt.EditorTools
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.color = textColor;
             tmp.text = texts != null ? texts.Get(textKey) : textKey;
+            // Schilder sind einzeilig: kein Umbruch (sonst bricht z. B. „WUT“ um, wenn die Breite zu knapp gemessen wird)
+            tmp.textWrappingMode = TextWrappingModes.NoWrap;
             tmp.rectTransform.sizeDelta = new Vector2(20f, 5f);
             tmp.ForceMeshUpdate();
             var pref = tmp.GetPreferredValues(tmp.text);

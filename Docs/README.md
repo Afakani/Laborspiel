@@ -7,7 +7,7 @@ Unity-Umsetzung des Prototyps „Plan erfüllt“ (Satire auf Planwirtschaft: K�
 1. Ordner `Builds/Windows/` öffnen (wird beim Build erzeugt, liegt nicht im Git).
 2. `PlanErfuellt.exe` starten. Das Spiel startet im randlosen Vollbild in Bildschirmauflösung (umstellbar in den Einstellungen).
 3. Im Hauptmenü „Neues Spiel“ → Einsatzbesprechung (sechs Seiten, „Weiter →“) → auf der letzten Seite „Für den Plan!“ (mit Einführung und Hinweisen) oder jederzeit „Ohne Einführung“. Jede Schicht beginnt mit der Auftragskarte (Tagessoll); die Zeit läuft erst nach „Schicht beginnen“.
-   Bestellt wird jederzeit am Bestellterminal im Lager (Tür ganz links in der Rückwand) – für den nächsten Morgen. Wer nichts bestellt, bekommt die Standardlieferung.
+   Bestellt wird jederzeit am Bestellterminal im Lager (Tür ganz links in der Rückwand) – für den nächsten Morgen. Wer nichts bestellt, bekommt die Standardlieferung. Der Knopf „Empfohlene Bestellung“ trägt passende Mengen für den Plan von morgen ein.
 4. Gespeichert wird automatisch zu Beginn jeder Schicht. „Weiterspielen“ im Hauptmenü setzt dort fort. Der Spielstand liegt unter `%USERPROFILE%\AppData\LocalLow\DefaultCompany\Plan erfüllt\spielstand.json`.
 5. Nebenzimmer hinter der Rückwand: Lager (Bestellen), Umkleide (Schutzkittel), Schlafraum (mit erfülltem Plan früher Feierabend), Kantine (Essen verstärkt die Seren bis Schichtende), Direktorbüro (Kaviar persönlich).
 

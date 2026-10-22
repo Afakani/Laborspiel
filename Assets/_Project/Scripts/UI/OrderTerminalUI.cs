@@ -9,7 +9,8 @@ namespace PlanErfuellt
     /// Bestellterminal im Lager (GDD 6.9, auf Wunsch umgebaut): während der Schicht jederzeit; sieben Artikel mit −/+,
     /// Lagerbestand, Preis, Summe und Kasse. Bestellt wird für den nächsten Morgen (sofort bezahlt), ohne Bestellung
     /// kommt die Standardbestellung. Zeigt, was für morgen schon bestellt ist. „Wie gestern“ übernimmt die zuletzt
-    /// gelieferte eigene Bestellung (so weit die Kasse reicht).
+    /// gelieferte eigene Bestellung (so weit die Kasse reicht), „Empfohlen“ die Bestellung nach dem Plan von morgen
+    /// (orderHelp, in der Einführung Pflicht).
     /// </summary>
     public class OrderTerminalUI : PanelBase
     {
@@ -39,6 +40,8 @@ namespace PlanErfuellt
         [SerializeField] TMP_Text closeLabel;
         [SerializeField] Button repeat;
         [SerializeField] TMP_Text repeatLabel;
+        [SerializeField] Button recommend;
+        [SerializeField] TMP_Text recommendLabel;
         [SerializeField] Row[] rows = new Row[OrderLogic.Items];
 
         readonly int[] amounts = new int[OrderLogic.Items];
@@ -55,6 +58,7 @@ namespace PlanErfuellt
             confirm.onClick.AddListener(OnConfirm);
             closeButton.onClick.AddListener(Close);
             repeat.onClick.AddListener(Repeat);
+            recommend.onClick.AddListener(Recommend);
         }
 
         protected override void OnOpened()
@@ -70,10 +74,13 @@ namespace PlanErfuellt
             string text = t.Format("ui.order.info", ("plan", s.planIdx + 1), ("max", cfg.day.plans),
                 ("text", DayCycle.Instance.PlanText(cfg.day.targets[p])), ("min", Mathf.RoundToInt(cfg.day.dayLengthSec / 60f)));
             if (s.infected) text += t.Format("ui.order.infoInfected", ("n", s.infectedUntilDay));
-            info.text = text;
             confirmLabel.text = t.Get("ui.order.confirm");
             closeLabel.text = t.Get("ui.order.close");
             repeatLabel.text = t.Get(s.lastOrder != null ? "ui.order.repeat" : "ui.order.repeatNone");
+            recommendLabel.text = t.Get("ui.order.recommend");
+            var need = TutorialLogic.RequiredOrder(s, cfg);
+            if (need != null) text += t.Format("ui.order.infoTutorial", ("list", OrderLogic.List(need, DayCycle.Instance.ItemNames())));
+            info.text = text;
             for (int i = 0; i < rows.Length; i++)
             {
                 rows[i].name.text = t.Get("ui.order.item" + ItemKeys[i]);
@@ -121,6 +128,15 @@ namespace PlanErfuellt
                 if (last < 0) break;
                 amounts[last]--;
             }
+            Refresh(false);
+        }
+
+        /// <summary>Empfohlene Bestellung für morgen übernehmen (gekürzt auf die Kasse).</summary>
+        void Recommend()
+        {
+            var r = OrderLogic.Recommended(GM.State, GM.Config, true);
+            if (r == null) return;
+            for (int i = 0; i < amounts.Length; i++) amounts[i] = r[i];
             Refresh(false);
         }
 

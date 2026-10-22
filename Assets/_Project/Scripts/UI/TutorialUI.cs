@@ -89,8 +89,14 @@ namespace PlanErfuellt
         {
             var t = gm.Texts;
             title.text = t.Format("ui.tutorial.title", ("n", step + 1), ("max", gm.Config.tutorial.steps.Length));
-            text.text = t.Get($"ui.tutorial.steps[{step}].text");
-            target = FindTarget(gm.Config.tutorial.steps[step].target);
+            // Platzhalter: Pflicht-Mischung {a}/{b}/{c}, empfohlene Bestellung {list}
+            var cfg = gm.Config;
+            var d = cfg.tutorial.mixDose;
+            var order = OrderLogic.Recommended(gm.State, cfg, false);
+            string list = order != null && DayCycle.Instance != null ? OrderLogic.List(order, DayCycle.Instance.ItemNames()) : "";
+            text.text = t.Format($"ui.tutorial.steps[{step}].text", ("a", d.Length > 0 ? d[0] : 0), ("b", d.Length > 1 ? d[1] : 0),
+                ("c", d.Length > 2 ? d[2] : 0), ("list", list));
+            target = FindTarget(cfg.tutorial.steps[step].target);
         }
 
         /// <summary>Hinweis bei erstem Auftreten: Titel „HINWEIS“, Text und Ziel aus tutorial.hints.</summary>
@@ -107,6 +113,7 @@ namespace PlanErfuellt
         static Transform FindTarget(string id)
         {
             if (string.IsNullOrEmpty(id)) return null;
+            if (id == "inspector") return InspectorEntry();
             if (id == "chamber")
             {
                 var c = FindAnyObjectByType<Chamber>();
@@ -114,6 +121,18 @@ namespace PlanErfuellt
             }
             var go = GameObject.Find("Station_" + id);
             return go != null ? go.transform : null;
+        }
+
+        static Transform entry;
+
+        /// <summary>Punkt, an dem der Kommissar die Halle betritt (rechts, inspector.startX / pathZ).</summary>
+        static Transform InspectorEntry()
+        {
+            if (entry != null) return entry;
+            var c = GameManager.Instance.Config.inspector;
+            entry = new GameObject("InspectorEntry").transform;
+            entry.position = LayoutConfig.ToUnity(c.startX, 0f, c.pathZ);
+            return entry;
         }
 
         void UpdateMarker(bool show)

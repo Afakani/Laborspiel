@@ -16,5 +16,7 @@ namespace PlanErfuellt
         public float hintInfoSec;
         /// <summary>Höchstdauer eines Hinweises, auch wenn die Lage bleibt</summary>
         public float hintMaxSec;
+        /// <summary>Pflicht-Mischung der Einführung (A, B, C)</summary>
+        public int[] mixDose = new int[0];
     }
 }

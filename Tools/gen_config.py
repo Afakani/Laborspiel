@@ -21,6 +21,7 @@ CLASSES = [
         F("GoodsValues", "payPerTon", "SM pro Tonne"),
         F("float", "overfulfilPayBonus", "Aufschlag über Soll (0.5 = +50 %)"),
         F("float", "lateWarningSec", "Restzeit, ab der der Bildschirmrand pulsiert"),
+        F("float", "lateNoticeSec", "Restzeit, ab der eine Warnmeldung kommt (Plan noch offen)"),
         F("int[]", "standardOrder", "Lieferung ohne Bestellung (A, B, C, Gegenmittel, Wodka, Kaviar, Laken)")]),
     ("StartConfig", "Startwerte eines neuen Spiels (GDD 4.1).", [
         F("float", "money", "Start-Kasse"),
@@ -44,7 +45,13 @@ CLASSES = [
         F("TutorialStepConfig[]", "steps", "Reihenfolge der Schritte (Texte in ui.tutorial.steps)"),
         F("TutorialHintConfig[]", "hints", "Hinweise, Reihenfolge = Vorrang"),
         F("float", "hintInfoSec", "Anzeigedauer von Info-Hinweisen"),
-        F("float", "hintMaxSec", "Höchstdauer eines Hinweises, auch wenn die Lage bleibt")]),
+        F("float", "hintMaxSec", "Höchstdauer eines Hinweises, auch wenn die Lage bleibt"),
+        F("int[]", "mixDose", "Pflicht-Mischung der Einführung (A, B, C)")]),
+    ("OrderPlanConfig", "Empfohlene Bestellung für einen Plan.", [
+        F("int[]", "amounts", "A, B, C, Gegenmittel, Wodka, Kaviar, Laken")]),
+    ("OrderHelpConfig", "Empfohlene Bestellung am Terminal (und Pflicht in der Einführung).", [
+        F("OrderPlanConfig[]", "plans", "Empfehlung je Plan (für den Plan von morgen)"),
+        F("int[]", "trim", "Reihenfolge beim Kürzen, wenn die Kasse nicht reicht (Artikel-Index)")]),
     ("SubstanceConfig", "Ein Grundstoff (A/B/C) mit Anzeige-Daten.", [
         F("string", "id", "A, B oder C"), F("string", "code", "z. B. A-17"),
         F("string", "displayName", "Anzeigename", None, "name"), F("string", "color", "Farbe als Hex")]),
@@ -130,7 +137,8 @@ CLASSES = [
         F("int", "fromDay"), F("float", "triggerAuthority"), F("float", "firstAfterDay2StartSec"), F("float", "gapSec"),
         F("float", "minGapSec"), F("float", "speed"), F("float", "range"), F("float", "suspMax"),
         F("SuspicionConfig", "susp"), F("InspectionMultConfig", "mult"), F("VodkaConfig", "vodka"),
-        F("float", "prize"), F("float", "bossPrizeMult"), F("float", "bossAfterUltSec")]),
+        F("float", "prize"), F("float", "bossPrizeMult"), F("float", "bossAfterUltSec"),
+        F("float", "announceSec", "So lange vorher wird der Kommissar angekündigt")]),
     ("InspectorConfig", "Weg und Darstellung des Kommissars (Prototyp inspG, Prototyp-Koordinaten).", [
         F("float", "startX", "Start rechts"), F("float", "endX", "Ende links (Kontrolle bestanden)"),
         F("float", "pathZ", "Weg vor der Kammer"), F("float", "vodkaReach", "Abstand für Wodka anbieten"),
@@ -325,7 +333,8 @@ CLASSES = [
         F("float", "subtitleMinSec", "Untertitel mindestens so lange"), F("float", "subtitlePerChar", "plus pro Zeichen"),
         F("float", "boardRefreshSec", "Plantafel und TV-Bild auffrischen alle"),
         F("float", "dayEndDelaySec", "Pause zwischen Schichtende und Bestellterminal"),
-        F("float", "contractAnnounceDelaySec", "Sonderauftrag wird so spät nach Schichtbeginn gemeldet")]),
+        F("float", "contractAnnounceDelaySec", "Sonderauftrag wird so spät nach Schichtbeginn gemeldet"),
+        F("float", "alertSec", "Anzeigedauer der Warnmeldung in der Bildmitte")]),
     ("PultConfig", "Pult: Reinigung, Hebelanimation, Statuslampen (GDD 6.1).", [
         F("float", "cleanSec", "Dauer der Kammerreinigung"), F("float", "leverPullSec"), F("float", "leverPullDeg"),
         F("float", "statusTempWarn", "Hitze, ab der die Temperaturlampe gelb wird"),

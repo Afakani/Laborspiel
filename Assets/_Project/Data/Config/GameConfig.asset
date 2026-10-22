@@ -42,7 +42,8 @@ MonoBehaviour:
       e: 1.6
       f: 2.2
     overfulfilPayBonus: 0.5
-    lateWarningSec: 12
+    lateWarningSec: 15
+    lateNoticeSec: 60
     standardOrder: 02000000030000000200000000000000000000000000000000000000i
   start:
     money: 900
@@ -246,6 +247,7 @@ MonoBehaviour:
     prize: 150
     bossPrizeMult: 2
     bossAfterUltSec: 25
+    announceSec: 20
   inspector:
     startX: 16
     endX: -16
@@ -667,16 +669,16 @@ MonoBehaviour:
       signHeight: 7.1
       reach: 0
     - id: angerScale
-      x: 3.95
+      x: 11
       y: 5.9
-      z: -2.65
+      z: -2.2
       facing: 0
       size:
       - 0.62
       - 2.5
       - 0.1
       signKey: ui.signs.angerScale
-      signHeight: 6.6
+      signHeight: 7.5
       reach: 0
     - id: planBoard
       x: 7.4
@@ -837,6 +839,7 @@ MonoBehaviour:
     boardRefreshSec: 10
     dayEndDelaySec: 1.4
     contractAnnounceDelaySec: 2.5
+    alertSec: 5
   pult:
     cleanSec: 3
     leverPullSec: 0.6
@@ -1189,6 +1192,9 @@ MonoBehaviour:
     - id: finish
       target: 
     hints:
+    - id: inspectionSoon
+      target: inspector
+      info: 0
     - id: inspection
       target: chamber
       info: 0
@@ -1224,6 +1230,7 @@ MonoBehaviour:
       info: 1
     hintInfoSec: 12
     hintMaxSec: 30
+    mixDose: 010000000100000000000000i
   sideRooms:
     canteen:
       meals:
@@ -1242,6 +1249,14 @@ MonoBehaviour:
       angerReduce: 40
       shoutChance: 0.3
       shoutAnger: 12
+  orderHelp:
+    plans:
+    - amounts: 03000000050000000000000000000000000000000000000001000000i
+    - amounts: 04000000060000000100000000000000000000000000000002000000i
+    - amounts: 05000000070000000200000001000000000000000000000002000000i
+    - amounts: 06000000080000000200000001000000000000000100000003000000i
+    - amounts: 07000000090000000300000001000000000000000100000003000000i
+    trim: 05000000040000000300000002000000010000000000000006000000i
   ultimates:
   - {fileID: 11400000, guid: 5dc976084a4515f499639506535e6f29, type: 2}
   - {fileID: 11400000, guid: 4e589e637b093764ebf22431455450b9, type: 2}

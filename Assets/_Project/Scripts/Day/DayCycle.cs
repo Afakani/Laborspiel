@@ -125,6 +125,13 @@ namespace PlanErfuellt
         public bool PlaceOrder(int[] amounts)
         {
             var s = GM.State;
+            // Einführung: nur die empfohlene Bestellung
+            var need = TutorialLogic.RequiredOrder(s, GM.Config);
+            if (need != null && !OrderLogic.Same(amounts, need))
+            {
+                GM.Toast("ui.errors.tutorialOrder", ToastKind.Bad, ("list", OrderLogic.List(need, ItemNames())));
+                return false;
+            }
             if (!OrderLogic.Place(s, GM.Config, amounts)) return false;
             GM.Toast("ui.toasts.orderPlaced", ToastKind.Good, ("list", OrderLogic.List(amounts, ItemNames())), ("n", s.dayNum + 1));
             EventBus.RaiseStation("order");
@@ -278,6 +285,9 @@ namespace PlanErfuellt
             // Hinweise bei erstem Auftreten (Kontrolle, Band, Not-Stopp …); neuer Hinweis klingt kurz an
             string newHint = HintLogic.Tick(s, cfg, new HintLogic.Context { unstable = chamber != null && chamber.State == AnimalState.Unstable }, dt);
             if (newHint != null && AudioService.Instance != null) AudioService.Instance.Play("coin", 0.8f);
+            // Warnmeldungen in der Bildmitte (Wut, Zeit, Kommissar)
+            string warning = WarningLogic.Tick(s, cfg);
+            if (warning != null) Alert(warning);
 
             bool busy = gm.PanelOpen || (player != null && player.IsMoving) || (interaction != null && interaction.IsHoldingActive);
             if (DayLogic.TickIdle(ref idleTimer, busy, s, cfg, dt)) director.SayTier("director.idle");
@@ -344,6 +354,28 @@ namespace PlanErfuellt
         {
             var gm = GM;
             gm.Toast("ui.toasts.overfulfil", ToastKind.Good, ("good", GoodName(good)));
+        }
+
+        /// <summary>Warnmeldung aus WarningLogic in der Bildmitte zeigen (mit Warnton).</summary>
+        void Alert(string id)
+        {
+            var gm = GM;
+            var t = gm.Texts;
+            var s = gm.State;
+            string text;
+            if (id == WarningLogic.TimeLow)
+            {
+                var q = s.quota;
+                var parts = new List<string>();
+                string[] keys = { "ui.alerts.missingMilk", "ui.alerts.missingEggs", "ui.alerts.missingMeat" };
+                float[] miss = { q.target.m - q.prod.m, q.target.e - q.prod.e, q.target.f - q.prod.f };
+                for (int i = 0; i < 3; i++)
+                    if (miss[i] > 0.5f) parts.Add(t.Format(keys[i], ("n", Mathf.CeilToInt(miss[i]))));
+                text = t.Format("ui.alerts.timeLow", ("sec", Mathf.RoundToInt(gm.Config.day.lateNoticeSec)), ("list", string.Join(", ", parts)));
+            }
+            else text = t.Format("ui.alerts." + id, ("sec", Mathf.RoundToInt(gm.Config.inspection.announceSec)));
+            EventBus.RaiseAlert(text, id == WarningLogic.AngerAnnoyed || id == WarningLogic.InspectionSoon ? ToastKind.Warn : ToastKind.Bad);
+            if (AudioService.Instance != null) AudioService.Instance.Play("warn");
         }
 
         // ---------- Texte ----------

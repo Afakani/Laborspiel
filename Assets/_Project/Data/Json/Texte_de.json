@@ -135,7 +135,7 @@
         "say": "Jetzt eine Kuh. Kühe geben Milch. Das ist Wissenschaft."
       },
       {
-        "step": "Am Pult das Serum im Regal wählen und GAS ziehen.",
+        "step": "Am Pult das Serum im Regal wählen und den GAS-HEBEL ziehen.",
         "say": "Sprühen Sie, Genosse! Für das Volk!"
       },
       {
@@ -423,7 +423,7 @@
       "beltBroken": "Förderband gerissen: zum Bandmotor links, F halten.",
       "contaminated": "Kammer verseucht: am Pult reinigen.",
       "emptyChamber": "Am Pult eine Kuh (Milch) oder ein Huhn (Eier) klonen.",
-      "spraySerum": "Am Pult ein Serum aus dem Regal wählen und GAS ziehen.",
+      "spraySerum": "Am Pult ein Serum aus dem Regal wählen und den GAS-HEBEL ziehen.",
       "mixSerum": "An der Mischstation (links) ein Serum mischen.",
       "meatOnlyProc": "Fleisch gibt es nur über das Förderband zur Verarbeitung.",
       "buildPump": "B drücken: Melkpumpe bauen – sauber, aber teuer.",
@@ -617,7 +617,9 @@
       "mealFull": "Schon satt – nur ein besseres Gericht hilft noch",
       "noMoneyMeal": "Zu wenig Geld für dieses Essen",
       "coatAlready": "Der Kittel ist schon an",
-      "bedNotMet": "Erst den Plan erfüllen, dann schlafen"
+      "bedNotMet": "Erst den Plan erfüllen, dann schlafen",
+      "tutorialMix": "Einführung: bitte genau {a}× A-17, {b}× B-08 und {c}× C-04 einstellen.",
+      "tutorialOrder": "Einführung: bitte genau das bestellen: {list}. Tipp: „Empfohlene Bestellung“ drücken."
     },
     "pult": {
       "title": "PULT · KAMMER B-12",
@@ -631,11 +633,11 @@
       "rack": "SERUM-REGAL",
       "rackEmpty": "Regal leer – an der Mischstation ein Serum mischen.",
       "levers": "HEBEL",
-      "leverGas": "GAS · Serum sprühen",
-      "leverCloneCow": "KLON · Kuh · {cost} SM",
-      "leverCloneHen": "KLON · Huhn · {cost} SM",
-      "leverBelt": "FÖRDERBAND · Verarbeitung",
-      "leverBeltBrave": "FÖRDERBAND · riskieren (Mut-Bonus)",
+      "leverGas": "GAS-HEBEL – Serum sprühen",
+      "leverCloneCow": "KLON-HEBEL – Kuh – {cost} SM",
+      "leverCloneHen": "KLON-HEBEL – Huhn – {cost} SM",
+      "leverBelt": "FÖRDERBAND-HEBEL – Verarbeitung",
+      "leverBeltBrave": "FÖRDERBAND-HEBEL – riskieren (Mut)",
       "status": "STATUS",
       "statusGas": "GAS",
       "statusTemp": "TEMPERATUR",
@@ -746,7 +748,9 @@
       "itemCloth": "Laken",
       "descCloth": "deckt die Kammer bei einer Kontrolle ab – zerfällt nach einem Einsatz",
       "repeat": "Wie gestern",
-      "repeatNone": "Noch keine eigene Bestellung"
+      "repeatNone": "Noch keine eigene Bestellung",
+      "recommend": "Empfohlene Bestellung",
+      "infoTutorial": "\nEINFÜHRUNG: Bestelle genau {list} – oder drücke „Empfohlene Bestellung“."
     },
     "build": {
       "title": "BAUEN (B beendet)",
@@ -847,7 +851,7 @@
         },
         {
           "title": "So entsteht die Ware",
-          "text": "1.  MISCHSTATION: Serum mischen.\n     A-17 Wachstum → mehr Fleisch · B-08 Laktation → mehr Milch und Eier · C-04 Stabilität → sicherer\n\n2.  PULT: eine Kuh (Milch) oder ein Huhn (Eier) klonen. Klonen kostet Geld.\n\n3.  PULT: Serum im Regal wählen und GAS ziehen. Das Tier produziert, solange es in der Kammer steht.\n\n4.  PULT: FÖRDERBAND ziehen. Die Verarbeitung gibt FLEISCH – nur so. Danach das nächste Tier klonen."
+          "text": "1.  MISCHSTATION: Serum mischen.\n     A-17 Wachstum → mehr Fleisch · B-08 Laktation → mehr Milch und Eier · C-04 Stabilität → sicherer\n\n2.  PULT: eine Kuh (Milch) oder ein Huhn (Eier) klonen. Klonen kostet Geld.\n\n3.  PULT: Serum im Regal wählen und den GAS-HEBEL ziehen. Das Tier produziert, solange es in der Kammer steht.\n\n4.  PULT: FÖRDERBAND ziehen. Die Verarbeitung gibt FLEISCH – nur so. Danach das nächste Tier klonen."
         },
         {
           "title": "Gefahren",
@@ -855,11 +859,11 @@
         },
         {
           "title": "Der Kommissar",
-          "text": "Ab Tag 2 kommt der Kommissar der Partei. Er darf keine Mutationen sehen.\n\nSobald er kommt: sofort zur KAMMER und mit F ein LAKEN überwerfen. Ist er weg, das Laken abnehmen – es ist danach zerfressen.\n\nLaken gibt es nur im LAGER am Bestellterminal. Immer welche vorrätig halten! Sieht er eine Mutation, ist das ein Skandal – Spielende."
+          "text": "Ab Tag 2 kommt der Kommissar der Partei. Er betritt die Halle rechts und läuft zur Kammer – 20 s vorher kommt eine Warnung. Er darf keine Mutationen sehen.\n\nSobald er kommt: sofort zur KAMMER und mit F ein LAKEN überwerfen. Ist er weg, das Laken abnehmen – es ist danach zerfressen.\n\nLaken gibt es nur im LAGER am Bestellterminal. Immer welche vorrätig halten! Sieht er eine Mutation, ist das ein Skandal – Spielende."
         },
         {
           "title": "Geld und Direktor",
-          "text": "Bezahlt wird mit Stalinmünzen (SM): Bestellungen im Lager (für den nächsten Morgen), Klonen, Essen. Geld gibt es für jede gelieferte Tonne – Überschuss zahlt mehr.\n\nDer Direktor im Fernseher wird wütend, wenn Sie trödeln oder Pläne verfehlen. Bei 100 % sind Sie entlassen. Kaviar beruhigt ihn: per Rohrpost oder persönlich im Büro."
+          "text": "Bezahlt wird mit Stalinmünzen (SM): Bestellungen im Lager (für den nächsten Morgen, „Empfohlene Bestellung“ hilft), Klonen, Essen. Geld gibt es für jede gelieferte Tonne – Überschuss zahlt mehr.\n\nDer Direktor im Fernseher wird wütend, wenn Sie trödeln oder Pläne verfehlen. Bei 100 % sind Sie entlassen. Kaviar beruhigt ihn: per Rohrpost oder persönlich im Büro."
         },
         {
           "title": "Steuerung",
@@ -962,15 +966,15 @@
           "say": "Genosse, dort steht die Mischstation. Laufen Sie! Die Partei sieht zu."
         },
         {
-          "text": "Mische ein Serum: z. B. 1× Laktation B-08 einstellen und MISCHEN drücken.",
+          "text": "Mische das Serum der Einführung: genau {a}× A-17 (Wachstum) und {b}× B-08 (Laktation) einstellen, C-04 auf {c} – dann MISCHEN drücken. Andere Mischungen gehen in der Einführung nicht.",
           "say": "Genosse, das da ist ein Regler. Regler gut. Explosion schlecht. Verstanden?"
         },
         {
-          "text": "Geh zum PULT in der Mitte und klone eine Kuh. Klonen kostet Stalinmünzen.",
+          "text": "Geh zum PULT in der Mitte und zieh den KLON-HEBEL „Kuh“ (der wackelnde Hebel). Klonen kostet Stalinmünzen.",
           "say": "Jetzt eine Kuh. Kühe geben Milch. Das ist Wissenschaft."
         },
         {
-          "text": "Am Pult das Serum im Regal wählen und GAS ziehen.",
+          "text": "Am PULT: das Serum im Regal anklicken, dann links den GAS-HEBEL ziehen (der wackelnde Hebel). Das Gas sprüht das Serum in die Kammer.",
           "say": "Sprühen Sie, Genosse! Für das Volk!"
         },
         {
@@ -978,19 +982,19 @@
           "say": "Beobachten Sie das Tier. Wenn es glüht, ist das … vermutlich normal."
         },
         {
-          "text": "Fleisch gibt es nur aus der Verarbeitung: am Pult FÖRDERBAND ziehen.",
+          "text": "Fleisch gibt es nur aus der Verarbeitung: am Pult den FÖRDERBAND-HEBEL ziehen.",
           "say": "Fleisch gibt es nur aus der Verarbeitung. Das Volk fragt nicht, woher."
         },
         {
-          "text": "Geh ins LAGER und bestelle am Terminal für morgen. Ohne Bestellung kommt die Standardlieferung.",
+          "text": "Geh ins LAGER (Tür ganz links) und bestelle am Terminal für morgen genau: {list}. Oder einfach „Empfohlene Bestellung“ drücken.",
           "say": "Denken Sie an morgen, Genosse. Wer nicht bestellt, bekommt Standardware."
         },
         {
-          "text": "Kommt der Kommissar, seitlich an der Kammer ein LAKEN überwerfen. Jedes Laken wird dabei verbraucht.",
+          "text": "Ab Tag 2 kommt der Kommissar: Er betritt die Halle RECHTS und läuft zur Kammer. 20 s vorher kommt eine Warnung. Dann seitlich an der Kammer ein LAKEN überwerfen (jedes Laken wird verbraucht).",
           "say": "Der Kommissar darf nichts sehen. Laken kosten Geld. Sparen Sie nicht am falschen Ende."
         },
         {
-          "text": "Erfülle den Plan bis Schichtende: Milch, Eier und Fleisch. Überschuss zahlt doppelt!",
+          "text": "Erfülle den Plan bis Schichtende: Milch, Eier und Fleisch. Überschuss zahlt extra!",
           "say": "Gut, Genosse. Ab morgen kommt die Partei zu Besuch."
         }
       ],
@@ -1006,7 +1010,8 @@
         "centrifuge": "Tipp: Die ZENTRIFUGE verstärkt Seren. Serum laden und bei GRÜN mit F bremsen: Wirkung +50 %.",
         "cryo": "Tipp: Die KRYOKAMMER ist frei. Eingefrorene Seren bringen +20 Stabilität – im Zeitfenster herausnehmen!",
         "ultimate": "Goldene Seren: 2-3-5 oder 4-1-4 mischen, in der Zentrifuge bei GRÜN bremsen, dann in der Kryokammer einfrieren.",
-        "rooms": "Tipp: Hinten liegen Nebenzimmer – Kantine (Seren stärker), Umkleide (Schutzkittel), Schlafraum (früher Feierabend), Büro (Kaviar)."
+        "rooms": "Tipp: Hinten liegen Nebenzimmer – Kantine (Seren stärker), Umkleide (Schutzkittel), Schlafraum (früher Feierabend), Büro (Kaviar).",
+        "inspectionSoon": "Gleich kommt der KOMMISSAR! Er betritt die Halle RECHTS (Pfeil) und läuft zur Kammer. Stell dich seitlich an die KAMMER und wirf mit F ein LAKEN über, sobald er auftaucht."
       }
     },
     "rooms": {
@@ -1056,6 +1061,15 @@
       "repeat": "Gestern verfehlt – heute gilt derselbe Plan.",
       "order": "Für morgen im LAGER (Tür ganz links) bestellen, sonst kommt nur die Standardlieferung.",
       "start": "Schicht beginnen  [F]"
+    },
+    "alerts": {
+      "angerAnnoyed": "ACHTUNG: Der Direktor wird ungeduldig! Weiter produzieren – oder Kaviar per Rohrpost schicken.",
+      "angerFurious": "ACHTUNG: Der Direktor ist WÜTEND! Bei 100 % sind Sie entlassen. Sofort Kaviar per Rohrpost schicken!",
+      "timeLow": "ACHTUNG: Noch {sec} s bis Schichtende – Plan nicht erfüllt! Es fehlen: {list}",
+      "missingMilk": "{n} t Milch",
+      "missingEggs": "{n} t Eier",
+      "missingMeat": "{n} t Fleisch",
+      "inspectionSoon": "ACHTUNG: In {sec} s kommt der Kommissar (Halle rechts)! An die Kammer stellen und Laken bereithalten."
     }
   }
 }

@@ -18,6 +18,8 @@ namespace PlanErfuellt
         public static event Action DayEnded;
         public static event Action<bool> InspectionStarted;
         public static event Action<string, ToastKind> Toast;
+        /// <summary>Große Warnmeldung in der Bildmitte.</summary>
+        public static event Action<string, ToastKind> Alert;
         /// <summary>Textpfad einer Meldung (für Klänge zur Meldung).</summary>
         public static event Action<string> ToastKey;
         public static event Action<string> DirectorSpeak;
@@ -47,6 +49,7 @@ namespace PlanErfuellt
         public static void RaiseDayEnded() => DayEnded?.Invoke();
         public static void RaiseInspectionStarted(bool boss) => InspectionStarted?.Invoke(boss);
         public static void RaiseToast(string text, ToastKind kind) => Toast?.Invoke(text, kind);
+        public static void RaiseAlert(string text, ToastKind kind) => Alert?.Invoke(text, kind);
         public static void RaiseToastKey(string path) => ToastKey?.Invoke(path);
         public static void RaiseDirectorSpeak(string text) => DirectorSpeak?.Invoke(text);
         public static void RaisePauseChanged(bool paused) => PauseChanged?.Invoke(paused);
@@ -91,6 +94,7 @@ namespace PlanErfuellt
             DayEnded = null;
             InspectionStarted = null;
             Toast = null;
+            Alert = null;
             ToastKey = null;
             DirectorSpeak = null;
             PauseChanged = null;

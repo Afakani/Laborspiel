@@ -54,6 +54,7 @@ namespace PlanErfuellt
         public SettingsConfig settings = new SettingsConfig();
         public TutorialConfig tutorial = new TutorialConfig();
         public SideRoomsConfig sideRooms = new SideRoomsConfig();
+        public OrderHelpConfig orderHelp = new OrderHelpConfig();
 
         // Diese Teile sind in der JSON als Objekte mit Schlüsseln abgelegt und werden vom Importer gesondert übertragen.
         [JsonIgnore] public List<UltimateSerum> ultimates = new List<UltimateSerum>();

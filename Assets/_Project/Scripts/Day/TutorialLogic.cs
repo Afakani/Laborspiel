@@ -46,6 +46,31 @@ namespace PlanErfuellt
             else events.Add(DayEvent.TutorialStep);
         }
 
+        /// <summary>
+        /// Pflicht-Mischung bis zum Schritt „mix“ (auf Wunsch: in der Einführung klappt nur die vorgegebene Mischung).
+        /// null = freie Wahl.
+        /// </summary>
+        public static Dose? RequiredMix(GameState s, GameConfig cfg)
+        {
+            var d = cfg.tutorial.mixDose;
+            // nur während einer Schicht (die Einführung läuft nur dort)
+            if (!Active(s, cfg) || s.quota == null || d == null || d.Length < 3) return null;
+            int mix = System.Array.FindIndex(cfg.tutorial.steps, x => x.id == "mix");
+            return s.tutorialStep <= mix ? new Dose(d[0], d[1], d[2]) : (Dose?)null;
+        }
+
+        /// <summary>
+        /// Pflicht-Bestellung im Schritt „order“: genau die empfohlene Bestellung (ungekürzt). Reicht die Kasse nicht,
+        /// ist die Wahl frei (null), damit die Einführung nicht hängen bleibt.
+        /// </summary>
+        public static int[] RequiredOrder(GameState s, GameConfig cfg)
+        {
+            var step = Current(s, cfg);
+            if (step == null || step.id != "order") return null;
+            var r = OrderLogic.Recommended(s, cfg, false);
+            return r != null && OrderLogic.Sum(cfg, r) <= s.Money ? r : null;
+        }
+
         /// <summary>Einführung abbrechen (Pause-Knopf), samt Hinweisen.</summary>
         public static void Skip(GameState s)
         {

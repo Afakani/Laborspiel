@@ -104,6 +104,10 @@ namespace PlanErfuellt
         public float hintTime;
         /// <summary>Schon gezeigte Hinweise (jeder nur einmal pro Spiel).</summary>
         public readonly HashSet<string> hintsSeen = new HashSet<string>();
+        /// <summary>Warnmeldungen: schon gemeldete Wut-Stufe, Tag der Zeitwarnung, Kommissar angekündigt.</summary>
+        public int angerWarned;
+        public int timeWarnedDay;
+        public bool inspectionAnnounced;
 
         // ---------- Druck von oben ----------
         public float anger;

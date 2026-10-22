@@ -130,6 +130,11 @@ namespace PlanErfuellt.EditorTools
             var cow = MakeButton(root, "CloneCow", new Vector2(660f, -162f), new Vector2(380f, 50f), ButtonBg, LeverBorder, 20, false);
             var hen = MakeButton(root, "CloneHen", new Vector2(660f, -218f), new Vector2(380f, 50f), ButtonBg, LeverBorder, 20, false);
             var belt = MakeButton(root, "Belt", new Vector2(660f, -274f), new Vector2(380f, 50f), ButtonBg, LeverBorder, 20, false);
+            // kleiner Hebel links in jedem Hebel-Knopf (Schlitz, Stange, roter Knauf)
+            var levers = new[] { gas, cow, hen, belt };
+            var sticks = new RectTransform[levers.Length];
+            var knobs = new Image[levers.Length];
+            for (int i = 0; i < levers.Length; i++) (sticks[i], knobs[i]) = LeverIcon(levers[i].transform);
             var statusHeader = Text(root, "StatusHeader", 18, Head, new Vector2(660f, -336f), new Vector2(380f, 26f), TextAlignmentOptions.Left);
             var lamps = new PanelControl.Lamp[4];
             for (int i = 0; i < 4; i++)
@@ -173,6 +178,14 @@ namespace PlanErfuellt.EditorTools
             so.FindProperty("clean").objectReferenceValue = clean;
             so.FindProperty("stop").objectReferenceValue = stop;
             so.FindProperty("closeButton").objectReferenceValue = close;
+            var stickProp = so.FindProperty("leverSticks");
+            var knobProp = so.FindProperty("leverKnobs");
+            stickProp.arraySize = knobProp.arraySize = sticks.Length;
+            for (int i = 0; i < sticks.Length; i++)
+            {
+                stickProp.GetArrayElementAtIndex(i).objectReferenceValue = sticks[i];
+                knobProp.GetArrayElementAtIndex(i).objectReferenceValue = knobs[i];
+            }
             var lampsProp = so.FindProperty("lamps");
             lampsProp.arraySize = 4;
             for (int i = 0; i < 4; i++)
@@ -183,6 +196,23 @@ namespace PlanErfuellt.EditorTools
             }
             so.ApplyModifiedPropertiesWithoutUndo();
             return p;
+        }
+
+        /// <summary>Hebel-Symbol links im Knopf: dunkler Schlitz, Messingstange (Drehpunkt unten), roter Knauf.</summary>
+        static (RectTransform stick, Image knobImage) LeverIcon(Transform button)
+        {
+            Img(button, "LeverSlot", new Vector2(14f, -34f), new Vector2(22f, 10f), new Color(0.06f, 0.05f, 0.04f), uiSprite, false);
+            var stick = Rect(button, "LeverStick", new Vector2(25f, -38f), new Vector2(5f, 28f));
+            stick.pivot = new Vector2(0.5f, 0f);
+            stick.anchoredPosition = new Vector2(25f, -38f);
+            var img = stick.gameObject.AddComponent<Image>();
+            img.color = new Color(0.85f, 0.68f, 0.3f);
+            img.raycastTarget = false;
+            var k = Img(stick, "Knob", Vector2.zero, new Vector2(14f, 14f), new Color(0.85f, 0.15f, 0.1f), knob, false);
+            k.rectTransform.anchorMin = k.rectTransform.anchorMax = new Vector2(0.5f, 1f);
+            k.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            k.rectTransform.anchoredPosition = Vector2.zero;
+            return (stick, k);
         }
 
         // ---------- Bausteine ----------

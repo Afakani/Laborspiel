@@ -22,5 +22,7 @@ namespace PlanErfuellt
         public float dayEndDelaySec;
         /// <summary>Sonderauftrag wird so spät nach Schichtbeginn gemeldet</summary>
         public float contractAnnounceDelaySec;
+        /// <summary>Anzeigedauer der Warnmeldung in der Bildmitte</summary>
+        public float alertSec;
     }
 }

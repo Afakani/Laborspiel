@@ -62,6 +62,7 @@ namespace PlanErfuellt
         public static Inspection Start(GameState s, GameConfig cfg)
         {
             s.inspection = new Inspection { x = cfg.inspector.startX, boss = BossDue(s) };
+            s.inspectionAnnounced = false;
             return s.inspection;
         }
 

@@ -86,6 +86,36 @@ namespace PlanErfuellt
             return string.Join(", ", parts);
         }
 
+        /// <summary>
+        /// Empfohlene Bestellung für morgen (orderHelp, nach dem Plan von morgen). Mit trim von hinten nach orderHelp.trim
+        /// gekürzt, bis sie in die Kasse passt. null = keine Empfehlung in der Config.
+        /// </summary>
+        public static int[] Recommended(GameState s, GameConfig cfg, bool trim)
+        {
+            var plans = cfg.orderHelp.plans;
+            if (plans == null || plans.Length == 0) return null;
+            int p = Mathf.Clamp(s.planIdx + (s.quota != null && s.quota.met ? 1 : 0), 0, plans.Length - 1);
+            var amounts = new int[Items];
+            var src = plans[p].amounts;
+            for (int i = 0; i < Items && i < src.Length; i++) amounts[i] = src[i];
+            if (!trim) return amounts;
+            var order = cfg.orderHelp.trim;
+            while (Sum(cfg, amounts) > s.Money)
+            {
+                int k = System.Array.FindIndex(order, i => i < Items && amounts[i] > 0);
+                if (k < 0) break;
+                amounts[order[k]]--;
+            }
+            return amounts;
+        }
+
+        public static bool Same(int[] a, int[] b)
+        {
+            for (int i = 0; i < Items; i++)
+                if ((i < a.Length ? a[i] : 0) != (i < b.Length ? b[i] : 0)) return false;
+            return true;
+        }
+
         /// <summary>Kosten fürs Klonen.</summary>
         public static float CloneCost(GameConfig cfg, AnimalKind kind) => kind == AnimalKind.Cow ? cfg.prices.cloneCow : cfg.prices.cloneHen;
     }

@@ -43,7 +43,8 @@
       "f": 2.2
     },
     "overfulfilPayBonus": 0.5,
-    "lateWarningSec": 12,
+    "lateWarningSec": 15,
+    "lateNoticeSec": 60,
     "standardOrder": [2, 3, 2, 0, 0, 0, 0]
   },
   "start": {
@@ -290,7 +291,8 @@
     },
     "prize": 150,
     "bossPrizeMult": 2,
-    "bossAfterUltSec": 25
+    "bossAfterUltSec": 25,
+    "announceSec": 20
   },
   "inspector": {
     "_doc": "Prototyp: inspG läuft bei z 3.0 von x 16 nach x -16; Wodka-Ziel im Umkreis 2.4 (Wertung Abstand − 0.6); Oberkommissar ×1.25; Schwanken ±0.12 rad mit 3/s; Wackeln 0.2 beim Eintreffen. stepFreq/legSwingDeg eigene Werte.",
@@ -985,9 +987,9 @@
       },
       {
         "id": "angerScale",
-        "x": 3.95,
+        "x": 11.0,
         "y": 5.9,
-        "z": -2.65,
+        "z": -2.2,
         "facing": 0,
         "size": [
           0.62,
@@ -995,7 +997,7 @@
           0.1
         ],
         "signKey": "ui.signs.angerScale",
-        "signHeight": 6.6,
+        "signHeight": 7.5,
         "reach": 0
       },
       {
@@ -1194,7 +1196,8 @@
     "subtitlePerChar": 0.08,
     "boardRefreshSec": 10,
     "dayEndDelaySec": 1.4,
-    "contractAnnounceDelaySec": 2.5
+    "contractAnnounceDelaySec": 2.5,
+    "alertSec": 5
   },
   "pult": {
     "_doc": "Pult (GDD 6.1, Prototyp refreshPult/statusState/pullLever)",
@@ -1502,6 +1505,7 @@
       { "id": "finish", "target": "" }
     ],
     "hints": [
+      { "id": "inspectionSoon", "target": "inspector", "info": false },
       { "id": "inspection", "target": "chamber", "info": false },
       { "id": "unstable", "target": "pult", "info": false },
       { "id": "belt", "target": "beltMotor", "info": false },
@@ -1515,7 +1519,19 @@
       { "id": "rooms", "target": "canteen", "info": true }
     ],
     "hintInfoSec": 12,
-    "hintMaxSec": 30
+    "hintMaxSec": 30,
+    "mixDose": [1, 1, 0]
+  },
+  "orderHelp": {
+    "_doc": "Empfohlene Bestellung je Plan (eigene Werte nach der Balancing-Serie D137): A, B, C, Gegenmittel, Wodka, Kaviar, Laken. In der Einführung Pflicht.",
+    "plans": [
+      { "amounts": [3, 5, 0, 0, 0, 0, 1] },
+      { "amounts": [4, 6, 1, 0, 0, 0, 2] },
+      { "amounts": [5, 7, 2, 1, 0, 0, 2] },
+      { "amounts": [6, 8, 2, 1, 0, 1, 3] },
+      { "amounts": [7, 9, 3, 1, 0, 1, 3] }
+    ],
+    "trim": [5, 4, 3, 2, 1, 0, 6]
   },
   "sideRooms": {
     "_doc": "Eigene Werte (D126-D129): Kantine 200/350/500 SM für Serumstärke ×1,1/×1,3/×1,5 bis Schichtende; Kittel hält 60 % der Ansteckungen ab; Kaviar persönlich: Wut −40, aber 30 % Chance auf Brüllen (+12).",

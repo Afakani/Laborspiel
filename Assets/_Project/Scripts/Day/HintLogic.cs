@@ -18,6 +18,7 @@ namespace PlanErfuellt
         /// <summary>Tritt die Lage gerade ein?</summary>
         public static bool Triggered(string id, GameState s, Context c, GameConfig cfg) => id switch
         {
+            "inspectionSoon" => s.inspectionAnnounced && s.inspection == null,
             "inspection" => s.inspection != null,
             "unstable" => c.unstable,
             "belt" => s.beltBroken,
@@ -35,6 +36,7 @@ namespace PlanErfuellt
         /// <summary>Ist die Lage gelöst (Hinweis darf weg)?</summary>
         public static bool Resolved(string id, GameState s, Context c, GameConfig cfg) => id switch
         {
+            "inspectionSoon" => s.inspection != null || !s.inspectionAnnounced,
             "inspection" => s.inspection == null || s.chamberCovered,
             "unstable" => !c.unstable,
             "belt" => !s.beltBroken,

@@ -29,6 +29,7 @@ namespace PlanErfuellt.EditorTools
             BuildSubtitle(canvas);
             BuildBuildBar(canvas);
             BuildTutorial(canvas);
+            BuildAlert(canvas);
         }
 
         /// <summary>Vollbild-Overlays über allem außer der Pause.</summary>
@@ -137,6 +138,42 @@ namespace PlanErfuellt.EditorTools
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
+        /// <summary>Warnmeldung oben in der Bildmitte: farbiger Rahmen, dunkler Grund, große Schrift.</summary>
+        static void BuildAlert(Transform canvas)
+        {
+            var holder = Holder(canvas, "Alert");
+            var go = new GameObject("Box", typeof(RectTransform), typeof(Image), typeof(CanvasGroup));
+            var rt = (RectTransform)go.transform;
+            rt.SetParent(holder, false);
+            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = new Vector2(0f, 190f);
+            rt.sizeDelta = new Vector2(1120f, 96f);
+            var frame = go.GetComponent<Image>();
+            frame.raycastTarget = false;
+            var inner = new GameObject("Inner", typeof(RectTransform), typeof(Image));
+            var irt = (RectTransform)inner.transform;
+            irt.SetParent(rt, false);
+            P.Stretch(irt);
+            irt.offsetMin = new Vector2(5f, 5f);
+            irt.offsetMax = new Vector2(-5f, -5f);
+            var bg = inner.GetComponent<Image>();
+            bg.color = new Color(0.08f, 0.03f, 0.02f, 0.92f);
+            bg.raycastTarget = false;
+            var text = P.Text(irt, "Text", 32, P.Cream, new Vector2(18f, -6f), new Vector2(1074f, 76f), TextAlignmentOptions.Center);
+            text.textWrappingMode = TMPro.TextWrappingModes.Normal;
+            text.enableAutoSizing = true;
+            text.fontSizeMin = 18f;
+            text.fontSizeMax = 32f;
+            var group = go.GetComponent<CanvasGroup>();
+            group.blocksRaycasts = false;
+            group.interactable = false;
+            var ui = holder.gameObject.AddComponent<AlertUI>();
+            Set(ui, "root", go);
+            Set(ui, "frame", frame);
+            Set(ui, "text", text);
+            Set(ui, "group", group);
+        }
+
         static void BuildSubtitle(Transform canvas)
         {
             var holder = Holder(canvas, "Subtitle");
@@ -167,8 +204,12 @@ namespace PlanErfuellt.EditorTools
             var title = P.Text(frame, "Title", 34, Gold, new Vector2(30f, -20f), new Vector2(1000f, 46f), TextAlignmentOptions.Left);
             var info = P.Text(frame, "Info", 18, P.Cream, new Vector2(30f, -70f), new Vector2(1000f, 60f), TextAlignmentOptions.TopLeft);
             info.textWrappingMode = TMPro.TextWrappingModes.Normal;
-            var pending = P.Text(frame, "Pending", 18, Green, new Vector2(30f, -134f), new Vector2(760f, 30f), TextAlignmentOptions.Left);
+            info.enableAutoSizing = true;
+            info.fontSizeMin = 12f;
+            info.fontSizeMax = 18f;
+            var pending = P.Text(frame, "Pending", 18, Green, new Vector2(30f, -134f), new Vector2(500f, 30f), TextAlignmentOptions.Left);
             var repeat = P.MakeButton(frame, "Repeat", new Vector2(-30f, -124f), new Vector2(220f, 42f), P.ButtonBg, Gold, 18, true);
+            var recommend = P.MakeButton(frame, "Recommend", new Vector2(-262f, -124f), new Vector2(250f, 42f), ConfirmBg, ConfirmBorder, 18, true);
             pending.enableAutoSizing = true;
             pending.fontSizeMin = 12f;
             pending.fontSizeMax = 18f;
@@ -213,6 +254,8 @@ namespace PlanErfuellt.EditorTools
             so.FindProperty("closeLabel").objectReferenceValue = close.GetComponentInChildren<TMP_Text>();
             so.FindProperty("repeat").objectReferenceValue = repeat;
             so.FindProperty("repeatLabel").objectReferenceValue = repeat.GetComponentInChildren<TMP_Text>();
+            so.FindProperty("recommend").objectReferenceValue = recommend;
+            so.FindProperty("recommendLabel").objectReferenceValue = recommend.GetComponentInChildren<TMP_Text>();
             so.FindProperty("sum").objectReferenceValue = sum;
             so.FindProperty("confirm").objectReferenceValue = confirm;
             so.FindProperty("confirmLabel").objectReferenceValue = confirm.GetComponentInChildren<TMP_Text>();
