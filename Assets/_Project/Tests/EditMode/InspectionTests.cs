@@ -189,5 +189,19 @@ namespace PlanErfuellt.Tests
             Assert.IsTrue(s.bossDone);
             Assert.IsFalse(InspectionLogic.ScheduleBoss(s, cfg), "nur einmal");
         }
+
+        [Test]
+        public void InspectionEndsWithTheShift()
+        {
+            var s = Day2();
+            DayLogic.StartDay(s, cfg, () => 0.5f);
+            s.playTime = 500f;
+            InspectionLogic.Start(s, cfg);
+            float money = s.Money;
+            DayLogic.EndDay(s, cfg, false);
+            Assert.IsNull(s.inspection, "Kommissar bleibt nicht über Nacht");
+            Assert.AreEqual(money, s.Money, 0.001f, "keine Prämie");
+            Assert.Greater(s.nextInspectionAt, s.playTime, "kommt am nächsten Morgen wieder");
+        }
     }
 }

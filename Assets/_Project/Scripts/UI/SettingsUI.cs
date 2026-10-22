@@ -5,7 +5,8 @@ using UnityEngine.UI;
 namespace PlanErfuellt
 {
     /// <summary>
-    /// Einstellungen (Phase 12): Lautstärke Gesamt/Musik/Effekte, Mausempfindlichkeit, Kamerawackeln, Grafik Hoch/Niedrig, Vollbild/Fenster, Ton an/aus.
+    /// Einstellungen (Phase 12): Lautstärke Gesamt/Musik/Effekte, Mausempfindlichkeit, Kamerawackeln, Grafik Hoch/Niedrig, Vollbild/Fenster,
+    /// Springen an/aus, Tastenbelegung (eigenes Fenster), Ton an/aus.
     /// Geöffnet aus Hauptmenü und Pause; Werte sofort in GameSettings. Esc/P schließt nur das Fenster.
     /// </summary>
     public class SettingsUI : MonoBehaviour
@@ -14,9 +15,9 @@ namespace PlanErfuellt
 
         [SerializeField] GameObject root;
         [SerializeField] TMP_Text title;
-        [SerializeField] TMP_Text[] labels = new TMP_Text[7];
+        [SerializeField] TMP_Text[] labels = new TMP_Text[8];
         [SerializeField] Slider master, music, sfx, mouse, shake;
-        [SerializeField] Button graphicsHigh, graphicsLow, fullscreen, windowed, sound, back;
+        [SerializeField] Button graphicsHigh, graphicsLow, fullscreen, windowed, jumpOn, jumpOff, keys, sound, back;
         [SerializeField] Color selectedColor = new Color(0.55f, 1f, 0.45f);
         [SerializeField] Color normalColor = new Color(0.96f, 0.93f, 0.82f);
 
@@ -39,13 +40,16 @@ namespace PlanErfuellt
             var t = gm.Texts;
             var s = gm.Config.settings;
             title.text = t.Get("ui.settings.title");
-            string[] keys = { "master", "music", "sfx", "mouse", "shake", "graphics", "display" };
-            for (int i = 0; i < labels.Length && i < keys.Length; i++) labels[i].text = t.Get("ui.settings." + keys[i]);
+            string[] names = { "master", "music", "sfx", "mouse", "shake", "graphics", "display", "jump" };
+            for (int i = 0; i < labels.Length && i < names.Length; i++) labels[i].text = t.Get("ui.settings." + names[i]);
             Label(graphicsHigh, t.Get("ui.settings.high"));
             Label(graphicsLow, t.Get("ui.settings.low"));
             Label(fullscreen, t.Get("ui.settings.fullscreen"));
             Label(windowed, t.Get("ui.settings.windowed"));
             Label(back, t.Get("ui.settings.back"));
+            Label(jumpOn, t.Get("ui.settings.on"));
+            Label(jumpOff, t.Get("ui.settings.off"));
+            Label(keys, t.Get("ui.settings.keys"));
             foreach (var sl in new[] { master, music, sfx, shake }) Range(sl, 0f, 1f);
             Range(mouse, s.mouseMin, s.mouseMax);
             master.onValueChanged.AddListener(v => GameSettings.Master = v);
@@ -58,6 +62,9 @@ namespace PlanErfuellt
             fullscreen.onClick.AddListener(() => GameSettings.Fullscreen = true);
             windowed.onClick.AddListener(() => GameSettings.Fullscreen = false);
             sound.onClick.AddListener(() => GameSettings.Muted = !GameSettings.Muted);
+            jumpOn.onClick.AddListener(() => GameSettings.JumpEnabled = true);
+            jumpOff.onClick.AddListener(() => GameSettings.JumpEnabled = false);
+            keys.onClick.AddListener(() => { if (KeyBindingsUI.Instance != null) KeyBindingsUI.Instance.Open(); });
             back.onClick.AddListener(Close);
             GameSettings.Changed += Refresh;
         }
@@ -79,11 +86,16 @@ namespace PlanErfuellt
             Refresh();
         }
 
-        public void Close() => root.SetActive(false);
+        public void Close()
+        {
+            if (KeyBindingsUI.Instance != null && KeyBindingsUI.Instance.IsOpen) return;
+            root.SetActive(false);
+        }
 
         void Update()
         {
-            if (IsOpen && InputReader.PausePressed) Close();
+            // offenes Tastenfenster schließt Esc zuerst
+            if (IsOpen && InputReader.PausePressed && (KeyBindingsUI.Instance == null || (!KeyBindingsUI.Instance.IsOpen && !KeyBindingsUI.Instance.ClosedThisFrame))) Close();
         }
 
         void Refresh()
@@ -101,6 +113,9 @@ namespace PlanErfuellt
             bool full = GameSettings.Fullscreen;
             fullscreen.GetComponentInChildren<TMP_Text>().color = full ? selectedColor : normalColor;
             windowed.GetComponentInChildren<TMP_Text>().color = full ? normalColor : selectedColor;
+            bool jump = GameSettings.JumpEnabled;
+            jumpOn.GetComponentInChildren<TMP_Text>().color = jump ? selectedColor : normalColor;
+            jumpOff.GetComponentInChildren<TMP_Text>().color = jump ? normalColor : selectedColor;
             Label(sound, GameManager.Instance.Texts.Get(GameSettings.Muted ? "ui.hud.btnSoundOff" : "ui.hud.btnSoundOn"));
         }
     }

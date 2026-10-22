@@ -56,8 +56,10 @@ namespace PlanErfuellt
             {
                 if (order.Count == 0 && GM != null)
                 {
-                    order.AddRange(GM.Config.buildMachineTypes);
-                    order.Sort((a, b) => a.unlockPlanIdx.CompareTo(b.unlockPlanIdx));
+                    // stabil sortieren: gleiche Freischaltung behält die Reihenfolge der JSON (feste Tasten)
+                    var all = GM.Config.buildMachineTypes;
+                    order.AddRange(all);
+                    order.Sort((a, b) => a.unlockPlanIdx != b.unlockPlanIdx ? a.unlockPlanIdx.CompareTo(b.unlockPlanIdx) : all.IndexOf(a).CompareTo(all.IndexOf(b)));
                 }
                 return order;
             }

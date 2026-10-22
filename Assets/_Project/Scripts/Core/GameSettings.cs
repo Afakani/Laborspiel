@@ -5,12 +5,13 @@ namespace PlanErfuellt
 {
     /// <summary>
     /// Einstellungen des Spielers (GDD 14, Phase 12): Lautstärke Gesamt/Musik/Effekte, Ton aus (M), Mausempfindlichkeit, Kamerawackeln,
-    /// Grafik Hoch/Niedrig und Vollbild/Fenster (umgesetzt von GraphicsQuality). Gespeichert in den PlayerPrefs, Vorgaben und Grenzen aus der Balancing-JSON.
+    /// Grafik Hoch/Niedrig und Vollbild/Fenster (umgesetzt von GraphicsQuality), Springen an/aus, eigene Tastenbelegung. Gespeichert in den PlayerPrefs, Vorgaben und Grenzen aus der Balancing-JSON.
     /// </summary>
     public static class GameSettings
     {
         const string KeyMaster = "pe.master", KeyMusic = "pe.music", KeySfx = "pe.sfx", KeyMuted = "pe.muted",
-            KeyMouse = "pe.mouse", KeyHigh = "pe.highQuality", KeyShake = "pe.shake", KeyFull = "pe.fullscreen";
+            KeyMouse = "pe.mouse", KeyHigh = "pe.highQuality", KeyShake = "pe.shake", KeyFull = "pe.fullscreen",
+            KeyJump = "pe.jump", KeyBindings = "pe.bindings";
 
         static GameConfig cfg;
 
@@ -60,6 +61,28 @@ namespace PlanErfuellt
             set
             {
                 PlayerPrefs.SetInt(KeyHigh, value ? 1 : 0);
+                Changed?.Invoke();
+            }
+        }
+
+        /// <summary>Springen erlaubt (abschaltbar, damit man nicht aus Versehen springt).</summary>
+        public static bool JumpEnabled
+        {
+            get => PlayerPrefs.GetInt(KeyJump, 1) == 1;
+            set
+            {
+                PlayerPrefs.SetInt(KeyJump, value ? 1 : 0);
+                Changed?.Invoke();
+            }
+        }
+
+        /// <summary>Eigene Tastenbelegung als JSON der Input-System-Overrides (leer = Standard).</summary>
+        public static string Bindings
+        {
+            get => PlayerPrefs.GetString(KeyBindings, "");
+            set
+            {
+                PlayerPrefs.SetString(KeyBindings, value ?? "");
                 Changed?.Invoke();
             }
         }

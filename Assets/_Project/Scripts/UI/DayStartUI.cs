@@ -47,7 +47,7 @@ namespace PlanErfuellt
             time.text = t.Format("ui.dayStart.time", ("min", Mathf.RoundToInt(cfg.day.dayLengthSec / 60f)));
             steps.text = t.Get("ui.dayStart.steps");
             notes.text = Notes(gm);
-            startLabel.text = t.Get("ui.dayStart.start");
+            startLabel.text = t.Format("ui.dayStart.start", ("key", KeyBindings.Display("Player/Interact")));
             // Zeit anhalten, solange die Karte offen ist (das Pausenmenü bleibt zu)
             if (!gm.Clock.Paused)
             {

@@ -23,6 +23,9 @@ namespace PlanErfuellt
                 Debug.LogError("InputReader: Keine projektweiten Input Actions gesetzt.");
                 return;
             }
+            // eigene Tastenbelegung aus den Einstellungen
+            string overrides = GameSettings.Bindings;
+            if (!string.IsNullOrEmpty(overrides)) a.LoadBindingOverridesFromJson(overrides);
             move = a.FindAction("Player/Move", true);
             turn = a.FindAction("Player/Turn", true);
             look = a.FindAction("Player/Look", true);
@@ -72,8 +75,8 @@ namespace PlanErfuellt
         public static bool InteractHeld { get { if (TestInteract.HasValue) return TestInteract.Value; Init(); return ready && interact.IsPressed(); } }
         /// <summary>Sprinten (Shift gehalten).</summary>
         public static bool SprintHeld { get { if (TestSprint.HasValue) return TestSprint.Value; Init(); return ready && sprint.IsPressed(); } }
-        /// <summary>Springen (Leertaste).</summary>
-        public static bool JumpPressed { get { Init(); return ready && jump.WasPressedThisFrame(); } }
+        /// <summary>Springen (Leertaste), sofern in den Einstellungen nicht abgeschaltet.</summary>
+        public static bool JumpPressed { get { Init(); return ready && GameSettings.JumpEnabled && jump.WasPressedThisFrame(); } }
         public static bool InteractPressed { get { Init(); return ready && interact.WasPressedThisFrame(); } }
         public static bool PausePressed { get { Init(); return ready && pause.WasPressedThisFrame(); } }
         public static bool AntidotePressed { get { Init(); return ready && antidote.WasPressedThisFrame(); } }

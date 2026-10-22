@@ -71,7 +71,7 @@ namespace PlanErfuellt
                 shownUse = source.CanUse;
                 // Taste vor dem Text, nur wenn man die Aktion ausführen kann: „[F] Pult benutzen“
                 var t = GameManager.Instance.Texts;
-                label.text = shownUse ? t.Format("ui.prompts.keyHint", ("key", t.Get("ui.prompts.key")), ("text", text)) : text;
+                label.text = shownUse ? t.Format("ui.prompts.keyHint", ("key", KeyBindings.Display("Player/Interact")), ("text", text)) : text;
                 label.color = shownUse ? activeText : disabledText;
                 frame.color = shownUse ? activeFrame : disabledFrame;
             }

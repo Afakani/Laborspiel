@@ -22,5 +22,7 @@ namespace PlanErfuellt
         public int windowedWidth;
         /// <summary>Fenstermodus: Höhe</summary>
         public int windowedHeight;
+        /// <summary>Belegbare Tasten in Anzeige-Reihenfolge</summary>
+        public RebindConfig[] rebind = new RebindConfig[0];
     }
 }

@@ -80,6 +80,14 @@ namespace PlanErfuellt
             s.quota = null;
             s.wish = null;
             s.contract = null;
+            // laufende Kontrolle endet mit der Schicht (ohne Prämie); der Kommissar kommt am nächsten Morgen wieder
+            if (s.inspection != null)
+            {
+                s.inspection = null;
+                s.inspectionAnnounced = false;
+                s.inspectionDoneAt = s.playTime;
+                s.nextInspectionAt = s.playTime + cfg.inspection.firstAfterDay2StartSec;
+            }
             if (r.met) s.planIdx++;
             else
             {

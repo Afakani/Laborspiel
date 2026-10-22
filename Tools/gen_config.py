@@ -260,11 +260,15 @@ CLASSES = [
         F("float", "whirClipHz", "Grundton der Datei whir_loop"), F("float", "whirBaseHz"), F("float", "whirHzPerRpm"),
         F("float", "coinEggChance", "Münzhuhn: Münzklang je Ei"),
         F("ToastSound[]", "toastSounds", "Meldung → Klang")]),
+    ("RebindConfig", "Belegbare Taste: Aktion (Map/Name) und bei Laufen der Teil (up, down, left, right).", [
+        F("string", "id", "Text unter ui.settings.keyNames"), F("string", "action", "z. B. Player/Interact"),
+        F("string", "part", "Teil einer zusammengesetzten Bindung oder leer")]),
     ("SettingsConfig", "Einstellungen: Vorgaben und Grenzen (Maus, Grafik).", [
         F("float", "mouseDefault", "Mausempfindlichkeit Faktor"), F("float", "mouseMin"), F("float", "mouseMax"),
         F("float", "lowRenderScale", "Grafik Niedrig: Auflösungsfaktor"), F("float", "lowShadowDistance", "Grafik Niedrig: Schattenweite m"),
         F("int", "lowShadowResolution", "Grafik Niedrig: Schattenkarte"), F("int", "lowShadowCascades", "Grafik Niedrig: Kaskaden"),
-        F("int", "windowedWidth", "Fenstermodus: Breite"), F("int", "windowedHeight", "Fenstermodus: Höhe")]),
+        F("int", "windowedWidth", "Fenstermodus: Breite"), F("int", "windowedHeight", "Fenstermodus: Höhe"),
+        F("RebindConfig[]", "rebind", "Belegbare Tasten in Anzeige-Reihenfolge")]),
     ("EndingsConfig", "Schwellen für die Spielenden (GDD 13).", [
         F("float", "heroMinPop"), F("int", "heroMaxFailedDays"), F("float", "deadBelowPop")]),
     ("ComboNameEntry", "Fester Name einer Kombination, z. B. 1-1-1 = Planformel.", [

@@ -1487,7 +1487,20 @@
     "lowShadowResolution": 1024,
     "lowShadowCascades": 2,
     "windowedWidth": 1600,
-    "windowedHeight": 900
+    "windowedHeight": 900,
+    "rebind": [
+      { "id": "up", "action": "Player/Move", "part": "up" },
+      { "id": "down", "action": "Player/Move", "part": "down" },
+      { "id": "left", "action": "Player/Move", "part": "left" },
+      { "id": "right", "action": "Player/Move", "part": "right" },
+      { "id": "sprint", "action": "Player/Sprint", "part": "" },
+      { "id": "jump", "action": "Player/Jump", "part": "" },
+      { "id": "interact", "action": "Player/Interact", "part": "" },
+      { "id": "antidote", "action": "Player/Antidote", "part": "" },
+      { "id": "logbook", "action": "Player/Logbook", "part": "" },
+      { "id": "build", "action": "Player/Build", "part": "" },
+      { "id": "mute", "action": "Player/Mute", "part": "" }
+    ]
   },
   "tutorial": {
     "_docHints": "Hinweise bei erstem Auftreten (nur mit Einführung, ab Tag 2 bzw. nach der Einführung): Reihenfolge = Vorrang, info = verschwindet nach hintInfoSec. Eigene Werte (D133).",

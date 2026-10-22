@@ -19,17 +19,17 @@ Beenden: Hauptmenü „Beenden“, im Spiel Esc → „Spiel beenden“, oder Al
 |---|---|
 | W A S D | laufen |
 | Shift halten | sprinten |
-| Leertaste | springen (schließt auch Panels) |
+| Leertaste | springen (in den Einstellungen abschaltbar; schließt auch Panels) |
 | Maus oder Q / E | umsehen bzw. drehen |
 | F halten | Station benutzen (Mischstation, Pult, Laken, Zentrifuge …) |
 | G | Gegenmittel selbst spritzen (nach Infektion) |
 | L | Forschungslogbuch |
-| B | Baumodus (Maschinen, ab Plan 2) |
+| B | Baumodus (Maschinen; dort 1–5 wählen, X abreißen) |
 | M | Ton an/aus |
 | P oder Esc | Pause (dort: Logbuch, Staats-TV, Ton, Einstellungen, Hauptmenü, Spiel beenden) |
 | Mausklick ins Bild | Maus fangen (nur nach Alt+Tab nötig) |
 
-Einstellungen (Hauptmenü oder Pause → „Einstellungen“): Lautstärke gesamt, Musik, Effekte, Mausempfindlichkeit, Kamerawackeln, Grafik Hoch/Niedrig, Anzeige Vollbild/Fenster (Fenster 1600 × 900), Ton an/aus. Sie werden gespeichert. Alt+Enter schaltet ebenfalls zwischen Vollbild und Fenster um.
+Einstellungen (Hauptmenü oder Pause → „Einstellungen“): Lautstärke gesamt, Musik, Effekte, Mausempfindlichkeit, Kamerawackeln, Grafik Hoch/Niedrig, Anzeige Vollbild/Fenster (Fenster 1600 × 900), Springen an/aus, „Tasten belegen …“ (Laufen, Sprinten, Springen, Benutzen, Gegenmittel, Logbuch, Baumodus, Ton; Esc bricht ab, „Standard“ setzt zurück), Ton an/aus. Sie werden gespeichert. Alt+Enter schaltet ebenfalls zwischen Vollbild und Fenster um.
 
 ## Im Unity-Editor öffnen
 
@@ -54,3 +54,7 @@ Einstellungen (Hauptmenü oder Pause → „Einstellungen“): Lautstärke gesam
 - `Docs/Fortschritt.md` – Stand jeder Phase, offene Punkte
 - `Docs/Entscheidungen.md` – eigene Entscheidungen (D1 …)
 - `Docs/Screenshots/` – Aufnahmen je Phase
+- `Docs/Projektdoku.md` – Kurzdokumentation für die Abgabe
+- `Docs/itchio_Seite.md` – Entwurf der Store-Seite
+- `Docs/Ideen.md` – zurückgestellte Ideen
+- `Docs/Balancing/` – Messreihen des Autopiloten
