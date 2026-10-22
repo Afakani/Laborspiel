@@ -5,7 +5,8 @@ namespace PlanErfuellt
     /// <summary>
     /// Direktor im Fernseher aus Ebenen (Tools/gen_director.py): Mund bewegt sich beim Sprechen (brüllt, wenn er
     /// wütend ist), blinzelt, Brauen senken sich und das Gesicht läuft mit der Wut rot an; ab der ersten Wut-Stufe
-    /// schwitzt er, ab der zweiten pocht die Zornesader und der Kopf zittert.
+    /// schwitzt er, ab der zweiten pocht die Zornesader und der Kopf zittert. Nach erfülltem Plan jubelt er (Cheer):
+    /// Mund offen, Brauen hoch, Kopf wippt.
     /// </summary>
     public class DirectorRig : MonoBehaviour
     {
@@ -39,7 +40,7 @@ namespace PlanErfuellt
         MaterialPropertyBlock mpb;
         Vector3 browLPos, browRPos, veinScale;
         Vector3[] sweatPos, sweatScale;
-        float blinkAt, blinkLeft, speakLeft, emission = 1.6f;
+        float blinkAt, blinkLeft, speakLeft, cheerLeft, emission = 1.6f;
         int mouthFrame = -1;
 
         /// <summary>Teile setzen (Editor-Aufbau).</summary>
@@ -78,6 +79,9 @@ namespace PlanErfuellt
         /// <summary>Er spricht für die angegebene Zeit (Untertitel/Parole).</summary>
         public void Speak(float seconds) => speakLeft = Mathf.Max(speakLeft, seconds);
 
+        /// <summary>Er jubelt für die angegebene Zeit (Plan erfüllt).</summary>
+        public void Cheer(float seconds) => cheerLeft = Mathf.Max(cheerLeft, seconds);
+
         /// <summary>Helligkeit des Bildschirms (Flackern, Pulsieren aus TvDirectorFx).</summary>
         public void SetEmission(float e) => emission = e;
 
@@ -92,6 +96,8 @@ namespace PlanErfuellt
             bool rage = gm.State.anger >= anger.tiers[1];
             bool speaking = speakLeft > 0f;
             if (speaking) speakLeft -= dt;
+            bool cheer = cheerLeft > 0f;
+            if (cheer) cheerLeft -= dt;
 
             // Blinzeln
             blinkAt -= dt;
@@ -112,6 +118,8 @@ namespace PlanErfuellt
                 frame = n < 0.35f ? (annoyed ? 1 : 0) : (n > 0.7f && annoyed ? 3 : 2);
             }
             else frame = annoyed ? 1 : 0;
+            // Jubel: lachender offener Mund
+            if (cheer) frame = Mathf.PerlinNoise(t * 4f, 0.8f) < 0.25f ? 0 : 2;
             if (frame != mouthFrame && frame < mouthFrames.Length)
             {
                 mouthFrame = frame;
@@ -119,8 +127,8 @@ namespace PlanErfuellt
             }
 
             // Brauen: freundlich leicht gehoben, mit der Wut innen tief; beim Sprechen wippen sie
-            float deg = Mathf.Lerp(browFriendlyDeg, browMaxDeg, a);
-            float lift = speaking ? Mathf.Sin(t * 6f) * browDrop * 0.3f : 0f;
+            float deg = cheer ? browFriendlyDeg * 2f : Mathf.Lerp(browFriendlyDeg, browMaxDeg, a);
+            float lift = cheer ? browDrop * (0.6f + 0.4f * Mathf.Sin(t * 8f)) : speaking ? Mathf.Sin(t * 6f) * browDrop * 0.3f : 0f;
             var drop = Vector3.down * (browDrop * a) + Vector3.up * lift;
             browL.localPosition = browLPos + drop;
             browR.localPosition = browRPos + drop;
@@ -130,7 +138,8 @@ namespace PlanErfuellt
             // Kopf: ruhiges Wiegen, beim Sprechen Nicken, bei Raserei Zittern
             float z = Mathf.Sin(t * 1.3f) * headSwayDeg;
             if (speaking) z += Mathf.Sin(t * 7f) * headTalkDeg;
-            if (rage) z += (Mathf.PerlinNoise(t * 18f, 1.7f) - 0.5f) * 2f * headRageDeg;
+            if (rage && !cheer) z += (Mathf.PerlinNoise(t * 18f, 1.7f) - 0.5f) * 2f * headRageDeg;
+            if (cheer) z += Mathf.Sin(t * 10f) * headTalkDeg * 1.5f;
             head.localEulerAngles = new Vector3(0f, 0f, z);
 
             // Schweißtropfen laufen herunter
@@ -147,7 +156,7 @@ namespace PlanErfuellt
             if (rage) vein.localScale = veinScale * (1f + veinPulse * Mathf.Abs(Mathf.Sin(t * 8f)));
 
             // Farbe: Gesicht läuft rot an; alle Ebenen folgen der Bildschirmhelligkeit
-            var face = Color.Lerp(Color.white, flush, a * a * flushAmount);
+            var face = Color.Lerp(Color.white, flush, cheer ? 0f : a * a * flushAmount);
             foreach (var r in renderers)
             {
                 bool isSkin = System.Array.IndexOf(skin, r) >= 0;

@@ -29,7 +29,7 @@ Satire auf Planwirtschaft. Der Spieler leitet als Biochemiker das Labor B-12 ein
 
 ## 4. Qualitätssicherung
 
-- **176 EditMode-Tests** (NUnit) für Formeln, Tagesablauf, Kontrolle, Bestellung, Maschinen, Spielstand, Einführung, Warnungen und Tastenbelegung.
+- **179 EditMode-Tests** (NUnit) für Formeln, Tagesablauf, Kontrolle, Bestellung, Maschinen, Spielstand, Einführung, Warnungen und Tastenbelegung.
 - **Play-Tests** nach jeder Änderung mit Screenshots (`Docs/Screenshots/`).
 - **Balancing-Messung:** ein Autopilot spielt das Spiel über die echten Systeme im Zeitraffer. Werkzeug *Balancing-Serie* spielt viele Varianten nacheinander (z. B. alle 27 Dosen 0–2 je Stoff, Melkpumpen, Kühe durchschleusen) und schreibt Kennzahlen je Schicht (`Docs/Balancing/*.csv`). Daraus entstanden die Anpassungen D132, D137, D138.
 - **Spieltests mit Personen:** Rückmeldungen führten zu Einsatzbesprechung in Seiten, Auftragskarte, Hinweisen beim ersten Auftreten, Pflicht-Mischung und -Bestellung in der Einführung, Hebel-Symbolen, Warnmeldungen und der Kommissar-Ankündigung (D133–D144).

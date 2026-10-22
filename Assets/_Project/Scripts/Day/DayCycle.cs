@@ -318,6 +318,8 @@ namespace PlanErfuellt
             {
                 case DayEvent.PlanMet:
                     director.SayTier("director.met");
+                    // Jubel im Fernseher, Konfetti in der Halle
+                    EventBus.RaiseQuotaMet();
                     var prize = s.quota.prize;
                     if (prize > 0f) gm.Toast("ui.toasts.planMetPrize", ToastKind.Good, ("money", Money(prize)));
                     else gm.Toast("ui.toasts.planMet", ToastKind.Good);

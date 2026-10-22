@@ -6,7 +6,8 @@ namespace PlanErfuellt
     /// <summary>
     /// Fernseher mit dem Direktor (GDD 7.2): Beim Sprechen erscheint der Spruch auf dem Parolenfeld und das Bild
     /// pulsiert und der Direktor (DirectorRig) bewegt den Mund; ist er cholerisch (dritte Wut-Stufe), flackert das Bild
-    /// und das TV-Licht wird rot.
+    /// und das TV-Licht wird rot. Ab der ersten Wut-Stufe wackelt der ganze Fernseher (stärker mit der Wut, feel.tvShake*);
+    /// nach erfülltem Plan jubelt der Direktor (feel.cheerSec).
     /// </summary>
     public class TvDirectorFx : MonoBehaviour
     {
@@ -23,6 +24,8 @@ namespace PlanErfuellt
         [SerializeField] float rageIntensity = 4f;
 
         MaterialPropertyBlock mpb;
+        Vector3 basePos;
+        Quaternion baseRot;
         float speakLeft;
         string idleText;
         float sloganSize;
@@ -39,10 +42,26 @@ namespace PlanErfuellt
         {
             mpb = new MaterialPropertyBlock();
             sloganSize = slogan.fontSize;
+            basePos = transform.localPosition;
+            baseRot = transform.localRotation;
         }
 
-        void OnEnable() => EventBus.DirectorSpeak += OnSpeak;
-        void OnDisable() => EventBus.DirectorSpeak -= OnSpeak;
+        void OnEnable()
+        {
+            EventBus.DirectorSpeak += OnSpeak;
+            EventBus.QuotaMet += OnPlanMet;
+        }
+
+        void OnDisable()
+        {
+            EventBus.DirectorSpeak -= OnSpeak;
+            EventBus.QuotaMet -= OnPlanMet;
+        }
+
+        void OnPlanMet()
+        {
+            if (rig != null) rig.Cheer(GameManager.Instance.Config.feel.cheerSec);
+        }
 
         void Start() => idleText = GameManager.Instance.Texts.Get("ui.signs.tvSlogan");
 
@@ -85,6 +104,13 @@ namespace PlanErfuellt
                 mpb.SetColor(EmissionId, Color.white * e);
                 screen.SetPropertyBlock(mpb);
             }
+            // Wut: der Fernseher wackelt in der Aufhängung (ab der ersten Stufe, mit der Wut stärker)
+            var anger = gm.Config.anger;
+            var f = gm.Config.feel;
+            float k = Mathf.Clamp01((gm.State.anger - anger.tiers[0]) / Mathf.Max(1f, anger.max - anger.tiers[0]));
+            float nx = Mathf.PerlinNoise(t * f.tvShakeFreq, 0.1f) - 0.5f, ny = Mathf.PerlinNoise(0.7f, t * f.tvShakeFreq) - 0.5f;
+            transform.localPosition = basePos + new Vector3(nx, ny, 0f) * (2f * f.tvShakeM * k);
+            transform.localRotation = baseRot * Quaternion.Euler(0f, 0f, nx * 2f * f.tvShakeDeg * k);
             tvLight.color = rage ? rageLight : calmLight;
             tvLight.intensity = rage ? rageIntensity * (0.6f + 0.4f * Mathf.Sin(t * 5f)) : calmIntensity;
         }

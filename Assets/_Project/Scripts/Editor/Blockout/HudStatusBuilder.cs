@@ -49,6 +49,13 @@ namespace PlanErfuellt.EditorTools
             var day = Text(bar, "Day", 18, Cream, new Vector2(-170f, 0f), new Vector2(220f, 40f), TextAlignmentOptions.Right, font, new Vector2(1f, 0.5f));
             var plan = Text(bar, "Plan", 18, Cream, new Vector2(-24f, 0f), new Vector2(140f, 40f), TextAlignmentOptions.Right, font, new Vector2(1f, 0.5f));
 
+            // Geld-Zahlen steigen rechts neben der Rate auf (MoneyPopupUI)
+            var popup = Text(bar, "MoneyPopup", 24, Gold, new Vector2(330f, -14f), new Vector2(200f, 34f), TextAlignmentOptions.Left, mono, new Vector2(0.5f, 0.5f));
+            var pop = bar.gameObject.AddComponent<MoneyPopupUI>();
+            var pso = new SerializedObject(pop);
+            pso.FindProperty("template").objectReferenceValue = popup;
+            pso.ApplyModifiedPropertiesWithoutUndo();
+
             var hud = bar.gameObject.AddComponent<HudTopBar>();
             var so = new SerializedObject(hud);
             so.FindProperty("logo").objectReferenceValue = logo;

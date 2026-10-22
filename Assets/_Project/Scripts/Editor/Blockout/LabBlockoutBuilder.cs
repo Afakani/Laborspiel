@@ -65,6 +65,9 @@ namespace PlanErfuellt.EditorTools
             var chamber = InstantiatePrefab("Chamber", rebuildPrefabs, () => LabChamberBuilder.Build(L, cfg.chamberDoors, cfg.fx, cfg.player.radius, cowPrefab, henPrefab), chamberRoot);
             chamber.transform.position = LayoutConfig.ToUnity(L.chamber.x, 0f, L.chamber.z);
             BuildZones(chamberRoot, L);
+            // Konfetti unter der Hallendecke vor der Kammer, regnet bei erfülltem Plan
+            var party = NewsStudioBuilder.Confetti(chamberRoot, new Vector3(0f, 7.6f, -4f), new Vector3(22f, 0.1f, 9f), 260f);
+            party.gameObject.AddComponent<PlanMetFx>().Setup(party);
 
             // Stationen
             foreach (var s in L.stations)

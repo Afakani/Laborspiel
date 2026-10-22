@@ -20,7 +20,7 @@ namespace PlanErfuellt
         int nextVoice;
         AudioSource siren, whir;
         Chamber chamber;
-        float mooTimer, beatTimer;
+        float mooTimer, beatTimer, distressTimer;
         int beat;
 
         GameManager GM => GameManager.Instance;
@@ -123,18 +123,22 @@ namespace PlanErfuellt
         }
 
         /// <summary>Laut des Tiers in der Kammer: Muhen (tiefer mit A, wobbelig bei B ≥ 2 / Ultimativ) bzw. Gackern.</summary>
-        void AnimalVoice(float delay)
+        void AnimalVoice(float delay) => AnimalVoice(delay, 1f, false);
+
+        /// <summary>Laut des Tiers; pitchFactor &gt; 1 und scared = gequältes Muhen bzw. hektisches Gackern (vor der Krise).</summary>
+        void AnimalVoice(float delay, float pitchFactor, bool scared)
         {
             if (chamber == null || !chamber.HasLivingAnimal && chamber.State != AnimalState.Enter) return;
             var s = chamber.Stats;
             if (s.kind == AnimalKind.Hen)
             {
-                Play("cluck", 1f, 1f, delay);
+                Play("cluck", pitchFactor, 1f, delay);
+                if (scared) Play("cluck", pitchFactor * 1.1f, 1f, delay + 0.18f);
                 return;
             }
-            float p = AudioLogic.MooPitch(s.dose.A, C);
+            float p = AudioLogic.MooPitch(s.dose.A, C) * pitchFactor;
             Play("moo", p, 1f, delay);
-            if (AudioLogic.MooWobble(s.dose.B, s.IsUltimate, C)) Play("moo_wobble", p, 1f, delay);
+            if (scared || AudioLogic.MooWobble(s.dose.B, s.IsUltimate, C)) Play("moo_wobble", p, 1f, delay);
         }
 
         void Grumble(string text)
@@ -195,6 +199,21 @@ namespace PlanErfuellt
                     Play("march_note", AudioLogic.MarchPitch(beat++, C), 1f, 0f, true);
                 }
             }
+
+            // Angst vor der Krise: klagt in kurzen Abständen, höher und wackelig (akustische Warnung)
+            var f = gm.Config.feel;
+            if (chamber != null && chamber.HasLivingAnimal && !chamber.IsUltimate
+                && AudioLogic.Distressed(chamber.State == AnimalState.Unstable, chamber.InCrisis, chamber.Stability, f))
+            {
+                distressTimer -= dt;
+                if (distressTimer <= 0f)
+                {
+                    distressTimer = f.distressIntervalSec;
+                    mooTimer = Mathf.Max(mooTimer, f.distressIntervalSec);
+                    AnimalVoice(0f, f.distressPitch, true);
+                }
+            }
+            else distressTimer = 0f;
 
             // Tierlaute alle 9–19 s; die Singende Kuh singt
             mooTimer -= dt;

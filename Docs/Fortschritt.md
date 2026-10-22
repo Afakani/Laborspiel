@@ -110,6 +110,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - [x] Balancing-Serie über alle 27 Dosen, Melkpumpen, Kühe durchschleusen (Werkzeug `BalanceBatch`); danach jede Ware ihr Serum (D137), Legebatterie (D138), Kryo 8 s (D136). Tests 165 grün
 - [x] Spielerführung nach Spieltest: Pflicht-Mischung und -Bestellung in der Einführung (D139), „Empfohlene Bestellung“ (D140), Hebel am Pult (D141), Warnmeldungen Wut/Zeit/Kommissar (D142), Kommissar erklärt (D143), Wut-Skala rechts am Fernseher (D144). Tests 172 grün
 - [x] Qualität und Abgabe: Spielstand-Test für alle neueren Felder, Kontrolle endet mit der Schicht (D145), feste Tasten im Baumodus (D146), Springen abschaltbar und Tastenbelegung (D147), Projektdoku und itch.io-Entwurf. Tests 176 grün
+- [x] Rückmeldung und Gefühl: Geld-Zahlen (D148), Konfetti und jubelnder Direktor bei erfülltem Plan (D149), wackelnder Fernseher bei Wut (D150), Angstlaute vor der Krise (D151). Tests 179 grün
 
 ## Phase 12 – Ton, Feinschliff, Performance, Build
 

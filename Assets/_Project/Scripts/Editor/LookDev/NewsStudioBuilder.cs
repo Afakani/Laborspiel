@@ -171,7 +171,7 @@ namespace PlanErfuellt.EditorTools
             }
             BlockoutKit.Cyl(t, "Cup", new Vector3(-2.3f, 1.2f, 1.0f), 0.09f, 0.2f, white, false);
             var paper = BlockoutKit.Box(t, "Paper", new Vector3(-0.95f, 1.106f, 1.05f), new Vector3(0.7f, 0.012f, 0.5f), white, false, new Vector3(0f, -14f, 0f));
-            var confetti = Confetti(t);
+            var confetti = Confetti(t, new Vector3(0f, 5.5f, 1.2f), new Vector3(7f, 0.1f, 3f), 70f);
             var flies = new List<Transform>();
             for (int i = 0; i < 4; i++)
             {
@@ -270,11 +270,12 @@ namespace PlanErfuellt.EditorTools
         }
 
         /// <summary>Konfetti über dem Pult (Jubel-Sendung): bunte Papierstücke, die langsam trudelnd fallen.</summary>
-        static ParticleSystem Confetti(Transform t)
+        /// <summary>Konfetti-Regen aus einer flachen Box (Studio bei Jubel, Halle bei erfülltem Plan).</summary>
+        internal static ParticleSystem Confetti(Transform t, Vector3 localPos, Vector3 box, float rate)
         {
             var go = new GameObject("Confetti");
             go.transform.SetParent(t, false);
-            go.transform.localPosition = new Vector3(0f, 5.5f, 1.2f);
+            go.transform.localPosition = localPos;
             var ps = go.AddComponent<ParticleSystem>();
             ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             var main = ps.main;
@@ -287,17 +288,17 @@ namespace PlanErfuellt.EditorTools
             main.startSize = new ParticleSystem.MinMaxCurve(0.06f, 0.11f);
             main.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
             main.gravityModifier = 0.12f;
-            main.maxParticles = 400;
+            main.maxParticles = 1200;
             var grad = new Gradient();
             grad.SetKeys(new[] { new GradientColorKey(LabMaterials.Hex("#D01A1A"), 0f), new GradientColorKey(LabMaterials.Hex("#FFD24A"), 0.35f),
                     new GradientColorKey(LabMaterials.Hex("#F4EFE3"), 0.65f), new GradientColorKey(LabMaterials.Hex("#3AA0FF"), 1f) },
                 new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(1f, 1f) });
             main.startColor = new ParticleSystem.MinMaxGradient(grad) { mode = ParticleSystemGradientMode.RandomColor };
             var em = ps.emission;
-            em.rateOverTime = 70f;
+            em.rateOverTime = rate;
             var shape = ps.shape;
             shape.shapeType = ParticleSystemShapeType.Box;
-            shape.scale = new Vector3(7f, 0.1f, 3f);
+            shape.scale = box;
             var rot = ps.rotationOverLifetime;
             rot.enabled = true;
             rot.z = new ParticleSystem.MinMaxCurve(-4f, 4f);

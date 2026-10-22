@@ -293,6 +293,8 @@ namespace PlanErfuellt.EditorTools
 
             // Direktor spricht über das Parolenfeld, flackert bei hoher Wut (Phase 6)
             var slogan = v.Find("Slogan").GetComponentInChildren<TMPro.TMP_Text>();
+            // wackelt bei Wut (TvDirectorFx), daher nicht statisch
+            foreach (var t in v.GetComponentsInChildren<Transform>(true)) t.gameObject.isStatic = false;
             v.gameObject.AddComponent<TvDirectorFx>().Setup(rig.transform.Find("Screen").GetComponent<Renderer>(), slogan, light, rig);
         }
 

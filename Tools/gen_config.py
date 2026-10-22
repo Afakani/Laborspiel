@@ -365,6 +365,15 @@ CLASSES = [
         F("float", "lightIntensity"), F("float", "flickerAmp"), F("float", "flickerFreq"),
         F("string", "lightColor"), F("string", "nozzleColor", "Farbe von Düsenlicht und Kegel während des Feuers"),
         F("float", "fadeSec", "Ein- und Ausblenden von Licht und Düsenfarbe")]),
+    ("FeelConfig", "Rückmeldung und Gefühl: Geld-Zahlen, Plan-erfüllt-Moment, wackelnder Fernseher, Tierangst.", [
+        F("float", "moneyIntervalSec", "Geld-Zahl höchstens so oft (kleine Beträge werden gesammelt)"),
+        F("float", "moneyMin", "Kleinere Summen erst zusammen mit späteren zeigen"),
+        F("float", "moneyRiseSec", "So lange steigt eine Geld-Zahl auf"), F("float", "moneyRisePx", "So weit steigt sie (Pixel)"),
+        F("float", "cheerSec", "Direktor jubelt nach erfülltem Plan"),
+        F("float", "tvShakeM", "Fernseher wackelt bei voller Wut so weit (m)"), F("float", "tvShakeDeg", "… und dreht so weit (Grad)"),
+        F("float", "tvShakeFreq", "Wackeln pro Sekunde"),
+        F("float", "distressBelowStab", "Tier klagt unter dieser Stabilität"), F("float", "distressIntervalSec", "Abstand der Angstlaute"),
+        F("float", "distressPitch", "Tonhöhe der Angstlaute (Faktor)")]),
     ("FxConfig", "Kamerawackeln und Effektstärken (Prototyp shake).", [
         F("float", "shakeExplosion"), F("float", "shakeProcExplosion"), F("float", "shakeBelt"), F("float", "shakeCable"),
         F("float", "shakeDecay", "Abbau pro s"), F("float", "shakeScale", "Meter Kameraversatz pro Wackel-Einheit"),

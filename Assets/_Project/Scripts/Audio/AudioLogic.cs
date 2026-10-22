@@ -14,6 +14,10 @@ namespace PlanErfuellt
         /// <summary>Muhen: Grundton 150 − 12·A (Prototyp moo) als Tonhöhenfaktor der Datei.</summary>
         public static float MooPitch(int a, AudioConfig c) => Mathf.Max(0.2f, (c.mooBaseHz - a * c.mooHzPerA) / c.mooBaseHz);
 
+        /// <summary>Tier hat Angst (klagt in kurzen Abständen): instabil, in der Krise oder Stabilität unter feel.distressBelowStab.</summary>
+        public static bool Distressed(bool unstable, bool crisis, float stability, FeelConfig f) =>
+            unstable || crisis || stability < f.distressBelowStab;
+
         /// <summary>Wobbeliges Muhen ab B ≥ 2 oder bei Ultimativ.</summary>
         public static bool MooWobble(int b, bool ultimate, AudioConfig c) => ultimate || b >= c.mooWobbleFromB;
 

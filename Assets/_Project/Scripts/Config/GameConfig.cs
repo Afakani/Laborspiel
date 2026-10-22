@@ -44,6 +44,7 @@ namespace PlanErfuellt
         public ChamberDoorsConfig chamberDoors = new ChamberDoorsConfig();
         public ChamberFireConfig chamberFire = new ChamberFireConfig();
         public FxConfig fx = new FxConfig();
+        public FeelConfig feel = new FeelConfig();
         public ClothFxConfig clothFx = new ClothFxConfig();
         public MachineFxConfig machineFx = new MachineFxConfig();
         public CinematicConfig cinematic = new CinematicConfig();
