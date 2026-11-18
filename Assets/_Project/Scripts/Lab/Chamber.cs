@@ -39,6 +39,8 @@ namespace PlanErfuellt
         public bool InCrisis => stats.crisis != CrisisKind.None;
         public bool IsUltimate => stats.IsUltimate;
         public AnimalStats Stats => stats;
+        /// <summary>Meldung über EventBus.Station: das Huhn hat ein Ei gelegt (EggPileFx).</summary>
+        public const string EggLaidEvent = "eggLaid";
         /// <summary>Sichtbares Tiermodell (für Effekte, die dem Tier folgen) oder null.</summary>
         public Transform ModelTransform => model != null ? model.transform : null;
         public bool HasLivingAnimal => State == AnimalState.Ok || State == AnimalState.Unstable;
@@ -194,6 +196,7 @@ namespace PlanErfuellt
                 if (stats.eggTimer <= 0f)
                 {
                     stats.eggTimer = Cfg.animal.eggInterval;
+                    EventBus.RaiseStation(EggLaidEvent);
                     if (stats.fun != null && stats.fun.coinsPerEgg > 0f)
                     {
                         S.AddMoney(stats.fun.coinsPerEgg);

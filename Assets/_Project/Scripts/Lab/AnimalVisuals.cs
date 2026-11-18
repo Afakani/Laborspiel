@@ -363,6 +363,14 @@ namespace PlanErfuellt
                     .SetTarget(this));
         }
 
+        /// <summary>Eiablage (D161): kurz in die Hocke, breiter und flacher; nicht während eines Wachstums-Tweens.</summary>
+        public void LayEgg(EggsConfig e)
+        {
+            if (DOTween.IsTweening(this)) return;
+            DOTween.Punch(() => wobble, x => wobble = x, new Vector3(0.5f, -1f, 0.5f) * e.squatStrength, e.squatSec, 4, 0.5f)
+                .SetTarget(this);
+        }
+
         void OnDestroy() => DOTween.Kill(this);
 
         static float Ease(float k) => k < 0.5f ? 4f * k * k * k : 1f - Mathf.Pow(-2f * k + 2f, 3f) / 2f;

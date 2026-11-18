@@ -157,6 +157,7 @@ namespace PlanErfuellt.EditorTools
             if (oldDay != null) Object.DestroyImmediate(oldDay.gameObject);
             new GameObject("DayCycle", typeof(Director), typeof(DayCycle), typeof(InspectionSystem), typeof(Announcer)).transform.SetParent(systems, false);
             BuildHallAlarm(systems, cfg);
+            BuildEggPile(systems, cfg);
             var oldInspector = systems.Find("Inspector");
             if (oldInspector != null) Object.DestroyImmediate(oldInspector.gameObject);
             LookDevInspector.Build(systems);
@@ -180,6 +181,22 @@ namespace PlanErfuellt.EditorTools
             return inst;
         }
 
+
+        /// <summary>Eierhaufen in der Kammer (D161): normale und goldene Schale, Eier entstehen zur Laufzeit.</summary>
+        static void BuildEggPile(Transform systems, GameConfig cfg)
+        {
+            var old = systems.Find("EggPile");
+            if (old != null) Object.DestroyImmediate(old.gameObject);
+            var go = new GameObject("EggPile");
+            go.transform.SetParent(systems, false);
+            ColorUtility.TryParseHtmlString(cfg.eggs.color, out var shell);
+            ColorUtility.TryParseHtmlString(cfg.animalVisuals.goldColor, out var goldColor);
+            var normal = BlockoutKit.Mat("LD_Egg", shell, 0f, 0.55f);
+            var gold = BlockoutKit.Mat("LD_EggGold", goldColor, 0.8f, 0.75f);
+            normal.enableInstancing = true;
+            gold.enableInstancing = true;
+            go.AddComponent<EggPileFx>().Setup(normal, gold);
+        }
 
         /// <summary>Rote Lampen unter der Hallendecke für das Rotlicht vor der Kontrolle (D157), aus bis zum Einsatz.</summary>
         static void BuildHallAlarm(Transform systems, GameConfig cfg)

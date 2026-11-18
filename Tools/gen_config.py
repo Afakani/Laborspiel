@@ -149,6 +149,16 @@ CLASSES = [
         F("string", "lightColor", "Rotlicht (Hex)"), F("float", "lightIntensity"), F("float", "lightRange", "Reichweite in m"),
         F("float", "lightPulseHz", "Blinken pro s"), F("float", "lightHeight", "Höhe der Lampen in m"),
         F("float", "tintAlpha", "Roter Schein über dem Bild: höchste Deckkraft")]),
+    ("EggsConfig", "Sichtbare Eier in der Kammer (D161): Ablage, Flug, Liegenbleiben bis Schichtende.", [
+        F("int", "maxOnFloor", "Höchstzahl Eier auf dem Boden (darüber verschwindet das älteste)"),
+        F("float", "length", "Eilänge in m"), F("float", "width", "Eibreite in m"), F("string", "color", "Eierschale (Hex)"),
+        F("float", "dropHeight", "Austritt über dem Boden (× Tiergröße)"), F("float", "backOffset", "Austritt hinter der Mitte (× Tiergröße)"),
+        F("float", "scatterSpeed", "Wurf nach hinten in m/s"), F("float", "sideScatter", "Streuung zur Seite 0..1"), F("float", "upSpeed", "Wurf nach oben in m/s"),
+        F("float", "gravity"), F("float", "bounce", "Aufprall: Anteil der Geschwindigkeit nach oben"), F("float", "bounceKeep", "Aufprall: Anteil waagerecht"),
+        F("float", "settleSpeed", "Darunter springt es nicht mehr"), F("float", "rollFriction", "Bremsen beim Rollen pro s"),
+        F("float", "stopSpeed", "Darunter liegt es still"), F("float", "restTurnSpeed", "Umfallen auf die Seite pro s"),
+        F("float", "spinDegMin", "Drehung im Flug Grad/s"), F("float", "spinDegMax"), F("float", "wallMargin", "Abstand zur Glaswand in m"),
+        F("float", "squatStrength", "Huhn geht beim Legen in die Hocke (Anteil)"), F("float", "squatSec")]),
     ("MachineFxConfig", "Darstellung von Zentrifuge und Kryokammer (Prototyp updatePlay/kryWin).", [
         F("float", "centrifugeRotorRadPerSec", "Rotordrehung bei voller Drehzahl"), F("float", "centrifugeShakeAmp", "Wackeln des Gehäuses in m bei voller Drehzahl"),
         F("float", "centrifugeBreakShake", "Kamerawackeln beim Zerspringen"),

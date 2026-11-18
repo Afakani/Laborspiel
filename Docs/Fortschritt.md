@@ -115,7 +115,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - [x] Tiere wachsen per DOTween mit S-Kurve und wabbeln danach (D155). Tests 173 grün
 - [x] Mutation in logischen Stufen (Beine, Kopf, Körperlänge, Euter) und Fellfarbe nach Serum, Ω gold (D156). Tests 173 grün
 - [x] HUD in die Welt: Tier-Meter und Spielwerte entfernt, Tafel „Lage der Nation“, Bestands-Whiteboard im Lager, rotes Direktor-Gesicht, Hallen-Durchsagen der Partei mit Stimme, 3 s Rotlicht vor dem Kommissar, NOT-STOPP heißt VERNICHTUNG (D157–D160). Tests 175 grün
-- [ ] Hühner legen sichtbar Eier, die bis Schichtende auf dem Boden liegen bleiben
+- [x] Hühner legen sichtbar Eier: Hocke, Ei fällt hinten heraus und bleibt bis Schichtende in der Kammer liegen, golden beim Münzhuhn und bei Ω (D161). Tests 175 grün
 - [ ] Spielende Sibirien: drei verfehlte Pläne in Folge, Tor geht hoch, zwei Stasi-Männer, Zwischensequenz mit Sprüchen und Plakaten
 
 ## Phase 12 – Ton, Feinschliff, Performance, Build

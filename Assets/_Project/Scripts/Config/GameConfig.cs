@@ -27,6 +27,7 @@ namespace PlanErfuellt
         public InspectionConfig inspection = new InspectionConfig();
         public InspectorConfig inspector = new InspectorConfig();
         public AnnounceConfig announce = new AnnounceConfig();
+        public EggsConfig eggs = new EggsConfig();
         public MachinesFixedConfig machinesFixed = new MachinesFixedConfig();
         public BuildMachinesConfig buildMachines = new BuildMachinesConfig();
         public InfectionConfig infection = new InfectionConfig();
