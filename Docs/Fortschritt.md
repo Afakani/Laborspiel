@@ -113,6 +113,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - [x] Rückmeldung und Gefühl: Geld-Zahlen (D148), Konfetti und jubelnder Direktor bei erfülltem Plan (D149), wackelnder Fernseher bei Wut (D150), Angstlaute vor der Krise (D151). Tests 179 grün
 - [x] Feature-Kürzung nach Rückmeldung des Professors: Sonderwunsch und Sonderauftrag (D152) und Probenmikroskop (D153) entfernt, Grammophon als Propaganda-Radio ohne Spielwirkung (D154)
 - [x] Tiere wachsen per DOTween mit S-Kurve und wabbeln danach (D155). Tests 173 grün
+- [x] Mutation in logischen Stufen (Beine, Kopf, Körperlänge, Euter) und Fellfarbe nach Serum, Ω gold (D156). Tests 173 grün
 
 ## Phase 12 – Ton, Feinschliff, Performance, Build
 

@@ -4,8 +4,10 @@ using UnityEngine;
 namespace PlanErfuellt
 {
     /// <summary>
-    /// Sichtbare Mutation und Bewegung eines Tiers mit Skelett (GDD 5.5, Prototyp updateSubject): Wachsen mit A per
-    /// DOTween mit S-Kurve und anschließendem Wabbeln (Stauchen/Strecken, D155),
+    /// Sichtbare Mutation und Bewegung eines Tiers mit Skelett (GDD 5.5, Prototyp updateSubject). Stufen (D156):
+    /// A1 alles wächst, A2 Beine bleiben klein, A3 auch der Kopf, ab A4 wird der Körper länger – per DOTween mit S-Kurve
+    /// und Wabbeln danach (D155); B1 Euter größer, ab B2 länger, ab B3 Zusatz-Euter, ab B4 Aufblähen. Fellfarbe nach dem
+    /// stärksten Serum (Serumfarben aus substances, A = B lila, Ω gold, Koloss rot),
     /// Aufblähen (Blendshape) mit A und B ≥ 3, Euter-Knochen wächst mit B, Zusatz-Euter wachsen weich heraus,
     /// Glühen bei Instabilität (rot bei Hitze, golden bei Ω). Dazu Atmen, Umschauen, Ohrenzucken, Schwanzpendeln,
     /// Laufen mit Knie, Beine baumeln beim Schweben, Zittern bei Instabilität, Flügelschlag und Kopfnicken beim Huhn.
@@ -44,7 +46,11 @@ namespace PlanErfuellt
         Vector3[] wingPos, extraPos, extraScale, wearScale;
         float[] extraK;
         int[] inflateIdx, breatheIdx;
-        float infl, udderScale = 1f, glow, grow = -1f, growGoal = -1f;
+        float infl, udderScale = 1f, udderLen = 1f, glow, grow = -1f, legGrow = 1f, headGrow = 1f, stretch = 1f, tintK;
+        int growA = -1;
+        Vector3[] legPos;
+        Color[] bodyBase;
+        Color tint = Color.white;
         // Wabbeln nach dem Wachsen: Abweichung je Achse vom gleichmäßigen Maßstab
         Vector3 wobble;
 
@@ -73,6 +79,11 @@ namespace PlanErfuellt
             }
             if (udder != null) udderPos = udder.localPosition;
             legBase = Rotations(legs);
+            legPos = new Vector3[legs.Length];
+            for (int i = 0; i < legs.Length; i++) legPos[i] = legs[i].localPosition;
+            bodyBase = new Color[bodyRenderers.Length];
+            for (int i = 0; i < bodyRenderers.Length; i++)
+                bodyBase[i] = bodyRenderers[i].sharedMaterial.HasProperty(BaseColorId) ? bodyRenderers[i].sharedMaterial.GetColor(BaseColorId) : Color.white;
             shinBase = Rotations(shins);
             wingBase = Rotations(wings);
             earBase = Rotations(ears);
@@ -110,9 +121,11 @@ namespace PlanErfuellt
         {
             infl = 0f;
             udderScale = 1f;
+            udderLen = 1f;
             glow = 0f;
             grow = -1f;
-            growGoal = -1f;
+            growA = -1;
+            tintK = 0f;
             wobble = Vector3.zero;
             DOTween.Kill(this);
             if (extraK == null) return;
@@ -135,13 +148,26 @@ namespace PlanErfuellt
             bool unstable = state == AnimalState.Unstable;
             bool lowStab = state == AnimalState.Ok && s.stability < v.lowStabWobbleBelow;
 
-            // Wachsen: beim neuen Tier sofort, sonst per Tween mit S-Kurve und Wabbeln am Ende
-            float growTarget = 1f + v.growPerA * Mathf.Min(a, v.growCapA) + (koloss ? v.kolossGrowExtra : 0f);
-            if (grow < 0f) grow = growGoal = growTarget;
-            else if (!Mathf.Approximately(growTarget, growGoal)) StartGrow(growTarget, v);
+            // Wachsen in Stufen: beim neuen Tier sofort, sonst per Tween mit S-Kurve und Wabbeln am Ende
+            int growKey = a + (koloss ? 1000 : 0);
+            if (grow < 0f)
+            {
+                var g = GrowTargets(a, koloss, v);
+                grow = g.x;
+                legGrow = g.y;
+                headGrow = g.z;
+                stretch = g.w;
+                growA = growKey;
+            }
+            else if (growKey != growA)
+            {
+                growA = growKey;
+                StartGrow(GrowTargets(a, koloss, v), v);
+            }
 
             // Aufblähen und Atmen über Blendshapes; anhängende Teile rücken mit nach außen
-            float inflTarget = (b >= 3 && !s.IsUltimate ? v.inflPerBOver2 * Mathf.Min(b - 2, v.inflBCap) : 0f) + v.inflPerA * Mathf.Min(a, v.growCapA);
+            int inflB = b - v.inflateFromB + 1;
+            float inflTarget = (inflB > 0 && !s.IsUltimate ? v.inflPerBOver2 * Mathf.Min(inflB, v.inflBCap) : 0f) + v.inflPerA * Mathf.Min(a, v.growCapA);
             infl = Mathf.Lerp(infl, inflTarget, Mathf.Min(1f, dt * v.inflSmoothing));
             float breathe = (0.5f + 0.5f * Mathf.Sin(t * v.breatheFreq * (unstable ? v.breatheUnstableMult : 1f))) * v.breatheAmp;
             for (int i = 0; i < skins.Length; i++)
@@ -156,13 +182,16 @@ namespace PlanErfuellt
 
             if (udder != null)
             {
-                udderScale = Mathf.Lerp(udderScale, 1f + v.udderPerB * Mathf.Min(b, v.udderBCap), Mathf.Min(1f, dt * v.udderSmoothing));
-                udder.localScale = Vector3.one * udderScale;
+                // B1 größer, ab B2 länger (nach unten gestreckt)
+                float k = Mathf.Min(1f, dt * v.udderSmoothing);
+                udderScale = Mathf.Lerp(udderScale, 1f + v.udderPerB * Mathf.Min(b, v.udderBigUntilB), k);
+                udderLen = Mathf.Lerp(udderLen, 1f + v.udderLongPerB * Mathf.Clamp(b - v.udderBigUntilB, 0, v.udderLongCapB), k);
+                udder.localScale = new Vector3(udderScale, udderScale * udderLen, udderScale);
                 udder.localPosition = Swell(udderPos);
             }
 
             // Zusatz-Euter / Wucherungen wachsen weich heraus und schrumpfen wieder
-            int extra = kind == AnimalKind.Cow ? Mathf.Max(0, (b - 1) * 2) : Mathf.Max(0, b * 2 - 1);
+            int extra = kind == AnimalKind.Cow ? Mathf.Max(0, (b - v.extraUddersFromB + 1) * 2) : Mathf.Max(0, b * 2 - 1);
             for (int i = 0; i < extraUdders.Length; i++)
             {
                 extraK[i] = Mathf.MoveTowards(extraK[i], i < extra ? 1f : 0f, dt * v.extraGrowSpeed);
@@ -183,13 +212,35 @@ namespace PlanErfuellt
             GlowColor = omega
                 ? Hex(v.goldColor)
                 : Color.Lerp(Hex(v.glowColor), Hex(v.heatColor), Mathf.Max(s.heat / 100f, unstable ? v.unstableHeatColorMix : 0f));
-            Tint(bodyRenderers, null, GlowColor * (glow * v.emissiveFactor * Pulse * GlowBoost));
+            // Fellfarbe nach dem stärksten Serum, mit der Dosis kräftiger
+            var (tintTarget, tintTargetK) = TintTarget(s, omega, koloss, cfg);
+            float tk = Mathf.Min(1f, dt * v.tintSmoothing);
+            tint = Color.Lerp(tint, tintTarget, tk);
+            tintK = Mathf.Lerp(tintK, tintTargetK, tk);
+            var emission = GlowColor * (glow * v.emissiveFactor * Pulse * GlowBoost);
+            for (int i = 0; i < bodyRenderers.Length; i++)
+            {
+                var r = bodyRenderers[i];
+                r.GetPropertyBlock(mpb);
+                mpb.SetColor(BaseColorId, Color.Lerp(bodyBase[i], tint, tintK));
+                mpb.SetColor(EmissionId, emission);
+                r.SetPropertyBlock(mpb);
+            }
             if (kind == AnimalKind.Cow)
                 Tint(spotRenderers, Color.Lerp(Hex(v.spotColor), omega ? Hex(v.goldColor) : Hex(v.spotGlowColor), glow * v.spotGlowFactor), null);
 
             // Größe mit Auftauchen (pop) und Basismaßstab je Tierart
             float baseScale = kind == AnimalKind.Cow ? 1f : v.henScale;
-            transform.localScale = Vector3.Scale(Vector3.one * (baseScale * grow * (0.2f + 0.8f * Ease(pop))), Vector3.one + wobble);
+            // Gesamtgröße folgt den Beinen; der Rumpf wächst darüber hinaus (und wird ab A4 länger), der Kopf bleibt zurück
+            transform.localScale = Vector3.Scale(Vector3.one * (baseScale * legGrow * (0.2f + 0.8f * Ease(pop))), Vector3.one + wobble);
+            float body = grow / legGrow;
+            spine.localScale = new Vector3(body * stretch, body, body);
+            for (int i = 0; i < legs.Length; i++) legs[i].localPosition = new Vector3(legPos[i].x * body * stretch, legPos[i].y, legPos[i].z);
+            if (head != null)
+            {
+                float h = headGrow / grow;
+                head.localScale = new Vector3(h / stretch, h, h);
+            }
 
             // Schweben: Wiegen; instabil: Wackeln; kritisch: leichtes Wackeln
             float fk = Mathf.Min(1f, s.floatHeight);
@@ -269,14 +320,43 @@ namespace PlanErfuellt
             }
         }
 
-        /// <summary>Größe per Tween (InOutSine = S-Kurve) zum neuen Ziel, danach Wabbeln: höher und schmaler im Wechsel.</summary>
-        void StartGrow(float target, AnimalVisualsConfig v)
+        /// <summary>Wachstums-Ziele zur Dosis A: x Rumpf, y Beine, z Kopf, w Länge des Rumpfs.</summary>
+        static Vector4 GrowTargets(int a, bool koloss, AnimalVisualsConfig v)
         {
-            growGoal = target;
+            int ac = Mathf.Min(a, Mathf.RoundToInt(v.growCapA));
+            float extra = koloss ? v.kolossGrowExtra : 0f;
+            return new Vector4(
+                1f + v.growPerA * ac + extra,
+                1f + v.growPerA * Mathf.Min(ac, v.legsGrowUntilA),
+                1f + v.growPerA * Mathf.Min(ac, v.headGrowUntilA),
+                1f + v.stretchPerA * Mathf.Max(0, ac - v.stretchFromA + 1));
+        }
+
+        /// <summary>Fellfarbe und Stärke: Ω gold, Koloss rot, sonst das stärkste Serum (A = B lila), mit der Gesamtdosis kräftiger.</summary>
+        static (Color color, float k) TintTarget(AnimalStats s, bool omega, bool koloss, GameConfig cfg)
+        {
+            var v = cfg.animalVisuals;
+            if (omega) return (Hex(v.goldColor), v.tintMax);
+            if (koloss) return (Hex(v.tintKoloss), v.tintMax);
+            var d = s.dose;
+            if (d.Total == 0) return (Color.white, 0f);
+            float k = Mathf.Min(v.tintMax, v.tintPerDose * d.Total);
+            if (d.A > 0 && d.A == d.B && d.A >= d.C) return (Hex(v.tintMixAB), k);
+            int top = d.A >= d.B && d.A >= d.C ? 0 : d.B >= d.C ? 1 : 2;
+            return (Hex(cfg.substances[top].color), k);
+        }
+
+        /// <summary>Größen per Tween (InOutSine = S-Kurve) zu den neuen Zielen, danach Wabbeln: höher und schmaler im Wechsel.</summary>
+        void StartGrow(Vector4 target, AnimalVisualsConfig v)
+        {
             DOTween.Kill(this);
             wobble = Vector3.zero;
-            DOTween.To(() => grow, x => grow = x, target, v.growTweenSec)
-                .SetEase(DG.Tweening.Ease.InOutSine)
+            var ease = DG.Tweening.Ease.InOutSine;
+            DOTween.To(() => legGrow, x => legGrow = x, target.y, v.growTweenSec).SetEase(ease).SetTarget(this);
+            DOTween.To(() => headGrow, x => headGrow = x, target.z, v.growTweenSec).SetEase(ease).SetTarget(this);
+            DOTween.To(() => stretch, x => stretch = x, target.w, v.growTweenSec).SetEase(ease).SetTarget(this);
+            DOTween.To(() => grow, x => grow = x, target.x, v.growTweenSec)
+                .SetEase(ease)
                 .SetTarget(this)
                 .OnComplete(() => DOTween.Punch(() => wobble, x => wobble = x, new Vector3(-0.5f, 1f, -0.5f) * v.wobbleStrength,
                         v.wobbleSec, v.wobbleVibrato, v.wobbleElasticity)

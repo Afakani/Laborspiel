@@ -69,6 +69,34 @@ namespace PlanErfuellt
         public int wobbleVibrato;
         /// <summary>Rückfederung 0..1</summary>
         public float wobbleElasticity;
+        /// <summary>Wachstum: Beine wachsen nur bis zu dieser Dosis A mit</summary>
+        public int legsGrowUntilA;
+        /// <summary>Wachstum: Kopf wächst nur bis zu dieser Dosis A mit</summary>
+        public int headGrowUntilA;
+        /// <summary>Wachstum: ab dieser Dosis A wird der Körper länger</summary>
+        public int stretchFromA;
+        /// <summary>Verlängerung des Körpers pro Dosis ab stretchFromA</summary>
+        public float stretchPerA;
+        /// <summary>Laktation: Euter wird bis zu dieser Dosis B größer</summary>
+        public int udderBigUntilB;
+        /// <summary>Laktation: Euter wird danach pro Dosis länger</summary>
+        public float udderLongPerB;
+        /// <summary>Höchstzahl Dosen für die Euterlänge</summary>
+        public int udderLongCapB;
+        /// <summary>Laktation: ab dieser Dosis B wachsen Zusatz-Euter (Kuh)</summary>
+        public int extraUddersFromB;
+        /// <summary>Laktation: ab dieser Dosis B bläht sich das Tier auf</summary>
+        public int inflateFromB;
+        /// <summary>Fellfarbe: Anteil der Serumfarbe pro Dosis</summary>
+        public float tintPerDose;
+        /// <summary>Fellfarbe: höchster Anteil</summary>
+        public float tintMax;
+        /// <summary>Fellfarbe: Annäherung pro s</summary>
+        public float tintSmoothing;
+        /// <summary>Fellfarbe bei gleich viel A und B (Hex)</summary>
+        public string tintMixAB;
+        /// <summary>Fellfarbe beim Fleischkoloss (Hex)</summary>
+        public string tintKoloss;
         /// <summary>Zusatz-Euter/Wucherungen: Ein-/Ausblenden pro s</summary>
         public float extraGrowSpeed;
         /// <summary>Atmen: Kreisfrequenz</summary>
