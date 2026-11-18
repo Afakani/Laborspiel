@@ -286,7 +286,8 @@
     "prize": 150,
     "bossPrizeMult": 2,
     "bossAfterUltSec": 25,
-    "announceSec": 20
+    "announceSec": 20,
+    "arriveSec": 3
   },
   "inspector": {
     "_doc": "Prototyp: inspG läuft bei z 3.0 von x 16 nach x -16; Wodka-Ziel im Umkreis 2.4 (Wertung Abstand − 0.6); Oberkommissar ×1.25; Schwanken ±0.12 rad mit 3/s; Wackeln 0.2 beim Eintreffen. stepFreq/legSwingDeg eigene Werte.",
@@ -301,6 +302,20 @@
     "stepFreq": 1.8,
     "legSwingDeg": 22,
     "startShake": 0.2
+  },
+  "announce": {
+    "_doc": "Hallen-Durchsagen (D157): Gong und Stimme (Tools/gen_announce.py, Texte unter announce). Parteikontrolle ab watchAt bzw. alarmAt (unter inspection.triggerAuthority 75), dazu Kommissar kommt gleich, tritt ein, ist fertig. Rotlicht in der Halle, solange er inspection.arriveSec vor der Tür steht.",
+    "volume": 0.5,
+    "watchAt": 35,
+    "alarmAt": 60,
+    "hysteresis": 15,
+    "gapSec": 1.5,
+    "lightColor": "#ff2412",
+    "lightIntensity": 45,
+    "lightRange": 26,
+    "lightPulseHz": 1.6,
+    "lightHeight": 7.2,
+    "tintAlpha": 0.6
   },
   "machinesFixed": {
     "centrifuge": {
@@ -905,6 +920,36 @@
         ],
         "signKey": "",
         "signHeight": 7.1,
+        "reach": 0
+      },
+      {
+        "id": "worldBoard",
+        "x": 15.0,
+        "y": 4.7,
+        "z": -1.55,
+        "facing": 0,
+        "size": [
+          2.9,
+          2.4,
+          0.3
+        ],
+        "signKey": "",
+        "signHeight": 0,
+        "reach": 0
+      },
+      {
+        "id": "serumBoard",
+        "x": -15.0,
+        "y": 1.9,
+        "z": 23.2,
+        "facing": 180,
+        "size": [
+          2.1,
+          1.5,
+          0.1
+        ],
+        "signKey": "",
+        "signHeight": 0,
         "reach": 0
       },
       {

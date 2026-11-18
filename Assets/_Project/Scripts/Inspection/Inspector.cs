@@ -108,7 +108,7 @@ namespace PlanErfuellt
             var gm = GM;
             if (gm == null) return;
             var ins = gm.State.inspection;
-            if (ins == null)
+            if (ins == null || ins.Arriving)
             {
                 if (visible) SetVisible(false);
                 return;

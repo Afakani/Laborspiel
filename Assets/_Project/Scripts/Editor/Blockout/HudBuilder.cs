@@ -37,7 +37,7 @@ namespace PlanErfuellt.EditorTools
 
             // Infektion: grüner Schleier hinter allem, Anzeige oben links (Phase 5)
             var veil = Img("InfectionVeil", root.transform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero, new Color(0.27f, 1f, 0.35f, 0f));
-            var badge = Img("InfectionBadge", root.transform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-170f, -346f), new Vector2(300f, 64f), new Color(0.12f, 0.3f, 0.1f, 0.92f));
+            var badge = Img("InfectionBadge", root.transform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-170f, -110f), new Vector2(300f, 64f), new Color(0.12f, 0.3f, 0.1f, 0.92f));
             var badgeTitle = Text("Title", badge.rectTransform, "", 26, new Color(0.55f, 1f, 0.45f), new Vector2(0f, 12f), new Vector2(290f, 32f));
             var badgeDeadline = Text("Deadline", badge.rectTransform, "", 20, Cream, new Vector2(0f, -16f), new Vector2(290f, 26f));
             var infHud = root.AddComponent<InfectionHud>();

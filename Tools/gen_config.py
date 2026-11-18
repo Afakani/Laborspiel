@@ -132,7 +132,8 @@ CLASSES = [
         F("float", "minGapSec"), F("float", "speed"), F("float", "range"), F("float", "suspMax"),
         F("SuspicionConfig", "susp"), F("InspectionMultConfig", "mult"), F("VodkaConfig", "vodka"),
         F("float", "prize"), F("float", "bossPrizeMult"), F("float", "bossAfterUltSec"),
-        F("float", "announceSec", "So lange vorher wird der Kommissar angekündigt")]),
+        F("float", "announceSec", "So lange vorher wird der Kommissar angekündigt"),
+        F("float", "arriveSec", "Rotlicht und Durchsage: so lange steht er vor der Tür, bevor er eintritt")]),
     ("InspectorConfig", "Weg und Darstellung des Kommissars (Prototyp inspG, Prototyp-Koordinaten).", [
         F("float", "startX", "Start rechts"), F("float", "endX", "Ende links (Kontrolle bestanden)"),
         F("float", "pathZ", "Weg vor der Kammer"), F("float", "vodkaReach", "Abstand für Wodka anbieten"),
@@ -140,6 +141,14 @@ CLASSES = [
         F("float", "bossScale", "Größe des Oberkommissars"), F("float", "swayDeg", "Schwanken beim Trinken"),
         F("float", "swayFreq"), F("float", "stepFreq", "Schritte pro s beim Gehen"), F("float", "legSwingDeg"),
         F("float", "startShake", "Kamerawackeln beim Eintreffen")]),
+    ("AnnounceConfig", "Hallen-Durchsagen der Partei und Rotlicht vor der Kontrolle (D157).", [
+        F("float", "volume", "Lautstärke relativ zu den Effekten"),
+        F("float", "watchAt", "Parteikontrolle: erste Durchsage ab"), F("float", "alarmAt", "Parteikontrolle: zweite Durchsage ab"),
+        F("float", "hysteresis", "Erneut erst, wenn die Parteikontrolle so weit unter die Schwelle gefallen ist"),
+        F("float", "gapSec", "Pause zwischen zwei Durchsagen"),
+        F("string", "lightColor", "Rotlicht (Hex)"), F("float", "lightIntensity"), F("float", "lightRange", "Reichweite in m"),
+        F("float", "lightPulseHz", "Blinken pro s"), F("float", "lightHeight", "Höhe der Lampen in m"),
+        F("float", "tintAlpha", "Roter Schein über dem Bild: höchste Deckkraft")]),
     ("MachineFxConfig", "Darstellung von Zentrifuge und Kryokammer (Prototyp updatePlay/kryWin).", [
         F("float", "centrifugeRotorRadPerSec", "Rotordrehung bei voller Drehzahl"), F("float", "centrifugeShakeAmp", "Wackeln des Gehäuses in m bei voller Drehzahl"),
         F("float", "centrifugeBreakShake", "Kamerawackeln beim Zerspringen"),

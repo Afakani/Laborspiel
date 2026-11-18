@@ -4,7 +4,7 @@ using UnityEngine;
 namespace PlanErfuellt
 {
     /// <summary>
-    /// Untertitel über dem Prompt (GDD 7.6): „DIREKTOR: …“ bzw. „RADIO: …“ (Propaganda vom Grammophon), Dauer nach
+    /// Untertitel über dem Prompt (GDD 7.6): „DIREKTOR: …“ bzw. „RADIO: …“ (Propaganda vom Grammophon), „DURCHSAGE: …“ (Partei, D157), Dauer nach
     /// Textlänge (ui.subtitle*).
     /// </summary>
     public class SubtitleUI : MonoBehaviour
@@ -19,16 +19,19 @@ namespace PlanErfuellt
         {
             EventBus.DirectorSpeak += OnSpeak;
             EventBus.RadioSpeak += OnRadio;
+            EventBus.AnnounceLine += OnAnnounce;
         }
 
         void OnDisable()
         {
             EventBus.DirectorSpeak -= OnSpeak;
             EventBus.RadioSpeak -= OnRadio;
+            EventBus.AnnounceLine -= OnAnnounce;
         }
 
         void OnSpeak(string line) => Show("ui.hud.subtitleSpeaker", line);
         void OnRadio(string line) => Show("ui.hud.radioSpeaker", line);
+        void OnAnnounce(string line) => Show("ui.hud.announceSpeaker", line);
 
         void Show(string speakerKey, string line)
         {

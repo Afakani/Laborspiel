@@ -25,8 +25,6 @@ namespace PlanErfuellt.EditorTools
             font = FontAssetCreator.Ensure($"{BlockoutKit.FontDir}/Oswald/Oswald-Bold.ttf", $"{BlockoutKit.FontDir}/Oswald/Oswald-Bold SDF.asset");
             mono = FontAssetCreator.Ensure($"{BlockoutKit.FontDir}/JetBrainsMono/JetBrainsMono-Bold.ttf", $"{BlockoutKit.FontDir}/JetBrainsMono/JetBrainsMono-Bold SDF.asset");
             BuildTopBar(canvas);
-            BuildChips(canvas);
-            BuildMeter(canvas, segments);
         }
 
         static void BuildTopBar(Transform canvas)
@@ -65,91 +63,6 @@ namespace PlanErfuellt.EditorTools
             so.FindProperty("rate").objectReferenceValue = rate;
             so.FindProperty("day").objectReferenceValue = day;
             so.FindProperty("plan").objectReferenceValue = plan;
-            so.ApplyModifiedPropertiesWithoutUndo();
-        }
-
-        static void BuildChips(Transform canvas)
-        {
-            var row = Rect(canvas, "Chips", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(20f, -70f), new Vector2(900f, 54f));
-            var hl = row.gameObject.AddComponent<HorizontalLayoutGroup>();
-            hl.spacing = 8f;
-            hl.childControlWidth = false;
-            hl.childControlHeight = false;
-            hl.childForceExpandWidth = false;
-            var chips = new HudChips.Chip[5];
-            for (int i = 0; i < 5; i++)
-            {
-                var c = Rect(row, "Chip" + i, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), Vector2.zero, new Vector2(i < 4 ? 150f : 190f, 54f));
-                var frame = c.gameObject.AddComponent<Image>();
-                frame.color = i == 4 ? new Color(0.43f, 1f, 0.29f) : Line;
-                var bg = Rect(c, "Bg", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
-                bg.offsetMin = new Vector2(2f, 2f);
-                bg.offsetMax = new Vector2(-2f, -2f);
-                bg.gameObject.AddComponent<Image>().color = Panel;
-                chips[i] = new HudChips.Chip
-                {
-                    frame = frame,
-                    symbol = Text(c, "Symbol", 30, Cream, new Vector2(10f, 0f), new Vector2(34f, 50f), TextAlignmentOptions.Center, font, new Vector2(0f, 0.5f)),
-                    name = Text(c, "Name", 13, Muted, new Vector2(50f, 10f), new Vector2(i < 4 ? 96f : 136f, 22f), TextAlignmentOptions.Left, font, new Vector2(0f, 0.5f)),
-                    count = Text(c, "Count", 16, Cream, new Vector2(50f, -11f), new Vector2(96f, 22f), TextAlignmentOptions.Left, mono, new Vector2(0f, 0.5f))
-                };
-            }
-            var hc = row.gameObject.AddComponent<HudChips>();
-            var so = new SerializedObject(hc);
-            var p = so.FindProperty("chips");
-            p.arraySize = 5;
-            for (int i = 0; i < 5; i++)
-            {
-                var e = p.GetArrayElementAtIndex(i);
-                e.FindPropertyRelative("symbol").objectReferenceValue = chips[i].symbol;
-                e.FindPropertyRelative("name").objectReferenceValue = chips[i].name;
-                e.FindPropertyRelative("count").objectReferenceValue = chips[i].count;
-                e.FindPropertyRelative("frame").objectReferenceValue = chips[i].frame;
-            }
-            so.ApplyModifiedPropertiesWithoutUndo();
-        }
-
-        static void BuildMeter(Transform canvas, int segments)
-        {
-            var box = Rect(canvas, "AnimalMeter", Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(20f, 20f), new Vector2(430f, 150f));
-            box.gameObject.AddComponent<Image>().color = new Color(0.055f, 0.047f, 0.039f, 0.86f);
-            var info = Text(box, "Info", 16, Gold, new Vector2(14f, -10f), new Vector2(400f, 26f), TextAlignmentOptions.Left, font, new Vector2(0f, 1f));
-            var labels = new TMP_Text[3];
-            var segs = new Image[3][];
-            // Symbole wie im Pult-Bild: Flasche (Menge), Stern (Qualität), Sanduhr (Stabilität)
-            string[] icons = { "IconBottle.png", "IconStar.png", "IconHourglass.png" };
-            for (int r = 0; r < 3; r++)
-            {
-                float y = -46f - r * 34f;
-                var icon = Rect(box, "Icon" + r, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(14f, y - 3f), new Vector2(20f, 20f)).gameObject.AddComponent<Image>();
-                icon.sprite = HudStyle.Sprite(icons[r]);
-                icon.color = Gold;
-                icon.preserveAspect = true;
-                icon.raycastTarget = false;
-                labels[r] = Text(box, "Label" + r, 15, Cream, new Vector2(40f, y), new Vector2(108f, 26f), TextAlignmentOptions.Left, font, new Vector2(0f, 1f));
-                segs[r] = new Image[segments];
-                for (int i = 0; i < segments; i++)
-                {
-                    var s = Rect(box, "Seg" + r + "_" + i, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(150f + i * 22f, y - 6f), new Vector2(18f, 16f));
-                    var img = s.gameObject.AddComponent<Image>();
-                    img.color = new Color(0.16f, 0.15f, 0.13f);
-                    img.raycastTarget = false;
-                    segs[r][i] = img;
-                }
-            }
-            var m = box.gameObject.AddComponent<AnimalMeter>();
-            var so = new SerializedObject(m);
-            so.FindProperty("info").objectReferenceValue = info;
-            var lp = so.FindProperty("labels");
-            lp.arraySize = 3;
-            for (int i = 0; i < 3; i++) lp.GetArrayElementAtIndex(i).objectReferenceValue = labels[i];
-            string[] names = { "amount", "quality", "stability" };
-            for (int r = 0; r < 3; r++)
-            {
-                var p = so.FindProperty(names[r]);
-                p.arraySize = segments;
-                for (int i = 0; i < segments; i++) p.GetArrayElementAtIndex(i).objectReferenceValue = segs[r][i];
-            }
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 

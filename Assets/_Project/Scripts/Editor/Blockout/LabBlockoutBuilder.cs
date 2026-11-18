@@ -144,7 +144,6 @@ namespace PlanErfuellt.EditorTools
             PlayerBuilder.Set(hud.GetComponent<PromptUI>(), "source", player.GetComponent<InteractionSystem>());
             var chamber = Object.FindAnyObjectByType<Chamber>();
             PlayerBuilder.Set(hud.GetComponentInChildren<PanelControl>(true), "chamber", chamber);
-            PlayerBuilder.Set(hud.GetComponentInChildren<AnimalMeter>(true), "chamber", chamber);
 
             var es = new GameObject("EventSystem", typeof(UnityEngine.EventSystems.EventSystem), typeof(UnityEngine.InputSystem.UI.InputSystemUIInputModule));
             es.transform.SetParent(ui, false);
@@ -156,7 +155,8 @@ namespace PlanErfuellt.EditorTools
             new GameObject("MixingSystem", typeof(MixingSystem), typeof(MachineSystem), typeof(NewsStudioLoader)).transform.SetParent(systems, false);
             var oldDay = systems.Find("DayCycle");
             if (oldDay != null) Object.DestroyImmediate(oldDay.gameObject);
-            new GameObject("DayCycle", typeof(Director), typeof(DayCycle), typeof(InspectionSystem)).transform.SetParent(systems, false);
+            new GameObject("DayCycle", typeof(Director), typeof(DayCycle), typeof(InspectionSystem), typeof(Announcer)).transform.SetParent(systems, false);
+            BuildHallAlarm(systems, cfg);
             var oldInspector = systems.Find("Inspector");
             if (oldInspector != null) Object.DestroyImmediate(oldInspector.gameObject);
             LookDevInspector.Build(systems);
@@ -180,6 +180,30 @@ namespace PlanErfuellt.EditorTools
             return inst;
         }
 
+
+        /// <summary>Rote Lampen unter der Hallendecke für das Rotlicht vor der Kontrolle (D157), aus bis zum Einsatz.</summary>
+        static void BuildHallAlarm(Transform systems, GameConfig cfg)
+        {
+            var old = systems.Find("HallAlarm");
+            if (old != null) Object.DestroyImmediate(old.gameObject);
+            var go = new GameObject("HallAlarm");
+            go.transform.SetParent(systems, false);
+            var r = cfg.layout.room;
+            float z = (r.frontWallZ + r.backWallZ) * 0.5f;
+            var lights = new Light[3];
+            for (int i = 0; i < 3; i++)
+            {
+                var l = new GameObject("Light" + i).AddComponent<Light>();
+                l.transform.SetParent(go.transform, false);
+                l.transform.position = LayoutConfig.ToUnity((i - 1) * r.sideWallX * 0.6f, cfg.announce.lightHeight, z);
+                l.type = LightType.Point;
+                l.shadows = LightShadows.None;
+                l.lightmapBakeType = LightmapBakeType.Realtime;
+                l.enabled = false;
+                lights[i] = l;
+            }
+            go.AddComponent<HallAlarm>().Setup(lights);
+        }
         static Transform Root(string name)
         {
             var go = GameObject.Find(name);

@@ -100,6 +100,8 @@ namespace PlanErfuellt
         public int angerWarned;
         public int timeWarnedDay;
         public bool inspectionAnnounced;
+        /// <summary>Durchsagen: zuletzt gemeldete Stufe der Parteikontrolle (0 keine, 1 watch, 2 alarm).</summary>
+        public int authorityAnnounced;
 
         // ---------- Druck von oben ----------
         public float anger;

@@ -41,6 +41,14 @@ Eigene Texturen (Emblem, Direktor, Plantafel, Papier, Checkliste, Icons, Warnstr
 Keine Fremdquellen.
 - 3D-Modelle (Halle, Stationen, Deko, Kuh und Huhn mit Skelett): selbst per Editor-Skript erzeugt (`Assets/_Project/Scripts/Editor/`).
 - Klänge: selbst erzeugt mit `Tools/gen_audio.py` (Nachbau der WebAudio-Synthese des Prototyps), Ablage `Assets/_Project/Audio/Generated/`.
+- Hallen-Durchsagen (`announce_*.wav`): erzeugt mit `Tools/gen_announce.py` aus Sprachausgabe, siehe unten.
+
+## Stimme
+
+| Werk | Quelle | Lizenz | Verwendung |
+|---|---|---|---|
+| Piper (Sprachausgabe), Version 2023.11.14-2 | github.com/rhasspy/piper (Michael Hansen) | MIT | Nur Werkzeug zum Erzeugen der WAVs, nicht im Projekt |
+| Stimme „Thorsten“ (de_DE-thorsten-medium) | huggingface.co/rhasspy/piper-voices; Datensatz Thorsten-Voice (Thorsten Müller) | Datensatz CC0, Modell MIT | Gesprochene Durchsagen, verarbeitet (tiefer, Lautsprecher-Klang, Hall, Gong) |
 
 ## Bibliotheken
 

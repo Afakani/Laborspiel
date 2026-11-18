@@ -24,7 +24,7 @@ namespace PlanErfuellt
         [SerializeField] Transform vein;
 
         [Header("Animation")]
-        [SerializeField] Color flush = new Color(1f, 0.5f, 0.45f);
+        [SerializeField] Color flush = new Color(1f, 0.2f, 0.14f);
         [SerializeField] float browMaxDeg = 18f;
         [SerializeField] float browFriendlyDeg = -6f;
         [SerializeField] float browDrop = 0.06f;
@@ -33,7 +33,9 @@ namespace PlanErfuellt
         [SerializeField] float headSwayDeg = 1.5f, headTalkDeg = 2.5f, headRageDeg = 3f;
         [SerializeField] float sweatFall = 0.35f, sweatPeriod = 1.4f;
         [SerializeField] float veinPulse = 0.18f;
-        [SerializeField] float flushAmount = 0.8f;
+        [SerializeField] float flushAmount = 0.95f;
+        [Tooltip("Verlauf der Rötung über die Wut (1 = gleichmäßig, größer = erst spät richtig rot)")]
+        [SerializeField] float flushCurve = 1.4f;
         [Tooltip("Leuchtkraft der Gesichtsebenen relativ zum Bildschirm (sonst überstrahlt die helle Haut)")]
         [SerializeField] float layerEmission = 0.6f;
 
@@ -156,7 +158,7 @@ namespace PlanErfuellt
             if (rage) vein.localScale = veinScale * (1f + veinPulse * Mathf.Abs(Mathf.Sin(t * 8f)));
 
             // Farbe: Gesicht läuft rot an; alle Ebenen folgen der Bildschirmhelligkeit
-            var face = Color.Lerp(Color.white, flush, cheer ? 0f : a * a * flushAmount);
+            var face = Color.Lerp(Color.white, flush, cheer ? 0f : Mathf.Pow(a, flushCurve) * flushAmount);
             foreach (var r in renderers)
             {
                 bool isSkin = System.Array.IndexOf(skin, r) >= 0;

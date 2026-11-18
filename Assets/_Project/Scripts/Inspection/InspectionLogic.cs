@@ -61,7 +61,7 @@ namespace PlanErfuellt
         /// <summary>Kontrolle beginnen (Kommissar tritt rechts ein).</summary>
         public static Inspection Start(GameState s, GameConfig cfg)
         {
-            s.inspection = new Inspection { x = cfg.inspector.startX, boss = BossDue(s) };
+            s.inspection = new Inspection { x = cfg.inspector.startX, boss = BossDue(s), arriveIn = cfg.inspection.arriveSec };
             s.inspectionAnnounced = false;
             return s.inspection;
         }
@@ -112,6 +112,12 @@ namespace PlanErfuellt
             }
             var ins = s.inspection;
             if (ins == null) return;
+            // Vor der Tür: Rotlicht und Durchsage, erst dann tritt er ein
+            if (ins.arriveIn > 0f)
+            {
+                ins.arriveIn -= dt;
+                return;
+            }
 
             if (ins.pause > 0f) ins.pause -= dt;
             else

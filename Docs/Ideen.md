@@ -9,3 +9,6 @@ Nur gesammelt, **nicht umgesetzt**. Vor einer Umsetzung mit dem Autor abstimmen.
 - Zufallsereignisse pro Schicht: angekündigter Stromausfall, verspätete Lieferung, Delegationsbesuch.
 - Nebenzimmer-Upgrades als Geldsenke für späte Pläne: besseres Bett, Kantinen-Upgrade.
 - Eigene Staats-TV-Sendung je Spielende statt nur Text.
+
+## Zwischensequenzen (Idee vom 18.11.2026)
+- Nahrung, Volk und Umwelt am Ende eines Plans oder Tages als kurze Zwischensequenz zeigen (statt nur auf der Tafel „Lage der Nation“).

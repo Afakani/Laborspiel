@@ -18,7 +18,7 @@ namespace PlanErfuellt
         readonly Dictionary<string, List<AudioClip>> bank = new Dictionary<string, List<AudioClip>>();
         AudioSource[] voices;
         int nextVoice;
-        AudioSource siren, whir;
+        AudioSource siren, whir, announce;
         Chamber chamber;
         float mooTimer, beatTimer, distressTimer;
         int beat;
@@ -48,6 +48,7 @@ namespace PlanErfuellt
             for (int i = 0; i < voices.Length; i++) voices[i] = NewSource("Voice" + i, null, false);
             siren = NewSource("Siren", Clip("siren_loop"), true);
             whir = NewSource("Whir", Clip("whir_loop"), true);
+            announce = NewSource("Announce", null, false);
             chamber = FindAnyObjectByType<Chamber>();
             mooTimer = C.mooEveryMin;
         }
@@ -120,6 +121,18 @@ namespace PlanErfuellt
             s.volume = level;
             if (delay > 0f) s.PlayDelayed(delay);
             else s.Play();
+        }
+
+        /// <summary>Durchsage auf eigener Quelle (wird nicht von Effekten verdrängt). Gibt die Länge in s zurück.</summary>
+        public float PlayAnnounce(string id, float volume)
+        {
+            var clip = Clip(id);
+            if (clip == null || announce == null) return 0f;
+            announce.Stop();
+            announce.clip = clip;
+            announce.volume = Level(false) * volume;
+            announce.Play();
+            return clip.length;
         }
 
         /// <summary>Laut des Tiers in der Kammer: Muhen (tiefer mit A, wobbelig bei B ≥ 2 / Ultimativ) bzw. Gackern.</summary>

@@ -38,6 +38,8 @@ namespace PlanErfuellt.EditorTools
                 case "tv": Tv(v); break;
                 case "angerScale": AngerScale(v); break;
                 case "planBoard": PlanBoard(v); break;
+                case "worldBoard": WorldBoard(v); break;
+                case "serumBoard": SerumBoard(v); break;
                 // Nebenzimmer: Möbel baut LookDevRooms, hier nur die Interaktion
                 case "canteen":
                 case "coat":
@@ -340,6 +342,62 @@ namespace PlanErfuellt.EditorTools
                 values[i].rectTransform.sizeDelta = new Vector2(1.5f, 0.2f);
             }
             v.gameObject.AddComponent<PlanBoardFx>().Setup(values, fills);
+        }
+
+        /// <summary>Tafel „Lage der Nation“ am Laufsteg (D157, statt Spielwerte im HUD): Nahrung, Volk, Umwelt mit Zahl und Balken.</summary>
+        static void WorldBoard(Transform v)
+        {
+            var ink = M.Hex("#2A2119");
+            LookDevKit.Box(v, "Frame", new Vector3(0f, 0f, 0.05f), new Vector3(2.9f, 2.4f, 0.2f), LookDevMaterials.SteelDark);
+            LookDevKit.Plane(v, "Panel", new Vector3(0f, -0.18f, -0.06f), new Vector2(2.7f, 1.85f), LookDevMaterials.CreamPlate);
+            LookDevKit.Box(v, "TitleBar", new Vector3(0f, 0.95f, -0.04f), new Vector3(2.7f, 0.4f, 0.03f), LookDevMaterials.RedPaint);
+            LookDevKit.Label(v, "Title", "ui.signs.worldBoard", new Vector3(0f, 0.95f, -0.06f), 2.4f, M.CreamText);
+            string[] keys = { "ui.signs.worldFood", "ui.signs.worldPop", "ui.signs.worldEnv" };
+            var values = new TMPro.TMP_Text[3];
+            var fills = new Transform[3];
+            for (int i = 0; i < 3; i++)
+            {
+                float y = 0.5f - i * 0.58f;
+                LookDevKit.Label(v, "Label_" + i, keys[i], new Vector3(-0.55f, y, -0.07f), 2.2f, ink);
+                var label = LookDevKit.Label(v, "Value_" + i, keys[i], new Vector3(0.9f, y, -0.07f), 2.2f, ink);
+                values[i] = label.GetComponentInChildren<TMPro.TMP_Text>();
+                Object.DestroyImmediate(label.GetComponent<StationSign>());
+                values[i].text = "–";
+                values[i].rectTransform.sizeDelta = new Vector2(0.8f, 0.3f);
+                LookDevKit.Box(v, "BarBg_" + i, new Vector3(0f, y - 0.24f, -0.075f), new Vector3(2.3f, 0.14f, 0.01f), LookDevMaterials.Rubber);
+                var pivot = BlockoutKit.Group(v, "BarPivot_" + i, new Vector3(-1.13f, y - 0.24f, -0.085f));
+                LookDevKit.Plane(pivot, "Fill", new Vector3(1.13f, 0f, 0f), new Vector2(2.26f, 0.1f), FillMat(), null, false);
+                pivot.localScale = new Vector3(0.001f, 1f, 1f);
+                fills[i] = pivot;
+            }
+            LookDevKit.Bolts(v, new Vector3(-1.38f, 1.13f, -0.055f), new Vector3(1.38f, 1.13f, -0.055f), 2, Vector3.back, LookDevMaterials.Brass, 0.016f);
+            LookDevKit.Bolts(v, new Vector3(-1.38f, -1.13f, -0.055f), new Vector3(1.38f, -1.13f, -0.055f), 2, Vector3.back, LookDevMaterials.Brass, 0.016f);
+            v.gameObject.AddComponent<WorldBoardFx>().Setup(values, fills);
+        }
+
+        /// <summary>Whiteboard im Lager (D157, statt Chips im HUD): Bestand je Serum mit Farbpunkt, Gegenmittel, Regal.</summary>
+        static void SerumBoard(Transform v)
+        {
+            var ink = M.Hex("#1F2A44");
+            LookDevKit.Box(v, "Frame", new Vector3(0f, 0f, 0.02f), new Vector3(2.1f, 1.5f, 0.05f), LookDevMaterials.SteelFrame);
+            LookDevKit.Plane(v, "Board", new Vector3(0f, 0f, -0.01f), new Vector2(2.0f, 1.4f), BlockoutKit.Mat("LD_Whiteboard", M.Hex("#F2F1EC"), 0f, 0.75f));
+            LookDevKit.Label(v, "Title", "ui.signs.serumBoard", new Vector3(0f, 0.52f, -0.02f), 1.7f, M.Hex("#B3261E"));
+            LookDevKit.Box(v, "Tray", new Vector3(0f, -0.74f, -0.05f), new Vector3(1.9f, 0.04f, 0.1f), LookDevMaterials.SteelFrame);
+            var lines = new TMPro.TMP_Text[5];
+            var dots = new Renderer[3];
+            for (int i = 0; i < 5; i++)
+            {
+                float y = 0.26f - i * 0.21f;
+                var label = LookDevKit.Label(v, "Line_" + i, "ui.signs.serumBoard", new Vector3(0.1f, y, -0.02f), 1.25f, ink);
+                lines[i] = label.GetComponentInChildren<TMPro.TMP_Text>();
+                Object.DestroyImmediate(label.GetComponent<StationSign>());
+                lines[i].alignment = TMPro.TextAlignmentOptions.Left;
+                lines[i].rectTransform.sizeDelta = new Vector2(1.5f, 0.2f);
+                lines[i].text = "–";
+                if (i < 3)
+                    dots[i] = BlockoutKit.Sphere(v, "Dot_" + i, new Vector3(-0.78f, y, -0.03f), 0.05f, LookDevMaterials.WhitePaint, false).GetComponent<Renderer>();
+            }
+            v.gameObject.AddComponent<SerumBoardFx>().Setup(lines, dots);
         }
 
         static Material FillMat() => BlockoutKit.Emissive("LD_GaugeFill", M.Hex("#FFFFFF"), 1.2f, false);

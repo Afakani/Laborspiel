@@ -22,5 +22,7 @@ namespace PlanErfuellt
         public float bossAfterUltSec;
         /// <summary>So lange vorher wird der Kommissar angekündigt</summary>
         public float announceSec;
+        /// <summary>Rotlicht und Durchsage: so lange steht er vor der Tür, bevor er eintritt</summary>
+        public float arriveSec;
     }
 }

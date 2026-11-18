@@ -14,6 +14,10 @@ namespace PlanErfuellt
         /// <summary>Warnung „beäugt das Serum-Regal“ schon gezeigt.</summary>
         public bool rackWarned;
 
+        /// <summary>Restzeit vor der Tür (Rotlicht und Durchsage), erst danach tritt er ein.</summary>
+        public float arriveIn;
+
         public bool Drinking => pause > 0f;
+        public bool Arriving => arriveIn > 0f;
     }
 }

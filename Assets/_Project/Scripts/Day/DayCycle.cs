@@ -349,6 +349,7 @@ namespace PlanErfuellt
             else text = t.Format("ui.alerts." + id, ("sec", Mathf.RoundToInt(gm.Config.inspection.announceSec)));
             EventBus.RaiseAlert(text, id == WarningLogic.AngerAnnoyed || id == WarningLogic.InspectionSoon ? ToastKind.Warn : ToastKind.Bad);
             if (AudioService.Instance != null) AudioService.Instance.Play("warn");
+            if (id == WarningLogic.InspectionSoon) EventBus.RaiseAnnounce(AnnounceLogic.Soon);
         }
 
         // ---------- Texte ----------

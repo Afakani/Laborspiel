@@ -24,8 +24,8 @@ namespace PlanErfuellt.EditorTools
         {
             P.Init();
             BuildRageBorder(canvas);
+            BuildAlarmTint(canvas);
             BuildQuota(canvas);
-            BuildWorld(canvas);
             BuildSubtitle(canvas);
             BuildBuildBar(canvas);
             BuildTutorial(canvas);
@@ -59,12 +59,27 @@ namespace PlanErfuellt.EditorTools
             Set(go.AddComponent<RageBorder>(), "border", img);
         }
 
+        /// <summary>Roter Schein beim Rotlicht vor der Kontrolle (D157), wie der Wut-Rahmen als Vignette.</summary>
+        static void BuildAlarmTint(Transform canvas)
+        {
+            var go = new GameObject("AlarmTint", typeof(RectTransform));
+            var rt = (RectTransform)go.transform;
+            rt.SetParent(canvas, false);
+            P.Stretch(rt);
+            var img = go.AddComponent<RawImage>();
+            img.texture = AssetDatabase.LoadAssetAtPath<Texture2D>(LookDevKit.OwnTexDir + "/Vignette.png");
+            img.raycastTarget = false;
+            img.color = new Color(1f, 0.08f, 0.04f, 0f);
+            img.enabled = false;
+            Set(go.AddComponent<AlarmTintUI>(), "tint", img);
+        }
+
         const float QuotaScale = 0.8f;
 
         static void BuildQuota(Transform canvas)
         {
             var holder = Holder(canvas, "Quota");
-            var root = P.Rect(holder, "QuotaPanel", new Vector2(20f, -136f), new Vector2(460f, 286f));
+            var root = P.Rect(holder, "QuotaPanel", new Vector2(20f, -70f), new Vector2(460f, 286f));
             var frame = root.gameObject.AddComponent<Image>();
             frame.color = P.Border;
             var inner = Bg(root);
@@ -98,34 +113,6 @@ namespace PlanErfuellt.EditorTools
             // kompakter: ganzes Planfenster auf 80 % (Drehpunkt oben links bleibt)
             root.localScale = new Vector3(QuotaScale, QuotaScale, 1f);
             root.gameObject.SetActive(false);
-        }
-
-        static void BuildWorld(Transform canvas)
-        {
-            var root = P.Rect(canvas, "WorldPanel", new Vector2(-20f, -70f), new Vector2(300f, 236f));
-            root.gameObject.AddComponent<Image>().color = P.Border;
-            var inner = Bg(root);
-            var title = P.Text(inner, "Title", 18, P.Head, new Vector2(12f, -6f), new Vector2(276f, 26f), TextAlignmentOptions.Left);
-            title.characterSpacing = 4f;
-            var panel = root.gameObject.AddComponent<WorldPanel>();
-            var so = new SerializedObject(panel);
-            so.FindProperty("title").objectReferenceValue = title;
-            string[] names = { "food", "pop", "env", "anger", "authority" };
-            for (int i = 0; i < names.Length; i++)
-            {
-                float y = -36f - i * 39f;
-                var label = P.Text(inner, "Label_" + names[i], 16, P.Cream, new Vector2(12f, y), new Vector2(200f, 22f), TextAlignmentOptions.Left);
-                var value = P.Text(inner, "Value_" + names[i], 16, P.Cream, new Vector2(200f, y), new Vector2(86f, 22f), TextAlignmentOptions.Right, P.mono);
-                var bg = P.Img(inner, "BarBg_" + names[i], new Vector2(12f, y - 24f), new Vector2(274f, 8f), BarBg, null, false);
-                var fill = P.Img(bg.rectTransform, "Fill", Vector2.zero, new Vector2(274f, 8f), Gold, AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd"), false);
-                fill.type = Image.Type.Filled;
-                fill.fillMethod = Image.FillMethod.Horizontal;
-                var bar = so.FindProperty(names[i]);
-                bar.FindPropertyRelative("label").objectReferenceValue = label;
-                bar.FindPropertyRelative("value").objectReferenceValue = value;
-                bar.FindPropertyRelative("fill").objectReferenceValue = fill;
-            }
-            so.ApplyModifiedPropertiesWithoutUndo();
         }
 
         /// <summary>Warnmeldung oben in der Bildmitte: farbiger Rahmen, dunkler Grund, große Schrift.</summary>

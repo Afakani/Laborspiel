@@ -26,6 +26,54 @@ namespace PlanErfuellt.Tests
 
         float MixingX => cfg.layout.Station("mixing").x;
 
+        /// <summary>Kommissar steht schon in der Halle (ohne Wartezeit vor der Tür).</summary>
+        static Inspection Inside(Inspection ins)
+        {
+            ins.arriveIn = 0f;
+            return ins;
+        }
+
+        [Test]
+        public void InspectorWaitsAtTheDoorBeforeEntering()
+        {
+            var s = Day2();
+            var ins = InspectionLogic.Start(s, cfg);
+            Assert.AreEqual(cfg.inspection.arriveSec, ins.arriveIn, 0.001f);
+            Assert.IsTrue(ins.Arriving);
+            float x = ins.x;
+            InspectionLogic.Step(s, cfg, cfg.inspection.arriveSec * 0.5f, Mutated(3, 0, 0), cfg.layout.chamber.x, MixingX, events, out _);
+            Assert.AreEqual(x, ins.x, 0.001f, "steht noch vor der Tür");
+            Assert.AreEqual(0f, ins.suspicion, 0.001f);
+            InspectionLogic.Step(s, cfg, cfg.inspection.arriveSec, default, 0f, MixingX, events, out _);
+            Assert.IsFalse(ins.Arriving);
+            InspectionLogic.Step(s, cfg, 1f, default, 0f, MixingX, events, out _);
+            Assert.Less(ins.x, x, "läuft danach los");
+        }
+
+        [Test]
+        public void AnnouncementsFollowAuthorityWithHysteresis()
+        {
+            var a = cfg.announce;
+            var s = Day2();
+            s.authority = a.watchAt - 1f;
+            Assert.IsNull(AnnounceLogic.Tick(s, cfg));
+            s.authority = a.watchAt;
+            Assert.AreEqual(AnnounceLogic.Watch, AnnounceLogic.Tick(s, cfg));
+            Assert.IsNull(AnnounceLogic.Tick(s, cfg), "nur einmal");
+            s.authority = a.alarmAt;
+            Assert.AreEqual(AnnounceLogic.Alarm, AnnounceLogic.Tick(s, cfg));
+            s.authority = a.alarmAt - a.hysteresis * 0.5f;
+            Assert.IsNull(AnnounceLogic.Tick(s, cfg));
+            s.authority = a.alarmAt;
+            Assert.IsNull(AnnounceLogic.Tick(s, cfg), "kein erneutes Durchsagen bei kleinem Schwanken");
+            s.authority = 0f;
+            AnnounceLogic.Tick(s, cfg);
+            Assert.AreEqual(0, s.authorityAnnounced);
+            s.dayNum = cfg.inspection.fromDay - 1;
+            s.authority = a.watchAt;
+            Assert.IsNull(AnnounceLogic.Tick(s, cfg), "vor dem ersten Kontrolltag still");
+        }
+
         /// <summary>Kontrolle laufen lassen, bis sie bestanden oder ein Skandal ist.</summary>
         InspectionEvent Run(GameState s, ChamberView v, float maxSec = 60f)
         {
@@ -132,7 +180,7 @@ namespace PlanErfuellt.Tests
             var s = Day2();
             s.serums.Add(new Serum(new Dose(3, 2, 0), SerumStage.Ready));
             Assert.IsTrue(InspectionLogic.RackSuspicious(s, cfg), "A+B ≥ 5");
-            InspectionLogic.Start(s, cfg).x = MixingX;
+            Inside(InspectionLogic.Start(s, cfg)).x = MixingX;
             events.Clear();
             InspectionLogic.Step(s, cfg, 1f, default, 0f, MixingX, events, out _);
             CollectionAssert.Contains(events, InspectionEvent.RackWarning);
@@ -141,7 +189,7 @@ namespace PlanErfuellt.Tests
             var s2 = Day2();
             s2.serums.Add(new Serum(new Dose(3, 2, 0), SerumStage.Ready));
             s2.rackHidden = true;
-            InspectionLogic.Start(s2, cfg).x = MixingX;
+            Inside(InspectionLogic.Start(s2, cfg)).x = MixingX;
             InspectionLogic.Step(s2, cfg, 1f, default, 0f, MixingX, events, out _);
             Assert.AreEqual(0f, s2.inspection.suspicion, 0.001f);
 

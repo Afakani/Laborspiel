@@ -71,7 +71,7 @@ namespace PlanErfuellt.Tests
         {
             var L = cfg.layout;
             Assert.AreEqual(3.1f, L.chamber.playerCollisionRadius, 0.0001f);
-            Assert.AreEqual(19, L.stations.Length, "15 Hallen-Stationen (ohne Mikroskop, D153) + Kantine, Kittel, Bett, Schreibtisch");
+            Assert.AreEqual(21, L.stations.Length, "15 Hallen-Stationen (ohne Mikroskop, D153) + 2 Tafeln (D157) + Kantine, Kittel, Bett, Schreibtisch");
             var pult = L.Station("pult");
             Assert.NotNull(pult);
             Assert.AreEqual(new UnityEngine.Vector3(0f, 0f, -6.2f), pult.UnityPosition, "z wird gespiegelt");

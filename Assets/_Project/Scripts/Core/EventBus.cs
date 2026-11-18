@@ -25,6 +25,10 @@ namespace PlanErfuellt
         public static event Action<string> DirectorSpeak;
         /// <summary>Durchsage aus dem Radio (Grammophon), als Untertitel.</summary>
         public static event Action<string> RadioSpeak;
+        /// <summary>Hallen-Durchsage anstoßen (Schlüssel unter announce, D157).</summary>
+        public static event Action<string> Announce;
+        /// <summary>Text der eben gespielten Durchsage, als Untertitel.</summary>
+        public static event Action<string> AnnounceLine;
         public static event Action<bool> PauseChanged;
         public static event Action<float> TimeScaleChanged;
         public static event Action PanelCloseRequested;
@@ -55,6 +59,8 @@ namespace PlanErfuellt
         public static void RaiseToastKey(string path) => ToastKey?.Invoke(path);
         public static void RaiseDirectorSpeak(string text) => DirectorSpeak?.Invoke(text);
         public static void RaiseRadioSpeak(string text) => RadioSpeak?.Invoke(text);
+        public static void RaiseAnnounce(string key) => Announce?.Invoke(key);
+        public static void RaiseAnnounceLine(string text) => AnnounceLine?.Invoke(text);
         public static void RaisePauseChanged(bool paused) => PauseChanged?.Invoke(paused);
         public static void RaiseTimeScaleChanged(float scale) => TimeScaleChanged?.Invoke(scale);
         public static void RaisePanelCloseRequested() => PanelCloseRequested?.Invoke();
@@ -101,6 +107,8 @@ namespace PlanErfuellt
             ToastKey = null;
             DirectorSpeak = null;
             RadioSpeak = null;
+            Announce = null;
+            AnnounceLine = null;
             PauseChanged = null;
             TimeScaleChanged = null;
             PanelCloseRequested = null;

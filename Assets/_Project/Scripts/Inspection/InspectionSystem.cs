@@ -55,6 +55,7 @@ namespace PlanErfuellt
                     if (director != null) director.SayAny("director.inspect");
                     if (shake != null) shake.Add(gm.Config.inspector.startShake);
                     EventBus.RaiseInspectionStarted(boss);
+                    EventBus.RaiseAnnounce(boss ? AnnounceLogic.ArriveBoss : AnnounceLogic.Arrive);
                     break;
                 case InspectionEvent.RackWarning:
                     gm.Toast("ui.toasts.inspectorRack", ToastKind.Bad);
@@ -64,6 +65,7 @@ namespace PlanErfuellt
                     gm.Toast("ui.toasts.inspectionPassed", ToastKind.Good,
                         ("money", gm.Texts.Format("ui.common.money", ("n", Mathf.RoundToInt(prize).ToString("N0", German)))));
                     if (director != null) director.SayAny("director.passed");
+                    EventBus.RaiseAnnounce(AnnounceLogic.Passed);
                     break;
                 case InspectionEvent.Scandal:
                     DayCycle.Instance.GameOver(GameOverKind.Scandal);
