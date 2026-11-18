@@ -41,3 +41,10 @@ Eigene Texturen (Emblem, Direktor, Plantafel, Papier, Checkliste, Icons, Warnstr
 Keine Fremdquellen.
 - 3D-Modelle (Halle, Stationen, Deko, Kuh und Huhn mit Skelett): selbst per Editor-Skript erzeugt (`Assets/_Project/Scripts/Editor/`).
 - Klänge: selbst erzeugt mit `Tools/gen_audio.py` (Nachbau der WebAudio-Synthese des Prototyps), Ablage `Assets/_Project/Audio/Generated/`.
+
+## Bibliotheken
+
+| Bibliothek | Version | Quelle | Lizenz | Ablage |
+|---|---|---|---|---|
+| DOTween (kostenlose Version) | 1.3.045 | dotween.demigiant.com (Daniele Giardini, Demigiant) | DOTween-Lizenz (kostenlos, auch kommerziell; dotween.demigiant.com/license.php) | `Assets/Plugins/Demigiant/DOTween/`, Einstellungen `Assets/Resources/DOTweenSettings.asset` |
+

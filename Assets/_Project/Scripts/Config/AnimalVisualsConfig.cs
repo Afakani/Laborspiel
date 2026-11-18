@@ -59,8 +59,16 @@ namespace PlanErfuellt
         public string funLabelColor;
         public float gasFlashAlpha;
         public float gasIdleAlpha;
-        /// <summary>Weiches Wachsen: Annäherung pro s</summary>
-        public float growSmoothing;
+        /// <summary>Wachsen per Tween mit S-Kurve: Dauer in s</summary>
+        public float growTweenSec;
+        /// <summary>Wabbeln nach dem Wachsen: Stauchen/Strecken (Anteil)</summary>
+        public float wobbleStrength;
+        /// <summary>Dauer des Wabbelns</summary>
+        public float wobbleSec;
+        /// <summary>Schwingungen beim Wabbeln</summary>
+        public int wobbleVibrato;
+        /// <summary>Rückfederung 0..1</summary>
+        public float wobbleElasticity;
         /// <summary>Zusatz-Euter/Wucherungen: Ein-/Ausblenden pro s</summary>
         public float extraGrowSpeed;
         /// <summary>Atmen: Kreisfrequenz</summary>

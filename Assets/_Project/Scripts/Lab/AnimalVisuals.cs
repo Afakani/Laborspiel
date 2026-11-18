@@ -1,9 +1,11 @@
+using DG.Tweening;
 using UnityEngine;
 
 namespace PlanErfuellt
 {
     /// <summary>
-    /// Sichtbare Mutation und Bewegung eines Tiers mit Skelett (GDD 5.5, Prototyp updateSubject): weiches Wachsen mit A,
+    /// Sichtbare Mutation und Bewegung eines Tiers mit Skelett (GDD 5.5, Prototyp updateSubject): Wachsen mit A per
+    /// DOTween mit S-Kurve und anschließendem Wabbeln (Stauchen/Strecken, D155),
     /// Aufblähen (Blendshape) mit A und B ≥ 3, Euter-Knochen wächst mit B, Zusatz-Euter wachsen weich heraus,
     /// Glühen bei Instabilität (rot bei Hitze, golden bei Ω). Dazu Atmen, Umschauen, Ohrenzucken, Schwanzpendeln,
     /// Laufen mit Knie, Beine baumeln beim Schweben, Zittern bei Instabilität, Flügelschlag und Kopfnicken beim Huhn.
@@ -42,7 +44,9 @@ namespace PlanErfuellt
         Vector3[] wingPos, extraPos, extraScale, wearScale;
         float[] extraK;
         int[] inflateIdx, breatheIdx;
-        float infl, udderScale = 1f, glow, grow = -1f;
+        float infl, udderScale = 1f, glow, grow = -1f, growGoal = -1f;
+        // Wabbeln nach dem Wachsen: Abweichung je Achse vom gleichmäßigen Maßstab
+        Vector3 wobble;
 
         public AnimalKind Kind => kind;
         /// <summary>Aktuelles Glühen 0..1 (für das Kammerlicht).</summary>
@@ -108,6 +112,9 @@ namespace PlanErfuellt
             udderScale = 1f;
             glow = 0f;
             grow = -1f;
+            growGoal = -1f;
+            wobble = Vector3.zero;
+            DOTween.Kill(this);
             if (extraK == null) return;
             for (int i = 0; i < extraK.Length; i++)
             {
@@ -128,9 +135,10 @@ namespace PlanErfuellt
             bool unstable = state == AnimalState.Unstable;
             bool lowStab = state == AnimalState.Ok && s.stability < v.lowStabWobbleBelow;
 
-            // Weiches Wachsen (beim neuen Tier sofort)
+            // Wachsen: beim neuen Tier sofort, sonst per Tween mit S-Kurve und Wabbeln am Ende
             float growTarget = 1f + v.growPerA * Mathf.Min(a, v.growCapA) + (koloss ? v.kolossGrowExtra : 0f);
-            grow = grow < 0f ? growTarget : Mathf.Lerp(grow, growTarget, Mathf.Min(1f, dt * v.growSmoothing));
+            if (grow < 0f) grow = growGoal = growTarget;
+            else if (!Mathf.Approximately(growTarget, growGoal)) StartGrow(growTarget, v);
 
             // Aufblähen und Atmen über Blendshapes; anhängende Teile rücken mit nach außen
             float inflTarget = (b >= 3 && !s.IsUltimate ? v.inflPerBOver2 * Mathf.Min(b - 2, v.inflBCap) : 0f) + v.inflPerA * Mathf.Min(a, v.growCapA);
@@ -181,7 +189,7 @@ namespace PlanErfuellt
 
             // Größe mit Auftauchen (pop) und Basismaßstab je Tierart
             float baseScale = kind == AnimalKind.Cow ? 1f : v.henScale;
-            transform.localScale = Vector3.one * (baseScale * grow * (0.2f + 0.8f * Ease(pop)));
+            transform.localScale = Vector3.Scale(Vector3.one * (baseScale * grow * (0.2f + 0.8f * Ease(pop))), Vector3.one + wobble);
 
             // Schweben: Wiegen; instabil: Wackeln; kritisch: leichtes Wackeln
             float fk = Mathf.Min(1f, s.floatHeight);
@@ -260,6 +268,22 @@ namespace PlanErfuellt
                 r.SetPropertyBlock(mpb);
             }
         }
+
+        /// <summary>Größe per Tween (InOutSine = S-Kurve) zum neuen Ziel, danach Wabbeln: höher und schmaler im Wechsel.</summary>
+        void StartGrow(float target, AnimalVisualsConfig v)
+        {
+            growGoal = target;
+            DOTween.Kill(this);
+            wobble = Vector3.zero;
+            DOTween.To(() => grow, x => grow = x, target, v.growTweenSec)
+                .SetEase(DG.Tweening.Ease.InOutSine)
+                .SetTarget(this)
+                .OnComplete(() => DOTween.Punch(() => wobble, x => wobble = x, new Vector3(-0.5f, 1f, -0.5f) * v.wobbleStrength,
+                        v.wobbleSec, v.wobbleVibrato, v.wobbleElasticity)
+                    .SetTarget(this));
+        }
+
+        void OnDestroy() => DOTween.Kill(this);
 
         static float Ease(float k) => k < 0.5f ? 4f * k * k * k : 1f - Mathf.Pow(-2f * k + 2f, 3f) / 2f;
 
