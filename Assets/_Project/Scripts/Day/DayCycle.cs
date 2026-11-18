@@ -187,6 +187,13 @@ namespace PlanErfuellt
                 foreach (var (key, name) in DayLogic.Unlocks(s.planIdx, gm.Config))
                     gm.Toast(key, ToastKind.Good, ("name", name));
             }
+            if (r.siberia)
+            {
+                // Zwischensequenz am Rolltor, danach GameOver(Siberia) durch SiberiaCinematic
+                SetMode(DayMode.Arrest);
+                EventBus.RaiseArrest();
+                return;
+            }
             if (r.fired)
             {
                 GameOver(GameOverKind.Fired);

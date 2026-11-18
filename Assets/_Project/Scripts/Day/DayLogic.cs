@@ -20,6 +20,8 @@ namespace PlanErfuellt
             public bool final;
             /// <summary>Wut am Maximum → entlassen.</summary>
             public bool fired;
+            /// <summary>Zu viele verfehlte Pläne in Folge → Sibirien (geht vor der Entlassung).</summary>
+            public bool siberia;
             public int planBefore;
         }
 
@@ -76,14 +78,20 @@ namespace PlanErfuellt
                 s.inspectionDoneAt = s.playTime;
                 s.nextInspectionAt = s.playTime + cfg.inspection.firstAfterDay2StartSec;
             }
-            if (r.met) s.planIdx++;
+            if (r.met)
+            {
+                s.planIdx++;
+                s.failStreak = 0;
+            }
             else
             {
                 s.AddAnger(cfg.anger.planFailed, cfg);
                 s.quotasFailed++;
+                s.failStreak++;
             }
             r.final = s.planIdx >= cfg.day.plans;
-            r.fired = s.anger >= cfg.anger.max;
+            r.siberia = !r.met && s.failStreak >= cfg.endings.siberiaFailStreak;
+            r.fired = !r.siberia && s.anger >= cfg.anger.max;
             return r;
         }
 

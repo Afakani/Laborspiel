@@ -38,6 +38,7 @@ namespace PlanErfuellt
         {
             if (kind == GameOverKind.Fired) return "fired";
             if (kind == GameOverKind.Scandal) return "scandal";
+            if (kind == GameOverKind.Siberia) return "siberia";
             var v = Compute(s, cfg);
             var e = cfg.endings;
             if (v.pop >= e.heroMinPop && s.quotasFailed <= e.heroMaxFailedDays) return "hero_alive";

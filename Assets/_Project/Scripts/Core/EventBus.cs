@@ -41,6 +41,8 @@ namespace PlanErfuellt
         public static event Action<bool> InfectionChanged;
         public static event Action<char> Overfulfilled;
         public static event Action<GameOverKind> GameOver;
+        /// <summary>Spielende Sibirien beginnt (Zwischensequenz am Rolltor).</summary>
+        public static event Action Arrest;
         public static event Action<MachineEvent> Machine;
         public static event Action<UltimateSerum, bool> UltimateSprayed;
         public static event Action<string> Station;
@@ -82,6 +84,7 @@ namespace PlanErfuellt
         public static void RaiseOverfulfilled(char good) => Overfulfilled?.Invoke(good);
         /// <summary>Spielende (Endbildschirm).</summary>
         public static void RaiseGameOver(GameOverKind kind) => GameOver?.Invoke(kind);
+        public static void RaiseArrest() => Arrest?.Invoke();
         /// <summary>Zentrifuge oder Kryokammer meldet etwas (Überdrehzahl, fertig, Eisblock …).</summary>
         public static void RaiseMachine(MachineEvent e) => Machine?.Invoke(e);
         /// <summary>Ultimatives Serum wurde aufs Tier gesprüht (first = erstes Mal im Spiel, GDD 10).</summary>
@@ -124,6 +127,7 @@ namespace PlanErfuellt
             InfectionChanged = null;
             Overfulfilled = null;
             GameOver = null;
+            Arrest = null;
         }
     }
 }

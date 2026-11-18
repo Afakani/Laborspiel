@@ -267,7 +267,21 @@ CLASSES = [
         F("int", "windowedWidth", "Fenstermodus: Breite"), F("int", "windowedHeight", "Fenstermodus: Höhe"),
         F("RebindConfig[]", "rebind", "Belegbare Tasten in Anzeige-Reihenfolge")]),
     ("EndingsConfig", "Schwellen für die Spielenden (GDD 13).", [
-        F("float", "heroMinPop"), F("int", "heroMaxFailedDays"), F("float", "deadBelowPop")]),
+        F("float", "heroMinPop"), F("int", "heroMaxFailedDays"), F("float", "deadBelowPop"),
+        F("int", "siberiaFailStreak", "So viele verfehlte Pläne in Folge: ab nach Sibirien (D162)")]),
+    ("SiberiaConfig", "Zwischensequenz Sibirien (D162): Rolltor, zwei Stasi-Männer, Kamera, Ablauf in s.", [
+        F("float", "gateX", "Tor in der Vorderwand (Proto-x)"), F("float", "gateZ", "Wand (Proto-z)"),
+        F("float", "gateWidth"), F("float", "gateHeight"),
+        F("float", "camX", "Kamera (Proto)"), F("float", "camZ"), F("float", "camHeight"), F("float", "camLookHeight"),
+        F("float", "camFov"), F("float", "dolly", "Kamerafahrt nach vorn in m"),
+        F("float", "fadeInSec"), F("float", "directorSec", "Direktor verleugnet den Spieler"),
+        F("float", "openStartSec", "Tor geht hoch ab"), F("float", "openSec"),
+        F("float", "walkStartSec", "Stasi-Männer gehen los ab"), F("float", "walkSec"), F("float", "walkDist", "Weg nach vorn in m"),
+        F("float", "line1Sec"), F("float", "line2Sec"), F("float", "fadeOutStartSec"), F("float", "endSec"),
+        F("float", "stasiScale", "Größe der Stasi-Männer"), F("float", "stasiSpacing", "Abstand zwischen beiden in m"),
+        F("float", "stepFreq", "Schritte pro s"), F("float", "legSwingDeg"),
+        F("string", "lightColor", "Gegenlicht im Tor (Hex)"), F("float", "lightIntensity"), F("float", "letterbox", "Kinobalken je Anteil der Bildhöhe"),
+        F("float", "voiceVolume")]),
     ("ComboNameEntry", "Fester Name einer Kombination, z. B. 1-1-1 = Planformel.", [
         F("string", "key", "Dosis als A-B-C"), F("string", "displayName", "Name")]),
     ("RoomLayout", "Raummaße in Prototyp-Koordinaten (GDD 3).", [

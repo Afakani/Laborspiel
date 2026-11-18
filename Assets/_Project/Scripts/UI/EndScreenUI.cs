@@ -21,6 +21,8 @@ namespace PlanErfuellt
         [SerializeField] TMP_Text statValues;
         [SerializeField] Button again;
         [SerializeField] TMP_Text againLabel;
+        [SerializeField] GameObject sloganBar;
+        [SerializeField] TMP_Text slogan;
         [SerializeField] float lineHeightFactor = 1.45f;
 
         bool shown;
@@ -50,6 +52,10 @@ namespace PlanErfuellt
             string key = WorldValues.EndingKey(kind, s, cfg);
             title.text = t.Get($"endings.{key}.title");
             text.text = t.Get($"endings.{key}.text");
+            // Endungen mit Parolen (Sibirien): eine zufällige als Plakatstreifen unter der Statistik
+            bool hasSlogan = t.Count($"endings.{key}.slogans") > 0;
+            sloganBar.SetActive(hasSlogan);
+            if (hasSlogan) slogan.text = t.Pick($"endings.{key}.slogans");
             var w = WorldValues.Compute(s, cfg);
             var l = new StringBuilder();
             var v = new StringBuilder();

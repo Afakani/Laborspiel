@@ -5,6 +5,8 @@ namespace PlanErfuellt
     {
         Final,
         Fired,
-        Scandal
+        Scandal,
+        /// <summary>Zu viele verfehlte Pläne in Folge: ab nach Sibirien (D162).</summary>
+        Siberia
     }
 }

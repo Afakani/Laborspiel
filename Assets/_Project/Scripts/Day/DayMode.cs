@@ -9,6 +9,8 @@ namespace PlanErfuellt
         DayOver,
         /// <summary>Sondersendung im Staats-TV (Spielzeit steht).</summary>
         News,
+        /// <summary>Spielende Sibirien: Zwischensequenz am Rolltor (Spielzeit steht).</summary>
+        Arrest,
         GameOver
     }
 }

@@ -158,6 +158,7 @@ namespace PlanErfuellt.EditorTools
             new GameObject("DayCycle", typeof(Director), typeof(DayCycle), typeof(InspectionSystem), typeof(Announcer)).transform.SetParent(systems, false);
             BuildHallAlarm(systems, cfg);
             BuildEggPile(systems, cfg);
+            SiberiaBuilder.Build(systems, cfg);
             var oldInspector = systems.Find("Inspector");
             if (oldInspector != null) Object.DestroyImmediate(oldInspector.gameObject);
             LookDevInspector.Build(systems);

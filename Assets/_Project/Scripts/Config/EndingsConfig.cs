@@ -9,5 +9,7 @@ namespace PlanErfuellt
         public float heroMinPop;
         public int heroMaxFailedDays;
         public float deadBelowPop;
+        /// <summary>So viele verfehlte Pläne in Folge: ab nach Sibirien (D162)</summary>
+        public int siberiaFailStreak;
     }
 }

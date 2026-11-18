@@ -326,6 +326,18 @@
     "scandal": {
       "title": "Skandal in der Säule",
       "text": "Der Kommissar hat ein mutiertes Tier gefunden. Offiziell existieren weder sie noch du. Viel Glück dabei."
+    },
+    "siberia": {
+      "title": "Ab nach Sibirien",
+      "text": "Drei Pläne in Folge verfehlt. Die Partei hat eine neue Aufgabe für Sie gefunden: Kohleförderung in Sibirien, Schicht 1 bis Lebensende. Unterkunft, Verpflegung und Kälte sind kostenlos. Die Mine erfüllt ihren Plan – mit oder ohne Sie.",
+      "slogans": [
+        "SIBIRIEN – Hier ist die Luft so frisch, dass sie wehtut.",
+        "Minus 50 Grad, plus 100 % Planerfüllung!",
+        "Jede Tonne Kohle ein Gruß an die Heimat.",
+        "Die Mine ruft. Sie ruft sehr laut. Und sehr oft.",
+        "Wer nicht friert, hat nicht genug gearbeitet.",
+        "Einfache Fahrt. Rückfahrkarten sind nicht vorgesehen."
+      ]
     }
   },
   "ui": {
@@ -395,7 +407,8 @@
       "moneyPlus": "+{n} SM",
       "moneyMinus": "−{n} SM",
       "radioSpeaker": "RADIO: ",
-      "announceSpeaker": "DURCHSAGE: "
+      "announceSpeaker": "DURCHSAGE: ",
+      "stasiSpeaker": "STASI: "
     },
     "quota": {
       "title": "PLAN {n}/{max}",
@@ -939,7 +952,10 @@
       "serumBoard": "BESTAND",
       "serumLine": "{name}  ×{n}",
       "serumAntidote": "Gegenmittel  ×{n}",
-      "serumRack": "Seren im Regal  {n}/{max}"
+      "serumRack": "Seren im Regal  {n}/{max}",
+      "gate": "TOR 3",
+      "siberiaSign": "SIBIRIEN-EXPRESS",
+      "siberiaSign2": "EINFACHE FAHRT"
     },
     "names": {
       "pult": "Pult",
@@ -1090,5 +1106,13 @@
     "arrive": "Achtung, Achtung! Der Kommissar der Partei betritt die Halle. Alle Genossen an ihre Plätze!",
     "arriveBoss": "Achtung, Achtung! Der Oberkommissar betritt die Halle. Haltung annehmen und lächeln!",
     "passed": "Die Kontrolle ist beendet. Die Partei dankt für Ihre Mitarbeit. Weiterarbeiten!"
+  },
+  "siberia": {
+    "_info": "Zwischensequenz beim Spielende Sibirien (D162). lines werden mit Tools/gen_announce.py gesprochen (Datei siberia_<n>.wav).",
+    "director": "Ich kenne diesen Mann nicht! Er war nie hier!",
+    "lines": [
+      "Genosse, drei Pläne verfehlt. Sie kommen mit.",
+      "Packen Sie warm ein. Oder auch nicht. Sie werden es nicht brauchen."
+    ]
   }
 }

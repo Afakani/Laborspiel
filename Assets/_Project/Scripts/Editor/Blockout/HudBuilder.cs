@@ -34,6 +34,8 @@ namespace PlanErfuellt.EditorTools
             // Bildformat (Laptop 16:10, 4:3, 21:9): Skalierung nach Breite oder Höhe
             root.AddComponent<CanvasAspectFit>();
             root.AddComponent<GraphicRaycaster>();
+            // Ausblenden während der Sibirien-Zwischensequenz (D162)
+            root.AddComponent<CanvasGroup>();
 
             // Infektion: grüner Schleier hinter allem, Anzeige oben links (Phase 5)
             var veil = Img("InfectionVeil", root.transform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero, new Color(0.27f, 1f, 0.35f, 0f));

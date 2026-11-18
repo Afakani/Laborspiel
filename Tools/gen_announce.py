@@ -1,4 +1,5 @@
-# Erzeugt die Hallen-Durchsagen der Partei als WAV: Gong (Ding-Dong) und gesprochener Text aus Texte_de.json "announce".
+# Erzeugt die Hallen-Durchsagen der Partei als WAV: Gong (Ding-Dong) und gesprochener Text aus Texte_de.json "announce",
+# dazu die Stasi-Sätze aus "siberia.lines" (tiefer, mit leichtem Nachhall).
 # Stimme: Piper (MIT) mit der deutschen Stimme "Thorsten" (Datensatz CC0), danach tiefer und wie ein alter
 # Hallen-Lautsprecher (Bandpass, leichte Verzerrung, Echo). Piper liegt nicht im Projekt.
 # Aufruf: python Tools/gen_announce.py <piper.exe> <de_DE-thorsten-medium.onnx> <Zielordner>
@@ -75,8 +76,23 @@ def save(path, x):
         w.writeframes((x * 32767).astype(np.int16).tobytes())
 
 
-texts = json.load(io.open(TEXTS, encoding='utf-8'))['announce']
+def room(x):
+    """Stimme im Raum (Stasi am Tor): nur leichter Nachhall, kein Lautsprecher."""
+    x = bandpass(x, 90.0, 7000.0)
+    y = np.concatenate([x, np.zeros(int(SR * 0.6))])
+    for delay, gain in ((0.07, 0.18), (0.16, 0.1), (0.29, 0.05)):
+        d = int(SR * delay)
+        y[d:d + len(x)] += x * gain
+    return y
+
+
+all_texts = json.load(io.open(TEXTS, encoding='utf-8'))
+texts = all_texts['announce']
 os.makedirs(OUT, exist_ok=True)
+# Stasi-Sätze der Sibirien-Zwischensequenz (D162): tiefer, ohne Gong
+for i, line in enumerate(all_texts['siberia']['lines']):
+    save(os.path.join(OUT, 'stasi_line' + str(i) + '.wav'), room(deepen(speak(line), 0.8)))
+    print('stasi', i)
 for key, line in texts.items():
     if key.startswith('_'):
         continue

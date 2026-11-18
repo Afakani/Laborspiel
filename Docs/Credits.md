@@ -48,7 +48,7 @@ Keine Fremdquellen.
 | Werk | Quelle | Lizenz | Verwendung |
 |---|---|---|---|
 | Piper (Sprachausgabe), Version 2023.11.14-2 | github.com/rhasspy/piper (Michael Hansen) | MIT | Nur Werkzeug zum Erzeugen der WAVs, nicht im Projekt |
-| Stimme „Thorsten“ (de_DE-thorsten-medium) | huggingface.co/rhasspy/piper-voices; Datensatz Thorsten-Voice (Thorsten Müller) | Datensatz CC0, Modell MIT | Gesprochene Durchsagen, verarbeitet (tiefer, Lautsprecher-Klang, Hall, Gong) |
+| Stimme „Thorsten“ (de_DE-thorsten-medium) | huggingface.co/rhasspy/piper-voices; Datensatz Thorsten-Voice (Thorsten Müller) | Datensatz CC0, Modell MIT | Gesprochene Durchsagen und Stasi-Sätze, verarbeitet (tiefer, Lautsprecher-Klang bzw. Nachhall, Gong) |
 
 ## Bibliotheken
 

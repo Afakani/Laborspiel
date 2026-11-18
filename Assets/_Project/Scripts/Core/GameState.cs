@@ -85,6 +85,8 @@ namespace PlanErfuellt
         /// <summary>Erfüllte und verfehlte Tage.</summary>
         public int quotasMet;
         public int quotasFailed;
+        /// <summary>Verfehlte Pläne in Folge (Sibirien, D162).</summary>
+        public int failStreak;
         /// <summary>Schritt der Einführung an Tag 1 (−1 = keine Einführung mehr).</summary>
         public int tutorialStep;
         /// <summary>Zeit im aktuellen Einführungsschritt (für Lese-Schritte).</summary>

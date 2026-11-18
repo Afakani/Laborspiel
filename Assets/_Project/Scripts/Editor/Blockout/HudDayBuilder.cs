@@ -564,6 +564,12 @@ namespace PlanErfuellt.EditorTools
             var values = P.Text(frame, "StatValues", 22, P.Cream, new Vector2(620f, -260f), new Vector2(460f, 420f), TextAlignmentOptions.TopLeft, P.mono);
             labels.lineSpacing = values.lineSpacing = 12f;
             var again = P.MakeButton(frame, "Again", new Vector2(410f, -760f), new Vector2(380f, 68f), ConfirmBg, ConfirmBorder, 26, false);
+            // Parole wie ein Plakatstreifen (Sibirien, D162), sonst ausgeblendet
+            var sloganBar = P.Img(frame, "SloganBar", new Vector2(120f, -630f), new Vector2(960f, 80f), new Color(0.72f, 0.1f, 0.08f), null, false);
+            var slogan = P.Text(sloganBar.rectTransform, "Slogan", 28, P.Cream, new Vector2(20f, -8f), new Vector2(920f, 64f), TextAlignmentOptions.Center);
+            slogan.textWrappingMode = TMPro.TextWrappingModes.Normal;
+            slogan.fontStyle = FontStyles.Italic;
+            sloganBar.gameObject.SetActive(false);
             var ui = holder.gameObject.AddComponent<EndScreenUI>();
             var so = new SerializedObject(ui);
             so.FindProperty("root").objectReferenceValue = root;
@@ -572,6 +578,8 @@ namespace PlanErfuellt.EditorTools
             so.FindProperty("statLabels").objectReferenceValue = labels;
             so.FindProperty("statValues").objectReferenceValue = values;
             so.FindProperty("again").objectReferenceValue = again;
+            so.FindProperty("sloganBar").objectReferenceValue = sloganBar.gameObject;
+            so.FindProperty("slogan").objectReferenceValue = slogan;
             so.FindProperty("againLabel").objectReferenceValue = again.GetComponentInChildren<TMP_Text>();
             so.ApplyModifiedPropertiesWithoutUndo();
         }

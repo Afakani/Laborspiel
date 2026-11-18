@@ -84,6 +84,33 @@ namespace PlanErfuellt.Tests
         }
 
         [Test]
+        public void FailStreakSendsToSiberiaAndMetResetsIt()
+        {
+            int n = cfg.endings.siberiaFailStreak;
+            var s = Started();
+            for (int i = 1; i < n; i++)
+            {
+                var r = DayLogic.EndDay(s, cfg, false);
+                Assert.IsFalse(r.siberia, $"nach {i} Fehltagen noch nicht");
+                Assert.AreEqual(i, s.failStreak);
+                s.anger = 0f;
+                DayLogic.StartDay(s, cfg, () => 0f);
+            }
+            // erfüllter Plan setzt die Serie zurück
+            s.quota.met = true;
+            Assert.IsTrue(DayLogic.EndDay(s, cfg, false).met);
+            Assert.AreEqual(0, s.failStreak);
+            for (int i = 1; i <= n; i++)
+            {
+                DayLogic.StartDay(s, cfg, () => 0f);
+                s.anger = cfg.anger.max;
+                var r = DayLogic.EndDay(s, cfg, false);
+                Assert.AreEqual(i == n, r.siberia);
+                Assert.IsFalse(r.siberia && r.fired, "Sibirien geht vor der Entlassung");
+            }
+        }
+
+        [Test]
         public void CollapseCountsAsFailedEvenIfMet()
         {
             var s = Started();
