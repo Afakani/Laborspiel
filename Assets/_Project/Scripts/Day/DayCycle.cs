@@ -22,7 +22,7 @@ namespace PlanErfuellt
         FirstPersonController player;
         InteractionSystem interaction;
         readonly List<DayEvent> events = new List<DayEvent>();
-        float idleTimer, dayOverTimer, contractTimer, newsTime;
+        float idleTimer, dayOverTimer, newsTime;
         bool finalAfterDay, newsAfterDay;
 
         public DayMode Mode { get; private set; }
@@ -145,7 +145,6 @@ namespace PlanErfuellt
             DayLogic.StartDay(s, gm.Config, () => Random.value);
             InspectionLogic.OnDayStart(s, gm.Config);
             idleTimer = 0f;
-            contractTimer = gm.Config.ui.contractAnnounceDelaySec;
             director.ResetTimer(s.dayNum == 1);
             SetMode(DayMode.Play);
 
@@ -163,7 +162,7 @@ namespace PlanErfuellt
         {
             var gm = GM;
             var s = gm.State;
-            // Tagesrekorde und Lob für den Sonderauftrag (Prototyp endDay)
+            // Tagesrekorde (Prototyp endDay)
             var q = s.quota;
             if (q != null)
             {
@@ -171,8 +170,6 @@ namespace PlanErfuellt
                 Records.Report(RecordLogic.DayEggs, q.prod.e);
                 Records.Report(RecordLogic.DayMeat, q.prod.f);
             }
-            if (s.contract != null && s.contract.got > 0f)
-                s.newsFacts.Add(gm.Texts.Format("newsFacts.contract", ("who", s.contract.data.who), ("what", s.contract.data.what)));
             bool collapse = infection != null && infection.CheckCollapse();
             var r = DayLogic.EndDay(s, gm.Config, collapse);
             s.lastDayResult = r.met ? 1 : -1;
@@ -273,8 +270,6 @@ namespace PlanErfuellt
 
             events.Clear();
             DayLogic.Tick(s, cfg, dt, events);
-            bool crisis = chamber != null && (chamber.InCrisis || chamber.State == AnimalState.Unstable);
-            DayLogic.TickWish(s, cfg, dt, crisis, () => Random.value, events);
             if (chamber != null)
                 TutorialLogic.Tick(s, cfg, new TutorialLogic.Context
                 {
@@ -291,16 +286,6 @@ namespace PlanErfuellt
 
             bool busy = gm.PanelOpen || (player != null && player.IsMoving) || (interaction != null && interaction.IsHoldingActive);
             if (DayLogic.TickIdle(ref idleTimer, busy, s, cfg, dt)) director.SayTier("director.idle");
-
-            if (s.contract != null && contractTimer > 0f)
-            {
-                contractTimer -= dt;
-                if (contractTimer <= 0f)
-                {
-                    var c = s.contract.data;
-                    gm.Toast("ui.toasts.contractAnnounce", ToastKind.Good, ("who", c.who), ("what", c.what), ("q", c.minQ));
-                }
-            }
 
             foreach (var e in events)
             {
@@ -326,20 +311,6 @@ namespace PlanErfuellt
                     break;
                 case DayEvent.TimeUp:
                     EndDay();
-                    break;
-                case DayEvent.WishNew:
-                    var w = s.wish;
-                    string text = WishText(w);
-                    director.Say(gm.Texts.Format("director.wishes.announce", ("wish", text), ("sec", Mathf.RoundToInt(w.left))));
-                    gm.Toast("ui.toasts.wishAnnounce", ToastKind.Warn, ("text", text));
-                    break;
-                case DayEvent.WishDone:
-                    director.Say(gm.Texts.Get("director.wishes.done"));
-                    gm.Toast("ui.toasts.wishDone", ToastKind.Good, ("money", Money(DayLogic.WishReward(s, gm.Config))));
-                    break;
-                case DayEvent.WishFailed:
-                    director.Say(gm.Texts.Get("director.wishes.failed"));
-                    gm.Toast("ui.toasts.wishFailed", ToastKind.Bad);
                     break;
                 case DayEvent.TutorialStep:
                     // Schritt geschafft: heller Klingelton, der Kasten blinkt (TutorialUI)
@@ -387,9 +358,6 @@ namespace PlanErfuellt
 
         public string GoodName(char good) =>
             GM.Texts.Get(good == 'm' ? "ui.common.goodMilk" : good == 'e' ? "ui.common.goodEggs" : "ui.common.goodMeat");
-
-        public string WishText(Wish w) =>
-            GM.Texts.Format("director.wishes." + w.Id, ("n", Mathf.RoundToInt(w.need)));
 
         string Money(float v) => GM.Texts.Format("ui.common.money", ("n", Mathf.RoundToInt(v).ToString("N0", German)));
     }

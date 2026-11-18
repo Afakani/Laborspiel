@@ -11,8 +11,6 @@ CLASSES = [
         F("float", "m", "Milch"), F("float", "e", "Eier"), F("float", "f", "Fleisch")]),
     ("SubstanceAmounts", "Menge je Grundstoff A/B/C.", [
         F("int", "A", "Wachstum A-17"), F("int", "B", "Laktation B-08"), F("int", "C", "Stabilität C-04")]),
-    ("LinearValue", "Wert, der mit dem Plan-Index wächst: base + perPlan * planIdx.", [
-        F("float", "base", "Grundwert"), F("float", "perPlan", "Zuwachs pro Plan-Index")]),
     ("DayConfig", "Tagesablauf, Quoten und Bezahlung (GDD 7.1).", [
         F("int", "plans", "Anzahl Pläne bis Spielende"),
         F("float", "dayLengthSec", "Schichtlänge in Sekunden"),
@@ -82,7 +80,6 @@ CLASSES = [
         F("float", "ratePerBHen", "Eier: Wirkung von B beim Huhn (statt rate.perB)"),
         F("float", "statMax", "Obergrenze für Stabilität und Qualität"),
         F("float", "frozenStabBonus", "+Stabilität pro tiefgekühltem Serum"),
-        F("float", "musicStabBonus", "+Stabilität während Musik"),
         F("float", "stampQualityBonus", "+Qualität durch Siegel"),
         F("AcidConfig", "acid")]),
     ("ComboConfig", "Schwellen für Kombinationsnamen und Vor-/Nachteile (GDD 4.4).", [
@@ -102,7 +99,6 @@ CLASSES = [
         F("float", "cableTearBelowStab"), F("float", "cableTearChancePerSec"),
         F("float", "blackoutSec"), F("float", "blackoutProductionFactor"),
         F("float", "blackoutLightFactor", "Helligkeit während des Stromausfalls (0.2 = 20 %)"),
-        F("float", "heatMusicDecay", "Zusätzliches Abkühlen pro s während Musik"),
         F("float", "unstableCountdownSec"),
         F("float", "infectionDistance"), F("float", "infectionChance"), F("int", "infectionFromDay"), F("int", "infectionDays")]),
     ("WarningsConfig", "Warnzeichen vor Krisen (GDD 5.3).", [
@@ -113,7 +109,6 @@ CLASSES = [
     ("AngerConfig", "Direktor-Wut (GDD 7.2).", [
         F("float", "max"), F("float", "idleAfterSec"), F("float", "idlePerSec"), F("float", "explode"), F("float", "collapse"),
         F("float", "planFailed"), F("float", "planMet"), F("float", "inspectionPassed"), F("float", "caviar"),
-        F("float", "wishDone"), F("float", "wishFailed"),
         F("float[]", "tiers", "Grenzen der Wut-Stufen"),
         F("float[]", "shoutIntervalSec", "Abstand zufälliger Rufe [min, max]"),
         F("float", "shoutJitterSec", "Zufälliger Zuschlag auf den Rufabstand"),
@@ -121,8 +116,7 @@ CLASSES = [
         F("float", "startShoutDelaySec", "Erster zufälliger Ruf nach Spielstart")]),
     ("AuthorityConfig", "Parteikontrolle (GDD 9).", [
         F("float", "max"), F("float", "base"), F("float", "lowStab"), F("float", "floating"), F("float", "glowFactor"),
-        F("float", "omega"), F("float", "koloss"), F("float", "clothFactor"), F("float", "musicFactor"),
-        F("float", "singingCow"), F("float", "contaminated"), F("float", "decay"), F("float", "explodeAdd"), F("float", "afterInspection"),
+        F("float", "omega"), F("float", "koloss"), F("float", "clothFactor"), F("float", "singingCow"), F("float", "contaminated"), F("float", "decay"), F("float", "explodeAdd"), F("float", "afterInspection"),
         F("float", "floatingFrom", "Schwebehöhe, ab der „schwebend“ zählt")]),
     ("SuspicionConfig", "Verdacht pro Sekunde während der Kontrolle (GDD 9).", [
         F("float", "uncovered"), F("float", "uncoveredKoloss"), F("float", "coveredBase"), F("float", "coveredPerDose"),
@@ -130,7 +124,7 @@ CLASSES = [
         F("float", "contaminated"), F("float", "rack"), F("float", "rackRange"), F("int", "rackSuspiciousAB"),
         F("float", "ultLevel", "Mutationsgrad eines Ultimativs (Laken-Verdacht und Wackeln)")]),
     ("InspectionMultConfig", "Multiplikatoren für den Verdacht.", [
-        F("float", "boss"), F("float", "music"), F("float", "singingCow")]),
+        F("float", "boss"), F("float", "singingCow")]),
     ("VodkaConfig", "Wirkung von Wodka am Kommissar.", [
         F("float", "pauseSec"), F("float", "suspReduce")]),
     ("InspectionConfig", "Kontrolle durch den Kommissar (GDD 9).", [
@@ -153,7 +147,7 @@ CLASSES = [
         F("float", "iceBlockShowSec", "Eisblock im Fenster sichtbar"),
         F("float", "recordRadPerSec", "Grammophon-Platte"), F("float", "crankRadPerSec"), F("float", "notesPerSec", "Noten am Grammophon"),
         F("float", "singNotesPerSec", "Noten über der Singenden Kuh"), F("float", "milkDropsPerRate", "Milchtropfen beim Milchhuhn"),
-        F("float", "stampSec", "Stempelbewegung des Verkostungsautomaten"), F("float", "probeGlowPulse")]),
+        F("float", "stampSec", "Stempelbewegung des Verkostungsautomaten")]),
     ("CinematicConfig", "Ultimativ-Höhepunkt (GDD 10, Prototyp ultCinematic).", [
         F("float", "durationSec", "Licht gedimmt, Tier leuchtet"), F("float", "lightFactor", "Bildhelligkeit während der Sequenz"),
         F("float", "directorLineDelaySec", "„… … …“, dann der Spruch"), F("float", "animalGlowBoost", "Tier leuchtet heller, damit es im Dunkeln strahlt"),
@@ -176,17 +170,12 @@ CLASSES = [
         F("int", "unlockPlanIdx"), F("float", "cost"), F("float", "qualityBonus"),
         F("float", "hiFrom", "Qualität ab der ein Lob kommt"), F("float", "midFrom", "Qualität für den mittleren Spruch")]),
     ("GramophoneConfig", "Grammophon (GDD 6.5).", [
-        F("float", "crankSec"), F("float", "musicSec"), F("float", "heatExtraDecay"), F("float", "directorCommentChance")]),
+        F("float", "crankSec"), F("float", "musicSec"), F("float", "directorCommentChance"),
+        F("float", "lineEverySec", "Abstand der Propaganda-Durchsagen")]),
     ("RohrpostConfig", "Rohrpost (GDD 6.7).", [F("float", "angerReduce"), F("float", "capsuleSec", "Flugzeit der Kapsel im Rohr")]),
-    ("MicroscopeConfig", "Probenmikroskop (GDD 6.2).", [
-        F("float", "cost"), F("float", "analyseSec"),
-        F("float[]", "factorLevels", "Schwellen für ↑ / ↑↑ / ↑↑↑"),
-        F("float[]", "qualityLevels", "Schwellen für ↓ / – / ↑"),
-        F("float[]", "stabLevels", "Schwellen für nervös / ruhig")]),
     ("MachinesFixedConfig", "Feste Stationen im Labor.", [
         F("CentrifugeConfig", "centrifuge"), F("CryoConfig", "cryo"), F("UnlockConfig", "ultimate"),
-        F("TastingConfig", "tasting"), F("GramophoneConfig", "gramophone"), F("RohrpostConfig", "rohrpost"),
-        F("MicroscopeConfig", "microscope")]),
+        F("TastingConfig", "tasting"), F("GramophoneConfig", "gramophone"), F("RohrpostConfig", "rohrpost")]),
     ("BuildGridConfig", "Raster des Baumodus (GDD 3).", [
         F("int", "cols"), F("int", "rows"), F("float", "cell"), F("float", "x0"), F("float", "z0"),
         F("int", "blockedRow"), F("int", "blockedFrom"), F("int", "blockedTo")]),
@@ -202,17 +191,6 @@ CLASSES = [
         F("float", "hideBehindZ", "Umgebung hinter dieser z-Linie (Rückwand) wird ausgeblendet"),
         F("float", "hideLeftX", "Umgebung links dieser x-Linie (linke Wand) wird ausgeblendet"),
         F("float", "hideAboveY", "Umgebung über dieser Höhe (Decke) wird ausgeblendet")]),
-    ("WishTypeConfig", "Ein Sonderwunsch-Typ (GDD 7.3).", [
-        F("string", "id"), F("LinearValue", "amount", "Menge in t (falls benötigt)"),
-        F("float", "minQuality"), F("float", "durationSec")]),
-    ("WishesConfig", "Sonderwünsche des Direktors (GDD 7.3).", [
-        F("int", "fromDay"), F("float", "firstAfterSec"), F("float[]", "intervalSec"),
-        F("LinearValue", "reward"), F("WishTypeConfig[]", "types")]),
-    ("ContractConfig", "Ein Sonderauftrag (GDD 7.4).", [
-        F("string", "k", "Ware m/e/f"), F("float", "minQ", "Mindestqualität"),
-        F("string", "who", "Auftraggeber"), F("string", "what", "Warenname")]),
-    ("ContractsConfig", "Sonderaufträge (GDD 7.4).", [
-        F("int", "fromDay"), F("float", "payMult"), F("ContractConfig[]", "list")]),
     ("InfectionConfig", "Infektion des Spielers (GDD 8).", [
         F("float[]", "symptomIntervalSec"), F("float[]", "symptomDurationSec"),
         F("float", "fast"), F("float", "slow"), F("string[]", "symptoms"),
@@ -337,7 +315,6 @@ CLASSES = [
         F("float", "subtitleMinSec", "Untertitel mindestens so lange"), F("float", "subtitlePerChar", "plus pro Zeichen"),
         F("float", "boardRefreshSec", "Plantafel und TV-Bild auffrischen alle"),
         F("float", "dayEndDelaySec", "Pause zwischen Schichtende und Bestellterminal"),
-        F("float", "contractAnnounceDelaySec", "Sonderauftrag wird so spät nach Schichtbeginn gemeldet"),
         F("float", "alertSec", "Anzeigedauer der Warnmeldung in der Bildmitte")]),
     ("PultConfig", "Pult: Reinigung, Hebelanimation, Statuslampen (GDD 6.1).", [
         F("float", "cleanSec", "Dauer der Kammerreinigung"), F("float", "leverPullSec"), F("float", "leverPullDeg"),

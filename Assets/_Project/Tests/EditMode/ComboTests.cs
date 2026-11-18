@@ -68,12 +68,5 @@ namespace PlanErfuellt.Tests
             var cons = ComboTexts.Effects(info.cons, texts);
             CollectionAssert.Contains(cons, "Wirkung gedämpft −13 %");
         }
-
-        [Test]
-        public void ProbeText()
-        {
-            string s = ComboTexts.Probe(Formula.Probe(new Dose(2, 2, 0), cfg), texts);
-            Assert.AreEqual("Fleisch ↑↑↑ · Milch ↑↑↑ · Geschmack ↓↓ · Probe brodelt gefährlich", s);
-        }
     }
 }

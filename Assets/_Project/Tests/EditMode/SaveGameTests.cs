@@ -73,7 +73,6 @@ namespace PlanErfuellt.Tests
             s.inspectionAnnounced = true;
             s.beltBroken = true;
             s.cloths = 3;
-            s.probedRecipes.Add("2-0-1");
             s.machines.Add(new PlacedMachine { typeId = BuildLogic.Layer, gx = 5, gz = 2, paid = 400f });
             s.centrifuge = new CentrifugeJob { serum = new Serum(new Dose(1, 1, 0), SerumStage.Raw), rpm = 0.4f };
             s.cryo = new CryoJob { serum = new Serum(new Dose(2, 3, 5), SerumStage.Centrifuged), freezeLeft = 3f, windowLeft = 12f };
@@ -91,7 +90,6 @@ namespace PlanErfuellt.Tests
             Assert.IsTrue(l.inspectionAnnounced);
             Assert.IsTrue(l.beltBroken);
             Assert.AreEqual(3, l.cloths);
-            CollectionAssert.Contains(l.probedRecipes, "2-0-1");
             Assert.AreEqual(BuildLogic.Layer, l.machines[0].typeId);
             Assert.AreEqual(0.4f, l.centrifuge.rpm, 0.001f);
             Assert.AreEqual(new Dose(2, 3, 5), l.cryo.serum.dose);

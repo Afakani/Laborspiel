@@ -159,9 +159,6 @@ namespace PlanErfuellt.EditorTools
             Check(c.day.prizes.Length == c.day.plans, "day.prizes muss so viele Einträge haben wie day.plans.");
             Check(c.substances.Length == 3, "substances braucht genau 3 Einträge (A, B, C).");
             Check(c.anger.tiers.Length == 2, "anger.tiers braucht 2 Grenzen.");
-            Check(c.machinesFixed.microscope.factorLevels.Length == 3, "microscope.factorLevels braucht 3 Werte.");
-            Check(c.machinesFixed.microscope.qualityLevels.Length == 3, "microscope.qualityLevels braucht 3 Werte.");
-            Check(c.machinesFixed.microscope.stabLevels.Length == 2, "microscope.stabLevels braucht 2 Werte.");
             Check(c.ultimates.Count > 0, "Keine ultimativen Seren gefunden.");
             Check(c.formulas.statMax > 0, "formulas.statMax fehlt.");
         }

@@ -70,10 +70,6 @@ namespace PlanErfuellt
         public bool chamberCovered;
         /// <summary>Restzeit der Volksmusik vom Grammophon (GDD 6.5).</summary>
         public float musicLeft;
-        /// <summary>Restzeit der Probe unter dem Mikroskop (GDD 6.2).</summary>
-        public float probeLeft;
-        /// <summary>Mischungen, die schon unter dem Mikroskop waren (Schlüssel "A-B-C").</summary>
-        public readonly HashSet<string> probedRecipes = new HashSet<string>();
         /// <summary>Restflugzeit der Rohrpost-Kapsel.</summary>
         public float rohrpostLeft;
         /// <summary>Gebaute Maschinen (GDD 6.10).</summary>
@@ -89,10 +85,6 @@ namespace PlanErfuellt
         /// <summary>Erfüllte und verfehlte Tage.</summary>
         public int quotasMet;
         public int quotasFailed;
-        public Wish wish;
-        /// <summary>Zeit bis zum nächsten Sonderwunsch.</summary>
-        public float wishTimer;
-        public Contract contract;
         /// <summary>Schritt der Einführung an Tag 1 (−1 = keine Einführung mehr).</summary>
         public int tutorialStep;
         /// <summary>Zeit im aktuellen Einführungsschritt (für Lese-Schritte).</summary>

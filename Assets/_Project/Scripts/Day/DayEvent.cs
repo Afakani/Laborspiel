@@ -5,9 +5,6 @@ namespace PlanErfuellt
     {
         PlanMet,
         TimeUp,
-        WishNew,
-        WishDone,
-        WishFailed,
         TutorialStep,
         TutorialDone
     }

@@ -14,20 +14,19 @@ namespace PlanErfuellt
         /// <summary>
         /// Ein Zeitschritt für ein Tier im Zustand Ok oder Unstable. rnd liefert Zufallszahlen in [0, 1).
         /// </summary>
-        public static void Step(AnimalStats s, AnimalState state, GameState g, GameConfig cfg, float dt, bool music,
+        public static void Step(AnimalStats s, AnimalState state, GameState g, GameConfig cfg, float dt,
             Func<float> rnd, List<RiskEvent> events)
         {
             var r = cfg.risks;
             var w = cfg.warnings;
             int a = s.dose.A, b = s.dose.B;
-            float s0 = s.BaseStability(music, cfg);
+            float s0 = s.BaseStability(cfg);
             bool active = !s.IsUltimate && s0 < r.activeBelowStab;
             float risk = s.IsUltimate ? 0f : 1f - s0 / 100f;
 
             // Hitze
             if (active && a >= r.heatMinA) s.heat = Mathf.Min(r.heatUnstable, s.heat + a * r.heatPerA * risk * dt);
             else s.heat = Mathf.Max(0f, s.heat - r.heatDecay * dt);
-            if (music) s.heat = Mathf.Max(0f, s.heat - r.heatMusicDecay * dt);
 
             // Warnzeichen (je einmal pro Tier)
             if (s.heat > w.heat[0] && s.heat <= w.heat[1]) Warn(s, RiskWarnings.Heat, RiskEvent.WarnHeat, events);

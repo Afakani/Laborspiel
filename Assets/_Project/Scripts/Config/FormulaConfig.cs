@@ -20,8 +20,6 @@ namespace PlanErfuellt
         public float statMax;
         /// <summary>+Stabilität pro tiefgekühltem Serum</summary>
         public float frozenStabBonus;
-        /// <summary>+Stabilität während Musik</summary>
-        public float musicStabBonus;
         /// <summary>+Qualität durch Siegel</summary>
         public float stampQualityBonus;
         public AcidConfig acid = new AcidConfig();

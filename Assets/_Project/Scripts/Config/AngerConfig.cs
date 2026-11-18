@@ -15,8 +15,6 @@ namespace PlanErfuellt
         public float planMet;
         public float inspectionPassed;
         public float caviar;
-        public float wishDone;
-        public float wishFailed;
         /// <summary>Grenzen der Wut-Stufen</summary>
         public float[] tiers = new float[0];
         /// <summary>Abstand zufälliger Rufe [min, max]</summary>

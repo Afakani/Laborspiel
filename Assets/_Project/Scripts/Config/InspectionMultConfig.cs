@@ -7,7 +7,6 @@ namespace PlanErfuellt
     public class InspectionMultConfig
     {
         public float boss;
-        public float music;
         public float singingCow;
     }
 }

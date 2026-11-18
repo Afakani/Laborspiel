@@ -62,8 +62,8 @@ namespace PlanErfuellt
         public bool IsUltimate => ultimate != null;
         public bool IsMutated => dose.Total > 0 || IsUltimate;
 
-        /// <summary>Basis-Stabilität S0 (Formel/Ultimativ + Kryo + Musik).</summary>
-        public float BaseStability(bool music, GameConfig cfg) => Formula.AnimalStability(dose, ultimate, stabBonus, music, cfg);
+        /// <summary>Basis-Stabilität S0 (Formel/Ultimativ + Kryo).</summary>
+        public float BaseStability(GameConfig cfg) => Formula.AnimalStability(dose, ultimate, stabBonus, cfg);
 
         public float Quality(GameConfig cfg) => Formula.AnimalQuality(dose, ultimate, stamped, fun, acid, cfg);
 

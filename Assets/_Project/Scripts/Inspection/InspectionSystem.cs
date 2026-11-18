@@ -37,10 +37,9 @@ namespace PlanErfuellt
             var s = gm.State;
             var cfg = gm.Config;
             var view = chamber != null ? chamber.View : default;
-            bool music = s.musicLeft > 0f;
             float mixingX = cfg.layout.Station("mixing").x;
             events.Clear();
-            InspectionLogic.Step(s, cfg, dt, view, music, cfg.layout.chamber.x, mixingX, events, out var passed);
+            InspectionLogic.Step(s, cfg, dt, view, cfg.layout.chamber.x, mixingX, events, out var passed);
             foreach (var e in events) Handle(e, passed);
         }
 

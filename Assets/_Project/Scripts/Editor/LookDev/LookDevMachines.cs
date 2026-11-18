@@ -72,20 +72,6 @@ namespace PlanErfuellt.EditorTools
             WarnLamp(v, new Vector3(0.2f, 0.85f, -0.02f), M.LampGreen);
         }
 
-        // ---------- Mikroskop (auf der Mischstation) ----------
-
-        public static void Microscope(Transform v)
-        {
-            LookDevKit.Box(v, "Base", new Vector3(0f, 0.02f, 0.02f), new Vector3(0.24f, 0.04f, 0.3f), L.BlackPaint);
-            LookDevKit.Obj(v, "Arm", LookDevKit.Tube("MicroArm", new Vector3(0f, 0.04f, 0.1f), new Vector3(0f, 0.25f, 0.16f), new Vector3(0f, 0.38f, 0.12f), new Vector3(0f, 0.42f, 0.04f), 0.03f, 12, 8), Vector3.zero, L.BlackPaint);
-            LookDevKit.Box(v, "Stage", new Vector3(0f, 0.16f, -0.01f), new Vector3(0.18f, 0.015f, 0.16f), L.BlackPaint);
-            LookDevKit.Cyl(v, "Dish", new Vector3(0f, 0.175f, -0.02f), 0.05f, 0.01f, M.CryoWindow, null, false, 16);
-            LookDevKit.Cyl(v, "Tube", new Vector3(0f, 0.36f, 0.0f), 0.032f, 0.26f, L.Brass, new Vector3(-20f, 0f, 0f), true, 16);
-            LookDevKit.Cyl(v, "Eyepiece", new Vector3(0f, 0.5f, 0.05f), 0.022f, 0.08f, L.BlackPaint, new Vector3(-20f, 0f, 0f), true, 12);
-            LookDevKit.Cyl(v, "Objective", new Vector3(0f, 0.23f, -0.03f), 0.018f, 0.06f, L.Chrome, null, true, 12);
-            LookDevKit.Cyl(v, "Knob", new Vector3(0.05f, 0.28f, 0.13f), 0.035f, 0.02f, L.Brass, new Vector3(0f, 0f, 90f), true, 12);
-        }
-
         // ---------- Zentrifuge (1,7 × 1,8 × 1,7) ----------
 
         public static void Centrifuge(Transform v)

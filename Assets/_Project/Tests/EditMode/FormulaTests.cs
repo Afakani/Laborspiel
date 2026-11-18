@@ -54,11 +54,11 @@ namespace PlanErfuellt.Tests
         }
 
         [Test]
-        public void AnimalStabilityIncludesFrozenAndMusic()
+        public void AnimalStabilityIncludesFrozen()
         {
             var d = new Dose(1, 1, 0); // 62
-            Assert.AreEqual(62f + 20f + 15f, Formula.AnimalStability(d, null, cfg.formulas.frozenStabBonus, true, cfg), 0.001f);
-            Assert.AreEqual(100f, Formula.AnimalStability(new Dose(0, 0, 1), null, 20f, true, cfg), 0.001f);
+            Assert.AreEqual(62f + 20f, Formula.AnimalStability(d, null, cfg.formulas.frozenStabBonus, cfg), 0.001f);
+            Assert.AreEqual(100f, Formula.AnimalStability(new Dose(0, 0, 1), null, 20f, cfg), 0.001f);
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace PlanErfuellt.Tests
             var omega = cfg.UltimateById("omega");
             Assert.NotNull(omega);
             var d = omega.Recipe;
-            Assert.AreEqual(100f, Formula.AnimalStability(d, omega, 0f, false, cfg), 0.001f);
+            Assert.AreEqual(100f, Formula.AnimalStability(d, omega, 0f, cfg), 0.001f);
             Assert.AreEqual(92f, Formula.AnimalQuality(d, omega, false, null, false, cfg), 0.001f);
             Assert.AreEqual(7f, Formula.AnimalRate(AnimalKind.Cow, d, omega, 0f, cfg), 0.001f);
             Assert.AreEqual(7.8f, Formula.AnimalMeat(AnimalKind.Cow, d, omega, 0f, null, cfg), 0.001f);
@@ -91,28 +91,6 @@ namespace PlanErfuellt.Tests
             Assert.NotNull(sing);
             float plain = Formula.Meat(AnimalKind.Cow, new Dose(3, 0, 3), cfg);
             Assert.AreEqual(plain * 0.8f, Formula.AnimalMeat(AnimalKind.Cow, new Dose(3, 0, 3), null, 0f, sing, cfg), 0.001f);
-        }
-
-        [Test]
-        public void ProbeHints()
-        {
-            var calm = Formula.Probe(Dose.Zero, cfg);
-            Assert.AreEqual(0, calm.meatLevel);
-            Assert.AreEqual(0, calm.milkLevel);
-            Assert.AreEqual(0, calm.taste);   // Qualität 80 → –
-            Assert.AreEqual(0, calm.danger);  // ruhig
-
-            var wild = Formula.Probe(new Dose(2, 2, 0), cfg); // Fleisch 2.6, Rate 2.9, Q 40, S 12
-            Assert.AreEqual(3, wild.meatLevel);
-            Assert.AreEqual(3, wild.milkLevel);
-            Assert.AreEqual(-2, wild.taste);
-            Assert.AreEqual(2, wild.danger);
-
-            // Fleischfaktor 1.8 liegt genau auf der Schwelle (Rundung), daher hier nicht geprüft.
-            var mid = Formula.Probe(new Dose(1, 1, 0), cfg); // Rate 1.95, Q 60, S 62
-            Assert.AreEqual(3, mid.milkLevel);
-            Assert.AreEqual(-1, mid.taste);
-            Assert.AreEqual(0, mid.danger);
         }
     }
 }

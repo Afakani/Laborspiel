@@ -39,9 +39,6 @@ namespace PlanErfuellt.Tests
             Assert.AreEqual(2.4f, cfg.warnings.@float[1], 0.0001f);
             Assert.AreEqual(1.6f, cfg.inspection.mult.boss, 0.0001f);
             Assert.AreEqual(0.75f, cfg.machinesFixed.centrifuge.zones.green[0], 0.0001f);
-            Assert.AreEqual(4, cfg.wishes.types.Length);
-            Assert.AreEqual(150f, cfg.wishes.reward.@base);
-            Assert.AreEqual("Krankenhaus", cfg.contracts.list[0].who);
             Assert.AreEqual("Wachstum", cfg.substances[0].displayName);
         }
 
@@ -74,7 +71,7 @@ namespace PlanErfuellt.Tests
         {
             var L = cfg.layout;
             Assert.AreEqual(3.1f, L.chamber.playerCollisionRadius, 0.0001f);
-            Assert.AreEqual(20, L.stations.Length, "16 Hallen-Stationen + Kantine, Kittel, Bett, Schreibtisch");
+            Assert.AreEqual(19, L.stations.Length, "15 Hallen-Stationen (ohne Mikroskop, D153) + Kantine, Kittel, Bett, Schreibtisch");
             var pult = L.Station("pult");
             Assert.NotNull(pult);
             Assert.AreEqual(new UnityEngine.Vector3(0f, 0f, -6.2f), pult.UnityPosition, "z wird gespiegelt");

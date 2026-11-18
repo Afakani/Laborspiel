@@ -12,14 +12,15 @@ namespace PlanErfuellt.Tests
         public void Setup() => cfg = TestData.Config();
 
         [Test]
-        public void GramophonePlaysAndRaisesStability()
+        public void GramophonePlaysMusicOnly()
         {
+            // Propaganda-Radio (D154): nur Stimmung, die Musik ändert keine Spielwerte mehr
             var s = GameState.Create(cfg);
             Assert.IsTrue(StationLogic.Crank(s, cfg).IsOk);
             Assert.AreEqual(cfg.machinesFixed.gramophone.musicSec, s.musicLeft, 0.001f);
             Assert.IsFalse(StationLogic.Crank(s, cfg).IsOk, "läuft schon");
-            var a = new AnimalStats { dose = new Dose(2, 2, 0) };
-            Assert.AreEqual(a.BaseStability(false, cfg) + cfg.formulas.musicStabBonus, a.BaseStability(true, cfg), 0.001f);
+            Assert.Greater(cfg.machinesFixed.gramophone.lineEverySec, 0f);
+            Assert.Greater(TestData.Texts().Count("radio.lines"), 3, "Durchsagen vorhanden");
             StationLogic.Tick(s, cfg.machinesFixed.gramophone.musicSec + 1f);
             Assert.IsFalse(StationLogic.MusicPlaying(s));
         }
@@ -55,22 +56,6 @@ namespace PlanErfuellt.Tests
             Assert.AreEqual(0, s.caviar);
             Assert.Greater(s.rohrpostLeft, 0f);
             Assert.IsFalse(StationLogic.SendCaviar(s, cfg).IsOk, "kein Kaviar mehr");
-        }
-
-        [Test]
-        public void ProbeOnlyForUnknownMixAndOnce()
-        {
-            var s = GameState.Create(cfg);
-            Assert.IsFalse(StationLogic.TakeProbe(s, cfg).IsOk, "leere Mischung");
-            s.mix = new Dose(1, 2, 0);
-            float money = s.Money;
-            Assert.IsTrue(StationLogic.TakeProbe(s, cfg).IsOk);
-            Assert.AreEqual(money - cfg.machinesFixed.microscope.cost, s.Money, 0.001f);
-            Assert.AreEqual(cfg.machinesFixed.microscope.analyseSec, s.probeLeft, 0.001f);
-            Assert.IsFalse(StationLogic.TakeProbe(s, cfg).IsOk, "schon geprüft");
-            s.mix = new Dose(1, 0, 0);
-            s.discoveredRecipes.Add(s.mix.Key);
-            Assert.IsFalse(StationLogic.CanProbe(s), "bekannte Mischung braucht keine Probe");
         }
 
         [Test]

@@ -3,8 +3,8 @@ using UnityEngine;
 namespace PlanErfuellt
 {
     /// <summary>
-    /// Nebenstationen als reine Regeln (Prototyp crankGramophone, tasteAnimal, sendRohrpost, takeProbe):
-    /// Grammophon, Verkostungsautomat, Rohrpost und Probenmikroskop. Werte aus machinesFixed und anger.
+    /// Nebenstationen als reine Regeln (Prototyp crankGramophone, tasteAnimal, sendRohrpost):
+    /// Grammophon, Verkostungsautomat und Rohrpost. Werte aus machinesFixed und anger.
     /// </summary>
     public static class StationLogic
     {
@@ -54,31 +54,12 @@ namespace PlanErfuellt
             return Feedback.Ok;
         }
 
-        // ---------- Probenmikroskop (GDD 6.2) ----------
-
-        /// <summary>Kann die aktuelle Mischung untersucht werden (unbekannt, noch nicht geprüft)?</summary>
-        public static bool CanProbe(GameState s) =>
-            s.mix.Total > 0 && !s.discoveredRecipes.Contains(s.mix.Key) && !s.probedRecipes.Contains(s.mix.Key);
-
-        /// <summary>Probe der aktuellen Reglerstellung: kostet, Ergebnis nach analyseSec.</summary>
-        public static Feedback TakeProbe(GameState s, GameConfig cfg)
-        {
-            var m = cfg.machinesFixed.microscope;
-            if (s.mix.Total == 0) return Feedback.Error("ui.errors.mixSetSliders");
-            if (!CanProbe(s)) return Feedback.Error("ui.mixing.probeRunning");
-            if (!s.TrySpend(m.cost)) return Feedback.Error("ui.errors.probeFee", ("n", Mathf.RoundToInt(m.cost)));
-            s.probedRecipes.Add(s.mix.Key);
-            s.probeLeft = m.analyseSec;
-            return Feedback.Ok;
-        }
-
         // ---------- Zeit ----------
 
-        /// <summary>Musik, Mikroskop und Rohrpost-Kapsel weiterzählen.</summary>
+        /// <summary>Musik und Rohrpost-Kapsel weiterzählen.</summary>
         public static void Tick(GameState s, float dt)
         {
             if (s.musicLeft > 0f) s.musicLeft = Mathf.Max(0f, s.musicLeft - dt);
-            if (s.probeLeft > 0f) s.probeLeft = Mathf.Max(0f, s.probeLeft - dt);
             if (s.rohrpostLeft > 0f) s.rohrpostLeft = Mathf.Max(0f, s.rohrpostLeft - dt);
         }
     }

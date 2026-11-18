@@ -14,7 +14,6 @@ namespace PlanErfuellt
         public float omega;
         public float koloss;
         public float clothFactor;
-        public float musicFactor;
         public float singingCow;
         public float contaminated;
         public float decay;

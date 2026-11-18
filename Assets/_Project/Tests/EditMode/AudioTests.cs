@@ -35,8 +35,9 @@ namespace PlanErfuellt.Tests
         {
             Assert.AreEqual(60f / 400f, AudioLogic.WhirPitch(0f, c), 1e-4f);
             Assert.AreEqual(760f / 400f, AudioLogic.WhirPitch(1f, c), 1e-4f);
-            Assert.AreEqual(1f, AudioLogic.MarchPitch(0, c), 1e-4f);
-            Assert.AreEqual(523f / 392f, AudioLogic.MarchPitch(2, c), 1e-4f);
+            // Marsch-Polka (D154): Tonhöhe = Note / Grundton der Datei
+            Assert.AreEqual(c.marchNotes[0] / c.marchBaseHz, AudioLogic.MarchPitch(0, c), 1e-4f);
+            Assert.AreEqual(c.marchNotes[2] / c.marchBaseHz, AudioLogic.MarchPitch(2, c), 1e-4f);
             Assert.AreEqual(AudioLogic.MarchPitch(0, c), AudioLogic.MarchPitch(c.marchNotes.Length, c), "Melodie wiederholt sich");
         }
 

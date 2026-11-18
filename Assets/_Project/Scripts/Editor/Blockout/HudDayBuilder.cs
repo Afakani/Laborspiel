@@ -91,18 +91,8 @@ namespace PlanErfuellt.EditorTools
                 row.FindPropertyRelative("value").objectReferenceValue = value;
                 row.FindPropertyRelative("fill").objectReferenceValue = fill;
             }
-            var wish = P.Text(inner, "Wish", 17, Gold, new Vector2(14f, -180f), new Vector2(430f, 24f), TextAlignmentOptions.Left);
-            var contract = P.Text(inner, "Contract", 17, Green, new Vector2(14f, -204f), new Vector2(430f, 24f), TextAlignmentOptions.Left);
-            var hint = P.Text(inner, "Hint", 16, P.Muted, new Vector2(14f, -230f), new Vector2(430f, 50f), TextAlignmentOptions.TopLeft);
+            var hint = P.Text(inner, "Hint", 16, P.Muted, new Vector2(14f, -186f), new Vector2(430f, 50f), TextAlignmentOptions.TopLeft);
             hint.textWrappingMode = TMPro.TextWrappingModes.Normal;
-            foreach (var t in new[] { wish, contract })
-            {
-                t.enableAutoSizing = true;
-                t.fontSizeMin = 12f;
-                t.fontSizeMax = 17f;
-            }
-            so.FindProperty("wish").objectReferenceValue = wish;
-            so.FindProperty("contract").objectReferenceValue = contract;
             so.FindProperty("hint").objectReferenceValue = hint;
             so.ApplyModifiedPropertiesWithoutUndo();
             // kompakter: ganzes Planfenster auf 80 % (Drehpunkt oben links bleibt)

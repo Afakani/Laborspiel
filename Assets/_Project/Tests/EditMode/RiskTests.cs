@@ -29,7 +29,7 @@ namespace PlanErfuellt.Tests
             for (float t = 0f; t < seconds; t += dt)
             {
                 events.Clear();
-                RiskLogic.Step(s, state, g, cfg, dt, false, () => roll, events);
+                RiskLogic.Step(s, state, g, cfg, dt, () => roll, events);
                 all.AddRange(events);
                 if (events.Contains(RiskEvent.Unstable)) state = AnimalState.Unstable;
                 if (events.Contains(RiskEvent.FlyAway)) break;
@@ -41,7 +41,7 @@ namespace PlanErfuellt.Tests
         public void StableAnimalHasNoRisks()
         {
             var s = Animal(1, 0, 1);
-            Assert.GreaterOrEqual(s.BaseStability(false, cfg), cfg.risks.activeBelowStab);
+            Assert.GreaterOrEqual(s.BaseStability(cfg), cfg.risks.activeBelowStab);
             var g = GameState.Create(cfg);
             var ev = Run(s, g, 30f, 0.1f, 0f);
             Assert.AreEqual(0f, s.heat);
@@ -55,11 +55,11 @@ namespace PlanErfuellt.Tests
         public void HeatRisesWithGrowth()
         {
             var s = Animal(2, 2, 0);
-            float s0 = s.BaseStability(false, cfg);
+            float s0 = s.BaseStability(cfg);
             Assert.Less(s0, cfg.risks.activeBelowStab);
             var g = GameState.Create(cfg);
             events.Clear();
-            RiskLogic.Step(s, AnimalState.Ok, g, cfg, 1f, false, () => 1f, events);
+            RiskLogic.Step(s, AnimalState.Ok, g, cfg, 1f, () => 1f, events);
             Assert.AreEqual(2 * cfg.risks.heatPerA * (1f - s0 / 100f), s.heat, 0.001f);
         }
 
@@ -79,7 +79,7 @@ namespace PlanErfuellt.Tests
         public void FloatingAwayEndsTheAnimal()
         {
             var s = Animal(0, 4, 0);
-            Assert.Less(s.BaseStability(false, cfg), cfg.risks.activeBelowStab);
+            Assert.Less(s.BaseStability(cfg), cfg.risks.activeBelowStab);
             s.floatHeight = cfg.risks.floatEscape - 0.01f;
             var ev = Run(s, GameState.Create(cfg), 5f);
             CollectionAssert.Contains(ev, RiskEvent.FlyAway);
@@ -91,7 +91,7 @@ namespace PlanErfuellt.Tests
             var s = Animal(3, 0, 0);
             var g = GameState.Create(cfg);
             events.Clear();
-            RiskLogic.Step(s, AnimalState.Ok, g, cfg, 0.1f, false, () => 0f, events);
+            RiskLogic.Step(s, AnimalState.Ok, g, cfg, 0.1f, () => 0f, events);
             Assert.IsTrue(g.beltBroken);
             CollectionAssert.Contains(events, RiskEvent.BeltBroken);
         }

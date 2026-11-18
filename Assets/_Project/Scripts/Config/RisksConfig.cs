@@ -32,8 +32,6 @@ namespace PlanErfuellt
         public float blackoutProductionFactor;
         /// <summary>Helligkeit während des Stromausfalls (0.2 = 20 %)</summary>
         public float blackoutLightFactor;
-        /// <summary>Zusätzliches Abkühlen pro s während Musik</summary>
-        public float heatMusicDecay;
         public float unstableCountdownSec;
         public float infectionDistance;
         public float infectionChance;

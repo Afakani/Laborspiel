@@ -33,7 +33,7 @@ namespace PlanErfuellt.Tests
             {
                 events.Clear();
                 s.playTime += 0.05f;
-                InspectionLogic.Step(s, cfg, 0.05f, v, false, cfg.layout.chamber.x, MixingX, events, out _);
+                InspectionLogic.Step(s, cfg, 0.05f, v, cfg.layout.chamber.x, MixingX, events, out _);
                 if (events.Contains(InspectionEvent.Scandal)) return InspectionEvent.Scandal;
                 if (events.Contains(InspectionEvent.Passed)) return InspectionEvent.Passed;
             }
@@ -45,13 +45,12 @@ namespace PlanErfuellt.Tests
         {
             var a = cfg.authority;
             var v = Mutated(2, 1, 0, cfg.risks.activeBelowStab - 1f);
-            float open = InspectionLogic.AuthorityGain(v, false, false, false, cfg);
+            float open = InspectionLogic.AuthorityGain(v, false, false, cfg);
             Assert.AreEqual(a.@base + a.lowStab, open, 0.001f);
-            Assert.AreEqual(open * a.clothFactor, InspectionLogic.AuthorityGain(v, true, false, false, cfg), 0.001f);
-            Assert.AreEqual(open * a.musicFactor, InspectionLogic.AuthorityGain(v, false, true, false, cfg), 0.001f);
+            Assert.AreEqual(open * a.clothFactor, InspectionLogic.AuthorityGain(v, true, false, cfg), 0.001f);
             v.ultimateId = UltimateIds.Omega;
-            Assert.AreEqual(open + a.omega, InspectionLogic.AuthorityGain(v, false, false, false, cfg), 0.001f);
-            Assert.AreEqual(a.contaminated, InspectionLogic.AuthorityGain(default, false, false, true, cfg), 0.001f);
+            Assert.AreEqual(open + a.omega, InspectionLogic.AuthorityGain(v, false, false, cfg), 0.001f);
+            Assert.AreEqual(a.contaminated, InspectionLogic.AuthorityGain(default, false, true, cfg), 0.001f);
         }
 
         [Test]
@@ -59,7 +58,7 @@ namespace PlanErfuellt.Tests
         {
             var s = Day2();
             s.authority = 10f;
-            InspectionLogic.Step(s, cfg, 1f, default, false, 0f, MixingX, events, out _);
+            InspectionLogic.Step(s, cfg, 1f, default, 0f, MixingX, events, out _);
             Assert.AreEqual(10f - cfg.authority.decay, s.authority, 0.001f);
         }
 
@@ -135,7 +134,7 @@ namespace PlanErfuellt.Tests
             Assert.IsTrue(InspectionLogic.RackSuspicious(s, cfg), "A+B ≥ 5");
             InspectionLogic.Start(s, cfg).x = MixingX;
             events.Clear();
-            InspectionLogic.Step(s, cfg, 1f, default, false, 0f, MixingX, events, out _);
+            InspectionLogic.Step(s, cfg, 1f, default, 0f, MixingX, events, out _);
             CollectionAssert.Contains(events, InspectionEvent.RackWarning);
             Assert.Greater(s.inspection.suspicion, 0f);
 
@@ -143,7 +142,7 @@ namespace PlanErfuellt.Tests
             s2.serums.Add(new Serum(new Dose(3, 2, 0), SerumStage.Ready));
             s2.rackHidden = true;
             InspectionLogic.Start(s2, cfg).x = MixingX;
-            InspectionLogic.Step(s2, cfg, 1f, default, false, 0f, MixingX, events, out _);
+            InspectionLogic.Step(s2, cfg, 1f, default, 0f, MixingX, events, out _);
             Assert.AreEqual(0f, s2.inspection.suspicion, 0.001f);
 
             var s3 = Day2();
@@ -166,7 +165,7 @@ namespace PlanErfuellt.Tests
             Assert.AreEqual(50f - cfg.inspection.vodka.suspReduce, ins.suspicion, 0.001f);
             Assert.AreEqual(cfg.inspection.vodka.pauseSec, ins.pause, 0.001f);
             float x = ins.x;
-            InspectionLogic.Step(s, cfg, 1f, default, false, 0f, MixingX, events, out _);
+            InspectionLogic.Step(s, cfg, 1f, default, 0f, MixingX, events, out _);
             Assert.AreEqual(x, ins.x, 0.001f, "steht beim Trinken");
             ins.pause = 0f;
             Assert.IsFalse(InspectionLogic.OfferVodka(s, cfg).IsOk, "kein Wodka mehr");

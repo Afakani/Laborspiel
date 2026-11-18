@@ -111,7 +111,6 @@ namespace PlanErfuellt
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Wut +20")) s.AddAnger(20f, gm.Config);
             if (GUILayout.Button("Wut −20")) s.AddAnger(-20f, gm.Config);
-            if (GUILayout.Button("Wunsch jetzt") && q != null) s.wishTimer = 0.01f;
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Plan {s.planIdx + 1}", GUILayout.Width(60));

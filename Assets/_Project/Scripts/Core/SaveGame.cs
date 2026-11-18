@@ -34,7 +34,7 @@ namespace PlanErfuellt
             ContractResolver = new DataOnlyResolver()
         };
 
-        /// <summary>Nur echte Daten: berechnete Eigenschaften ohne Setter (z. B. Contract.Good) weglassen, readonly-Felder laden.</summary>
+        /// <summary>Nur echte Daten: berechnete Eigenschaften ohne Setter (z. B. Serum.IsUltimate) weglassen, readonly-Felder laden.</summary>
         class DataOnlyResolver : DefaultContractResolver
         {
             protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)

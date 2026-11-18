@@ -147,15 +147,6 @@
         "say": "Gut, Genosse. Ab morgen kommt die Partei zu Besuch."
       }
     ],
-    "wishes": {
-      "meat": "{n} t Fleisch für mein Bankett",
-      "eggs": "{n} t Eier für die Parteikantine",
-      "quality": "ein Tier mit Qualität ab 85 % verarbeiten",
-      "calm": "60 Sekunden ohne Explosion und ohne Krise",
-      "announce": "SONDERWUNSCH: {wish}! Sie haben {sec} Sekunden.",
-      "done": "Hervorragend! Das Bankett ist gerettet.",
-      "failed": "Kein Bankett?! Das vergesse ich Ihnen nicht."
-    },
     "deskThanks": [
       "Kaviar! Persönlich! Sie verstehen etwas von Hierarchie, Genosse.",
       "Mmh. Das Volk soll Kohl essen. Der Plan isst Kaviar.",
@@ -204,7 +195,6 @@
     "coinhen": "Hühner legen Stalinmünzen – Inflation laut Experten „ausgeschlossen“",
     "inspection": "Parteikontrolle in Kombinat B-12: „Nichts Auffälliges, nur Kühe“",
     "bossInspection": "Oberkommissar besucht Kombinat B-12: „Vorbildlich, fast schon verdächtig vorbildlich“",
-    "contract": "{who} lobt Kombinat B-12 für erstklassige {what}",
     "specialHead": "Kombinat B-12 erschafft „{name}“ – Direktor nimmt Orden persönlich entgegen",
     "specialTicker": [
       "Wissenschaftler „sprachlos vor Stolz“",
@@ -403,16 +393,13 @@
       "chipRack": "{n}/{max}",
       "btnSkipTutorial": "Einführung überspringen",
       "moneyPlus": "+{n} SM",
-      "moneyMinus": "−{n} SM"
+      "moneyMinus": "−{n} SM",
+      "radioSpeaker": "RADIO: "
     },
     "quota": {
       "title": "PLAN {n}/{max}",
       "titleMet": "PLAN {n}/{max} · ERFÜLLT",
-      "tutorial": "EINFÜHRUNG {n}/{max}: {text}",
-      "wish": "SONDERWUNSCH: {text} · {sec} s",
-      "wishProgress": "SONDERWUNSCH: {text} · {got}/{need} t · {sec} s",
-      "contract": "AUFTRAG: {who} zahlt 2× für {what} ab {q} %",
-      "contractProgress": "AUFTRAG: {who} zahlt 2× für {what} ab {q} % · {got} t"
+      "tutorial": "EINFÜHRUNG {n}/{max}: {text}"
     },
     "hints": {
       "unstable": "INSTABIL! Zum Pult und NOT-STOPP drücken!",
@@ -441,8 +428,8 @@
       "vodkaOffer": "Kommissar Wodka anbieten ({n})",
       "vodkaDrinking": "Der Kommissar trinkt …",
       "vodkaNone": "Kein Wodka – beim nächsten Mal bestellen",
-      "gramophoneCrank": "Grammophon kurbeln (Tier beruhigen)",
-      "gramophonePlaying": "Volksmusik läuft … {sec} s",
+      "gramophoneCrank": "Grammophon kurbeln (Radio Volksstimme)",
+      "gramophonePlaying": "Radio Volksstimme läuft … {sec} s",
       "tastingLocked": "Verkostung – gesperrt bis Plan {n}",
       "tastingDone": "Tier ist schon staatlich geprüft",
       "tasting": "Tier verkosten lassen ({cost} SM, Qualität +{bonus})",
@@ -479,7 +466,6 @@
     },
     "toasts": {
       "dayStart": "Tag {day} · Plan {plan}/{max}: {text}",
-      "contractAnnounce": "Sonderauftrag: {who} zahlt DOPPELT für {what} ab {q} % Qualität",
       "infectedLastDay": "LETZTER TAG der Infektion! Gegenmittel spritzen (G)!",
       "infectedDeadline": "Du bist infiziert. Frist: bis Ende Tag {n}",
       "collapse": "Zusammenbruch! Ohne Gegenmittel übersteht man die Frist nicht. Tag verloren.",
@@ -509,7 +495,7 @@
       "braveBonus": "Mut-Bonus +{money} – das Tier war kurz vor der Explosion!",
       "kolossBelt": "Der Koloss hat das Förderband zerrissen!",
       "notStop": "NOT-STOPP: Tier in die Vernichtungskammer",
-      "warnHeat": "Es dampft! Überhitzung droht – Ursache: viel Wachstum A. Hilft: Kühlaggregat, Musik, Not-Stopp.",
+      "warnHeat": "Es dampft! Überhitzung droht – Ursache: viel Wachstum A. Hilft: Kühlaggregat, Not-Stopp.",
       "warnAcid": "Die Milch blubbert! Säure droht – Ursache: viel Laktation B. Hilft: Gegenmittel ins Tier oder verarbeiten.",
       "warnFloat": "Das Tier hebt ab – am Pult anleinen!",
       "warnStab": "Das Tier zittert – Stabilität kritisch! Mehr C-04 oder Not-Stopp.",
@@ -542,9 +528,8 @@
       "vodka": "Der Kommissar nimmt einen großen Schluck … ({sec} s Pause, Verdacht −{n})",
       "inspectionPassed": "Kontrolle bestanden. Verschwiegenheitsprämie +{money}",
       "caviar": "Kaviar per Rohrpost an den Direktor geschickt (Wut −{n})",
-      "gramophone": "Volksmusik! Das Tier beruhigt sich, der Kommissar summt mit.",
+      "gramophone": "Radio Volksstimme: Marsch-Polka für die Arbeit!",
       "tasting": "Verkostung: „{text}“ Qualität +{n}",
-      "probeRunning": "Probe unter dem Mikroskop …",
       "centrifugeRunning": "Zentrifuge läuft – bei GRÜN bremsen!",
       "centrifugeTooEarly": "Zu früh gebremst – nichts passiert.",
       "centrifugePerfect": "Perfekt zentrifugiert!",
@@ -557,9 +542,6 @@
       "cryoIceBlock": "Zu spät! Das Serum ist zum Eisblock gefroren – unbrauchbar.",
       "cryoFrozen": "Serum stabilisiert (+20 Stabilität beim Sprühen).",
       "cryoNoReaction": "Die Probe reagiert nicht richtig … (erst ab Plan {n} möglich)",
-      "wishAnnounce": "Sonderwunsch des Direktors: {text}",
-      "wishDone": "Sonderwunsch erfüllt! +{money}",
-      "wishFailed": "Sonderwunsch verfehlt. Der Direktor ist beleidigt.",
       "record": "NEUER REKORD: {text}",
       "autoSprayNone": "Auto-Sprüher: kein passendes Serum im Regal",
       "emergencyDoc": "Notfall-Automat hat eingegriffen",
@@ -605,7 +587,6 @@
       "alreadyUltimate": "Dieses Tier ist bereits ultimativ behandelt.",
       "alreadyStamped": "Dieses Tier hat schon ein Siegel.",
       "tastingFee": "Siegelgebühr: {n} SM.",
-      "probeFee": "Nährboden kostet {n} SM.",
       "notInfected": "Du bist nicht infiziert.",
       "noAntidote": "Kein Gegenmittel im Lager.",
       "noAntidoteBuy": "Kein Gegenmittel im Lager – in der nächsten Bestellung kaufen!",
@@ -662,28 +643,10 @@
       "stock": "Lager {n}",
       "mix": "MISCHEN",
       "mixing": "Mischt … {sec} s",
-      "probeButton": "PROBE UNTERS MIKROSKOP · {cost} SM",
-      "probeUnknown": "Unbekannt. Eine Probe ({cost} SM) zeigt grobe Tendenzen.",
-      "probeRunning": "Mikroskop: Probe wird untersucht …",
-      "probeResult": "Mikroskop: {text}",
       "hintEmpty": "Regler einstellen. Jede Kombination hat Vor- und Nachteile.",
       "unknownTitle": "Unbekannte Mischung",
       "unknownText": "Erst an einem Tier testen – danach steht das Ergebnis im Logbuch.",
       "row": "{name} {code}"
-    },
-    "probe": {
-      "format": "Fleisch {meat} · Milch {milk} · Geschmack {taste} · Probe {state}",
-      "level3": "↑↑↑",
-      "level2": "↑↑",
-      "level1": "↑",
-      "level0": "–",
-      "tasteUp": "↑",
-      "tasteSame": "–",
-      "tasteDown": "↓",
-      "tasteBad": "↓↓",
-      "calm": "ruhig",
-      "nervous": "nervös",
-      "dangerous": "brodelt gefährlich"
     },
     "serum": {
       "unknownName": "Mischung A{a}·B{b}·C{c}",
@@ -1095,5 +1058,19 @@
       "missingMeat": "{n} t Fleisch",
       "inspectionSoon": "ACHTUNG: In {sec} s kommt der Kommissar (Halle rechts)! An die Kammer stellen und Laken bereithalten."
     }
+  },
+  "radio": {
+    "lines": [
+      "Achtung, Achtung! Die Milchnorm wurde heute zu 312 Prozent erfüllt.",
+      "Genossen, Fleisch ist Fortschritt. Fortschritt ist Pflicht.",
+      "Eine Kuh, die zweifelt, gibt keine Milch. Zweifeln Sie nicht.",
+      "Das Wetter: heiter. Der Plan: erfüllt. Die Stimmung: befohlen.",
+      "Unser Labor B-12 grüßt die tapferen Melkerinnen der Zentrale!",
+      "Wer Serum spart, spart am Volk.",
+      "Gerüchte über schwebende Kühe sind westliche Propaganda.",
+      "Bleiben Sie dran: Gleich die Polka „Fünf Pläne in vier Tagen“.",
+      "Der Kommissar wünscht Ihnen einen ordentlichen Arbeitstag.",
+      "Heute vor einem Jahr: Der Direktor lobt sich selbst. Wir gratulieren."
+    ]
   }
 }

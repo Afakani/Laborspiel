@@ -164,9 +164,8 @@ namespace PlanErfuellt
 
         void UpdateLiving(float dt)
         {
-            bool music = S.musicLeft > 0f;
             riskEvents.Clear();
-            RiskLogic.Step(stats, State, S, Cfg, dt, music, RandomValue, riskEvents);
+            RiskLogic.Step(stats, State, S, Cfg, dt, RandomValue, riskEvents);
             foreach (var e in riskEvents)
             {
                 HandleRisk(e);
@@ -448,7 +447,6 @@ namespace PlanErfuellt
             float meat = stats.Meat(Cfg);
             float quality = stats.Quality(Cfg);
             Production.Deliver(S, Cfg, 'f', meat, quality);
-            DayLogic.OnProcessed(S, quality);
             GM.Toast("ui.toasts.processed", ToastKind.Good, ("n", meat.ToString("0.0", German)));
             Records.Report(RecordLogic.Rate, stats.maxRate);
             Records.Report(RecordLogic.Meat, meat);

@@ -64,13 +64,13 @@ namespace PlanErfuellt
         // ---------- Werte am Tier mit Modifikatoren (GDD 4.3, 4.5, 4.6) ----------
 
         /// <summary>
-        /// Basis-Stabilität S0 am Tier: Formel bzw. Ultimativ-Wert + Kryo-Bonus + Musik, max. statMax.
+        /// Basis-Stabilität S0 am Tier: Formel bzw. Ultimativ-Wert + Kryo-Bonus, max. statMax.
         /// S0 steuert auch die Risiken (Entscheidung: wie Prototyp stabOf).
         /// </summary>
-        public static float AnimalStability(Dose d, UltimateSerum ult, float frozenBonus, bool music, GameConfig cfg)
+        public static float AnimalStability(Dose d, UltimateSerum ult, float frozenBonus, GameConfig cfg)
         {
             float s = ult != null ? ult.stability : Stability(d, cfg);
-            s += frozenBonus + (music ? cfg.formulas.musicStabBonus : 0f);
+            s += frozenBonus;
             return Mathf.Min(cfg.formulas.statMax, s);
         }
 
@@ -152,33 +152,7 @@ namespace PlanErfuellt
             return info;
         }
 
-        /// <summary>Tendenzen für das Probenmikroskop (GDD 6.2).</summary>
-        public static ProbeResult Probe(Dose d, GameConfig cfg)
-        {
-            var m = cfg.machinesFixed.microscope;
-            float q = Quality(d, cfg), s = Stability(d, cfg);
-            int meat = CountAbove(MeatFactor(d, cfg), m.factorLevels);
-            int milk = CountAbove(RateFactor(d, cfg), m.factorLevels);
-            int taste = CountAtLeast(q, m.qualityLevels) - 2;
-            int danger = m.stabLevels.Length - CountAtLeast(s, m.stabLevels);
-            return new ProbeResult(meat, milk, taste, danger);
-        }
-
         /// <summary>Kaufmännisches Runden wie im Prototyp (Math.round).</summary>
         public static int RoundHalfUp(float v) => Mathf.FloorToInt(v + 0.5f);
-
-        static int CountAbove(float v, float[] limits)
-        {
-            int n = 0;
-            foreach (var t in limits) if (v > t) n++;
-            return n;
-        }
-
-        static int CountAtLeast(float v, float[] limits)
-        {
-            int n = 0;
-            foreach (var t in limits) if (v >= t) n++;
-            return n;
-        }
     }
 }

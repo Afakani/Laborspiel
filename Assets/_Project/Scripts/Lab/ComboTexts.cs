@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace PlanErfuellt
 {
-    /// <summary>Macht aus ComboInfo und ProbeResult lesbare Texte (aus ui.combo bzw. ui.probe).</summary>
+    /// <summary>Macht aus ComboInfo lesbare Texte (aus ui.combo).</summary>
     public static class ComboTexts
     {
         /// <summary>Anzeigetext eines Vor- oder Nachteils.</summary>
@@ -34,18 +34,6 @@ namespace PlanErfuellt
             var list = new List<string>();
             foreach (var e in effects) list.Add(Effect(e, t));
             return list;
-        }
-
-        /// <summary>Mikroskop-Ergebnis als eine Zeile.</summary>
-        public static string Probe(ProbeResult p, TextDatabase t)
-        {
-            string taste = p.taste >= 1 ? "tasteUp" : p.taste == 0 ? "tasteSame" : p.taste == -1 ? "tasteDown" : "tasteBad";
-            string state = p.danger == 0 ? "calm" : p.danger == 1 ? "nervous" : "dangerous";
-            return t.Format("ui.probe.format",
-                ("meat", t.Get("ui.probe.level" + p.meatLevel)),
-                ("milk", t.Get("ui.probe.level" + p.milkLevel)),
-                ("taste", t.Get("ui.probe." + taste)),
-                ("state", t.Get("ui.probe." + state)));
         }
     }
 }

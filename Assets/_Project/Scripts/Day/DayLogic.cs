@@ -5,9 +5,9 @@ using UnityEngine;
 namespace PlanErfuellt
 {
     /// <summary>
-    /// Meta-Kreislauf ohne Szene (GDD 7, Prototyp startDay/endDay/updateBoss/newWish/updateWish/updateTutorial):
-    /// Schichtbeginn mit Soll und Sonderauftrag, Quote mit Prämie, Sonderwünsche, Einführung, Schichtende mit
-    /// Planfortschritt oder Wiederholung. Wut-Änderungen passieren hier, Meldungen macht der Aufrufer.
+    /// Meta-Kreislauf ohne Szene (GDD 7, Prototyp startDay/endDay/updateBoss/updateTutorial):
+    /// Schichtbeginn mit Soll, Quote mit Prämie, Einführung, Schichtende mit Planfortschritt oder Wiederholung.
+    /// Wut-Änderungen passieren hier, Meldungen macht der Aufrufer. Sonderwunsch und Sonderauftrag sind gestrichen (D152).
     /// </summary>
     public static class DayLogic
     {
@@ -37,21 +37,11 @@ namespace PlanErfuellt
                 duration = d.dayLengthSec,
                 prize = d.prizes[p]
             };
-            s.wish = null;
-            s.contract = null;
             // Kantinen-Schub und Schutzkittel gelten nur eine Schicht
             s.mealBoost = 1f;
             s.coatOn = false;
-            if (s.dayNum >= cfg.wishes.fromDay)
-            {
-                s.tutorialStep = -1;
-                s.wishTimer = cfg.wishes.firstAfterSec;
-            }
-            if (s.dayNum >= cfg.contracts.fromDay && cfg.contracts.list.Length > 0)
-            {
-                int i = Mathf.Min(cfg.contracts.list.Length - 1, Mathf.FloorToInt(rnd() * cfg.contracts.list.Length));
-                s.contract = new Contract { data = cfg.contracts.list[i] };
-            }
+            // die geführte Einführung gibt es nur an Tag 1
+            if (s.dayNum > 1) s.tutorialStep = -1;
         }
 
         /// <summary>Zeitschritt der Quote: Prämie bei Erfüllung, Meldung bei Ablauf.</summary>
@@ -78,8 +68,6 @@ namespace PlanErfuellt
             var r = new DayResult { planBefore = s.planIdx, collapse = collapse, met = q != null && q.met && !collapse };
             if (q != null) s.meatTargetTotal += q.target.f;
             s.quota = null;
-            s.wish = null;
-            s.contract = null;
             // laufende Kontrolle endet mit der Schicht (ohne Prämie); der Kommissar kommt am nächsten Morgen wieder
             if (s.inspection != null)
             {
@@ -115,7 +103,7 @@ namespace PlanErfuellt
         // ---------- Lieferung ----------
 
         /// <summary>
-        /// Bezahlung einer Lieferung mit Quote (Übererfüllung), Sonderauftrag und Sonderwunsch. Liefert den Preis;
+        /// Bezahlung einer Lieferung mit Quote (Übererfüllung). Liefert den Preis;
         /// newlyOver = Ware hat das Soll gerade überschritten.
         /// </summary>
         public static float Pay(GameState s, GameConfig cfg, char good, float tons, float quality, out bool newlyOver)
@@ -137,73 +125,7 @@ namespace PlanErfuellt
                 }
                 Quota.Add(q.prod, good, tons);
             }
-            var c = s.contract;
-            if (c != null && c.Good == good && quality >= c.data.minQ)
-            {
-                pay *= cfg.contracts.payMult;
-                c.got += tons;
-            }
-            var w = s.wish;
-            if (w != null && ((w.Id == "meat" && good == 'f') || (w.Id == "eggs" && good == 'e'))) w.got += tons;
             return pay;
-        }
-
-        // ---------- Sonderwünsche ----------
-
-        public static void TickWish(GameState s, GameConfig cfg, float dt, bool crisis, Func<float> rnd, List<DayEvent> events)
-        {
-            var c = cfg.wishes;
-            if (s.dayNum < c.fromDay || s.quota == null) return;
-            var w = s.wish;
-            if (w == null)
-            {
-                s.wishTimer -= dt;
-                if (s.wishTimer > 0f) return;
-                s.wishTimer = Mathf.Lerp(c.intervalSec[0], c.intervalSec[1], rnd());
-                int i = Mathf.Min(c.types.Length - 1, Mathf.FloorToInt(rnd() * c.types.Length));
-                var t = c.types[i];
-                s.wish = new Wish
-                {
-                    type = t,
-                    need = t.id == "meat" || t.id == "eggs" ? t.amount.@base + t.amount.perPlan * s.planIdx : 1f,
-                    left = t.durationSec
-                };
-                events.Add(DayEvent.WishNew);
-                return;
-            }
-            w.left -= dt;
-            if (w.Id == "calm" && crisis) w.ok = false;
-            if ((w.Id == "meat" || w.Id == "eggs" || w.Id == "quality") && w.got >= w.need)
-            {
-                FinishWish(s, cfg, true, events);
-                return;
-            }
-            if (w.left <= 0f) FinishWish(s, cfg, w.Id == "calm" && w.ok, events);
-        }
-
-        /// <summary>Verarbeitetes Tier für den Qualitäts-Wunsch melden.</summary>
-        public static void OnProcessed(GameState s, float quality)
-        {
-            var w = s.wish;
-            if (w != null && w.Id == "quality" && quality >= w.type.minQuality) w.got = 1f;
-        }
-
-        public static float WishReward(GameState s, GameConfig cfg) => cfg.wishes.reward.@base + cfg.wishes.reward.perPlan * s.planIdx;
-
-        static void FinishWish(GameState s, GameConfig cfg, bool success, List<DayEvent> events)
-        {
-            s.wish = null;
-            if (success)
-            {
-                s.AddMoney(WishReward(s, cfg));
-                s.AddAnger(cfg.anger.wishDone, cfg);
-                events.Add(DayEvent.WishDone);
-            }
-            else
-            {
-                s.AddAnger(cfg.anger.wishFailed, cfg);
-                events.Add(DayEvent.WishFailed);
-            }
         }
 
         // Einführung (Tag 1): siehe TutorialLogic

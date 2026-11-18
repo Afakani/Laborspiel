@@ -23,6 +23,8 @@ namespace PlanErfuellt
         /// <summary>Textpfad einer Meldung (für Klänge zur Meldung).</summary>
         public static event Action<string> ToastKey;
         public static event Action<string> DirectorSpeak;
+        /// <summary>Durchsage aus dem Radio (Grammophon), als Untertitel.</summary>
+        public static event Action<string> RadioSpeak;
         public static event Action<bool> PauseChanged;
         public static event Action<float> TimeScaleChanged;
         public static event Action PanelCloseRequested;
@@ -52,6 +54,7 @@ namespace PlanErfuellt
         public static void RaiseAlert(string text, ToastKind kind) => Alert?.Invoke(text, kind);
         public static void RaiseToastKey(string path) => ToastKey?.Invoke(path);
         public static void RaiseDirectorSpeak(string text) => DirectorSpeak?.Invoke(text);
+        public static void RaiseRadioSpeak(string text) => RadioSpeak?.Invoke(text);
         public static void RaisePauseChanged(bool paused) => PauseChanged?.Invoke(paused);
         public static void RaiseTimeScaleChanged(float scale) => TimeScaleChanged?.Invoke(scale);
         public static void RaisePanelCloseRequested() => PanelCloseRequested?.Invoke();
@@ -77,7 +80,7 @@ namespace PlanErfuellt
         public static void RaiseMachine(MachineEvent e) => Machine?.Invoke(e);
         /// <summary>Ultimatives Serum wurde aufs Tier gesprüht (first = erstes Mal im Spiel, GDD 10).</summary>
         public static void RaiseUltimateSprayed(UltimateSerum u, bool first) => UltimateSprayed?.Invoke(u, first);
-        /// <summary>Nebenstation benutzt (gramophone, tasting, rohrpost, probe, coinEgg, buildPlaced, buildSold) – für Effekte.</summary>
+        /// <summary>Nebenstation benutzt (gramophone, tasting, rohrpost, coinEgg, buildPlaced, buildSold) – für Effekte.</summary>
         public static void RaiseStation(string id) => Station?.Invoke(id);
 
         /// <summary>Alle Abonnenten entfernen (bei Play-Start ohne Domain-Reload).</summary>
@@ -97,6 +100,7 @@ namespace PlanErfuellt
             Alert = null;
             ToastKey = null;
             DirectorSpeak = null;
+            RadioSpeak = null;
             PauseChanged = null;
             TimeScaleChanged = null;
             PanelCloseRequested = null;

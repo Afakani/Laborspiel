@@ -8,7 +8,8 @@ namespace PlanErfuellt
     {
         public float crankSec;
         public float musicSec;
-        public float heatExtraDecay;
         public float directorCommentChance;
+        /// <summary>Abstand der Propaganda-Durchsagen</summary>
+        public float lineEverySec;
     }
 }

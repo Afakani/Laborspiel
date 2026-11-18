@@ -28,6 +28,5 @@ namespace PlanErfuellt
         public float milkDropsPerRate;
         /// <summary>Stempelbewegung des Verkostungsautomaten</summary>
         public float stampSec;
-        public float probeGlowPulse;
     }
 }

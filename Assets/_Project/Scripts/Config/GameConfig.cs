@@ -28,8 +28,6 @@ namespace PlanErfuellt
         public InspectorConfig inspector = new InspectorConfig();
         public MachinesFixedConfig machinesFixed = new MachinesFixedConfig();
         public BuildMachinesConfig buildMachines = new BuildMachinesConfig();
-        public WishesConfig wishes = new WishesConfig();
-        public ContractsConfig contracts = new ContractsConfig();
         public InfectionConfig infection = new InfectionConfig();
         public WorldConfig world = new WorldConfig();
         public NewsConfig news = new NewsConfig();

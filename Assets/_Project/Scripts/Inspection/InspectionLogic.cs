@@ -12,7 +12,7 @@ namespace PlanErfuellt
         // ---------- Parteikontrolle ----------
 
         /// <summary>Anstieg der Parteikontrolle pro s ohne den Abbau (authority.decay).</summary>
-        public static float AuthorityGain(in ChamberView v, bool covered, bool music, bool contaminated, GameConfig cfg)
+        public static float AuthorityGain(in ChamberView v, bool covered, bool contaminated, GameConfig cfg)
         {
             var a = cfg.authority;
             float gain = 0f;
@@ -23,7 +23,7 @@ namespace PlanErfuellt
                           + (v.floatHeight > a.floatingFrom ? a.floating : 0f)
                           + v.glow * a.glowFactor
                           + (v.IsOmega ? a.omega : v.IsKoloss ? a.koloss : 0f);
-                gain += m * (covered ? a.clothFactor : 1f) * (music ? a.musicFactor : 1f);
+                gain += m * (covered ? a.clothFactor : 1f);
             }
             if (v.Singing && v.ok) gain += a.singingCow;
             if (contaminated) gain += a.contaminated;
@@ -86,24 +86,24 @@ namespace PlanErfuellt
             return c.coveredBase + v.Level(c) * c.coveredPerDose + (v.unstable ? c.coveredUnstable : 0f);
         }
 
-        /// <summary>Multiplikator für den Verdacht (Oberkommissar, Musik, Singende Kuh).</summary>
-        public static float SuspicionMult(bool boss, bool music, in ChamberView v, GameConfig cfg)
+        /// <summary>Multiplikator für den Verdacht (Oberkommissar, Singende Kuh).</summary>
+        public static float SuspicionMult(bool boss, in ChamberView v, GameConfig cfg)
         {
             var m = cfg.inspection.mult;
-            return (boss ? m.boss : 1f) * (music ? m.music : 1f) * (v.Singing ? m.singingCow : 1f);
+            return (boss ? m.boss : 1f) * (v.Singing ? m.singingCow : 1f);
         }
 
         /// <summary>
         /// Ein Schritt: Parteikontrolle, Start, Gang, Verdacht, Ende. passed enthält die eben bestandene Kontrolle.
         /// chamberX und mixingX in Prototyp-Koordinaten.
         /// </summary>
-        public static void Step(GameState s, GameConfig cfg, float dt, in ChamberView v, bool music,
+        public static void Step(GameState s, GameConfig cfg, float dt, in ChamberView v,
             float chamberX, float mixingX, List<InspectionEvent> events, out Inspection passed)
         {
             passed = null;
             var a = cfg.authority;
             var c = cfg.inspection;
-            s.AddAuthority((AuthorityGain(v, s.chamberCovered, music, s.contaminated, cfg) - a.decay) * dt, cfg);
+            s.AddAuthority((AuthorityGain(v, s.chamberCovered, s.contaminated, cfg) - a.decay) * dt, cfg);
 
             if (ShouldStart(s, cfg))
             {
@@ -117,7 +117,7 @@ namespace PlanErfuellt
             else
             {
                 ins.x -= c.speed * dt;
-                float mult = SuspicionMult(ins.boss, music, v, cfg);
+                float mult = SuspicionMult(ins.boss, v, cfg);
                 if (Mathf.Abs(ins.x - chamberX) < c.range)
                 {
                     ins.suspicion += AnimalSuspicion(v, s.chamberCovered, cfg) * mult * dt;

@@ -23,7 +23,7 @@ namespace PlanErfuellt.Tests
         public void Cow_1_1_0_MatchesPrompt4()
         {
             var a = Animal(AnimalKind.Cow, new Dose(1, 1, 0));
-            Assert.AreEqual(62f, a.BaseStability(false, cfg), 0.001f);
+            Assert.AreEqual(62f, a.BaseStability(cfg), 0.001f);
             Assert.AreEqual(60f, a.Quality(cfg), 0.001f);
             Assert.AreEqual(3.9f, a.Rate(false, cfg), 0.001f);
             Assert.AreEqual(10.8f, a.Meat(cfg), 0.001f);
@@ -58,8 +58,7 @@ namespace PlanErfuellt.Tests
         {
             var a = Animal(AnimalKind.Cow, new Dose(2, 2, 0)); // 12
             a.stabBonus = cfg.formulas.frozenStabBonus;
-            Assert.AreEqual(32f, a.BaseStability(false, cfg), 0.001f);
-            Assert.AreEqual(47f, a.BaseStability(true, cfg), 0.001f);
+            Assert.AreEqual(32f, a.BaseStability(cfg), 0.001f);
         }
 
         [Test]

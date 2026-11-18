@@ -22,8 +22,6 @@ namespace PlanErfuellt
         [SerializeField] Image frame;
         [SerializeField] TMP_Text title;
         [SerializeField] GoodRow[] goods = new GoodRow[3];
-        [SerializeField] TMP_Text wish;
-        [SerializeField] TMP_Text contract;
         [SerializeField] TMP_Text hint;
         [SerializeField] Chamber chamber;
         [SerializeField] Color frameNormal = new Color(0.48f, 0.35f, 0.23f);
@@ -59,26 +57,6 @@ namespace PlanErfuellt
                 goods[i].value.text = $"{Mathf.FloorToInt(v)} / {target:0} t";
                 goods[i].fill.fillAmount = target > 0f ? Mathf.Clamp01(v / target) : 1f;
                 goods[i].fill.color = v >= target ? fillOk : fillOpen;
-            }
-
-            var w = s.wish;
-            wish.gameObject.SetActive(w != null);
-            if (w != null)
-            {
-                string text = DayCycle.Instance.WishText(w);
-                int sec = Mathf.CeilToInt(Mathf.Max(0f, w.left));
-                wish.text = w.Id == "meat" || w.Id == "eggs"
-                    ? t.Format("ui.quota.wishProgress", ("text", text), ("got", Mathf.FloorToInt(w.got)), ("need", Mathf.RoundToInt(w.need)), ("sec", sec))
-                    : t.Format("ui.quota.wish", ("text", text), ("sec", sec));
-            }
-
-            var c = s.contract;
-            contract.gameObject.SetActive(c != null);
-            if (c != null)
-            {
-                contract.text = c.got > 0f
-                    ? t.Format("ui.quota.contractProgress", ("who", c.data.who), ("what", c.data.what), ("q", c.data.minQ), ("got", Mathf.FloorToInt(c.got)))
-                    : t.Format("ui.quota.contract", ("who", c.data.who), ("what", c.data.what), ("q", c.data.minQ));
             }
 
             hint.text = Hint(gm, s);

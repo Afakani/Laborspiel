@@ -3,7 +3,10 @@ using UnityEngine;
 
 namespace PlanErfuellt
 {
-    /// <summary>Direktor-Untertitel über dem Prompt (GDD 7.6): „DIREKTOR: …“, Dauer nach Textlänge (ui.subtitle*).</summary>
+    /// <summary>
+    /// Untertitel über dem Prompt (GDD 7.6): „DIREKTOR: …“ bzw. „RADIO: …“ (Propaganda vom Grammophon), Dauer nach
+    /// Textlänge (ui.subtitle*).
+    /// </summary>
     public class SubtitleUI : MonoBehaviour
     {
         [SerializeField] GameObject root;
@@ -12,14 +15,26 @@ namespace PlanErfuellt
         float left;
 
         void Awake() => root.SetActive(false);
-        void OnEnable() => EventBus.DirectorSpeak += OnSpeak;
-        void OnDisable() => EventBus.DirectorSpeak -= OnSpeak;
+        void OnEnable()
+        {
+            EventBus.DirectorSpeak += OnSpeak;
+            EventBus.RadioSpeak += OnRadio;
+        }
 
-        void OnSpeak(string line)
+        void OnDisable()
+        {
+            EventBus.DirectorSpeak -= OnSpeak;
+            EventBus.RadioSpeak -= OnRadio;
+        }
+
+        void OnSpeak(string line) => Show("ui.hud.subtitleSpeaker", line);
+        void OnRadio(string line) => Show("ui.hud.radioSpeaker", line);
+
+        void Show(string speakerKey, string line)
         {
             var gm = GameManager.Instance;
             var ui = gm.Config.ui;
-            text.text = gm.Texts.Get("ui.hud.subtitleSpeaker") + line;
+            text.text = gm.Texts.Get(speakerKey) + line;
             left = Mathf.Max(ui.subtitleMinSec, line.Length * ui.subtitlePerChar);
             root.SetActive(true);
         }

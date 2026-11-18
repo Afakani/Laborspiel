@@ -21,29 +21,24 @@ namespace PlanErfuellt.Tests
         }
 
         [Test]
-        public void StartDaySetsQuotaAndContractFromDayTwo()
+        public void StartDaySetsQuotaAndEndsTutorialAfterDayOne()
         {
             var s = Started();
             Assert.AreEqual(1, s.dayNum);
             Assert.AreEqual(cfg.day.targets[0].m, s.quota.target.m);
             Assert.AreEqual(cfg.day.dayLengthSec, s.quota.left);
             Assert.AreEqual(cfg.day.prizes[0], s.quota.prize);
-            Assert.IsNull(s.contract, "Tag 1 ohne Sonderauftrag");
             Assert.AreEqual(0, s.tutorialStep, "Tag 1 mit Einführung");
             var s2 = Started(1);
-            Assert.IsNotNull(s2.contract);
             Assert.AreEqual(-1, s2.tutorialStep);
-            Assert.AreEqual(cfg.wishes.firstAfterSec, s2.wishTimer);
         }
 
         [Test]
-        public void OverfulfilmentAndContractPayMore()
+        public void OverfulfilmentPaysMore()
         {
             var s = Started(1);
-            s.contract = new Contract { data = new ContractConfig { k = "m", minQ = 80f, who = "x", what = "y" } };
             float basePay = Production.PayPerTon(cfg, 'm');
-            Assert.AreEqual(10f * basePay * cfg.contracts.payMult, DayLogic.Pay(s, cfg, 'm', 10f, 90f, out _), 0.001f);
-            Assert.AreEqual(10f * basePay, DayLogic.Pay(s, cfg, 'm', 10f, 50f, out _), 0.001f, "unter Mindestqualität normal");
+            Assert.AreEqual(10f * basePay, DayLogic.Pay(s, cfg, 'm', 10f, 50f, out _), 0.001f, "unter Soll normal");
             s.quota.prod.m = s.quota.target.m;
             Assert.AreEqual(10f * basePay * (1f + cfg.day.overfulfilPayBonus), DayLogic.Pay(s, cfg, 'm', 10f, 50f, out bool over), 0.001f);
             Assert.IsTrue(over, "erste Übererfüllung wird gemeldet");
@@ -106,50 +101,6 @@ namespace PlanErfuellt.Tests
             DayLogic.StartDay(s, cfg, () => 0f);
             s.quota.met = true;
             Assert.IsTrue(DayLogic.EndDay(s, cfg, false).final);
-        }
-
-        [Test]
-        public void MeatWishSucceedsWhenDelivered()
-        {
-            var s = Started(1);
-            s.wishTimer = 0.01f;
-            float roll = 0f; // erster Wunschtyp = Fleisch
-            events.Clear();
-            DayLogic.TickWish(s, cfg, 0.1f, false, () => roll, events);
-            CollectionAssert.Contains(events, DayEvent.WishNew);
-            Assert.AreEqual("meat", s.wish.Id);
-            Assert.AreEqual(cfg.wishes.types[0].amount.@base, s.wish.need, 0.001f);
-            float money = s.Money;
-            DayLogic.Pay(s, cfg, 'f', s.wish.need, 50f, out _);
-            events.Clear();
-            DayLogic.TickWish(s, cfg, 0.1f, false, () => roll, events);
-            CollectionAssert.Contains(events, DayEvent.WishDone);
-            Assert.AreEqual(money + DayLogic.WishReward(s, cfg), s.Money, 0.001f);
-            Assert.IsNull(s.wish);
-        }
-
-        [Test]
-        public void CalmWishFailsOnCrisis()
-        {
-            var s = Started(1);
-            s.wish = new Wish { type = System.Array.Find(cfg.wishes.types, t => t.id == "calm"), need = 1f, left = 1f };
-            events.Clear();
-            DayLogic.TickWish(s, cfg, 0.5f, true, () => 0f, events);
-            DayLogic.TickWish(s, cfg, 0.6f, false, () => 0f, events);
-            CollectionAssert.Contains(events, DayEvent.WishFailed);
-            Assert.AreEqual(cfg.anger.wishFailed, s.anger, 0.001f);
-        }
-
-        [Test]
-        public void QualityWishCountsProcessedAnimal()
-        {
-            var s = Started(1);
-            var type = System.Array.Find(cfg.wishes.types, t => t.id == "quality");
-            s.wish = new Wish { type = type, need = 1f, left = 10f };
-            DayLogic.OnProcessed(s, type.minQuality - 1f);
-            Assert.AreEqual(0f, s.wish.got);
-            DayLogic.OnProcessed(s, type.minQuality);
-            Assert.AreEqual(1f, s.wish.got);
         }
 
         [Test]

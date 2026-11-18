@@ -24,9 +24,6 @@ namespace PlanErfuellt.EditorTools
                     v.gameObject.AddComponent<BeltMotorFx>().Setup(v.Find("Lamp/Bulb").GetComponent<Renderer>());
                     break;
                 case "mixing": Mixing(v); break;
-                case "microscope":
-                    LookDevMachines.Microscope(v);
-                    v.gameObject.AddComponent<PlanErfuellt.MicroscopeFx>().Setup(v.Find("Dish").GetComponent<Renderer>());
                     break;
                 case "centrifuge": LookDevMachines.Centrifuge(v); CentrifugeFx(v); break;
                 case "cryo": LookDevMachines.Cryo(v); CryoFx(v); break;

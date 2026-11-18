@@ -12,6 +12,5 @@ namespace PlanErfuellt
         public TastingConfig tasting = new TastingConfig();
         public GramophoneConfig gramophone = new GramophoneConfig();
         public RohrpostConfig rohrpost = new RohrpostConfig();
-        public MicroscopeConfig microscope = new MicroscopeConfig();
     }
 }
