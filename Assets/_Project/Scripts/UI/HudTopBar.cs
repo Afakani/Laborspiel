@@ -18,6 +18,8 @@ namespace PlanErfuellt
         [SerializeField] TMP_Text plan;
 
         string lastCash, lastRate, lastDay, lastPlan;
+        // Zahlen des letzten Aufbaus: Texte nur bei Änderung formatieren (sonst jedes Bild Speichermüll)
+        int shownMoney = int.MinValue, shownRate = int.MinValue, shownDay = int.MinValue, shownSec = int.MinValue, shownPlan = int.MinValue;
 
         void Start()
         {
@@ -33,13 +35,35 @@ namespace PlanErfuellt
             if (gm == null) return;
             var t = gm.Texts;
             var s = gm.State;
-            Set(cash, ref lastCash, t.Format("ui.common.money", ("n", Mathf.RoundToInt(s.Money).ToString("N0", German))));
-            Set(rate, ref lastRate, t.Format("ui.common.ratePerSec", ("n", s.currentRate.ToString("0.0", German))));
-            string dayText = s.quota != null
-                ? t.Format("ui.hud.dayTime", ("n", Mathf.Max(1, s.dayNum)), ("time", Clock(s.quota.left)))
-                : t.Format("ui.hud.day", ("n", Mathf.Max(1, s.dayNum)));
-            Set(day, ref lastDay, dayText);
-            Set(plan, ref lastPlan, t.Format("ui.hud.plan", ("n", Mathf.Min(gm.Config.day.plans, s.planIdx + 1)), ("max", gm.Config.day.plans)));
+            int money = Mathf.RoundToInt(s.Money);
+            if (money != shownMoney)
+            {
+                shownMoney = money;
+                Set(cash, ref lastCash, t.Format("ui.common.money", ("n", money.ToString("N0", German))));
+            }
+            int rate10 = Mathf.RoundToInt(s.currentRate * 10f);
+            if (rate10 != shownRate)
+            {
+                shownRate = rate10;
+                Set(rate, ref lastRate, t.Format("ui.common.ratePerSec", ("n", (rate10 / 10f).ToString("0.0", German))));
+            }
+            int dayNum = Mathf.Max(1, s.dayNum);
+            int sec = s.quota != null ? Mathf.Max(0, Mathf.CeilToInt(s.quota.left)) : -1;
+            if (dayNum != shownDay || sec != shownSec)
+            {
+                shownDay = dayNum;
+                shownSec = sec;
+                string dayText = s.quota != null
+                    ? t.Format("ui.hud.dayTime", ("n", dayNum), ("time", Clock(s.quota.left)))
+                    : t.Format("ui.hud.day", ("n", dayNum));
+                Set(day, ref lastDay, dayText);
+            }
+            int planNo = Mathf.Min(gm.Config.day.plans, s.planIdx + 1);
+            if (planNo != shownPlan)
+            {
+                shownPlan = planNo;
+                Set(plan, ref lastPlan, t.Format("ui.hud.plan", ("n", planNo), ("max", gm.Config.day.plans)));
+            }
         }
 
         static string Clock(float sec)

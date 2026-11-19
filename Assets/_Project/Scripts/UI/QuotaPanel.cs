@@ -33,6 +33,11 @@ namespace PlanErfuellt
         static readonly char[] Keys = { 'm', 'e', 'f' };
         static readonly string[] LabelKeys = { "ui.common.goodMilk", "ui.common.goodEggs", "ui.common.goodMeat" };
 
+        // Zahlen des letzten Aufbaus: Texte nur bei Änderung formatieren (sonst jedes Bild Speichermüll)
+        int shownTitle = int.MinValue;
+        readonly int[] shownValue = { int.MinValue, int.MinValue, int.MinValue };
+        bool labelsSet;
+
         void LateUpdate()
         {
             var gm = GameManager.Instance;
@@ -45,20 +50,31 @@ namespace PlanErfuellt
             var t = gm.Texts;
             var cfg = gm.Config;
 
-            title.text = t.Format(q.met ? "ui.quota.titleMet" : "ui.quota.title", ("n", s.planIdx + 1), ("max", cfg.day.plans))
-                         + "  ·  " + Clock(q.left);
+            int titleHash = System.HashCode.Combine(q.met, s.planIdx, Mathf.Max(0, Mathf.CeilToInt(q.left)));
+            if (titleHash != shownTitle)
+            {
+                shownTitle = titleHash;
+                title.text = t.Format(q.met ? "ui.quota.titleMet" : "ui.quota.title", ("n", s.planIdx + 1), ("max", cfg.day.plans))
+                             + "  ·  " + Clock(q.left);
+            }
             bool late = !q.met && q.left < cfg.day.lateWarningSec;
             frame.color = q.met ? frameMet : late ? Color.Lerp(frameNormal, frameLate, 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 8f)) : frameNormal;
 
             for (int i = 0; i < 3; i++)
             {
                 float v = Quota.Get(q.prod, Keys[i]), target = Quota.Get(q.target, Keys[i]);
-                goods[i].label.text = t.Get(LabelKeys[i]);
-                goods[i].value.text = $"{Mathf.FloorToInt(v)} / {target:0} t";
+                if (!labelsSet) goods[i].label.text = t.Get(LabelKeys[i]);
+                int valueHash = System.HashCode.Combine(Mathf.FloorToInt(v), Mathf.RoundToInt(target));
+                if (valueHash != shownValue[i])
+                {
+                    shownValue[i] = valueHash;
+                    goods[i].value.text = $"{Mathf.FloorToInt(v)} / {target:0} t";
+                }
                 goods[i].fill.fillAmount = target > 0f ? Mathf.Clamp01(v / target) : 1f;
                 goods[i].fill.color = v >= target ? fillOk : fillOpen;
             }
 
+            labelsSet = true;
             hint.text = Hint(gm, s);
         }
 

@@ -21,6 +21,11 @@ namespace PlanErfuellt
 
         readonly AnimalStats stats = new AnimalStats();
         readonly List<RiskEvent> riskEvents = new List<RiskEvent>();
+        // Zufall als feste Funktion (eine Methodengruppe würde jedes Bild ein neues Delegate-Objekt anlegen)
+        static readonly System.Func<float> Rand = RandomValue;
+        // Schild über dem Tier: nur neu bauen, wenn sich etwas Sichtbares geändert hat (sonst jedes Bild Texte und Speichermüll)
+        int labelHash;
+        bool labelBuilt;
         AnimalVisuals model;
         float x, drop, pop = 1f, sink, destroyTimer;
 
@@ -167,7 +172,7 @@ namespace PlanErfuellt
         void UpdateLiving(float dt)
         {
             riskEvents.Clear();
-            RiskLogic.Step(stats, State, S, Cfg, dt, RandomValue, riskEvents);
+            RiskLogic.Step(stats, State, S, Cfg, dt, Rand, riskEvents);
             foreach (var e in riskEvents)
             {
                 HandleRisk(e);
@@ -283,7 +288,12 @@ namespace PlanErfuellt
             bool unstable = State == AnimalState.Unstable;
             int stab = Formula.RoundHalfUp(stats.stability);
             int sec = Mathf.CeilToInt(stats.unstableTimer);
-            string key = $"{stats.kind}|{stats.dose.Key}|{stats.ultimate?.id}|{stats.fun?.id}|{stats.stamped}|{State}|{stats.crisis}|{stab / 5}|{(unstable ? sec : 0)}";
+            int hash = System.HashCode.Combine(System.HashCode.Combine((int)stats.kind, stats.dose.A, stats.dose.B, stats.dose.C, stats.ultimate, stats.fun),
+                stats.stamped, (int)State, (int)stats.crisis, stab, unstable ? sec : 0);
+            if (labelBuilt && hash == labelHash) return;
+            labelBuilt = true;
+            labelHash = hash;
+            string key = hash.ToString();
 
             string top;
             Color topColor = Color.white;
@@ -334,6 +344,7 @@ namespace PlanErfuellt
             if (!S.TrySpend(cost)) return Feedback.Error("ui.errors.noMoneyClone", ("money", Mathf.RoundToInt(cost)));
 
             stats.Reset(Cfg.animal.eggInterval);
+            labelBuilt = false;
             stats.kind = kind;
             model = kind == AnimalKind.Cow ? cowModel : henModel;
             cowModel.gameObject.SetActive(kind == AnimalKind.Cow);
@@ -376,6 +387,7 @@ namespace PlanErfuellt
                 var u = Cfg.UltimateById(serum.ultimateId);
                 var kind = stats.kind;
                 stats.Reset(Cfg.animal.eggInterval);
+            labelBuilt = false;
                 stats.kind = kind;
                 stats.ultimate = u;
                 stats.dose = u.Recipe;
@@ -485,6 +497,7 @@ namespace PlanErfuellt
             S.NotifyInventoryChanged();
             var kind = stats.kind;
             stats.Reset(Cfg.animal.eggInterval);
+            labelBuilt = false;
             stats.kind = kind;
             SetState(AnimalState.Ok);
             GM.Toast("ui.toasts.antidoteAnimal", ToastKind.Good);
@@ -550,6 +563,7 @@ namespace PlanErfuellt
         {
             SetState(AnimalState.Empty);
             stats.Reset(Cfg.animal.eggInterval);
+            labelBuilt = false;
             cowModel.gameObject.SetActive(false);
             henModel.gameObject.SetActive(false);
             model = null;
