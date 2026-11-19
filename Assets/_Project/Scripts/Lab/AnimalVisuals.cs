@@ -65,8 +65,6 @@ namespace PlanErfuellt
         void Awake()
         {
             mpb = new MaterialPropertyBlock();
-            // Beim Aufbau des Prefabs im Editor ist das Skelett noch nicht verdrahtet
-            if (spine == null) return;
             spineRot = spine.localRotation;
             if (neck != null)
             {
