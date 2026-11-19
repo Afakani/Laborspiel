@@ -118,6 +118,7 @@ Stand der Umsetzung nach `09_Prompts.md`. Pro Phase ein Git-Commit „Phase N: �
 - [x] Hühner legen sichtbar Eier: Hocke, Ei fällt hinten heraus und bleibt bis Schichtende in der Kammer liegen, golden beim Münzhuhn und bei Ω (D161). Tests 175 grün
 - [x] Spielende Sibirien: drei verfehlte Pläne in Folge, Rolltor geht hoch, zwei Stasi-Männer sprechen, Endbildschirm mit Parole (D162). Tests 176 grün
 - [x] Lag-Suche mit Messhilfe im Build (-perflog), Speichermüll pro Bild um 85 % gesenkt (D163). Tests 176 grün
+- [x] Tiermeshes schlanker ohne sichtbaren Unterschied (Kuh 170k auf 102k, Huhn 100k auf 57k Dreiecke), Bildschirmkopie aus (D164). Tests 176 grün
 
 ## Phase 12 – Ton, Feinschliff, Performance, Build
 

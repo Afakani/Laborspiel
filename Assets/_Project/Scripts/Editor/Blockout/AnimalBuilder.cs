@@ -18,6 +18,8 @@ namespace PlanErfuellt.EditorTools
         const string MeshDir = "Assets/_Project/Art/Models/Animals";
         /// <summary>Breite des weichen Übergangs zwischen Knochen-Zonen in m.</summary>
         const float SkinSigma = 0.035f;
+        // Gitterweite aller Tiermeshes x Faktor: 1.4 halbiert etwa die Dreiecke (außer Flecken), Normalen kommen aus dem Feld, die Form bleibt glatt (D164)
+        const float CellScale = 1.4f;
         static readonly string[] Obsolete = { "Cow_Body", "Cow_BodySpots", "Cow_Head", "Cow_HeadSpots", "Cow_LegRear", "Cow_LegFront", "Hen_Body", "Hen_Head" };
 
         public static GameObject LoadOrBuild(string path, bool rebuild, System.Func<GameObject> create)
@@ -225,7 +227,7 @@ namespace PlanErfuellt.EditorTools
             var bounds = new Bounds(new Vector3(0.35f, 0.95f, 0f), new Vector3(3.5f, 1.95f, 1.3f));
             var skinMesh = SkinMesh("Cow_Skin", CowSkin, bounds, 0.016f, parts, boneArr, shapes);
             // nur die sichtbare Kappe auf der Haut, nicht die Fleckkugeln im Inneren
-            var spotMesh = SkinMesh("Cow_SkinSpots", CowSpotShell, bounds, 0.016f, parts, boneArr, shapes, c => CowSkin(c) > -0.012f);
+            var spotMesh = SkinMesh("Cow_SkinSpots", CowSpotShell, bounds, 0.016f, parts, boneArr, shapes, c => CowSkin(c) > -0.012f, 1f); // Fleckenränder brauchen das feine Gitter
             var skins = new List<SkinnedMeshRenderer>
             {
                 SkinMesher.Renderer(t, "Skin", skinMesh, boneArr, spine, body, true),
@@ -460,15 +462,15 @@ namespace PlanErfuellt.EditorTools
         }
 
         static Mesh SkinMesh(string name, SdfMesher.Field f, Bounds b, float cell, List<SkinPart> parts, Transform[] bones,
-            List<(string, SkinMesher.ShapeDelta)> shapes, System.Func<Vector3, bool> keep = null)
+            List<(string, SkinMesher.ShapeDelta)> shapes, System.Func<Vector3, bool> keep = null, float scale = CellScale)
         {
-            var mesh = SdfMesher.Build(name, f, b, cell, Vector3.zero, keep);
+            var mesh = SdfMesher.Build(name, f, b, cell * scale, Vector3.zero, keep);
             SkinMesher.Skin(mesh, parts.ToArray(), bones, SkinSigma, shapes);
             return SkinMesher.Save(mesh, $"{MeshDir}/{name}.asset");
         }
 
         static Mesh BuildMesh(string name, SdfMesher.Field f, Bounds b, float cell, Vector3 origin) =>
-            SdfMesher.Save(SdfMesher.Build(name, f, b, cell, origin), $"{MeshDir}/{name}.asset");
+            SdfMesher.Save(SdfMesher.Build(name, f, b, cell * CellScale, origin), $"{MeshDir}/{name}.asset");
 
         /// <summary>Glatte Kugel als Drehkörper (Augen, Wucherungen).</summary>
         static Mesh SphereMesh(float r)
